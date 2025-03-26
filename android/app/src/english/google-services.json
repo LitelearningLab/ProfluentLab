@@ -1,0 +1,143 @@
+{
+  "project_info": {
+    "project_number": "620147953805",
+    "firebase_url": "https://lite-learning-lab.firebaseio.com",
+    "project_id": "lite-learning-lab",
+    "storage_bucket": "lite-learning-lab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620147953805:android:389a231abf4e75ef",
+        "android_client_info": {
+          "package_name": "org.mahajob.litelearninglab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620147953805-g9u8k90vgvvskts2u3n5r93g70or5soa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.mahajob.litelearninglab",
+            "certificate_hash": "5fb4ac0e8abb44d5e5fe59c114abe408fa66c276"
+          }
+        },
+        {
+          "client_id": "620147953805-i0l0cd3jlu1bihn2rbua8a2d0f40ap5r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.mahajob.litelearninglab",
+            "certificate_hash": "bb8b48a667a331c84f2aab1bbc718559a0691b90"
+          }
+        },
+        {
+          "client_id": "620147953805-nmdqq7mlpeaqpsmdqme23j8les55biu5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.mahajob.litelearninglab",
+            "certificate_hash": "f5985d5d5df7a8c87d01571903b345a8807347bc"
+          }
+        },
+        {
+          "client_id": "620147953805-d5are7d0mm71u42mq29eh4c9qk4cacps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn3rQBPiCd4C7c9AzXCL2YHU7OYFlXvBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620147953805-d5are7d0mm71u42mq29eh4c9qk4cacps.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "620147953805-kleheav1j3vmhsfr6b49d32qrd5mn8tc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vaghaitech.smartsociety"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620147953805:android:1c69993d369e19f3b752c4",
+        "android_client_info": {
+          "package_name": "org.mahajob.litelearninglab.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620147953805-d5are7d0mm71u42mq29eh4c9qk4cacps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn3rQBPiCd4C7c9AzXCL2YHU7OYFlXvBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620147953805-d5are7d0mm71u42mq29eh4c9qk4cacps.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "620147953805-kleheav1j3vmhsfr6b49d32qrd5mn8tc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vaghaitech.smartsociety"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620147953805:android:9c7d47377b0e84b4b752c4",
+        "android_client_info": {
+          "package_name": "org.profluenten.school_prototype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620147953805-d5are7d0mm71u42mq29eh4c9qk4cacps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn3rQBPiCd4C7c9AzXCL2YHU7OYFlXvBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620147953805-d5are7d0mm71u42mq29eh4c9qk4cacps.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "620147953805-kleheav1j3vmhsfr6b49d32qrd5mn8tc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vaghaitech.smartsociety"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
