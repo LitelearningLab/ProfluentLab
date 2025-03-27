@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:litelearninglab/API/api.dart';
 import 'package:litelearninglab/common_widgets/spacings.dart';
@@ -17,7 +17,6 @@ import 'package:litelearninglab/database/SentDatabaseProvider.dart';
 import 'package:litelearninglab/database/SentencesDatabaseRepository.dart';
 import 'package:litelearninglab/database/WordsDatabaseRepository.dart';
 import 'package:litelearninglab/database/databaseProvider.dart';
-import 'package:litelearninglab/models/Word.dart';
 import 'package:litelearninglab/screens/word_screen/word_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/encrypt_data.dart';
@@ -26,7 +25,6 @@ import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../utils/audio_player_manager.dart';
 import '../../../utils/shared_pref.dart';
@@ -131,9 +129,11 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     print("url : $url");
     try {
       print("responseeeeeeee");
-      var response = await http.post(Uri.parse(url), body: {"userid": userId, "type": action, "word": word});
+      var response = await http.post(Uri.parse(url),
+          body: {"userid": userId, "type": action, "word": word});
 
-      print("response for pronunciation lab report for listening : ${response.body}");
+      print(
+          "response for pronunciation lab report for listening : ${response.body}");
     } catch (e) {
       print("error login : $e");
     }
@@ -149,8 +149,11 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     print("urlll : $url");
     try {
       print("responseeeeeeeedferferfwer");
-      var response = await http.post(Uri.parse(url),
-          body: {"userid": userId, "practicetype": "Pronunciation Sound Lab Report", "action": action});
+      var response = await http.post(Uri.parse(url), body: {
+        "userid": userId,
+        "practicetype": "Pronunciation Sound Lab Report",
+        "action": action
+      });
 
       print("response start practice for pronunciation lab : ${response.body}");
     } catch (e) {
@@ -171,7 +174,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     // } else {
     //   _isPlaying = false;
     // }
-    _playerStateSubscription = audioPlayerManager.onPlayerStateChanged.listen((event) async {
+    _playerStateSubscription =
+        audioPlayerManager.onPlayerStateChanged.listen((event) async {
       Future.delayed(const Duration(seconds: 2), () {
         log("This was Triggered");
         return isPlaying[widget.index].value = false;
@@ -181,7 +185,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     });
     initConnectivity();
 
-    networkSubscription = Connectivity().onConnectivityChanged.listen((connectionResult) {
+    networkSubscription =
+        Connectivity().onConnectivityChanged.listen((connectionResult) {
       print('^^^^^^^^^^^^^^CHECKING CONNECTION');
       checkConnection(connectionResult);
     });
@@ -230,7 +235,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     }
   }
 
-  Future<void> checkConnection(List<ConnectivityResult> connectivityResult) async {
+  Future<void> checkConnection(
+      List<ConnectivityResult> connectivityResult) async {
     print("checkConnection function callledddd");
     connectivityResult = await Connectivity().checkConnectivity();
 
@@ -281,8 +287,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     });
     // audioPlayerManager = AudioPlayerManager();
     print("Above the loading value");
-    void result =
-        await audioPlayerManager.play(url!, context: context, localPath: widget.localPath, decodedPath: (val) {
+    void result = await audioPlayerManager.play(url!,
+        context: context, localPath: widget.localPath, decodedPath: (val) {
       eLocalPath = val;
     });
     print("urllll:${url}");
@@ -339,7 +345,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
       String? eLocalPath;
 
       if (widget.isFav == null || widget.isFav == 0) {
-        localPath = await Utils.downloadFile(userDatas, url!, '${widget.title}.mp3', '$appDocPath/${widget.load}');
+        localPath = await Utils.downloadFile(userDatas, url!,
+            '${widget.title}.mp3', '$appDocPath/${widget.load}');
         print("locallpathhh:${localPath}");
         eLocalPath = EncryptData.encryptFile(localPath, userDatas);
 
@@ -393,7 +400,9 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     }
     if (isFaved) {
       Toast.show(
-        !favIs ? "Removed from your priority list" : "Added to your priority list",
+        !favIs
+            ? "Removed from your priority list"
+            : "Added to your priority list",
         duration: Toast.lengthShort,
         gravity: Toast.bottom,
         backgroundColor: AppColors.white,
@@ -417,7 +426,9 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     }
     if (isFaved) {
       Toast.show(
-        !favIs ? "Removed from your priority list" : "Added to your priority list",
+        !favIs
+            ? "Removed from your priority list"
+            : "Added to your priority list",
         duration: Toast.lengthShort,
         gravity: Toast.bottom,
         backgroundColor: AppColors.white,
@@ -464,7 +475,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                       InkWell(
                           onTap: () async {
                             print('play iconnnnn tappeddd');
-                            pronunciationLabReport(actionType: "listening", word: widget.title);
+                            pronunciationLabReport(
+                                actionType: "listening", word: widget.title);
                             startPractice(actionType: 'listening');
                             print("widgetIndex:${widget.index}");
                             print("check:${widget.title}");
@@ -487,28 +499,31 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                             print("fileUrl:${widget.url}");
                             print("sdhhvgfrhngkihri");*/
                           },
-                          child: audioLoading[widget.index].value //_isAudioLoading
-                              // && _currentPLayingIndex == widget.index
-                              ? SizedBox(
-                                  height: 25,
-                                  width: 25,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: AppColors.white,
-                                    ),
-                                  ))
-                              : !_isAudioPlayed
-                                  ? Icon(
-                                      Icons.info_outline,
-                                      color: Colors.red,
-                                      size: 25,
-                                    )
-                                  : ImageIcon(
-                                      AssetImage(AllAssets.roundPlay),
-                                      color: widget.isFav == 0 ? Colors.white : Color(0xFF6C63FE),
-                                    )
+                          child:
+                              audioLoading[widget.index].value //_isAudioLoading
+                                  // && _currentPLayingIndex == widget.index
+                                  ? SizedBox(
+                                      height: 25,
+                                      width: 25,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(3.0),
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: AppColors.white,
+                                        ),
+                                      ))
+                                  : !_isAudioPlayed
+                                      ? Icon(
+                                          Icons.info_outline,
+                                          color: Colors.red,
+                                          size: 25,
+                                        )
+                                      : ImageIcon(
+                                          AssetImage(AllAssets.roundPlay),
+                                          color: widget.isFav == 0
+                                              ? Colors.white
+                                              : Color(0xFF6C63FE),
+                                        )
                           // Icon(
                           //     Icons.play_circle_outline,
                           //     color: AppColors.white,
@@ -536,11 +551,7 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                                   color: Color(0xFF6C63FE),
                                   size: 25,
                                 )),
-                    // if (widget.isWord) SPW(10),
-                    // Icon(
-                    //   Icons.format_list_bulleted,
-                    //   color: AppColors.white,
-                    // ),
+
                     SPW(10),
                     SizedBox(
                       width: widget.isWord
@@ -559,7 +570,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                         ),
                       ),
                     ),
-                    if (widget.isButtonsVisible || widget.underContruction) Spacer(),
+                    if (widget.isButtonsVisible || widget.underContruction)
+                      Spacer(),
                     if (widget.isDownloaded != null &&
                         !widget.isDownloaded! &&
                         !widget.isCheckBoxDownloading &&
@@ -570,7 +582,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                             if (_isConnected) {
                               setState(() {
                                 log("downloading startttt");
-                                print("widget.isDownloaded:${widget.isDownloaded}");
+                                print(
+                                    "widget.isDownloaded:${widget.isDownloaded}");
                                 // _isDownloading = true;
                                 widget.isCheckBoxDownloading = true;
                               });
@@ -582,34 +595,47 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                                 dbRef = WordsDatabaseRepository(dbb);
                               } else {
                                 print("sndkndnvkndkvncknvkcn");
-                                SentDatabaseProvider dbb = SentDatabaseProvider.get;
+                                SentDatabaseProvider dbb =
+                                    SentDatabaseProvider.get;
                                 dbRef = SentencesDatabaseRepository(dbb);
                               }
-                              Directory appDocDir = await getApplicationDocumentsDirectory();
+                              Directory appDocDir =
+                                  await getApplicationDocumentsDirectory();
                               String appDocPath = appDocDir.path;
-                              final downloadController = Provider.of<AuthState>(context, listen: false);
+                              final downloadController = Provider.of<AuthState>(
+                                  context,
+                                  listen: false);
                               String localPath = await Utils.downloadFile(
-                                  downloadController, url!, '${widget.title}.mp3', '$appDocPath/${widget.load}');
-                              AuthState userDatas = Provider.of<AuthState>(context, listen: false);
+                                  downloadController,
+                                  url!,
+                                  '${widget.title}.mp3',
+                                  '$appDocPath/${widget.load}');
+                              AuthState userDatas = Provider.of<AuthState>(
+                                  context,
+                                  listen: false);
 
-                              String eLocalPath = EncryptData.encryptFile(localPath, userDatas);
+                              String eLocalPath =
+                                  EncryptData.encryptFile(localPath, userDatas);
                               try {
                                 await File(localPath).delete();
                               } catch (e) {
                                 print("The Expection is :$e");
                               }
 
-                              if (localPath == "Error code: 403" || !downloadController.isDownloaded!) {
+                              if (localPath == "Error code: 403" ||
+                                  !downloadController.isDownloaded!) {
                                 Toast.show("Failed to Download",
                                     duration: Toast.lengthShort,
                                     gravity: Toast.bottom,
                                     backgroundColor: AppColors.white,
-                                    textStyle: TextStyle(color: AppColors.black),
+                                    textStyle:
+                                        TextStyle(color: AppColors.black),
                                     backgroundRadius: 10);
                                 widget.isRefresh(true);
                               } else {
                                 print("dnnfdknfkdnf");
-                                bool isFaved = await dbRef.setDownloadPath(widget.wordId, eLocalPath!);
+                                bool isFaved = await dbRef.setDownloadPath(
+                                    widget.wordId, eLocalPath!);
                                 setState(() {
                                   _isDownloading = false;
                                 });
@@ -618,7 +644,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                                       duration: Toast.lengthShort,
                                       gravity: Toast.bottom,
                                       backgroundColor: AppColors.white,
-                                      textStyle: TextStyle(color: AppColors.black),
+                                      textStyle:
+                                          TextStyle(color: AppColors.black),
                                       backgroundRadius: 10);
                                 widget.isRefresh(true);
                               }
@@ -659,7 +686,9 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                           ),
                         ],
                       ),
-                    if (widget.isDownloaded != null && widget.isDownloaded! && widget.isButtonsVisible)
+                    if (widget.isDownloaded != null &&
+                        widget.isDownloaded! &&
+                        widget.isButtonsVisible)
                       InkWell(
                         child: SizedBox(
                           // width: displayWidth(context) / 18.75,
@@ -680,9 +709,13 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                             height: 19,
                             width: 19,
                             child: Image.asset(
-                              widget.isFav == 0 ? AllAssets.save : AllAssets.saved,
+                              widget.isFav == 0
+                                  ? AllAssets.save
+                                  : AllAssets.saved,
                               width: 18,
-                              color: widget.isFav == 0 ? Colors.white : Color(0xFF6C63FE),
+                              color: widget.isFav == 0
+                                  ? Colors.white
+                                  : Color(0xFF6C63FE),
                             ),
                           ),
                           onPressed: () async {
@@ -842,7 +875,8 @@ class AppExpansionTile extends StatefulWidget {
   AppExpansionTileState createState() => new AppExpansionTileState();
 }
 
-class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerProviderStateMixin {
+class AppExpansionTileState extends State<AppExpansionTile>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late CurvedAnimation _easeOutAnimation;
   late CurvedAnimation _easeInAnimation;
@@ -857,15 +891,18 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
   void initState() {
     super.initState();
     _controller = new AnimationController(duration: _kExpand, vsync: this);
-    _easeOutAnimation = new CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    _easeInAnimation = new CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _easeOutAnimation =
+        new CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _easeInAnimation =
+        new CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _borderColor = new ColorTween();
     _headerColor = new ColorTween();
     _iconColor = new ColorTween();
 
     _backgroundColor = new ColorTween();
 
-    _isExpanded = PageStorage.of(context)!.readState(context) ?? widget.initiallyExpanded;
+    _isExpanded =
+        PageStorage.of(context)!.readState(context) ?? widget.initiallyExpanded;
     if (_isExpanded) _controller.value = 1.0;
   }
 
@@ -912,7 +949,8 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
     return new Container(
       margin: EdgeInsets.zero,
       decoration: new BoxDecoration(
-        color: _backgroundColor.evaluate(_easeOutAnimation) ?? Colors.transparent,
+        color:
+            _backgroundColor.evaluate(_easeOutAnimation) ?? Colors.transparent,
       ),
       child: Column(
         // mainAxisSize: MainAxisSize.min,
@@ -921,11 +959,15 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
             color: Color(0xFF293750),
             // margin: EdgeInsets.symmetric(vertical: 1),
             child: IconTheme.merge(
-              data: new IconThemeData(color: _iconColor.evaluate(_easeInAnimation)),
+              data: new IconThemeData(
+                  color: _iconColor.evaluate(_easeInAnimation)),
               child: GestureDetector(
                 onTap: toggle,
                 child: DefaultTextStyle(
-                  style: Theme.of(context!).textTheme.headline4!.copyWith(color: titleColor),
+                  style: Theme.of(context!)
+                      .textTheme
+                      .headline4!
+                      .copyWith(color: titleColor),
                   child: widget.title,
                 ),
               ),

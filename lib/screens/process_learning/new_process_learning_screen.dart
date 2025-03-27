@@ -1,28 +1,18 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:litelearninglab/API/api.dart';
-import 'package:litelearninglab/common_widgets/spacings.dart';
 import 'package:litelearninglab/constants/all_assets.dart';
 import 'package:litelearninglab/constants/app_colors.dart';
-import 'package:litelearninglab/screens/process_learning/indicator_controller.dart';
 import 'package:litelearninglab/screens/process_learning/learning_screen.dart';
 import 'package:litelearninglab/screens/process_learning/process_cat_screen.dart';
-import 'package:litelearninglab/screens/softskills/new_softskills_screen.dart';
 import 'package:litelearninglab/screens/webview/webview_screen.dart';
-import 'package:litelearninglab/utils/audio_player_manager.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
 import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/rect_rounded_swiper_pagination_builder.dart';
@@ -31,20 +21,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:swipe_deck/swipe_deck.dart';
 import 'package:toast/toast.dart';
 
 import '../../common_widgets/background_widget.dart';
 import '../../common_widgets/common_app_bar.dart';
-import '../../hiveDb/hiveDb.dart';
-import '../../main.dart';
 import '../../models/ProcessLearningMain.dart';
-import '../../models/ProcessLearningSub.dart';
 import '../../states/auth_state.dart';
 import '../../utils/firebase_helper.dart';
 import '../../utils/shared_pref.dart';
-import '../word_screen/widgets/drop_down_word_item.dart';
 
 String pTitle = "";
 
@@ -58,7 +42,8 @@ class NewProcessLearningScreen extends StatefulWidget {
   }
 }
 
-class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> with AfterLayoutMixin<NewProcessLearningScreen>, WidgetsBindingObserver {
+class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
+    with AfterLayoutMixin<NewProcessLearningScreen>, WidgetsBindingObserver {
   FirebaseHelper db = new FirebaseHelper();
   List<ProcessLearningMain> _processLeaning = [];
   bool _isLoading = false;
@@ -76,23 +61,46 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
   late TextScaler kText;
   late AuthState authStateController;
   List<Map<String, dynamic>> swipperList = [
-    {"tileColor": Color(0xFFEAE5FF), "tileImage": AllAssets.plRevenueCircle, 'heading': 'US HEALTHCARE'},
+    {
+      "tileColor": Color(0xFFEAE5FF),
+      "tileImage": AllAssets.plRevenueCircle,
+      'heading': 'US HEALTHCARE'
+    },
     {"tileColor": Color(0xFFFFDEDD), "tileImage": "", 'heading': ''},
-    {"tileColor": Color(0xFFFFC9C8), "tileImage": AllAssets.plAutoInsurance, 'heading': 'LIABILITY INSURANCE'},
-    {"tileColor": Color(0xFFEAE5FF), "tileImage": AllAssets.plWorkersCompensation, 'heading': 'LIABILITY INSURANCE'},
-    {"tileColor": Color(0xFFFFDEDD), "tileImage": AllAssets.plFederalInsurance, 'heading': 'US HEALTHCARE'},
-    {"tileColor": Color(0xFFFFC9C8), "tileImage": AllAssets.plBLueCross, 'heading': 'US HEALTHCARE'},
+    {
+      "tileColor": Color(0xFFFFC9C8),
+      "tileImage": AllAssets.plAutoInsurance,
+      'heading': 'LIABILITY INSURANCE'
+    },
+    {
+      "tileColor": Color(0xFFEAE5FF),
+      "tileImage": AllAssets.plWorkersCompensation,
+      'heading': 'LIABILITY INSURANCE'
+    },
+    {
+      "tileColor": Color(0xFFFFDEDD),
+      "tileImage": AllAssets.plFederalInsurance,
+      'heading': 'US HEALTHCARE'
+    },
+    {
+      "tileColor": Color(0xFFFFC9C8),
+      "tileImage": AllAssets.plBLueCross,
+      'heading': 'US HEALTHCARE'
+    },
   ];
 
   @override
   void initState() {
     super.initState();
-    startTimerMainCategory("Process Learning");
+    // startTimerMainCategory("Process Learning");
     // Add the observer for lifecycle events
     WidgetsBinding.instance.addObserver(this);
 
     log("here start to listening the process learning spend time");
-    controller = AutoScrollController(viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom), axis: Axis.vertical);
+    controller = AutoScrollController(
+        viewportBoundaryGetter: () =>
+            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+        axis: Axis.vertical);
 
     _getWords();
     authStateController = Provider.of<AuthState>(context, listen: false);
@@ -126,43 +134,74 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
         print("title name : ${_processLeaning[i].category}");
         print("categories name: ${_processLeaning[i].subcategories}");
         for (int j = 0; j < _processLeaning[i].subcategories!.length; j++) {
-          print("processLearning Subcategoreis length:${_processLeaning[i].subcategories!.length}");
+          print(
+              "processLearning Subcategoreis length:${_processLeaning[i].subcategories!.length}");
           if (_processLeaning[i].subcategories![j].link != null) {
             if (_processLeaning[i].subcategories![j].link!.isNotEmpty) {
-              print("linkCheckkkk:${_processLeaning[i].subcategories![j].link!.isNotEmpty}");
+              print(
+                  "linkCheckkkk:${_processLeaning[i].subcategories![j].link!.isNotEmpty}");
               print("linkkkkkkk:${_processLeaning[i].subcategories![j].link}");
               activeLinkCountPL += 1;
             }
           }
           if (_processLeaning[i].subcategories![j].linkCats != null) {
             print("sdmkmgmrgmv");
-            for (int z = 0; z < _processLeaning[i].subcategories![j].linkCats!.length; z++) {
+            for (int z = 0;
+                z < _processLeaning[i].subcategories![j].linkCats!.length;
+                z++) {
               print("samkdmv");
-              if (_processLeaning[i].subcategories![j].linkCats![z].simulation != null) {
-                if (_processLeaning[i].subcategories![j].linkCats![z].simulation!.isNotEmpty) {
-                  print("simulationLink:${_processLeaning[i].subcategories![j].linkCats![z].simulation!}");
+              if (_processLeaning[i]
+                      .subcategories![j]
+                      .linkCats![z]
+                      .simulation !=
+                  null) {
+                if (_processLeaning[i]
+                    .subcategories![j]
+                    .linkCats![z]
+                    .simulation!
+                    .isNotEmpty) {
+                  print(
+                      "simulationLink:${_processLeaning[i].subcategories![j].linkCats![z].simulation!}");
                   print("dfdjj");
                   activeSimulationCountPL += 1;
                   print("activeSimulationCountPL:${activeSimulationCountPL}");
                 }
               }
-              if (_processLeaning[i].subcategories![j].linkCats![z].video != null) {
-                if (_processLeaning[i].subcategories![j].linkCats![z].video!.isNotEmpty) {
-                  print("videoLinkkkk:${_processLeaning[i].subcategories![j].linkCats![z].video!}");
+              if (_processLeaning[i].subcategories![j].linkCats![z].video !=
+                  null) {
+                if (_processLeaning[i]
+                    .subcategories![j]
+                    .linkCats![z]
+                    .video!
+                    .isNotEmpty) {
+                  print(
+                      "videoLinkkkk:${_processLeaning[i].subcategories![j].linkCats![z].video!}");
                   activeVideoCountPL += 1;
                   print("activeVideoCountPl:$activeVideoCountPL");
                 }
               }
-              if (_processLeaning[i].subcategories![j].linkCats![z].faq != null) {
-                if (_processLeaning[i].subcategories![j].linkCats![z].faq!.isNotEmpty) {
-                  print("faqLink:${_processLeaning[i].subcategories![j].linkCats![z].faq!}");
+              if (_processLeaning[i].subcategories![j].linkCats![z].faq !=
+                  null) {
+                if (_processLeaning[i]
+                    .subcategories![j]
+                    .linkCats![z]
+                    .faq!
+                    .isNotEmpty) {
+                  print(
+                      "faqLink:${_processLeaning[i].subcategories![j].linkCats![z].faq!}");
                   activeFAQCountPL += 1;
                   print("activeFAQCountPl:$activeFAQCountPL");
                 }
               }
-              if (_processLeaning[i].subcategories![j].linkCats![z].knowledge != null) {
-                if (_processLeaning[i].subcategories![j].linkCats![z].knowledge!.isNotEmpty) {
-                  print("knowledgeLink:${_processLeaning[i].subcategories![j].linkCats![z].knowledge!}");
+              if (_processLeaning[i].subcategories![j].linkCats![z].knowledge !=
+                  null) {
+                if (_processLeaning[i]
+                    .subcategories![j]
+                    .linkCats![z]
+                    .knowledge!
+                    .isNotEmpty) {
+                  print(
+                      "knowledgeLink:${_processLeaning[i].subcategories![j].linkCats![z].knowledge!}");
                   activeKnowledgePL += 1;
                   print("activeKnowledgePL:$activeKnowledgePL");
                 }
@@ -170,7 +209,11 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
             }
           }
         }
-        totalActiveLinkCountPL = activeLinkCountPL + activeSimulationCountPL + activeVideoCountPL + activeFAQCountPL + activeKnowledgePL;
+        totalActiveLinkCountPL = activeLinkCountPL +
+            activeSimulationCountPL +
+            activeVideoCountPL +
+            activeFAQCountPL +
+            activeKnowledgePL;
         print("activeLinkCountPL:${activeLinkCountPL}");
         print('activeSimulationCountPl:$activeSimulationCountPL');
         print('activeVideoCountPL:$activeVideoCountPL');
@@ -182,7 +225,8 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
     }
 
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DocumentReference processLearningReport = firestore.collection('processLearningReports').doc(userId);
+    DocumentReference processLearningReport =
+        firestore.collection('processLearningReports').doc(userId);
 
     DocumentSnapshot snapshot = await processLearningReport.get();
 
@@ -245,7 +289,8 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
       canPop: false,
       onPopInvoked: (value) {
         context.read<AuthState>().changeIndex(0);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => BottomNavigation()));
       },
       child: BackgroundWidget(
           appBar: widget.iconKey
@@ -271,7 +316,9 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
                       child: Column(
                         children: [
                           Container(
-                            height: isSplitScreen ? getFullWidgetHeight(height: 330) : getWidgetHeight(height: 330),
+                            height: isSplitScreen
+                                ? getFullWidgetHeight(height: 330)
+                                : getWidgetHeight(height: 330),
                             width: displayWidth(context),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -282,7 +329,8 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
                                       Flexible(
                                         child: Swiper(
                                           curve: Curves.linear,
-                                          indicatorLayout: PageIndicatorLayout.SLIDE,
+                                          indicatorLayout:
+                                              PageIndicatorLayout.SLIDE,
                                           itemCount: _processLeaning.length - 1,
 
                                           itemBuilder: (context, index) {
@@ -292,30 +340,49 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
                                             } else {
                                               adjustedIndex = index + 1;
                                             }
-                                            print('//////////// INDEX : $adjustedIndex');
+                                            print(
+                                                '//////////// INDEX : $adjustedIndex');
 
                                             return Transform(
-                                              transform: Matrix4.identity()..translate(-22.0, 0.0, 0.0),
+                                              transform: Matrix4.identity()
+                                                ..translate(-22.0, 0.0, 0.0),
                                               child: InkWell(
                                                 onTap: () async {
-                                                  print("adgvifjb;$adjustedIndex");
-                                                  if (_processLeaning[adjustedIndex].underconstruction == true &&
-                                                      _processLeaning[adjustedIndex].underconstruction != null) {
+                                                  print(
+                                                      "adgvifjb;$adjustedIndex");
+                                                  if (_processLeaning[
+                                                                  adjustedIndex]
+                                                              .underconstruction ==
+                                                          true &&
+                                                      _processLeaning[
+                                                                  adjustedIndex]
+                                                              .underconstruction !=
+                                                          null) {
                                                     print("dsnvikfjiv");
-                                                    Toast.show("Work in progress",
-                                                        duration: Toast.lengthShort,
+                                                    Toast.show(
+                                                        "Work in progress",
+                                                        duration:
+                                                            Toast.lengthShort,
                                                         gravity: Toast.bottom,
-                                                        backgroundColor: AppColors.white,
-                                                        textStyle: TextStyle(color: AppColors.black),
+                                                        backgroundColor:
+                                                            AppColors.white,
+                                                        textStyle: TextStyle(
+                                                            color: AppColors
+                                                                .black),
                                                         backgroundRadius: 10);
-                                                  } else if (adjustedIndex == 0) {
+                                                  } else if (adjustedIndex ==
+                                                      0) {
                                                     print("sucesss");
-                                                    print("d did : ${_processLeaning.length}");
-                                                    print("dpdid d  : ${_processLeaning}");
-                                                    print("adjusted index:${adjustedIndex}");
+                                                    print(
+                                                        "d did : ${_processLeaning.length}");
+                                                    print(
+                                                        "dpdid d  : ${_processLeaning}");
+                                                    print(
+                                                        "adjusted index:${adjustedIndex}");
                                                     print("indexdfff:$index");
 
-                                                    print('ifirejvg:${_processLeaning[adjustedIndex].subcategories![0].name}');
+                                                    print(
+                                                        'ifirejvg:${_processLeaning[adjustedIndex].subcategories![0].name}');
                                                     /*SharedPreferences prefs = await SharedPreferences.getInstance();
                                                     await prefs.setString('lastAccess', 'ProcessCatScreen');
                                                     await prefs.setString(
@@ -334,67 +401,126 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) => ProcessCatScreen(
-                                                                linkCats: _processLeaning[adjustedIndex].subcategories!.first.linkCats ?? [],
-                                                                title: _processLeaning[adjustedIndex].subcategories!.first.name ?? "",
+                                                          builder: (context) =>
+                                                              ProcessCatScreen(
+                                                                linkCats: _processLeaning[
+                                                                            adjustedIndex]
+                                                                        .subcategories!
+                                                                        .first
+                                                                        .linkCats ??
+                                                                    [],
+                                                                title: _processLeaning[
+                                                                            adjustedIndex]
+                                                                        .subcategories!
+                                                                        .first
+                                                                        .name ??
+                                                                    "",
                                                               )),
                                                     );
                                                   } else {
                                                     print("sucesss111");
-                                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                    Navigator.push(context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) {
                                                       return LearningScreen(
-                                                        title: _processLeaning[adjustedIndex].subcategories!.first.name ?? "",
-                                                        linkCats: _processLeaning[adjustedIndex].subcategories!.first.linkCats ?? [],
+                                                        title: _processLeaning[
+                                                                    adjustedIndex]
+                                                                .subcategories!
+                                                                .first
+                                                                .name ??
+                                                            "",
+                                                        linkCats: _processLeaning[
+                                                                    adjustedIndex]
+                                                                .subcategories!
+                                                                .first
+                                                                .linkCats ??
+                                                            [],
                                                       );
                                                     }));
                                                   }
                                                 },
                                                 child: Container(
                                                   padding: EdgeInsets.symmetric(
-                                                      horizontal: 20, vertical: isSplitScreen ? getFullWidgetHeight(height: 16) : getWidgetHeight(height: 16)),
+                                                      horizontal: 20,
+                                                      vertical: isSplitScreen
+                                                          ? getFullWidgetHeight(
+                                                              height: 16)
+                                                          : getWidgetHeight(
+                                                              height: 16)),
                                                   decoration: BoxDecoration(
-                                                    color: swipperList[adjustedIndex]['tileColor'],
-                                                    borderRadius: BorderRadius.circular(7),
+                                                    color: swipperList[
+                                                            adjustedIndex]
+                                                        ['tileColor'],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            7),
                                                   ),
                                                   child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: [
                                                       Align(
-                                                        alignment: Alignment.topLeft,
+                                                        alignment:
+                                                            Alignment.topLeft,
                                                         child: Text(
-                                                          swipperList[adjustedIndex]['heading'],
+                                                          swipperList[
+                                                                  adjustedIndex]
+                                                              ['heading'],
                                                           style: TextStyle(
-                                                            fontFamily: 'Roboto',
-                                                            fontWeight: FontWeight.w500,
-                                                            fontSize: kText.scale(12),
-                                                            color: adjustedIndex == 0 || adjustedIndex == 4
-                                                                ? Color(0xFF6A60FB)
-                                                                : adjustedIndex == 5
-                                                                    ? Color(0xFF26BFFF)
-                                                                    : Color(0xFFFF1A1A),
+                                                            fontFamily:
+                                                                'Roboto',
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize:
+                                                                kText.scale(12),
+                                                            color: adjustedIndex ==
+                                                                        0 ||
+                                                                    adjustedIndex ==
+                                                                        4
+                                                                ? Color(
+                                                                    0xFF6A60FB)
+                                                                : adjustedIndex ==
+                                                                        5
+                                                                    ? Color(
+                                                                        0xFF26BFFF)
+                                                                    : Color(
+                                                                        0xFFFF1A1A),
                                                           ),
                                                         ),
                                                       ),
                                                       SizedBox(
                                                         // height: displayHeight(context) * 0.224,
                                                         height: 182.04,
-                                                        width: displayWidth(context) * 0.685,
+                                                        width: displayWidth(
+                                                                context) *
+                                                            0.685,
                                                         child: Image.asset(
-                                                          swipperList[adjustedIndex]['tileImage'],
+                                                          swipperList[
+                                                                  adjustedIndex]
+                                                              ['tileImage'],
                                                         ),
                                                       ),
                                                       Align(
-                                                        alignment: Alignment.bottomLeft,
+                                                        alignment: Alignment
+                                                            .bottomLeft,
                                                         child: Text(
-                                                          _processLeaning[adjustedIndex].category!,
+                                                          _processLeaning[
+                                                                  adjustedIndex]
+                                                              .category!,
                                                           maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                           style: TextStyle(
-                                                              fontFamily: 'Roboto',
+                                                              fontFamily:
+                                                                  'Roboto',
                                                               letterSpacing: 0,
-                                                              color: Color(0xFF535353),
+                                                              color: Color(
+                                                                  0xFF535353),
                                                               fontSize: 16.5,
-                                                              fontWeight: FontWeight.w600
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600
                                                               // fontWeight:
                                                               //     FontWeight.w600,
                                                               ),
@@ -408,9 +534,13 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
                                           },
                                           pagination: SwiperPagination(
                                             margin: EdgeInsets.only(
-                                              top: isSplitScreen ? getFullWidgetHeight(height: 5) : getWidgetHeight(height: 5),
+                                              top: isSplitScreen
+                                                  ? getFullWidgetHeight(
+                                                      height: 5)
+                                                  : getWidgetHeight(height: 5),
                                             ),
-                                            builder: RectRoundedSwiperPaginationBuilder(
+                                            builder:
+                                                RectRoundedSwiperPaginationBuilder(
                                               color: Color(0xFF9D97FF),
                                               activeColor: Color(0xFF6C63FE),
                                               size: Size(15, 12),
@@ -420,7 +550,9 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
                                           controller: SwiperController(),
                                           // itemHeight: displayHeight(context) / 2.829,
 
-                                          itemHeight: isSplitScreen ? getFullWidgetHeight(height: 287) : getWidgetHeight(height: 287),
+                                          itemHeight: isSplitScreen
+                                              ? getFullWidgetHeight(height: 287)
+                                              : getWidgetHeight(height: 287),
                                           itemWidth: getWidgetWidth(width: 290),
                                           layout: SwiperLayout.STACK,
 
@@ -452,22 +584,31 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
                               children: [
                                 Expanded(
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 9)),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: getWidgetWidth(width: 9)),
                                     height: getWidgetHeight(height: 90),
                                     width: getWidgetWidth(width: 335),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Expanded(
                                           child: Text(
                                             _processLeaning[1].category!,
-                                            style: TextStyle(fontFamily: 'Roboto', letterSpacing: 0, fontSize: kText.scale(17), fontWeight: FontWeight.w600),
+                                            style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                letterSpacing: 0,
+                                                fontSize: kText.scale(17),
+                                                fontWeight: FontWeight.w600),
                                           ),
                                         ),
                                         SizedBox(
                                           child: SvgPicture.asset(
                                             AllAssets.plAccounts,
-                                            height: isSplitScreen ? getFullWidgetHeight(height: 86) : getWidgetHeight(height: 86),
+                                            height: isSplitScreen
+                                                ? getFullWidgetHeight(
+                                                    height: 86)
+                                                : getWidgetHeight(height: 86),
                                             // scale: 1,
                                           ),
                                         ),
@@ -482,45 +623,102 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
                                     itemBuilder: (context, index) {
                                       return InkWell(
                                         onTap: () async {
-                                          if (_processLeaning[1].subcategories![index].link != null) {
+                                          sessionName = _processLeaning[1]
+                                              .subcategories![index]
+                                              .name!;
+                                          if (_processLeaning[1]
+                                                  .subcategories![index]
+                                                  .link !=
+                                              null) {
                                             print("arManagementTappeddd");
-                                            String? arManagementLinks = _processLeaning[1].subcategories![index].link;
-                                            processLearningLinks.add(arManagementLinks!);
-                                            FirebaseFirestore firestore = FirebaseFirestore.instance;
-                                            String userId = await SharedPref.getSavedString('userId');
-                                            DocumentReference softSkills = firestore.collection('processLearningReports').doc(userId);
+                                            String? arManagementLinks =
+                                                _processLeaning[1]
+                                                    .subcategories![index]
+                                                    .link;
+                                            processLearningLinks
+                                                .add(arManagementLinks!);
+                                            FirebaseFirestore firestore =
+                                                FirebaseFirestore.instance;
+                                            String userId =
+                                                await SharedPref.getSavedString(
+                                                    'userId');
+                                            DocumentReference softSkills =
+                                                firestore
+                                                    .collection(
+                                                        'processLearningReports')
+                                                    .doc(userId);
 
                                             await softSkills.update({
-                                              'isLink': FieldValue.arrayUnion([_processLeaning[1].subcategories![index].link]),
+                                              'isLink': FieldValue.arrayUnion([
+                                                _processLeaning[1]
+                                                    .subcategories![index]
+                                                    .link
+                                              ]),
                                             }).then((_) {
-                                              print('Link added to Firestore: ${_processLeaning[1].subcategories![index].link}');
+                                              print(
+                                                  'Link added to Firestore: ${_processLeaning[1].subcategories![index].link}');
                                             }).catchError((e) {
-                                              print('Error updating Firestore: $e');
+                                              print(
+                                                  'Error updating Firestore: $e');
                                             });
-                                            SharedPreferences prefs = await SharedPreferences.getInstance();
-                                            await prefs.setStringList('InAppWebViewPage', [_processLeaning[1].subcategories![index].link!]);
-                                            await prefs.setString('lastAccess', 'InAppWebViewPage');
-                                            await prefs.setString("lastYes", processLearning);
-                                            startTimerSubCategory(processLearning, _processLeaning[1].subcategories![index].name ?? "");
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            await prefs.setStringList(
+                                                'InAppWebViewPage', [
+                                              _processLeaning[1]
+                                                  .subcategories![index]
+                                                  .link!
+                                            ]);
+                                            await prefs.setString('lastAccess',
+                                                'InAppWebViewPage');
+                                            await prefs.setString(
+                                                "lastYes", processLearning);
+                                            startTimerSubCategory(
+                                                processLearning,
+                                                _processLeaning[1]
+                                                        .subcategories![index]
+                                                        .name ??
+                                                    "");
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => InAppWebViewPage(
+                                                builder: (context) =>
+                                                    InAppWebViewPage(
                                                   // title: _processLeaning[1].subcategories![index].name ?? "",
-                                                  url: _processLeaning[1].subcategories![index].link!,
+                                                  url: _processLeaning[1]
+                                                      .subcategories![index]
+                                                      .link!,
                                                 ),
                                               ),
                                             );
-                                          } else if (_processLeaning[1].subcategories![index].linkCats != null &&
-                                              _processLeaning[1].subcategories![index].linkCats!.isNotEmpty) {
+                                          } else if (_processLeaning[1]
+                                                      .subcategories![index]
+                                                      .linkCats !=
+                                                  null &&
+                                              _processLeaning[1]
+                                                  .subcategories![index]
+                                                  .linkCats!
+                                                  .isNotEmpty) {
                                             print('denial managementtt>>>>>');
-                                            print("checkk:${_processLeaning[1].subcategories![index].linkCats ?? []}");
-                                            print("check1 : ${_processLeaning[1].subcategories![index].name ?? ""}");
+                                            print(
+                                                "checkk:${_processLeaning[1].subcategories![index].linkCats ?? []}");
+                                            print(
+                                                "check1 : ${_processLeaning[1].subcategories![index].name ?? ""}");
                                             print("indexCheck;$index");
 
-                                            SharedPreferences prefs = await SharedPreferences.getInstance();
-                                            await prefs.setString('lastAccess', 'ProcessCatScreen');
-                                            await prefs.setString('ProcessCatScreen', _processLeaning[1].subcategories![index].name ?? "" ?? "");
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            await prefs.setString('lastAccess',
+                                                'ProcessCatScreen');
+                                            await prefs.setString(
+                                                'ProcessCatScreen',
+                                                _processLeaning[1]
+                                                        .subcategories![index]
+                                                        .name ??
+                                                    "" ??
+                                                    "");
                                             // final box = await Hive.openBox<ProcessLearningLinkHive>('newProcessLearningBox');
                                             // // processLearningBox = await Hive.box<ProcessLearningLinkHive>('processLearningLinkBox');
                                             // ProcessLearningLinkHive prHive = ProcessLearningLinkHive(item: _processLeaning[1].subcategories![index].linkCats);
@@ -529,9 +727,16 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => ProcessCatScreen(
-                                                  linkCats: _processLeaning[1].subcategories![index].linkCats ?? [],
-                                                  title: _processLeaning[1].subcategories![index].name ?? "",
+                                                builder: (context) =>
+                                                    ProcessCatScreen(
+                                                  linkCats: _processLeaning[1]
+                                                          .subcategories![index]
+                                                          .linkCats ??
+                                                      [],
+                                                  title: _processLeaning[1]
+                                                          .subcategories![index]
+                                                          .name ??
+                                                      "",
                                                 ),
                                               ),
                                             );
@@ -540,13 +745,20 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
                                         child: Container(
                                           // color: Colors.red,
                                           // height: displayHeight(context) / 15.61,
-                                          padding: EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 18)),
-                                          height: isSplitScreen ? getFullWidgetHeight(height: 40) : getWidgetHeight(height: 40),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal:
+                                                  getWidgetWidth(width: 18)),
+                                          height: isSplitScreen
+                                              ? getFullWidgetHeight(height: 40)
+                                              : getWidgetHeight(height: 40),
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                _processLeaning[1].subcategories![index].name!,
+                                                _processLeaning[1]
+                                                    .subcategories![index]
+                                                    .name!,
                                                 style: TextStyle(
                                                   fontFamily: 'Roboto',
                                                   letterSpacing: 0,
@@ -558,25 +770,33 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen> wit
                                               Icon(
                                                 Icons.chevron_right_rounded,
                                                 color: Color(0xFFD3D3D3),
-                                                size: displayWidth(context) / 11,
+                                                size:
+                                                    displayWidth(context) / 11,
                                               ),
                                             ],
                                           ),
                                         ),
                                       );
                                     },
-                                    separatorBuilder: (context, index) => Divider(
+                                    separatorBuilder: (context, index) =>
+                                        Divider(
                                           color: Color(0xFFE4E4E4),
                                         ),
-                                    itemCount: _processLeaning[1].subcategories!.length),
+                                    itemCount: _processLeaning[1]
+                                        .subcategories!
+                                        .length),
                                 SizedBox(
-                                  height: isSplitScreen ? getFullWidgetHeight(height: 5) : getWidgetHeight(height: 5),
+                                  height: isSplitScreen
+                                      ? getFullWidgetHeight(height: 5)
+                                      : getWidgetHeight(height: 5),
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(
-                            height: isSplitScreen ? getFullWidgetHeight(height: 20) : getWidgetHeight(height: 20),
+                            height: isSplitScreen
+                                ? getFullWidgetHeight(height: 20)
+                                : getWidgetHeight(height: 20),
                           ),
                         ],
                       ),

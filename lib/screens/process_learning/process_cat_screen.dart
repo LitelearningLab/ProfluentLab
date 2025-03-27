@@ -4,10 +4,8 @@ import 'package:get/get.dart';
 import 'package:litelearninglab/API/api.dart';
 import 'package:litelearninglab/common_widgets/spacings.dart';
 import 'package:litelearninglab/constants/app_colors.dart';
-import 'package:litelearninglab/main.dart';
 import 'package:litelearninglab/screens/webview/webview_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
-import 'package:litelearninglab/utils/audio_player_manager.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
 import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/shared_pref.dart';
@@ -24,7 +22,8 @@ import '../webview/video_player_screen.dart';
 import '../word_screen/widgets/drop_down_word_item.dart';
 
 class ProcessCatScreen extends StatefulWidget {
-  ProcessCatScreen({Key? key, required this.linkCats, required this.title}) : super(key: key);
+  ProcessCatScreen({Key? key, required this.linkCats, required this.title})
+      : super(key: key);
   final List<ProcessLearningLink> linkCats;
   final String title;
 
@@ -45,7 +44,10 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
   void initState() {
     startTimerSubCategory(processLearning, widget.title);
     // isPlaying = List.generate(widget.linkCats.length, (index) => false);
-    controller = AutoScrollController(viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom), axis: Axis.vertical);
+    controller = AutoScrollController(
+        viewportBoundaryGetter: () =>
+            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+        axis: Axis.vertical);
     super.initState();
   }
 
@@ -74,7 +76,9 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
-                      height: isSplitScreen ? getFullWidgetHeight(height: 60) : getWidgetHeight(height: 60),
+                      height: isSplitScreen
+                          ? getFullWidgetHeight(height: 60)
+                          : getWidgetHeight(height: 60),
                       width: kWidth,
                       decoration: BoxDecoration(
                         color: Color(0xFF34445F),
@@ -85,39 +89,78 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                           IconButton(
                               icon: ImageIcon(
                                 AssetImage(AllAssets.bottomHome),
-                                color: context.read<AuthState>().currentIndex == 0 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170),
+                                color:
+                                    context.read<AuthState>().currentIndex == 0
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170),
                               ),
                               onPressed: () {
                                 context.read<AuthState>().changeIndex(0);
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BottomNavigation()));
                               }),
                           IconButton(
                               icon: ImageIcon(AssetImage(AllAssets.bottomPL),
-                                  color: context.read<AuthState>().currentIndex == 1 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                              1
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170)),
                               onPressed: () {
                                 context.read<AuthState>().changeIndex(1);
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BottomNavigation()));
                               }),
                           IconButton(
                               icon: ImageIcon(AssetImage(AllAssets.bottomIS),
-                                  color: context.read<AuthState>().currentIndex == 2 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                              2
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170)),
                               onPressed: () {
                                 context.read<AuthState>().changeIndex(2);
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BottomNavigation()));
                               }),
                           IconButton(
                               icon: ImageIcon(AssetImage(AllAssets.bottomPE),
-                                  color: context.read<AuthState>().currentIndex == 3 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                              3
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170)),
                               onPressed: () {
                                 context.read<AuthState>().changeIndex(3);
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BottomNavigation()));
                               }),
                           IconButton(
                               icon: ImageIcon(AssetImage(AllAssets.bottomPT),
-                                  color: context.read<AuthState>().currentIndex == 4 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                              4
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170)),
                               onPressed: () {
                                 context.read<AuthState>().changeIndex(4);
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BottomNavigation()));
                               }),
                         ],
                       ),
@@ -130,14 +173,19 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                   Expanded(
                     child: ListView.builder(
                         padding: EdgeInsets.only(
-                            top: isSplitScreen ? getFullWidgetHeight(height: 10) : getWidgetHeight(height: 10),
-                            bottom: isSplitScreen ? getFullWidgetHeight(height: 10) : getWidgetHeight(height: 10)),
+                            top: isSplitScreen
+                                ? getFullWidgetHeight(height: 10)
+                                : getWidgetHeight(height: 10),
+                            bottom: isSplitScreen
+                                ? getFullWidgetHeight(height: 10)
+                                : getWidgetHeight(height: 10)),
                         shrinkWrap: true,
                         controller: controller,
                         itemCount: widget.linkCats.length,
                         // scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
-                          isPlaying = List.generate(widget.linkCats.length, (index) => false.obs);
+                          isPlaying = List.generate(
+                              widget.linkCats.length, (index) => false.obs);
                           print(widget.linkCats[index].toMap());
                           return AutoScrollTag(
                             key: ValueKey(widget.linkCats[index].name),
@@ -160,7 +208,8 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                 // expKey: expansionTile,
                                 onExpansionChanged: (val) {
                                   if (val) {
-                                    _selectedWordOnClick = widget.linkCats[index].name;
+                                    _selectedWordOnClick =
+                                        widget.linkCats[index].name;
                                     setState(() {});
                                   }
                                 },
@@ -172,7 +221,10 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                 //   //     _selectedWordOnClick != null &&
                                 //   //         _selectedWordOnClick == _words[index].text);
                                 // },
-                                initiallyExpanded: _selectedWordOnClick != null && _selectedWordOnClick == widget.linkCats[index].name,
+                                initiallyExpanded:
+                                    _selectedWordOnClick != null &&
+                                        _selectedWordOnClick ==
+                                            widget.linkCats[index].name,
                                 isWord: false,
                                 isRefresh: (val) {
                                   // if (val) _getWords(isRefresh: true);
@@ -190,32 +242,70 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                     child: Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
                                             InkWell(
                                               onTap: () async {
-                                                if (widget.linkCats[index].video != null && widget.linkCats[index].video!.isNotEmpty) {
-                                                  print('videoLinkkkkcheckkk:${widget.linkCats[index].video}');
-                                                  String? links = widget.linkCats[index].video;
-                                                  processLearningLinks.add(links!);
-                                                  FirebaseFirestore firestore = FirebaseFirestore.instance;
-                                                  String userId = await SharedPref.getSavedString('userId');
-                                                  DocumentReference softSkills = firestore.collection('processLearningReports').doc(userId);
+                                                if (widget.linkCats[index]
+                                                            .video !=
+                                                        null &&
+                                                    widget.linkCats[index]
+                                                        .video!.isNotEmpty) {
+                                                  sessionName = widget
+                                                      .linkCats[index].name!;
+                                                  startTimerMainCategory(
+                                                      "name");
+                                                  print(
+                                                      'videoLinkkkkcheckkk:${widget.linkCats[index].video}');
+                                                  String? links = widget
+                                                      .linkCats[index].video;
+                                                  processLearningLinks
+                                                      .add(links!);
+                                                  FirebaseFirestore firestore =
+                                                      FirebaseFirestore
+                                                          .instance;
+                                                  String userId =
+                                                      await SharedPref
+                                                          .getSavedString(
+                                                              'userId');
+                                                  DocumentReference softSkills =
+                                                      firestore
+                                                          .collection(
+                                                              'processLearningReports')
+                                                          .doc(userId);
 
                                                   await softSkills.update({
-                                                    'isLink': FieldValue.arrayUnion([widget.linkCats[index].video]),
+                                                    'isLink':
+                                                        FieldValue.arrayUnion([
+                                                      widget
+                                                          .linkCats[index].video
+                                                    ]),
                                                   }).then((_) {
-                                                    print('Link added to Firestore: ${widget.linkCats[index].video}');
+                                                    print(
+                                                        'Link added to Firestore: ${widget.linkCats[index].video}');
                                                   }).catchError((e) {
-                                                    print('Error updating Firestore: $e');
+                                                    print(
+                                                        'Error updating Firestore: $e');
                                                   });
                                                   Navigator.push(
-                                                      context, MaterialPageRoute(builder: (context) => VideoPlayerScreen(url: widget.linkCats[index].video!)));
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              VideoPlayerScreen(
+                                                                  url: widget
+                                                                      .linkCats[
+                                                                          index]
+                                                                      .video!)));
                                                 }
                                               },
                                               child: Icon(
                                                 Icons.play_circle_outline,
-                                                color: widget.linkCats[index].video != null && widget.linkCats[index].video!.isNotEmpty
+                                                color: widget.linkCats[index]
+                                                                .video !=
+                                                            null &&
+                                                        widget.linkCats[index]
+                                                            .video!.isNotEmpty
                                                     ? Colors.white
                                                     : Colors.grey,
                                                 size: 30,
@@ -224,38 +314,95 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                             SPW(15),
                                             InkWell(
                                                 onTap: () async {
-                                                  if (widget.linkCats[index].simulation != null && widget.linkCats[index].simulation!.isNotEmpty) {
-                                                    String? links2 = widget.linkCats[index].simulation;
-                                                    processLearningLinks.add(links2!);
-                                                    FirebaseFirestore firestore = FirebaseFirestore.instance;
-                                                    String userId = await SharedPref.getSavedString('userId');
-                                                    DocumentReference softSkills = firestore.collection('processLearningReports').doc(userId);
+                                                  sessionName = widget.title;
+                                                  if (widget.linkCats[index]
+                                                              .simulation !=
+                                                          null &&
+                                                      widget
+                                                          .linkCats[index]
+                                                          .simulation!
+                                                          .isNotEmpty) {
+                                                    String? links2 = widget
+                                                        .linkCats[index]
+                                                        .simulation;
+                                                    processLearningLinks
+                                                        .add(links2!);
+                                                    FirebaseFirestore
+                                                        firestore =
+                                                        FirebaseFirestore
+                                                            .instance;
+                                                    String userId =
+                                                        await SharedPref
+                                                            .getSavedString(
+                                                                'userId');
+                                                    DocumentReference
+                                                        softSkills = firestore
+                                                            .collection(
+                                                                'processLearningReports')
+                                                            .doc(userId);
 
                                                     await softSkills.update({
-                                                      'isLink': FieldValue.arrayUnion([widget.linkCats[index].simulation]),
+                                                      'isLink': FieldValue
+                                                          .arrayUnion([
+                                                        widget.linkCats[index]
+                                                            .simulation
+                                                      ]),
                                                     }).then((_) {
-                                                      print('Link added to Firestore: ${widget.linkCats[index].simulation}');
+                                                      print(
+                                                          'Link added to Firestore: ${widget.linkCats[index].simulation}');
                                                     }).catchError((e) {
-                                                      print('Error updating Firestore: $e');
+                                                      print(
+                                                          'Error updating Firestore: $e');
                                                     });
-                                                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                    await prefs.setStringList('InAppWebViewPage', [widget.linkCats[index].simulation!]);
-                                                    await prefs.setString('lastAccess', 'InAppWebViewPage');
+                                                    SharedPreferences prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    await prefs.setStringList(
+                                                        'InAppWebViewPage', [
+                                                      widget.linkCats[index]
+                                                          .simulation!
+                                                    ]);
+                                                    await prefs.setString(
+                                                        'lastAccess',
+                                                        'InAppWebViewPage');
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                            builder: (context) => InAppWebViewPage(
-                                                                  url: widget.linkCats[index].simulation!,
+                                                            builder: (context) =>
+                                                                InAppWebViewPage(
+                                                                  url: widget
+                                                                      .linkCats[
+                                                                          index]
+                                                                      .simulation!,
                                                                 )));
-                                                  } else if (widget.linkCats[index].eLearning != null && widget.linkCats[index].eLearning!.isNotEmpty) {
-                                                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                    await prefs.setStringList('InAppWebViewPage', [widget.linkCats[index].eLearning!]);
-                                                    await prefs.setString('lastAccess', 'InAppWebViewPage');
+                                                  } else if (widget
+                                                              .linkCats[index]
+                                                              .eLearning !=
+                                                          null &&
+                                                      widget
+                                                          .linkCats[index]
+                                                          .eLearning!
+                                                          .isNotEmpty) {
+                                                    SharedPreferences prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    await prefs.setStringList(
+                                                        'InAppWebViewPage', [
+                                                      widget.linkCats[index]
+                                                          .eLearning!
+                                                    ]);
+                                                    await prefs.setString(
+                                                        'lastAccess',
+                                                        'InAppWebViewPage');
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                            builder: (context) => InAppWebViewPage(
-                                                                  url: widget.linkCats[index].eLearning!,
+                                                            builder: (context) =>
+                                                                InAppWebViewPage(
+                                                                  url: widget
+                                                                      .linkCats[
+                                                                          index]
+                                                                      .eLearning!,
                                                                 )));
                                                   }
                                                 },
@@ -264,10 +411,31 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                                   /*widget.linkCats[index].eLearning != null
                                                       ? AllAssets.interaction
                                                       : AllAssets.interb,*/
-                                                  color: ((widget.linkCats[index].eLearning != null && widget.linkCats[index].eLearning!.isNotEmpty) ||
-                                                          (widget.linkCats[index].eLearning == null &&
-                                                              widget.linkCats[index].simulation != null &&
-                                                              widget.linkCats[index].simulation!.isNotEmpty))
+                                                  color: ((widget
+                                                                      .linkCats[
+                                                                          index]
+                                                                      .eLearning !=
+                                                                  null &&
+                                                              widget
+                                                                  .linkCats[
+                                                                      index]
+                                                                  .eLearning!
+                                                                  .isNotEmpty) ||
+                                                          (widget
+                                                                      .linkCats[
+                                                                          index]
+                                                                      .eLearning ==
+                                                                  null &&
+                                                              widget
+                                                                      .linkCats[
+                                                                          index]
+                                                                      .simulation !=
+                                                                  null &&
+                                                              widget
+                                                                  .linkCats[
+                                                                      index]
+                                                                  .simulation!
+                                                                  .isNotEmpty))
                                                       ? Colors.white
                                                       : Colors.grey,
                                                   width: 25,
@@ -276,64 +444,143 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                             SPW(15),
                                             InkWell(
                                                 onTap: () async {
-                                                  if (widget.linkCats[index].faq != null && widget.linkCats[index].faq!.isNotEmpty) {
-                                                    print("LinkCheckkk:${widget.linkCats[index].faq}");
-                                                    String? links3 = widget.linkCats[index].faq;
-                                                    processLearningLinks.add(links3!);
-                                                    FirebaseFirestore firestore = FirebaseFirestore.instance;
-                                                    String userId = await SharedPref.getSavedString('userId');
-                                                    DocumentReference softSkills = firestore.collection('processLearningReports').doc(userId);
+                                                  sessionName = widget
+                                                      .linkCats[index].name!;
+                                                  if (widget.linkCats[index]
+                                                              .faq !=
+                                                          null &&
+                                                      widget.linkCats[index]
+                                                          .faq!.isNotEmpty) {
+                                                    print(
+                                                        "LinkCheckkk:${widget.linkCats[index].faq}");
+                                                    String? links3 = widget
+                                                        .linkCats[index].faq;
+                                                    processLearningLinks
+                                                        .add(links3!);
+                                                    FirebaseFirestore
+                                                        firestore =
+                                                        FirebaseFirestore
+                                                            .instance;
+                                                    String userId =
+                                                        await SharedPref
+                                                            .getSavedString(
+                                                                'userId');
+                                                    DocumentReference
+                                                        softSkills = firestore
+                                                            .collection(
+                                                                'processLearningReports')
+                                                            .doc(userId);
 
                                                     await softSkills.update({
-                                                      'isLink': FieldValue.arrayUnion([widget.linkCats[index].faq]),
+                                                      'isLink': FieldValue
+                                                          .arrayUnion([
+                                                        widget
+                                                            .linkCats[index].faq
+                                                      ]),
                                                     }).then((_) {
-                                                      print('Link added to Firestore: ${widget.linkCats[index].faq}');
+                                                      print(
+                                                          'Link added to Firestore: ${widget.linkCats[index].faq}');
                                                     }).catchError((e) {
-                                                      print('Error updating Firestore: $e');
+                                                      print(
+                                                          'Error updating Firestore: $e');
                                                     });
-                                                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                    await prefs.setStringList('InAppWebViewPage', [widget.linkCats[index].faq!]);
-                                                    await prefs.setString('lastAccess', 'InAppWebViewPage');
+                                                    SharedPreferences prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    await prefs.setStringList(
+                                                        'InAppWebViewPage', [
+                                                      widget
+                                                          .linkCats[index].faq!
+                                                    ]);
+                                                    await prefs.setString(
+                                                        'lastAccess',
+                                                        'InAppWebViewPage');
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                            builder: (context) => InAppWebViewPage(
-                                                                  url: widget.linkCats[index].faq!,
+                                                            builder: (context) =>
+                                                                InAppWebViewPage(
+                                                                  url: widget
+                                                                      .linkCats[
+                                                                          index]
+                                                                      .faq!,
                                                                 )));
                                                   }
                                                 },
                                                 child: Image.asset(
                                                   AllAssets.faq,
-                                                  color:
-                                                      widget.linkCats[index].faq != null && widget.linkCats[index].faq!.isNotEmpty ? Colors.white : Colors.grey,
+                                                  color: widget.linkCats[index]
+                                                                  .faq !=
+                                                              null &&
+                                                          widget.linkCats[index]
+                                                              .faq!.isNotEmpty
+                                                      ? Colors.white
+                                                      : Colors.grey,
                                                   width: 25,
                                                   height: 25,
                                                 )),
                                             SPW(15),
                                             InkWell(
                                               onTap: () async {
-                                                if (widget.linkCats[index].knowledge != null && widget.linkCats[index].knowledge!.isNotEmpty) {
-                                                  String? links4 = widget.linkCats[index].knowledge;
-                                                  processLearningLinks.add(links4!);
-                                                  FirebaseFirestore firestore = FirebaseFirestore.instance;
-                                                  String userId = await SharedPref.getSavedString('userId');
-                                                  DocumentReference softSkills = firestore.collection('processLearningReports').doc(userId);
+                                                sessionName = widget
+                                                    .linkCats[index].name!;
+                                                if (widget.linkCats[index]
+                                                            .knowledge !=
+                                                        null &&
+                                                    widget
+                                                        .linkCats[index]
+                                                        .knowledge!
+                                                        .isNotEmpty) {
+                                                  String? links4 = widget
+                                                      .linkCats[index]
+                                                      .knowledge;
+                                                  processLearningLinks
+                                                      .add(links4!);
+                                                  FirebaseFirestore firestore =
+                                                      FirebaseFirestore
+                                                          .instance;
+                                                  String userId =
+                                                      await SharedPref
+                                                          .getSavedString(
+                                                              'userId');
+                                                  DocumentReference softSkills =
+                                                      firestore
+                                                          .collection(
+                                                              'processLearningReports')
+                                                          .doc(userId);
 
                                                   await softSkills.update({
-                                                    'isLink': FieldValue.arrayUnion([widget.linkCats[index].knowledge]),
+                                                    'isLink':
+                                                        FieldValue.arrayUnion([
+                                                      widget.linkCats[index]
+                                                          .knowledge
+                                                    ]),
                                                   }).then((_) {
-                                                    print('Link added to Firestore: ${widget.linkCats[index].knowledge}');
+                                                    print(
+                                                        'Link added to Firestore: ${widget.linkCats[index].knowledge}');
                                                   }).catchError((e) {
-                                                    print('Error updating Firestore: $e');
+                                                    print(
+                                                        'Error updating Firestore: $e');
                                                   });
-                                                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                  await prefs.setStringList('InAppWebViewPage', [widget.linkCats[index].faq!]);
-                                                  await prefs.setString('lastAccess', 'InAppWebViewPage');
+                                                  SharedPreferences prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  await prefs.setStringList(
+                                                      'InAppWebViewPage', [
+                                                    widget.linkCats[index].faq!
+                                                  ]);
+                                                  await prefs.setString(
+                                                      'lastAccess',
+                                                      'InAppWebViewPage');
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) => InAppWebViewPage(
-                                                                url: widget.linkCats[index].knowledge!,
+                                                          builder: (context) =>
+                                                              InAppWebViewPage(
+                                                                url: widget
+                                                                    .linkCats[
+                                                                        index]
+                                                                    .knowledge!,
                                                               )));
                                                 }
                                               },
@@ -341,7 +588,13 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                                 AllAssets.approval,
                                                 width: 25,
                                                 height: 25,
-                                                color: widget.linkCats[index].knowledge != null && widget.linkCats[index].knowledge!.isNotEmpty
+                                                color: widget.linkCats[index]
+                                                                .knowledge !=
+                                                            null &&
+                                                        widget
+                                                            .linkCats[index]
+                                                            .knowledge!
+                                                            .isNotEmpty
                                                     ? Colors.white
                                                     : Colors.grey,
                                               ),
@@ -403,7 +656,9 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                         }),
                   ),
                   Container(
-                    height: isSplitScreen ? getFullWidgetHeight(height: 55) : getWidgetHeight(height: 55),
+                    height: isSplitScreen
+                        ? getFullWidgetHeight(height: 55)
+                        : getWidgetHeight(height: 55),
                     width: kWidth,
                     decoration: BoxDecoration(
                       color: Color(0xFF34445F),
@@ -414,39 +669,73 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                         IconButton(
                             icon: ImageIcon(
                               AssetImage(AllAssets.bottomHome),
-                              color: context.read<AuthState>().currentIndex == 0 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170),
+                              color: context.read<AuthState>().currentIndex == 0
+                                  ? Color(0xFFAAAAAA)
+                                  : Color.fromARGB(132, 170, 170, 170),
                             ),
                             onPressed: () {
                               context.read<AuthState>().changeIndex(0);
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavigation()));
                             }),
                         IconButton(
                             icon: ImageIcon(AssetImage(AllAssets.bottomPL),
-                                color: context.read<AuthState>().currentIndex == 1 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                color:
+                                    context.read<AuthState>().currentIndex == 1
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
                             onPressed: () {
                               context.read<AuthState>().changeIndex(1);
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavigation()));
                             }),
                         IconButton(
                             icon: ImageIcon(AssetImage(AllAssets.bottomIS),
-                                color: context.read<AuthState>().currentIndex == 2 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                color:
+                                    context.read<AuthState>().currentIndex == 2
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
                             onPressed: () {
                               context.read<AuthState>().changeIndex(2);
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavigation()));
                             }),
                         IconButton(
                             icon: ImageIcon(AssetImage(AllAssets.bottomPE),
-                                color: context.read<AuthState>().currentIndex == 3 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                color:
+                                    context.read<AuthState>().currentIndex == 3
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
                             onPressed: () {
                               context.read<AuthState>().changeIndex(3);
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavigation()));
                             }),
                         IconButton(
                             icon: ImageIcon(AssetImage(AllAssets.bottomPT),
-                                color: context.read<AuthState>().currentIndex == 4 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                color:
+                                    context.read<AuthState>().currentIndex == 4
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
                             onPressed: () {
                               context.read<AuthState>().changeIndex(4);
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavigation()));
                             }),
                       ],
                     ),

@@ -1,21 +1,13 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:litelearninglab/common_widgets/spacings.dart';
 import 'package:litelearninglab/constants/all_assets.dart';
 import 'package:litelearninglab/constants/app_colors.dart';
-import 'package:litelearninglab/constants/keys.dart';
-import 'package:litelearninglab/main.dart';
 import 'package:litelearninglab/models/SoftSkills.dart';
 import 'package:litelearninglab/states/auth_state.dart';
-import 'package:litelearninglab/utils/audio_player_manager.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
-import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -49,8 +41,11 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
   @override
   void initState() {
     super.initState();
-    startTimerMainCategory("Soft Skills");
-    controller = AutoScrollController(viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom), axis: Axis.vertical);
+    // startTimerMainCategory("Soft Skills");
+    controller = AutoScrollController(
+        viewportBoundaryGetter: () =>
+            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+        axis: Axis.vertical);
 
     _getWords();
   }
@@ -87,7 +82,8 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
     }
 
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DocumentReference softSkills = firestore.collection('softSkillReports').doc(userId);
+    DocumentReference softSkills =
+        firestore.collection('softSkillReports').doc(userId);
 
     DocumentSnapshot snapshot = await softSkills.get();
 
@@ -134,7 +130,9 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
-                        height: isSplitScreen ? getFullWidgetHeight(height: 60) : getWidgetHeight(height: 60),
+                        height: isSplitScreen
+                            ? getFullWidgetHeight(height: 60)
+                            : getWidgetHeight(height: 60),
                         width: kWidth,
                         decoration: BoxDecoration(
                           color: Color(0xFF34445F),
@@ -145,39 +143,83 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
                             IconButton(
                                 icon: ImageIcon(
                                   AssetImage(AllAssets.bottomHome),
-                                  color: context.read<AuthState>().currentIndex == 0 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                              0
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170),
                                 ),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(0);
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
                                 }),
                             IconButton(
                                 icon: ImageIcon(AssetImage(AllAssets.bottomPL),
-                                    color: context.read<AuthState>().currentIndex == 1 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                    color: context
+                                                .read<AuthState>()
+                                                .currentIndex ==
+                                            1
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(1);
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
                                 }),
                             IconButton(
                                 icon: ImageIcon(AssetImage(AllAssets.bottomIS),
-                                    color: context.read<AuthState>().currentIndex == 2 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                    color: context
+                                                .read<AuthState>()
+                                                .currentIndex ==
+                                            2
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(2);
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
                                 }),
                             IconButton(
                                 icon: ImageIcon(AssetImage(AllAssets.bottomPE),
-                                    color: context.read<AuthState>().currentIndex == 3 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                    color: context
+                                                .read<AuthState>()
+                                                .currentIndex ==
+                                            3
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(3);
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
                                 }),
                             IconButton(
                                 icon: ImageIcon(AssetImage(AllAssets.bottomPT),
-                                    color: context.read<AuthState>().currentIndex == 4 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                    color: context
+                                                .read<AuthState>()
+                                                .currentIndex ==
+                                            4
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(4);
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
                                 }),
                           ],
                         ),
@@ -189,14 +231,18 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
                   children: [
                     Expanded(
                       child: ListView.builder(
-                          padding: EdgeInsets.only(top: isSplitScreen ? getFullWidgetHeight(height: 13) : getWidgetHeight(height: 13)),
+                          padding: EdgeInsets.only(
+                              top: isSplitScreen
+                                  ? getFullWidgetHeight(height: 13)
+                                  : getWidgetHeight(height: 13)),
                           shrinkWrap: true,
                           controller: controller,
                           itemCount: _categories.length,
                           // scrollDirection: Axis.horizontal,
                           itemBuilder: (BuildContext context, int index) {
                             // print(_categories[index].toMap());
-                            isPlaying = List.generate(_categories.length, (index) => false.obs);
+                            isPlaying = List.generate(
+                                _categories.length, (index) => false.obs);
                             return Column(
                               children: [
                                 AutoScrollTag(
@@ -207,51 +253,87 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
                                     splashColor: Colors.transparent,
                                     onTap: () async {
                                       if (_categories[index].link != null) {
-                                        if (_categories[index].link!.isEmpty || _categories[index].link == null) {
-                                          print('-----------------Invalid Link----------------');
+                                        if (_categories[index].link!.isEmpty ||
+                                            _categories[index].link == null) {
+                                          print(
+                                              '-----------------Invalid Link----------------');
 
                                           Toast.show("Work in progress",
                                               duration: Toast.lengthShort,
                                               gravity: Toast.bottom,
                                               backgroundColor: AppColors.white,
-                                              textStyle: TextStyle(color: AppColors.black),
+                                              textStyle: TextStyle(
+                                                  color: AppColors.black),
                                               backgroundRadius: 10);
                                         } else {
-                                          print('-------------------- ${_categories[index].link!}');
-                                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                                          await prefs.setStringList('InAppWebViewPage',
-                                              [_categories[index].link!, _categories[index].name == 'Meeting Etiquette' ? "false" : "true", "true"]);
-                                          await prefs.setString('lastAccess', 'InAppWebViewPage');
-                                          if (_categories[index].link!.isNotEmpty) {
+                                          print(
+                                              '-------------------- ${_categories[index].link!}');
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          await prefs.setStringList(
+                                              'InAppWebViewPage', [
+                                            _categories[index].link!,
+                                            _categories[index].name ==
+                                                    'Meeting Etiquette'
+                                                ? "false"
+                                                : "true",
+                                            "true"
+                                          ]);
+                                          await prefs.setString(
+                                              'lastAccess', 'InAppWebViewPage');
+                                          if (_categories[index]
+                                              .link!
+                                              .isNotEmpty) {
                                             print("sjfdif");
-                                            String? links = _categories[index].link;
+                                            String? links =
+                                                _categories[index].link;
                                             softSkillLinks.add(links!);
-                                            print("categoriesLink: ${_categories[index].link}");
+                                            print(
+                                                "categoriesLink: ${_categories[index].link}");
 
-                                            FirebaseFirestore firestore = FirebaseFirestore.instance;
-                                            String userId = await SharedPref.getSavedString('userId');
-                                            DocumentReference softSkills = firestore.collection('softSkillReports').doc(userId);
+                                            FirebaseFirestore firestore =
+                                                FirebaseFirestore.instance;
+                                            String userId =
+                                                await SharedPref.getSavedString(
+                                                    'userId');
+                                            DocumentReference softSkills =
+                                                firestore
+                                                    .collection(
+                                                        'softSkillReports')
+                                                    .doc(userId);
 
                                             await softSkills.update({
-                                              'isLink': FieldValue.arrayUnion([_categories[index].link!]),
+                                              'isLink': FieldValue.arrayUnion(
+                                                  [_categories[index].link!]),
                                             }).then((_) {
-                                              print('Link added to Firestore: ${_categories[index].link!}');
+                                              print(
+                                                  'Link added to Firestore: ${_categories[index].link!}');
                                             }).catchError((e) {
-                                              print('Error updating Firestore: $e');
+                                              print(
+                                                  'Error updating Firestore: $e');
                                             });
                                           }
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => InAppWebViewPage(
-                                                        isLandscape: _categories[index].name == 'Meeting Etiquette' ? false : true,
+                                                  builder: (context) =>
+                                                      InAppWebViewPage(
+                                                        isLandscape: _categories[
+                                                                        index]
+                                                                    .name ==
+                                                                'Meeting Etiquette'
+                                                            ? false
+                                                            : true,
                                                         isMeetingEtiquite: true,
-                                                        url: _categories[index].link!,
+                                                        url: _categories[index]
+                                                            .link!,
                                                       )));
                                         }
                                       } else
                                         () {
-                                          _selectedWordOnClick = _categories[index].name;
+                                          _selectedWordOnClick =
+                                              _categories[index].name;
                                           setState(() {});
                                         };
                                     },
@@ -260,8 +342,12 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
                                       padding: EdgeInsets.only(
                                           left: getWidgetWidth(width: 20),
                                           right: getWidgetWidth(width: 20),
-                                          top: isSplitScreen ? getFullWidgetHeight(height: 5) : getWidgetHeight(height: 5),
-                                          bottom: isSplitScreen ? getFullWidgetHeight(height: 5) : getWidgetHeight(height: 5)),
+                                          top: isSplitScreen
+                                              ? getFullWidgetHeight(height: 5)
+                                              : getWidgetHeight(height: 5),
+                                          bottom: isSplitScreen
+                                              ? getFullWidgetHeight(height: 5)
+                                              : getWidgetHeight(height: 5)),
                                       // onTap: onTap,
                                       child: Row(
                                         children: [
@@ -269,15 +355,26 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
                                             child: Row(
                                               children: [
                                                 CircleAvatar(
-                                                  backgroundColor: skillController.softSkillData[index]['color'],
+                                                  backgroundColor:
+                                                      skillController
+                                                              .softSkillData[
+                                                          index]['color'],
                                                   // colorList[index],
                                                   child: Padding(
                                                     padding: EdgeInsets.symmetric(
-                                                        horizontal: getWidgetWidth(width: 8),
-                                                        vertical: isSplitScreen ? getFullWidgetHeight(height: 8) : getWidgetHeight(height: 8)),
+                                                        horizontal:
+                                                            getWidgetWidth(
+                                                                width: 8),
+                                                        vertical: isSplitScreen
+                                                            ? getFullWidgetHeight(
+                                                                height: 8)
+                                                            : getWidgetHeight(
+                                                                height: 8)),
                                                     child: ImageIcon(
                                                       AssetImage(
-                                                        skillController.softSkillData[index]['icon'],
+                                                        skillController
+                                                                .softSkillData[
+                                                            index]['icon'],
                                                       ),
                                                     ),
                                                     // Image.asset(
@@ -288,15 +385,22 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
                                                   radius: 18,
                                                 ),
                                                 SizedBox(
-                                                  width: getWidgetWidth(width: 10),
+                                                  width:
+                                                      getWidgetWidth(width: 10),
                                                 ),
                                                 Expanded(
                                                   child: Text(
                                                     _categories[index].name!,
                                                     style: TextStyle(
-                                                        color: Colors.white, fontSize: kText.scale(15), fontWeight: FontWeight.w500, letterSpacing: 0),
+                                                        color: Colors.white,
+                                                        fontSize:
+                                                            kText.scale(15),
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        letterSpacing: 0),
                                                     maxLines: 2,
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
                                                 ),
                                               ],
@@ -429,9 +533,14 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
                             // );
                           }),
                     ),
-                    SizedBox(height: isSplitScreen ? getFullWidgetHeight(height: 10) : getWidgetHeight(height: 10)),
+                    SizedBox(
+                        height: isSplitScreen
+                            ? getFullWidgetHeight(height: 10)
+                            : getWidgetHeight(height: 10)),
                     Container(
-                      height: isSplitScreen ? getFullWidgetHeight(height: 60) : getWidgetHeight(height: 60),
+                      height: isSplitScreen
+                          ? getFullWidgetHeight(height: 60)
+                          : getWidgetHeight(height: 60),
                       width: kWidth,
                       decoration: BoxDecoration(
                         color: Color(0xFF34445F),
@@ -442,39 +551,78 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
                           IconButton(
                               icon: ImageIcon(
                                 AssetImage(AllAssets.bottomHome),
-                                color: context.read<AuthState>().currentIndex == 0 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170),
+                                color:
+                                    context.read<AuthState>().currentIndex == 0
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170),
                               ),
                               onPressed: () {
                                 context.read<AuthState>().changeIndex(0);
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BottomNavigation()));
                               }),
                           IconButton(
                               icon: ImageIcon(AssetImage(AllAssets.bottomPL),
-                                  color: context.read<AuthState>().currentIndex == 1 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                              1
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170)),
                               onPressed: () {
                                 context.read<AuthState>().changeIndex(1);
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BottomNavigation()));
                               }),
                           IconButton(
                               icon: ImageIcon(AssetImage(AllAssets.bottomIS),
-                                  color: context.read<AuthState>().currentIndex == 2 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                              2
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170)),
                               onPressed: () {
                                 context.read<AuthState>().changeIndex(2);
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BottomNavigation()));
                               }),
                           IconButton(
                               icon: ImageIcon(AssetImage(AllAssets.bottomPE),
-                                  color: context.read<AuthState>().currentIndex == 3 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                              3
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170)),
                               onPressed: () {
                                 context.read<AuthState>().changeIndex(3);
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BottomNavigation()));
                               }),
                           IconButton(
                               icon: ImageIcon(AssetImage(AllAssets.bottomPT),
-                                  color: context.read<AuthState>().currentIndex == 4 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                              4
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170)),
                               onPressed: () {
                                 context.read<AuthState>().changeIndex(4);
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BottomNavigation()));
                               }),
                         ],
                       ),

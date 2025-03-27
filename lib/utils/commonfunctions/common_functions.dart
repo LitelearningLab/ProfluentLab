@@ -6,6 +6,7 @@ import 'package:litelearninglab/API/api_functions.dart';
 Timer? mainCatTimer;
 Duration _timeSpent = Duration.zero;
 String mianCategoryTitile = "";
+String sessionName = "";
 bool _isTimerActive = false;
 bool resume = true;
 Timer? subCatTimer;
@@ -36,12 +37,19 @@ stopTimerMainCategory() async {
     _isTimerActive = false;
     finalDuration = _timeSpent;
     _timeSpent = Duration.zero;
-    await startPracticeTime(finalDuration, mianCategoryTitile, "");
+    await startPracticeTime(
+        duration: finalDuration,
+        mainCategory: mianCategoryTitile,
+        subCategory: subCategoryTitile,
+        sessionName: sessionName);
     log("printing the timing is working or not $finalDuration ${mianCategoryTitile}");
   }
 }
 
 void startTimerSubCategory(String name, String sub) {
+  if (mainCatTimer!.isActive) {
+    stopTimerMainCategory();
+  }
   mianCategoryTitile = name;
   subCategoryTitile = sub;
   if (!_subIsTimerActive) {
@@ -61,7 +69,8 @@ stopTimerSubCategory() async {
     _subIsTimerActive = false;
     finalSubDuartion = _subTimeSpent;
     _subTimeSpent = Duration.zero;
-    await startPracticeTime(finalSubDuartion, mianCategoryTitile, subCategoryTitile);
+    // await startPracticeTime(
+    //     finalSubDuartion, mianCategoryTitile, subCategoryTitile);
     log("printing the timing is working or not $finalSubDuartion ${subCategoryTitile}");
   }
   ;

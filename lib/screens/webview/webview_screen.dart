@@ -35,7 +35,7 @@ class _InAppWebViewPageState extends State<InAppWebViewPage>
   @override
   void initState() {
     super.initState();
-
+    startTimerMainCategory("name");
     // Add the observer for lifecycle events
     WidgetsBinding.instance.addObserver(this);
   }
@@ -98,7 +98,7 @@ class _InAppWebViewPageState extends State<InAppWebViewPage>
 
     return PopScope(
       onPopInvoked: (didPop) {
-        stopTimerSubCategory();
+        stopTimerMainCategory();
       },
       child: BackgroundWidget(
         body: Stack(
@@ -151,8 +151,8 @@ class _InAppWebViewPageState extends State<InAppWebViewPage>
                     BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                 child: IconButton(
                   onPressed: () {
+                    stopTimerMainCategory();
                     Navigator.pop(context);
-                    stopTimerSubCategory();
                   },
                   icon: Icon(Icons.arrow_back),
                 ),

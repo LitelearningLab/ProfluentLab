@@ -8,7 +8,6 @@ import 'package:litelearninglab/models/InteracticeSimulationMain.dart';
 import 'package:litelearninglab/screens/interactive_simulations/widgets/ar_grid_tile.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
-import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -73,7 +72,7 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
   @override
   void initState() {
     super.initState();
-    startTimerMainCategory("AR Call Simulation");
+    // startTimerMainCategory("AR Call Simulation");
     controller = AutoScrollController(
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),

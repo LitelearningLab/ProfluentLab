@@ -699,6 +699,24 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                       },
                     ),
                   ),
+                  Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: getWidgetWidth(width: 5)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: getWidgetWidth(width: 10),
+                        vertical: isSplitScreen
+                            ? getFullWidgetHeight(height: 10)
+                            : getWidgetHeight(height: 20)),
+                    child: Text(
+                      widget.load,
+                      style: TextStyle(
+                          color: AppColors.white,
+                          fontFamily: Keys.fontFamily,
+                          fontWeight: FontWeight.w500,
+                          fontSize: kText.scale(15)),
+                    ),
+                  ),
                   const Spacer(),
                   Container(
                     height: isSplitScreen

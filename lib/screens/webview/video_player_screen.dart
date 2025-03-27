@@ -1,15 +1,16 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:litelearninglab/screens/webview/widgets/videoplayer_controller.dart';
+import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../common_widgets/background_widget.dart';
-import 'dart:developer';
 
 class VideoPlayerScreen extends StatefulWidget {
   VideoPlayerScreen({Key? key, required this.url}) : super(key: key);
@@ -21,7 +22,8 @@ class VideoPlayerScreen extends StatefulWidget {
   }
 }
 
-class _VideoPlayerScreenState extends State<VideoPlayerScreen> with AfterLayoutMixin<VideoPlayerScreen>, WidgetsBindingObserver {
+class _VideoPlayerScreenState extends State<VideoPlayerScreen>
+    with AfterLayoutMixin<VideoPlayerScreen>, WidgetsBindingObserver {
   late VideoPlayerController _controller;
   late ChewieController _chewieController;
   late Future<void> _initializeVideoPlayerFuture;
@@ -35,6 +37,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with AfterLayoutM
   @override
   void initState() {
     super.initState();
+
     // Add the observer for lifecycle events
     WidgetsBinding.instance.addObserver(this);
     _initializeVideoPlayerFuture = initVideoPlayer(url: widget.url);
@@ -107,10 +110,16 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with AfterLayoutM
         allowFullScreen: false,
         fullScreenByDefault: false,
         looping: false,
-        materialProgressColors:
-            ChewieProgressColors(playedColor: Colors.white, bufferedColor: Color(0XFFD6D6D6), backgroundColor: Colors.grey, handleColor: Colors.grey),
-        cupertinoProgressColors:
-            ChewieProgressColors(playedColor: Colors.white, bufferedColor: Color(0XFFD6D6D6), backgroundColor: Colors.grey, handleColor: Colors.grey),
+        materialProgressColors: ChewieProgressColors(
+            playedColor: Colors.white,
+            bufferedColor: Color(0XFFD6D6D6),
+            backgroundColor: Colors.grey,
+            handleColor: Colors.grey),
+        cupertinoProgressColors: ChewieProgressColors(
+            playedColor: Colors.white,
+            bufferedColor: Color(0XFFD6D6D6),
+            backgroundColor: Colors.grey,
+            handleColor: Colors.grey),
       );
       videoInitialized = true;
       setState(() {});
@@ -135,14 +144,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with AfterLayoutM
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     _controller.play();
   }
 
   String formatDuration(Duration duration) {
     var remaining = duration - _controller.value.position;
-    String minutes = remaining.inMinutes.remainder(60).toString().padLeft(2, '0');
-    String seconds = remaining.inSeconds.remainder(60).toString().padLeft(2, '0');
+    String minutes =
+        remaining.inMinutes.remainder(60).toString().padLeft(2, '0');
+    String seconds =
+        remaining.inSeconds.remainder(60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
   }
 
@@ -150,6 +162,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with AfterLayoutM
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvoked: (didpop) async {
+        stopTimerMainCategory();
         _resetOrientation();
       },
       child: BackgroundWidget(
@@ -176,7 +189,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with AfterLayoutM
                                 child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  CircularProgressIndicator(color: Colors.white),
+                                  CircularProgressIndicator(
+                                      color: Colors.white),
                                   SizedBox(
                                     height: 10,
                                   ),
@@ -192,9 +206,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with AfterLayoutM
                       top: 20,
                       left: 20,
                       child: Container(
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.white),
                         child: IconButton(
                             onPressed: () {
+                              stopTimerMainCategory();
                               _resetOrientation();
                               Navigator.pop(context);
                             },
@@ -203,7 +219,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> with AfterLayoutM
                 ],
               );
             } else {
-              return Center(child: CircularProgressIndicator(color: Colors.white));
+              return Center(
+                  child: CircularProgressIndicator(color: Colors.white));
             }
           },
         ),

@@ -18,7 +18,6 @@ import 'package:litelearninglab/screens/profluent_english/widgets/top_catetgorie
 import 'package:litelearninglab/screens/webview/webview_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
-import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/firebase_helper.dart';
 import 'package:litelearninglab/utils/firebase_helper_RTD.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
@@ -69,7 +68,7 @@ class _ProfluentEnglishModifiedScreenState
 
   void initState() {
     super.initState();
-    startTimerMainCategory("Profluent English");
+    // startTimerMainCategory("Profluent English");
     user = Provider.of<AuthState>(context, listen: false);
     controller = AutoScrollController(
         viewportBoundaryGetter: () =>

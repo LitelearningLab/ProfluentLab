@@ -1011,27 +1011,41 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                   InkWell(
                                     splashColor: Colors.transparent,
                                     onTap: () async {
-                                      print("NDFU CLICKED");
-                                      SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
-                                      await prefs.setStringList(
-                                          'CallFlowCatScreen', [
-                                        "Non-Denials Follow-up",
-                                        "Non Denials Follow up"
-                                      ]);
-                                      await prefs.setString(
-                                          'lastAccess', 'CallFlowCatScreen');
-                                      Navigator.push(
+                                      if (_categories[0].subcategories !=
+                                          null) {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        await prefs.setString('lastAccess',
+                                            'InteracticeCatScreen');
+                                        await prefs.setString(
+                                            'InteracticeCatScreen',
+                                            _categories[0].category ?? "");
+                                        // final box = await Hive.openBox<InteractiveLinkHive>('InteractiveLinkBox');
+                                        // InteractiveLinkHive prHive =
+                                        //     InteractiveLinkHive(item: _categories[0].subcategories!);
+                                        // box.put('InteracticeCatScreen', prHive);
+                                        Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CallFlowCatScreen(
-                                                    user: user,
-                                                    title:
-                                                        "Non-Denials Follow-up",
-                                                    load:
-                                                        "Non Denials Follow up",
-                                                  )));
+                                            builder: (context) =>
+                                                InteracticeCatScreen(
+                                              linkCats:
+                                                  _categories[0].subcategories!,
+                                              title:
+                                                  _categories[0].category ?? "",
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        Toast.show("Work in progress",
+                                            duration: Toast.lengthShort,
+                                            gravity: Toast.bottom,
+                                            backgroundColor: AppColors.white,
+                                            textStyle: TextStyle(
+                                                color: AppColors.black),
+                                            backgroundRadius: 10);
+                                      }
                                     },
                                     child: QuickLinksTile(
                                       title: 'AR Follow Up (Non-Denials)',
@@ -1044,32 +1058,41 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                   InkWell(
                                     splashColor: Colors.transparent,
                                     onTap: () async {
-                                      print("DM CLICKED");
-                                      print(_processLeaning[1]
-                                              .subcategories![2]
-                                              .linkCats ??
-                                          []);
-                                      SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
-                                      await prefs.setString(
-                                          'lastAccess', 'ProcessCatScreen');
-                                      await prefs.setString('ProcessCatScreen',
-                                          "Denial Management");
-                                      // final box = await Hive.openBox<ProcessLearningLinkHive>('newProcessLearningBox');
-                                      // //processLearningBox =await Hive.box<ProcessLearningLinkHive>('processLearningLinkBox');
-                                      // ProcessLearningLinkHive prHive = ProcessLearningLinkHive(item: _processLeaning[1].subcategories![2].linkCats);
-                                      // box.put('ProcessCatScreen', prHive);
-                                      Navigator.push(
+                                      if (_categories[1].subcategories !=
+                                          null) {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        await prefs.setString('lastAccess',
+                                            'InteracticeCatScreen');
+                                        await prefs.setString(
+                                            'InteracticeCatScreen',
+                                            _categories[1].category ?? "");
+                                        // final box = await Hive.openBox<InteractiveLinkHive>('InteractiveLinkBox');
+                                        // InteractiveLinkHive prHive =
+                                        //     InteractiveLinkHive(item: _categories[0].subcategories!);
+                                        // box.put('InteracticeCatScreen', prHive);
+                                        Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProcessCatScreen(
-                                                    linkCats: _processLeaning[1]
-                                                            .subcategories![2]
-                                                            .linkCats ??
-                                                        [],
-                                                    title: "Denial Management",
-                                                  )));
+                                            builder: (context) =>
+                                                InteracticeCatScreen(
+                                              linkCats:
+                                                  _categories[1].subcategories!,
+                                              title:
+                                                  _categories[1].category ?? "",
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        Toast.show("Work in progress",
+                                            duration: Toast.lengthShort,
+                                            gravity: Toast.bottom,
+                                            backgroundColor: AppColors.white,
+                                            textStyle: TextStyle(
+                                                color: AppColors.black),
+                                            backgroundRadius: 10);
+                                      }
                                       /* Navigator.push(
                                   context,
                                   MaterialPageRoute(
