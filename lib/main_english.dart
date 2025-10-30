@@ -13,7 +13,8 @@ import 'package:provider/provider.dart';
 import 'config/app_config.dart';
 import 'main.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 NotificationAppLaunchDetails? notificationAppLaunchDetails;
 
 Future<void> main() async {
@@ -31,15 +32,22 @@ Future<void> main() async {
     //  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
     // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     //SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor:Color(0xFF293750)));
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(systemNavigationBarColor: Color(0xFF293750), statusBarColor: Color(0xFF293750)));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: Color(0xFF293750),
+        statusBarColor: Color(0xFF293750)));
   }
 
-  notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+  notificationAppLaunchDetails =
+      await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
   await initNotifications(flutterLocalNotificationsPlugin);
   requestIOSPermissions(flutterLocalNotificationsPlugin);
-  var configuredApp = new AppConfig(appName: 'Profluent English', flavorName: 'english', fcmKey: '', child: MyApp());
-  FirebaseFirestore.instance.settings = const Settings(persistenceEnabled: false);
+  var configuredApp = new AppConfig(
+      appName: 'Profluent English',
+      flavorName: 'english',
+      fcmKey: '',
+      child: MyApp());
+  FirebaseFirestore.instance.settings =
+      const Settings(persistenceEnabled: false);
   runApp(
     ChangeNotifierProvider(
       create: (_) => AuthState(),

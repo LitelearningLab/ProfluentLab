@@ -29,12 +29,14 @@ class _WalkThroughViewState extends State<WalkThroughView> {
         imageUrl: AllAssets.processLearning,
         title: 'Enjoy',
         subTitle: 'RCM & AR Process Learning',
-        content: "Rich multimedia learning content that's crisp, focused & interesting."),
+        content:
+            "Rich multimedia learning content that's crisp, focused & interesting."),
     WalkThrougModel(
         imageUrl: AllAssets.arCallSimulation,
         title: 'Easy',
         subTitle: 'AR Call Simulations',
-        content: 'Interactive lifelike simulations, to apply learning without real-world consequences.'),
+        content:
+            'Interactive lifelike simulations, to apply learning without real-world consequences.'),
     WalkThrougModel(
         imageUrl: AllAssets.profluentEnglish,
         title: '& Effective',
@@ -45,7 +47,8 @@ class _WalkThroughViewState extends State<WalkThroughView> {
         imageUrl: AllAssets.softSkill,
         title: 'Learning',
         subTitle: 'Soft Skills',
-        content: 'Acquire essential skills easily with byte-sized, business-specific modules.'),
+        content:
+            'Acquire essential skills easily with byte-sized, business-specific modules.'),
   ];
 
   void didChangeDependencies() {
@@ -73,24 +76,34 @@ class _WalkThroughViewState extends State<WalkThroughView> {
         onPageChanged: changingPage,
         itemBuilder: (BuildContext context, int index) {
           return Padding(
-            padding:
-                EdgeInsets.only(top: isSplitScreen ? getFullWidgetHeight(height: 30) : getWidgetHeight(height: 30)),
+            padding: EdgeInsets.only(
+                top: isSplitScreen
+                    ? getFullWidgetHeight(height: 30)
+                    : getWidgetHeight(height: 30)),
             child: Container(
               height: kHeight,
               width: kWidth,
               decoration: BoxDecoration(color: Colors.white),
               child: Column(
                 children: [
-                  SizedBox(height: isSplitScreen ? getFullWidgetHeight(height: 30) : getWidgetHeight(height: 30)),
+                  SizedBox(
+                      height: isSplitScreen
+                          ? getFullWidgetHeight(height: 30)
+                          : getWidgetHeight(height: 30)),
                   Text(
                     pageContent[index].title,
                     style: TextStyle(fontSize: 40, fontFamily: "Kaushan"),
                   ),
-                  SizedBox(height: isSplitScreen ? getFullWidgetHeight(height: 55) : getWidgetHeight(height: 55)),
+                  SizedBox(
+                      height: isSplitScreen
+                          ? getFullWidgetHeight(height: 55)
+                          : getWidgetHeight(height: 55)),
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: SizedBox(
-                        height: isSplitScreen ? getFullWidgetHeight(height: 280) : getWidgetHeight(height: 280),
+                        height: isSplitScreen
+                            ? getFullWidgetHeight(height: 280)
+                            : getWidgetHeight(height: 280),
                         child: Image.asset(pageContent[index].imageUrl)),
                   ),
                   SizedBox(height: 10),
@@ -100,7 +113,9 @@ class _WalkThroughViewState extends State<WalkThroughView> {
                       child: Text(
                         pageContent[index].subTitle,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Color(0XFF6B61FE), fontSize: kText.scale(25)),
+                        style: TextStyle(
+                            color: Color(0XFF6B61FE),
+                            fontSize: kText.scale(25)),
                       ),
                     ),
                   ),
@@ -108,7 +123,9 @@ class _WalkThroughViewState extends State<WalkThroughView> {
                   Padding(
                     padding: EdgeInsets.only(
                         left: getWidgetWidth(width: 35),
-                        right: isSplitScreen ? getFullWidgetHeight(height: 30) : getWidgetHeight(height: 30)),
+                        right: isSplitScreen
+                            ? getFullWidgetHeight(height: 30)
+                            : getWidgetHeight(height: 30)),
                     child: Text(
                       pageContent[index].content,
                       textAlign: TextAlign.center,
@@ -118,20 +135,25 @@ class _WalkThroughViewState extends State<WalkThroughView> {
                   const Spacer(),
                   Padding(
                     padding: EdgeInsets.only(
-                        bottom: isSplitScreen ? getFullWidgetHeight(height: 50) : getWidgetHeight(height: 50)),
+                        bottom: isSplitScreen
+                            ? getFullWidgetHeight(height: 50)
+                            : getWidgetHeight(height: 50)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         if (index != pageContent.length - 1)
                           SizedBox(
-                            height: isSplitScreen ? getFullWidgetHeight(height: 33) : getWidgetHeight(height: 33),
+                            height: isSplitScreen
+                                ? getFullWidgetHeight(height: 33)
+                                : getWidgetHeight(height: 33),
                             width: getWidgetWidth(width: 90),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0XFFCACACA),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(25), bottomLeft: Radius.circular(25))),
+                                          topLeft: Radius.circular(25),
+                                          bottomLeft: Radius.circular(25))),
                                 ),
                                 onPressed: () async {
                                   print("sdhiajei");
@@ -155,22 +177,26 @@ class _WalkThroughViewState extends State<WalkThroughView> {
                           )
                         else
                           SizedBox(
-                            height: isSplitScreen ? getFullWidgetHeight(height: 33) : getWidgetHeight(height: 33),
+                            height: isSplitScreen
+                                ? getFullWidgetHeight(height: 33)
+                                : getWidgetHeight(height: 33),
                             width: getWidgetWidth(width: 160),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0XFFCACACA),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(25), bottomLeft: Radius.circular(25))),
+                                          topLeft: Radius.circular(25),
+                                          bottomLeft: Radius.circular(25))),
                                 ),
                                 onPressed: () async {
-                                  authSatate = Provider.of<AuthState>(context, listen: false);
+                                  authSatate = Provider.of<AuthState>(context,
+                                      listen: false);
                                   print("sdhiajei");
                                   print("cureentIndex:$currentIndex");
-                                  await SharedPref.saveBool("walkthrough", true);
-                                  bool checking = await SharedPref.getSavedBool("walkthrough");
-                                  print("checkinh che e : $checking");
+                                  // await SharedPref.saveBool("walkthrough", true);
+                                  // bool checking = await SharedPref.getSavedBool("walkthrough");
+                                  // print("checkinh che e : $checking");
                                   await authSatate.changingWalk();
                                   setState(() {});
                                   // Navigator.push(

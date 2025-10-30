@@ -19,31 +19,36 @@ class SpeechLab implements Jsonable {
   String? main;
   int? timeCal;
   Map<String, dynamic>? focusWord;
+  String? batch;
+  String? companyId;
 
-  SpeechLab({
-    this.id,
-    this.correct,
-    this.listatt,
-    this.pracatt,
-    this.time,
-    this.lastAttempt,
-    this.lastScore,
-    this.sentence,
-    this.focusWord,
-    this.dateTime,
-    this.userId,
-    this.score,
-    this.title,
-    this.load,
-    this.main,
-    this.timeCal,
-  });
+  SpeechLab(
+      {this.id,
+      this.correct,
+      this.listatt,
+      this.pracatt,
+      this.time,
+      this.lastAttempt,
+      this.lastScore,
+      this.sentence,
+      this.focusWord,
+      this.dateTime,
+      this.userId,
+      this.score,
+      this.title,
+      this.load,
+      this.main,
+      this.timeCal,
+      this.batch,
+      this.companyId});
 
   SpeechLab.map(dynamic obj) {
     id = obj['id'];
     correct = obj['correct'];
 
     listatt = obj['listatt'];
+    companyId = obj['companyId'];
+    batch = obj['batch'];
     pracatt = obj['pracatt'];
     score = double.parse(obj['score'].toString());
     time = obj['time'];
@@ -70,6 +75,8 @@ class SpeechLab implements Jsonable {
     map['correct'] = correct;
 
     map['listatt'] = listatt;
+    map['companyId'] = companyId;
+    map['batch'] = batch;
     map['score'] = score;
     map['pracatt'] = pracatt;
     map['time'] = time;
@@ -92,6 +99,8 @@ class SpeechLab implements Jsonable {
     correct = map['correct'];
 
     listatt = map['listatt'];
+    companyId = map['companyId'];
+    batch = map['batch'];
     pracatt = map['pracatt'];
     userId = map['userId'];
     score = double.parse(map['score'].toString());
@@ -117,6 +126,7 @@ class SpeechLab implements Jsonable {
       id: doc.id,
       correct: map['correct'],
       listatt: map['listatt'],
+      companyId: map['companyId'], batch: map['batch'],
       pracatt: map['pracatt'],
       userId: map['userId'],
       score: double.parse(map['score'].toString()),
@@ -130,7 +140,9 @@ class SpeechLab implements Jsonable {
       main: map['main'],
       timeCal: map['timeCal'],
       // focusWord : map['focusWord'],
-      focusWord: map['focusWord'] != null ? Map<String, List>.from(map['focusWord']) : null,
+      focusWord: map['focusWord'] != null
+          ? Map<String, List>.from(map['focusWord'])
+          : null,
     );
     // map['focusWords'] != null ? new List.from(map['focusWords']) : null);
   }

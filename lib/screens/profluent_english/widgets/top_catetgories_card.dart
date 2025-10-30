@@ -1,5 +1,6 @@
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 
 // import 'package:litelearninglab/constants/all_assets.dart';
@@ -29,6 +30,8 @@ class _PETopCategoriesCardState extends State<PETopCategoriesCard> {
   @override
   void initState() {
     super.initState();
+    // startTimerMainCategory("name");
+    subCategoryTitile = widget.title;
   }
 
   @override

@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:litelearninglab/common_widgets/spacings.dart';
+import 'package:litelearninglab/screens/login/new_login_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/keys.dart';
 import '../screens/profile/profile_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../screens/webview/webview_screen.dart';
 import '../utils/bottom_navigation.dart';
@@ -57,18 +58,28 @@ class _CommonDrawerState extends State<CommonDrawer> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          insetPadding: EdgeInsets.only(left: kWidth / 32.35, right: kWidth / 32.75),
-          actionsPadding: EdgeInsets.only(right: kWidth / 26.2, left: kWidth / 26.2, bottom: kHeight / 28.4),
+          insetPadding:
+              EdgeInsets.only(left: kWidth / 32.35, right: kWidth / 32.75),
+          actionsPadding: EdgeInsets.only(
+              right: kWidth / 26.2,
+              left: kWidth / 26.2,
+              bottom: kHeight / 28.4),
           actionsAlignment: MainAxisAlignment.spaceBetween,
           title: Text(
             'Log out',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600, color: Colors.white),
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(fontWeight: FontWeight.w600, color: Colors.white),
           ),
           content: Text(
             'Are you sure want to log out?',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
           ),
           actions: [
             SizedBox(
@@ -79,29 +90,40 @@ class _CommonDrawerState extends State<CommonDrawer> {
                   },
                   child: Text(
                     'Cancel',
-                    style: Theme.of(context)
-                        .textTheme
-                        .displaySmall
-                        ?.copyWith(fontWeight: FontWeight.w500, color: Colors.white, fontSize: kText.scale(15)),
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                        fontSize: kText.scale(15)),
                   )),
             ),
             SizedBox(
               width: kWidth / 2.5,
               child: TextButton(
                   onPressed: () async {
-                    AuthState controller = Provider.of<AuthState>(context, listen: false);
+                    AuthState controller =
+                        Provider.of<AuthState>(context, listen: false);
                     await controller.signOut();
-                    Navigator.pop(context);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              NewLoginScreen()), // Your home page
+                      (Route<dynamic> route) =>
+                          false, // Remove all previous routes
+                    );
+
                     // Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
                   },
                   style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-                      backgroundColor: const MaterialStatePropertyAll(Colors.white),
-                      side: MaterialStatePropertyAll(BorderSide(width: 1, color: Colors.green))),
+                      backgroundColor:
+                          const MaterialStatePropertyAll(Colors.white),
+                      side: MaterialStatePropertyAll(
+                          BorderSide(width: 1, color: Colors.green))),
                   child: Text('Log out',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displaySmall
-                          ?.copyWith(fontWeight: FontWeight.w500, color: Colors.white, fontSize: kText.scale(15)))),
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                          fontSize: kText.scale(15)))),
             ),
           ],
           shape: RoundedRectangleBorder(
@@ -115,7 +137,8 @@ class _CommonDrawerState extends State<CommonDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _tile({required Widget icon, required String menu, Function()? onTap}) {
+    Widget _tile(
+        {required Widget icon, required String menu, Function()? onTap}) {
       return ListTile(
         onTap: onTap,
         leading: icon,
@@ -169,7 +192,10 @@ class _CommonDrawerState extends State<CommonDrawer> {
                     ),
                     menu: "Profile",
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProfileScreen()));
                     }),
                 _tile(
                     icon: Image.asset(
@@ -222,10 +248,13 @@ class _CommonDrawerState extends State<CommonDrawer> {
                     menu: "Rate this app",
                     onTap: () {
                       if (Platform.isAndroid || Platform.isIOS) {
-                        final appId =
-                            Platform.isAndroid ? 'org.mahajob.litelearninglab' : 'org.mahajob.litelearninglab';
+                        final appId = Platform.isAndroid
+                            ? 'org.mahajob.litelearninglab'
+                            : 'org.mahajob.litelearninglab';
                         final url = Uri.parse(
-                          Platform.isAndroid ? "market://details?id=$appId" : "https://apps.apple.com/app/id$appId",
+                          Platform.isAndroid
+                              ? "market://details?id=$appId"
+                              : "https://apps.apple.com/app/id$appId",
                         );
                         launchUrl(
                           url,

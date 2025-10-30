@@ -1,4 +1,4 @@
-import 'dart:ffi';
+// import 'dart:ffi';
 
 class Strings {
   static const String appName = "PROFLUENT";
@@ -11,7 +11,4 @@ class Strings {
   static const String engaging = "ENGAGING";
   static const String easy = "EASY";
   static const String effective = "EFFECTIVE";
-
-
-
 }

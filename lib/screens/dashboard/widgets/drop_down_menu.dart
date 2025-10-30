@@ -5,7 +5,13 @@ import 'package:litelearninglab/constants/keys.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 
 class DropDownMenu extends StatefulWidget {
-  DropDownMenu({Key? key, required this.children, required this.icon, required this.title, required this.isExpand, required this.onExpansionChanged})
+  DropDownMenu(
+      {Key? key,
+      required this.children,
+      required this.icon,
+      required this.title,
+      required this.isExpand,
+      required this.onExpansionChanged})
       : super(key: key);
   final List<Widget> children;
   final String title;
@@ -126,7 +132,8 @@ class AppExpansionTile extends StatefulWidget {
   AppExpansionTileState createState() => new AppExpansionTileState();
 }
 
-class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerProviderStateMixin {
+class AppExpansionTileState extends State<AppExpansionTile>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late CurvedAnimation _easeOutAnimation;
   late CurvedAnimation _easeInAnimation;
@@ -141,15 +148,18 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
   void initState() {
     super.initState();
     _controller = new AnimationController(duration: _kExpand, vsync: this);
-    _easeOutAnimation = new CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    _easeInAnimation = new CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _easeOutAnimation =
+        new CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _easeInAnimation =
+        new CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _borderColor = new ColorTween();
     _headerColor = new ColorTween();
     _iconColor = new ColorTween();
 
     _backgroundColor = new ColorTween();
 
-    _isExpanded = PageStorage.of(context)!.readState(context) ?? widget.initiallyExpanded;
+    _isExpanded =
+        PageStorage.of(context)!.readState(context) ?? widget.initiallyExpanded;
     if (_isExpanded) _controller.value = 1.0;
   }
 
@@ -192,7 +202,8 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
 
     return new Container(
       decoration: new BoxDecoration(
-        color: _backgroundColor.evaluate(_easeOutAnimation) ?? Colors.transparent,
+        color:
+            _backgroundColor.evaluate(_easeOutAnimation) ?? Colors.transparent,
 //          border: new Border(
 //            top: new BorderSide(color: borderSideColor),
 //            bottom: new BorderSide(color: borderSideColor),
@@ -202,11 +213,15 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           IconTheme.merge(
-            data: new IconThemeData(color: _iconColor.evaluate(_easeInAnimation)),
+            data:
+                new IconThemeData(color: _iconColor.evaluate(_easeInAnimation)),
             child: GestureDetector(
               onTap: toggle,
               child: DefaultTextStyle(
-                style: Theme.of(context!).textTheme.headline4!.copyWith(color: titleColor),
+                style: Theme.of(context!)
+                    .textTheme
+                    .headlineMedium!
+                    .copyWith(color: titleColor),
                 child: widget.title,
               ),
             ),
@@ -227,7 +242,7 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
     final ThemeData theme = Theme.of(context);
     _borderColor.end = theme.dividerColor;
     _headerColor
-      ..begin = theme.textTheme.headline4?.color
+      ..begin = theme.textTheme.headlineMedium?.color
       ..end = theme.primaryColor;
     _iconColor
       ..begin = theme.unselectedWidgetColor

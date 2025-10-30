@@ -39,7 +39,9 @@ import '../call_flow/follow_up_screen.dart';
 import '../webview/webview_screen.dart';
 
 class SearchResultScreen extends StatefulWidget {
-  SearchResultScreen({Key? key, this.user, required this.searchTerm, required this.labType}) : super(key: key);
+  SearchResultScreen(
+      {Key? key, this.user, required this.searchTerm, required this.labType})
+      : super(key: key);
   final AuthState? user;
   final String searchTerm;
   final String labType;
@@ -87,7 +89,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     } else if (widget.labType == 'Sentence Lab') {
       print("Sentence Lab Search functionality");
       _getSentences(isRefresh: false);
-      _playerStateSubscription = _audioPlayerManager.onPlayerStateChanged.listen((event) {
+      _playerStateSubscription =
+          _audioPlayerManager.onPlayerStateChanged.listen((event) {
         if (event == PlayerState.playing) {
           _isPlaying = true;
         } else {
@@ -109,7 +112,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     // searchAllFolders(searchWord: widget.searchTerm);
   }
 
-  Future<void> _play(String sentence, int index, {required String url, String? localPath}) async {
+  Future<void> _play(String sentence, int index,
+      {required String url, String? localPath}) async {
     FirebaseHelper db = new FirebaseHelper();
     AuthState userDatas = Provider.of<AuthState>(context, listen: false);
     String? eLocalPath;
@@ -120,7 +124,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
       print("*********URL : : : $url");
 
       await _audioPlayerManager.stop();
-      await _audioPlayerManager.play(url, localPath: localPath, context: context, decodedPath: (val) {
+      await _audioPlayerManager.play(url,
+          localPath: localPath, context: context, decodedPath: (val) {
         eLocalPath = val;
       });
       print("*********AUDIO PLAY COMPLETED : $eLocalPath");
@@ -174,14 +179,16 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
   void getFollowUps({String? searchTerm, required bool isRefresh}) async {
     isLoading = true;
     setState(() {});
-    DatabaseReference refer = FirebaseDatabase.instance.ref('Call Flow Practice');
+    DatabaseReference refer =
+        FirebaseDatabase.instance.ref('Call Flow Practice');
 
     await refer.get().then((DataSnapshot data) async {
       print("_getSentences");
       //   developer.log( (data.value! as Map).toString());
       Map<Object?, Object?> _grammarData = data.value as Map<Object?, Object?>;
       //  Map<String,dynamic> sentenceDatas = _grammarData as Map<String,dynamic>;
-      Map<String, dynamic> sentenceDatas = Map<String, dynamic>.from(data.value as Map);
+      Map<String, dynamic> sentenceDatas =
+          Map<String, dynamic>.from(data.value as Map);
       // log("sentenceDatas : $sentenceDatas");
       getCallFollowUpsValues.clear();
       sentenceDatas.forEach((k, v) {
@@ -195,7 +202,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
           print("dod idid");
           if (k1 == widget.searchTerm) {
             print("ips i isiosihs");
-            getCallFollowUpsValues.add(CallFollowUpsModels(title: k1, load: k1, main: k));
+            getCallFollowUpsValues
+                .add(CallFollowUpsModels(title: k1, load: k1, main: k));
           }
         });
       });
@@ -209,14 +217,16 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     print("dkpjdi d duh du");
     isLoading = true;
     setState(() {});
-    DatabaseReference refer = FirebaseDatabase.instance.ref('GrammarCheckConstructionLab');
+    DatabaseReference refer =
+        FirebaseDatabase.instance.ref('GrammarCheckConstructionLab');
 
     await refer.get().then((DataSnapshot data) async {
       print("_getSentences");
       //   developer.log( (data.value! as Map).toString());
       Map<Object?, Object?> _grammarData = data.value as Map<Object?, Object?>;
       //  Map<String,dynamic> sentenceDatas = _grammarData as Map<String,dynamic>;
-      Map<String, dynamic> sentenceDatas = Map<String, dynamic>.from(data.value as Map);
+      Map<String, dynamic> sentenceDatas =
+          Map<String, dynamic>.from(data.value as Map);
       // log("sentenceDatas : $sentenceDatas");
       getCallFollowUpsValues.clear();
       sentenceDatas.forEach((k, v) {
@@ -270,21 +280,31 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     });
   }*/
 
-  getPronuncationLab({required String folder, required String searchWord}) async {
-    DatabaseReference databaseReference = FirebaseDatabase.instance.ref().child(folder);
+  getPronuncationLab(
+      {required String folder, required String searchWord}) async {
+    DatabaseReference databaseReference =
+        FirebaseDatabase.instance.ref().child(folder);
     var sample = await databaseReference.get();
     final data = Map<String, dynamic>.from(sample.value as Map);
     data.forEach((key, value) {
       value.forEach((key1, value1) {
-        if (key1 == "text" && value1.toString().toLowerCase().startsWith(searchWord.toLowerCase())) {
-          wordss.add(SearchNewClass(folderName: 'Profluent English/Pronuncation Lab/$folder', text: value1));
+        if (key1 == "text" &&
+            value1
+                .toString()
+                .toLowerCase()
+                .startsWith(searchWord.toLowerCase())) {
+          wordss.add(SearchNewClass(
+              folderName: 'Profluent English/Pronuncation Lab/$folder',
+              text: value1));
         }
       });
     });
   }
 
-  getSentenceContstuctionLab({required String folder, required String searchWord}) async {
-    DatabaseReference databaseReference = FirebaseDatabase.instance.ref().child(folder);
+  getSentenceContstuctionLab(
+      {required String folder, required String searchWord}) async {
+    DatabaseReference databaseReference =
+        FirebaseDatabase.instance.ref().child(folder);
     var sample = await databaseReference.get();
     final data = Map<String, dynamic>.from(sample.value as Map);
     data.forEach((key, value) {
@@ -295,10 +315,15 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
           print("sentence key2 : $key2");
           value2.forEach((key3, value3) {
             print("sentence key3 : $key3");
-            if (key3 == "text" && value3.toString().toLowerCase().startsWith(searchWord.toLowerCase())) {
+            if (key3 == "text" &&
+                value3
+                    .toString()
+                    .toLowerCase()
+                    .startsWith(searchWord.toLowerCase())) {
               print("///// $key3 : $value3 ////");
               // wordss.add(value);
-              wordss.add(SearchNewClass(folderName: '$folder/$key/$key1', text: value3));
+              wordss.add(SearchNewClass(
+                  folderName: '$folder/$key/$key1', text: value3));
             }
           });
         });
@@ -306,8 +331,10 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     });
   }
 
-  getCallFlowPracticeLab({required String folder, required String searchWord}) async {
-    DatabaseReference databaseReference = FirebaseDatabase.instance.ref().child(folder);
+  getCallFlowPracticeLab(
+      {required String folder, required String searchWord}) async {
+    DatabaseReference databaseReference =
+        FirebaseDatabase.instance.ref().child(folder);
     var sample = await databaseReference.get();
     final data = Map<String, dynamic>.from(sample.value as Map);
     data.forEach((key, value) {
@@ -315,9 +342,14 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
       value.forEach((key1, value1) {
         print("call flow pratice lab key1 : $key1");
         print("call flow pratice lab value1 : $value1");
-        if (key1.toString().toLowerCase().startsWith(searchWord.toLowerCase())) {
+        if (key1
+            .toString()
+            .toLowerCase()
+            .startsWith(searchWord.toLowerCase())) {
           print("///// $key1 : $value1 ////");
-          wordss.add(SearchNewClass(folderName: 'Profluent English/Call Flow Practice Lab/$key/$key1', text: key1));
+          wordss.add(SearchNewClass(
+              folderName: 'Profluent English/Call Flow Practice Lab/$key/$key1',
+              text: key1));
         }
       });
     });
@@ -353,7 +385,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
       // color: Color(0xCC000000),
       child: Dialog(
         // backgroundColor: AppColors.black,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
         //this right here
         child: SpeechAnalyticsDialog(
           true,
@@ -411,7 +444,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                             child: DropDownWordItem(
                               localPath: _words[index].localPath,
                               load: 'Search Result for: ${widget.searchTerm}',
-                              maintitle: 'Search Result for: ${widget.searchTerm}',
+                              maintitle:
+                                  'Search Result for: ${widget.searchTerm}',
                               onExpansionChanged: (val) {
                                 // _toggleExpansion(index);
                                 print("check11111111111111111111111113333>");
@@ -428,8 +462,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                   // }
                                 }
                               },
-                              initiallyExpanded:
-                                  _selectedWordOnClick != null && _selectedWordOnClick == _words[index].text,
+                              initiallyExpanded: _selectedWordOnClick != null &&
+                                  _selectedWordOnClick == _words[index].text,
                               isWord: true,
                               isRefresh: (val) {
                                 if (val) _getWords(isRefresh: true);
@@ -440,18 +474,22 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                               url: _words[index].file!,
                               index: index,
                               length: _words.length,
-                              isDownloaded: _words[index].localPath != null && _words[index].localPath!.isNotEmpty,
+                              isDownloaded: _words[index].localPath != null &&
+                                  _words[index].localPath!.isNotEmpty,
                               //isDownloaded: ,
                               children: [
                                 WordMenu(
                                   pronun: _words[index].pronun!,
                                   selectedWord: _selectedWord,
-                                  isCorrect: _selectedWord == _words[index].text && _isCorrect,
+                                  isCorrect:
+                                      _selectedWord == _words[index].text &&
+                                          _isCorrect,
                                   text: _words[index].text!,
                                   syllables: _words[index].syllables!,
                                   onTapHeadphone: () async {},
                                   onTapMic: () async {
-                                    _showDialog(_words[index].text!, false, context);
+                                    _showDialog(
+                                        _words[index].text!, false, context);
                                   },
                                 )
                               ],
@@ -487,7 +525,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                     _selectedSentence = null;
                                   }
                                 },
-                                initiallyExpanded: _selectedSentence != null && _selectedSentence == _sentences[index],
+                                initiallyExpanded: _selectedSentence != null &&
+                                    _selectedSentence == _sentences[index],
                                 isFav: _sentences[index].isFav!,
                                 wordId: _sentences[index].id!,
                                 isWord: false,
@@ -498,26 +537,33 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                 onTapForThreePlayerStop: () {},
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 30, right: 30),
+                                    padding: const EdgeInsets.only(
+                                        left: 30, right: 30),
                                     child: Container(
                                       height: 59,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                                            bottomLeft: Radius.circular(10),
+                                            bottomRight: Radius.circular(10)),
                                         color: Colors.white,
                                       ),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           InkWell(
                                             onTap: () {
                                               print('INDEX : : : $index');
-                                              if (_isPlaying && _currentPlayingIndex == index) {
+                                              if (_isPlaying &&
+                                                  _currentPlayingIndex ==
+                                                      index) {
                                                 _audioPlayerManager.stop();
                                               } else {
                                                 _play(
-                                                  _sentences[index].text!, index,
+                                                  _sentences[index].text!,
+                                                  index,
                                                   url: _sentences[index].file!,
                                                   // localPath:
                                                   //     _sentences[index].localPath!,
@@ -528,15 +574,20 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                               children: [
                                                 SPW(35),
                                                 Icon(
-                                                  _isPlaying && _currentPlayingIndex == index
-                                                      ? Icons.pause_circle_outline
-                                                      : Icons.play_circle_outline,
+                                                  _isPlaying &&
+                                                          _currentPlayingIndex ==
+                                                              index
+                                                      ? Icons
+                                                          .pause_circle_outline
+                                                      : Icons
+                                                          .play_circle_outline,
                                                   color: AppColors.black,
                                                 ),
                                                 SPW(5),
                                                 Text(
                                                   "Native Speaker",
-                                                  style: TextStyle(fontSize: 13),
+                                                  style:
+                                                      TextStyle(fontSize: 13),
                                                 ),
                                               ],
                                             ),
@@ -552,7 +603,10 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                           //       )),
                                           InkWell(
                                             onTap: () {
-                                              _showDialog(_sentences[index].text!, false, context);
+                                              _showDialog(
+                                                  _sentences[index].text!,
+                                                  false,
+                                                  context);
                                             },
                                             child: Row(
                                               children: [
@@ -562,7 +616,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                                 SPW(5),
                                                 Text(
                                                   "Practice",
-                                                  style: TextStyle(fontSize: 13),
+                                                  style:
+                                                      TextStyle(fontSize: 13),
                                                 ),
                                                 SPW(35),
                                               ],
@@ -579,7 +634,9 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                         ? getCallFollowUpsValues.isNotEmpty
                             ? ListView.builder(
                                 padding: EdgeInsets.only(
-                                    top: isSplitScreen ? getFullWidgetHeight(height: 14) : getWidgetHeight(height: 14),
+                                    top: isSplitScreen
+                                        ? getFullWidgetHeight(height: 14)
+                                        : getWidgetHeight(height: 14),
                                     left: getWidgetWidth(width: 20),
                                     right: getWidgetWidth(width: 20)),
                                 itemCount: getCallFollowUpsValues.length,
@@ -593,30 +650,51 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                       InkWell(
                                         splashColor: Colors.transparent,
                                         onTap: () async {
-                                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                                          await prefs.setStringList('FollowUpScreen', [
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          await prefs
+                                              .setStringList('FollowUpScreen', [
                                             getCallFollowUpsValues[index].title,
-                                            getCallFollowUpsValues[index].load ?? "",
+                                            getCallFollowUpsValues[index]
+                                                    .load ??
+                                                "",
                                             getCallFollowUpsValues[index].main
                                           ]);
-                                          await prefs.setString('lastAccess', 'FollowUpScreen');
+                                          await prefs.setString(
+                                              'lastAccess', 'FollowUpScreen');
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => FollowUpScreen(
-                                                        user: Provider.of<AuthState>(context, listen: false),
-                                                        title: getCallFollowUpsValues[index].title,
-                                                        load: getCallFollowUpsValues[index].load,
-                                                        main: getCallFollowUpsValues[index].main,
+                                                  builder: (context) =>
+                                                      FollowUpScreen(
+                                                        user: Provider.of<
+                                                                AuthState>(
+                                                            context,
+                                                            listen: false),
+                                                        title:
+                                                            getCallFollowUpsValues[
+                                                                    index]
+                                                                .title,
+                                                        load:
+                                                            getCallFollowUpsValues[
+                                                                    index]
+                                                                .load,
+                                                        main:
+                                                            getCallFollowUpsValues[
+                                                                    index]
+                                                                .main,
                                                         // main: 'Denied As Maximum Benefits Exhausted',
                                                       )));
                                         },
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Flexible(
                                               child: Text(
-                                                getCallFollowUpsValues[index].title,
+                                                getCallFollowUpsValues[index]
+                                                    .title,
                                                 style: TextStyle(
                                                     color: AppColors.white,
                                                     fontFamily: Keys.fontFamily,
@@ -675,10 +753,13 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                             ? ListView.builder(
                                 shrinkWrap: true,
                                 padding: EdgeInsets.only(top: 10),
-                                itemCount: entriesList.length, //_sentences.length,
+                                itemCount:
+                                    entriesList.length, //_sentences.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  print("entrieslist length:${entriesList.length}");
-                                  MapEntry<Object?, Object?> entry = entriesList[index];
+                                  print(
+                                      "entrieslist length:${entriesList.length}");
+                                  MapEntry<Object?, Object?> entry =
+                                      entriesList[index];
                                   //print("AUDIO URL: ${_sentences[index].file}");
                                   /*return Container(
                         //height: 54,
@@ -717,12 +798,15 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                     //     url: _sentences[index].file,
                                     onExpansionChanged: (val) {
                                       if (val) {
-                                        _selectedWordOnClick = entry.key.toString() ?? '';
+                                        _selectedWordOnClick =
+                                            entry.key.toString() ?? '';
                                         setState(() {});
                                       }
                                     },
                                     initiallyExpanded:
-                                        _selectedWordOnClick != null && _selectedWordOnClick == entry.key.toString(),
+                                        _selectedWordOnClick != null &&
+                                            _selectedWordOnClick ==
+                                                entry.key.toString(),
                                     //   isFav: _sentences[index].isFav!,
                                     //   wordId: _sentences[index].id!,
                                     isWord: false,
@@ -735,12 +819,15 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                     isRefresh: (bool) {},
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 30, right: 30),
+                                        padding: const EdgeInsets.only(
+                                            left: 30, right: 30),
                                         child: Container(
                                           height: 59,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.only(
-                                                bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                                                bottomLeft: Radius.circular(10),
+                                                bottomRight:
+                                                    Radius.circular(10)),
                                             color: Colors.white,
                                           ),
                                           child: Row(
@@ -749,30 +836,51 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                               // if (!_isPlaying)
                                               InkWell(
                                                 onTap: () async {
-                                                  String? learningModuleValue = "";
+                                                  String? learningModuleValue =
+                                                      "";
                                                   if (entry.value is Map) {
-                                                    Map<dynamic, dynamic> valueMap =
-                                                        entry.value as Map<dynamic, dynamic>;
+                                                    Map<dynamic, dynamic>
+                                                        valueMap = entry.value
+                                                            as Map<dynamic,
+                                                                dynamic>;
 
-                                                    learningModuleValue = valueMap['Learning module'] as String?;
+                                                    learningModuleValue =
+                                                        valueMap[
+                                                                'Learning module']
+                                                            as String?;
 
-                                                    print('Learning module: ${learningModuleValue.runtimeType}');
+                                                    print(
+                                                        'Learning module: ${learningModuleValue.runtimeType}');
                                                   } else {
-                                                    print('The entry value is not a Map.');
+                                                    print(
+                                                        'The entry value is not a Map.');
                                                   }
-                                                  print("checkEntryValue:${entry.value}");
-                                                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                  await prefs
-                                                      .setStringList('InAppWebViewPage', [learningModuleValue ?? ""]);
-                                                  await prefs.setString('lastAccess', 'InAppWebViewPage');
+                                                  print(
+                                                      "checkEntryValue:${entry.value}");
+                                                  SharedPreferences prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  await prefs.setStringList(
+                                                      'InAppWebViewPage', [
+                                                    learningModuleValue ?? ""
+                                                  ]);
+                                                  await prefs.setString(
+                                                      'lastAccess',
+                                                      'InAppWebViewPage');
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                              InAppWebViewPage(url: learningModuleValue ?? "")));
+                                                              InAppWebViewPage(
+                                                                  url:
+                                                                      learningModuleValue ??
+                                                                          "")));
                                                 },
-                                                child: Image.asset(AllAssets.interaction,
-                                                    width: 25, height: 25, color: Colors.black),
+                                                child: Image.asset(
+                                                    AllAssets.interaction,
+                                                    width: 25,
+                                                    height: 25,
+                                                    color: Colors.black),
                                               ),
                                               SPW(5),
                                               Text(
@@ -784,24 +892,40 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                                 onTap: () async {
                                                   String? exerciseValue = "";
                                                   if (entry.value is Map) {
-                                                    Map<dynamic, dynamic> valueMap =
-                                                        entry.value as Map<dynamic, dynamic>;
+                                                    Map<dynamic, dynamic>
+                                                        valueMap = entry.value
+                                                            as Map<dynamic,
+                                                                dynamic>;
 
-                                                    exerciseValue = valueMap['Exercise'] as String?;
+                                                    exerciseValue =
+                                                        valueMap['Exercise']
+                                                            as String?;
 
-                                                    print('Exercise: ${exerciseValue.runtimeType}');
+                                                    print(
+                                                        'Exercise: ${exerciseValue.runtimeType}');
                                                   } else {
-                                                    print('The entry value is not a Map.');
+                                                    print(
+                                                        'The entry value is not a Map.');
                                                   }
-                                                  print("checkEntryValue:${entry.value}");
-                                                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                  await prefs.setStringList('InAppWebViewPage', [exerciseValue ?? ""]);
-                                                  await prefs.setString('lastAccess', 'InAppWebViewPage');
+                                                  print(
+                                                      "checkEntryValue:${entry.value}");
+                                                  SharedPreferences prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  await prefs.setStringList(
+                                                      'InAppWebViewPage',
+                                                      [exerciseValue ?? ""]);
+                                                  await prefs.setString(
+                                                      'lastAccess',
+                                                      'InAppWebViewPage');
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                              InAppWebViewPage(url: exerciseValue ?? "")));
+                                                              InAppWebViewPage(
+                                                                  url:
+                                                                      exerciseValue ??
+                                                                          "")));
                                                 },
                                                 child: Wrap(
                                                   children: [
@@ -814,7 +938,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                                     SPW(5),
                                                     Text(
                                                       "Exercise",
-                                                      style: TextStyle(fontSize: 13),
+                                                      style: TextStyle(
+                                                          fontSize: 13),
                                                     )
                                                   ],
                                                 ),
@@ -854,7 +979,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
           bm.MenuItem(
             child: Container(
               padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+              decoration:
+                  BoxDecoration(color: Colors.white, shape: BoxShape.circle),
               child: Icon(
                 Icons.home,
                 color: Colors.grey,
@@ -871,7 +997,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
           bm.MenuItem(
             child: Container(
               padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+              decoration:
+                  BoxDecoration(color: Colors.white, shape: BoxShape.circle),
               child: Icon(
                 Icons.keyboard,
                 color: Colors.grey,
@@ -921,7 +1048,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
           bm.MenuItem(
             child: Container(
               padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+              decoration:
+                  BoxDecoration(color: Colors.white, shape: BoxShape.circle),
               child: Icon(
                 Icons.check_box,
                 color: Colors.grey,
@@ -974,5 +1102,6 @@ class CallFollowUpsModels {
   final String title;
   final String load;
   final String main;
-  const CallFollowUpsModels({required this.title, required this.load, required this.main});
+  const CallFollowUpsModels(
+      {required this.title, required this.load, required this.main});
 }

@@ -91,7 +91,8 @@ class DropDownWordItemProluentEnglish extends StatefulWidget {
   }
 }
 
-class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProluentEnglish> {
+class _DropDownWordItemProluentEnglishState
+    extends State<DropDownWordItemProluentEnglish> {
   String? url;
   PlayerMode? mode;
   bool loading = false;
@@ -108,7 +109,8 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
   late bool isButtonsVisible;
   late bool isCheckBoxDownloading;
 
-  final GlobalKey<AppExpansionTileProfluentWordScreenState> expansionTile = new GlobalKey();
+  final GlobalKey<AppExpansionTileProfluentWordScreenState> expansionTile =
+      new GlobalKey();
 
   final Connectivity connectivity = Connectivity();
 
@@ -117,7 +119,8 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
   @override
   void initState() {
     super.initState();
-    _playerStateSubscription = audioPlayerManager.onPlayerStateChanged.listen((event) async {
+    _playerStateSubscription =
+        audioPlayerManager.onPlayerStateChanged.listen((event) async {
       Future.delayed(const Duration(seconds: 2), () {
         log("This was Triggered");
         return isPlaying1[widget.index].value = false;
@@ -126,7 +129,8 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
 
     initConnectivity();
 
-    networkSubscription = Connectivity().onConnectivityChanged.listen((connectionResult) {
+    networkSubscription =
+        Connectivity().onConnectivityChanged.listen((connectionResult) {
       checkConnection(connectionResult as ConnectivityResult);
     });
     isDownloaded = widget.isDownloaded!;
@@ -209,7 +213,9 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
     }
     if (isFaved) {
       Toast.show(
-        !favIs ? "Removed from your priority list" : "Added to your priority list",
+        !favIs
+            ? "Removed from your priority list"
+            : "Added to your priority list",
         duration: Toast.lengthShort,
         gravity: Toast.bottom,
         backgroundColor: AppColors.white,
@@ -233,7 +239,8 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
       String? eLocalPath;
 
       if (isFav == null || isFav == 0) {
-        localPath = await Utils.downloadFile(userDatas, url!, '${widget.title}.mp3', '$appDocPath/${widget.load}');
+        localPath = await Utils.downloadFile(userDatas, url!,
+            '${widget.title}.mp3', '$appDocPath/${widget.load}');
         eLocalPath = EncryptData.encryptFile(localPath, userDatas);
 
         try {
@@ -245,7 +252,8 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
         if (userDatas.isDownloaded!) {
           DatabaseProvider dbb = DatabaseProvider.get;
           WordsDatabaseRepository dbRef = WordsDatabaseRepository(dbb);
-          bool isFaved = await dbRef.setDownloadPath(widget.wordId!, eLocalPath);
+          bool isFaved =
+              await dbRef.setDownloadPath(widget.wordId!, eLocalPath);
           setState(() {
             _isDownloading = false;
           });
@@ -305,7 +313,8 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
       _isAudioLoading = true;
     });
 
-    await audioPlayerManager.play(url!, context: context, localPath: widget.localPath, decodedPath: (val) {
+    await audioPlayerManager.play(url!,
+        context: context, localPath: widget.localPath, decodedPath: (val) {
       eLocalPath = val;
     });
 
@@ -322,7 +331,11 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
 
     FirebaseHelper db = FirebaseHelper();
     AuthState userDatas = Provider.of<AuthState>(context, listen: false);
+    String company = await SharedPref.getSavedString("companyId");
+    String batch = await SharedPref.getSavedString("batch");
     db.saveWordListReport(
+      companyId: company,
+      batch: batch,
       isPractice: false,
       company: userDatas.appUser!.company!,
       name: userDatas.appUser!.UserMname,
@@ -354,10 +367,14 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
     print("urlll : $url");
     try {
       print("responseeeeeeeedferferfwer");
-      var response = await http.post(Uri.parse(url),
-          body: {"userid": userId, "practicetype": "Pronunciation Sound Lab Report", "action": action});
+      var response = await http.post(Uri.parse(url), body: {
+        "userid": userId,
+        "practicetype": "Pronunciation Sound Lab Report",
+        "action": action
+      });
 
-      print("response start practice for pronunciation labbb : ${response.body}");
+      print(
+          "response start practice for pronunciation labbb : ${response.body}");
     } catch (e) {
       print("error login : $e");
     }
@@ -415,7 +432,9 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
                                   )
                                 : ImageIcon(
                                     AssetImage(AllAssets.roundPlay),
-                                    color: isFav == 0 ? Colors.white : Color(0xFF6C63FE),
+                                    color: isFav == 0
+                                        ? Colors.white
+                                        : Color(0xFF6C63FE),
                                   ),
                       ),
                     if (isPlaying1[widget.index].value)
@@ -457,31 +476,42 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
                                 isCheckBoxDownloading = true;
                               });
                               DatabaseProvider dbb = DatabaseProvider.get;
-                              WordsDatabaseRepository dbRef = WordsDatabaseRepository(dbb);
-                              Directory appDocDir = await getApplicationDocumentsDirectory();
+                              WordsDatabaseRepository dbRef =
+                                  WordsDatabaseRepository(dbb);
+                              Directory appDocDir =
+                                  await getApplicationDocumentsDirectory();
                               String appDocPath = appDocDir.path;
-                              AuthState userDatas = Provider.of<AuthState>(context, listen: false);
+                              AuthState userDatas = Provider.of<AuthState>(
+                                  context,
+                                  listen: false);
 
                               String localPath = await Utils.downloadFile(
-                                  userDatas, url!, '${widget.title}.mp3', '$appDocPath/${widget.load}');
+                                  userDatas,
+                                  url!,
+                                  '${widget.title}.mp3',
+                                  '$appDocPath/${widget.load}');
 
-                              String eLocalPath = EncryptData.encryptFile(localPath, userDatas);
+                              String eLocalPath =
+                                  EncryptData.encryptFile(localPath, userDatas);
                               try {
                                 await File(localPath).delete();
                               } catch (e) {
                                 print(e);
                               }
 
-                              if (localPath == "Error code: 403" || !downloadController.isDownloaded!) {
+                              if (localPath == "Error code: 403" ||
+                                  !downloadController.isDownloaded!) {
                                 Toast.show("Failed to Download",
                                     duration: Toast.lengthShort,
                                     gravity: Toast.bottom,
                                     backgroundColor: AppColors.white,
-                                    textStyle: TextStyle(color: AppColors.black),
+                                    textStyle:
+                                        TextStyle(color: AppColors.black),
                                     backgroundRadius: 10);
                                 widget.isRefresh(true);
                               } else {
-                                bool isFaved = await dbRef.setDownloadPath(widget.wordId!, eLocalPath);
+                                bool isFaved = await dbRef.setDownloadPath(
+                                    widget.wordId!, eLocalPath);
                                 setState(() {
                                   _isDownloading = false;
                                 });
@@ -493,7 +523,8 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
                                       duration: Toast.lengthShort,
                                       gravity: Toast.bottom,
                                       backgroundColor: AppColors.white,
-                                      textStyle: TextStyle(color: AppColors.black),
+                                      textStyle:
+                                          TextStyle(color: AppColors.black),
                                       backgroundRadius: 10);
                                   widget.isRefresh(true);
                                 }
@@ -535,7 +566,9 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
                           ),
                         ],
                       ),
-                    if (isDownloaded != null && isDownloaded && isButtonsVisible)
+                    if (isDownloaded != null &&
+                        isDownloaded &&
+                        isButtonsVisible)
                       InkWell(
                         child: SizedBox(
                           // width: displayWidth(context) / 18.75,
@@ -558,7 +591,8 @@ class _DropDownWordItemProluentEnglishState extends State<DropDownWordItemProlue
                             child: Image.asset(
                               isFav == 0 ? AllAssets.save : AllAssets.saved,
                               width: 18,
-                              color: isFav == 0 ? Colors.white : Color(0xFF6C63FE),
+                              color:
+                                  isFav == 0 ? Colors.white : Color(0xFF6C63FE),
                             ),
                           ),
                           onPressed: () async {
@@ -735,10 +769,12 @@ class AppExpansionTileProfluentWordScreen extends StatefulWidget {
   final bool initiallyExpanded;
 
   @override
-  State<AppExpansionTileProfluentWordScreen> createState() => AppExpansionTileProfluentWordScreenState();
+  State<AppExpansionTileProfluentWordScreen> createState() =>
+      AppExpansionTileProfluentWordScreenState();
 }
 
-class AppExpansionTileProfluentWordScreenState extends State<AppExpansionTileProfluentWordScreen>
+class AppExpansionTileProfluentWordScreenState
+    extends State<AppExpansionTileProfluentWordScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late CurvedAnimation _easeOutAnimation;
@@ -754,15 +790,18 @@ class AppExpansionTileProfluentWordScreenState extends State<AppExpansionTilePro
   void initState() {
     super.initState();
     _controller = new AnimationController(duration: _kExpand, vsync: this);
-    _easeOutAnimation = new CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    _easeInAnimation = new CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _easeOutAnimation =
+        new CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _easeInAnimation =
+        new CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _borderColor = new ColorTween();
     _headerColor = new ColorTween();
     _iconColor = new ColorTween();
 
     _backgroundColor = new ColorTween();
 
-    _isExpanded = PageStorage.of(context).readState(context) ?? widget.initiallyExpanded;
+    _isExpanded =
+        PageStorage.of(context).readState(context) ?? widget.initiallyExpanded;
     if (_isExpanded) _controller.value = 1.0;
   }
 
@@ -809,7 +848,8 @@ class AppExpansionTileProfluentWordScreenState extends State<AppExpansionTilePro
     return new Container(
       margin: EdgeInsets.zero,
       decoration: new BoxDecoration(
-        color: _backgroundColor.evaluate(_easeOutAnimation) ?? Colors.transparent,
+        color:
+            _backgroundColor.evaluate(_easeOutAnimation) ?? Colors.transparent,
       ),
       child: Column(
         // mainAxisSize: MainAxisSize.min,
@@ -818,11 +858,15 @@ class AppExpansionTileProfluentWordScreenState extends State<AppExpansionTilePro
             color: Color(0xFF293750),
             // margin: EdgeInsets.symmetric(vertical: 1),
             child: IconTheme.merge(
-              data: new IconThemeData(color: _iconColor.evaluate(_easeInAnimation)),
+              data: new IconThemeData(
+                  color: _iconColor.evaluate(_easeInAnimation)),
               child: GestureDetector(
                 onTap: toggle,
                 child: DefaultTextStyle(
-                  style: Theme.of(context!).textTheme.headline4!.copyWith(color: titleColor),
+                  style: Theme.of(context!)
+                      .textTheme
+                      .headlineMedium!
+                      .copyWith(color: titleColor),
                   child: widget.title,
                 ),
               ),
@@ -844,7 +888,7 @@ class AppExpansionTileProfluentWordScreenState extends State<AppExpansionTilePro
     final ThemeData theme = Theme.of(context);
     _borderColor.end = theme.dividerColor;
     _headerColor
-      ..begin = theme.textTheme.headline4?.color
+      ..begin = theme.textTheme.headlineMedium?.color
       ..end = theme.primaryColor;
     _iconColor
       ..begin = theme.unselectedWidgetColor

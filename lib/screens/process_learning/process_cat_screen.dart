@@ -1,7 +1,8 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:litelearninglab/API/api.dart';
 import 'package:litelearninglab/common_widgets/spacings.dart';
 import 'package:litelearninglab/constants/app_colors.dart';
 import 'package:litelearninglab/screens/webview/webview_screen.dart';
@@ -42,8 +43,8 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
 
   @override
   void initState() {
-    startTimerSubCategory(processLearning, widget.title);
     // isPlaying = List.generate(widget.linkCats.length, (index) => false);
+    subCategoryTitile = widget.title;
     controller = AutoScrollController(
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
@@ -55,7 +56,7 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvoked: (didPop) {
-        stopTimerSubCategory();
+        stopTimerMainCategory();
       },
       child: BackgroundWidget(
         appBar: CommonAppBar(
@@ -207,6 +208,9 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                 maintitle: "widget.title",
                                 // expKey: expansionTile,
                                 onExpansionChanged: (val) {
+                                  sessionName = widget.linkCats[index].name ??
+                                      "not getting";
+                                  log("printing the session ${sessionName}");
                                   if (val) {
                                     _selectedWordOnClick =
                                         widget.linkCats[index].name;
@@ -252,6 +256,7 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                                         null &&
                                                     widget.linkCats[index]
                                                         .video!.isNotEmpty) {
+                                                  activityName = "Video";
                                                   sessionName = widget
                                                       .linkCats[index].name!;
                                                   startTimerMainCategory(
@@ -314,7 +319,6 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                             SPW(15),
                                             InkWell(
                                                 onTap: () async {
-                                                  sessionName = widget.title;
                                                   if (widget.linkCats[index]
                                                               .simulation !=
                                                           null &&
@@ -322,6 +326,9 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                                           .linkCats[index]
                                                           .simulation!
                                                           .isNotEmpty) {
+                                                    activityName = "E-Learning";
+                                                    sessionName = widget
+                                                        .linkCats[index].name!;
                                                     String? links2 = widget
                                                         .linkCats[index]
                                                         .simulation;
@@ -383,6 +390,9 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                                           .linkCats[index]
                                                           .eLearning!
                                                           .isNotEmpty) {
+                                                    activityName = "E-Learning";
+                                                    sessionName = widget
+                                                        .linkCats[index].name!;
                                                     SharedPreferences prefs =
                                                         await SharedPreferences
                                                             .getInstance();
@@ -444,13 +454,14 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                             SPW(15),
                                             InkWell(
                                                 onTap: () async {
-                                                  sessionName = widget
-                                                      .linkCats[index].name!;
                                                   if (widget.linkCats[index]
                                                               .faq !=
                                                           null &&
                                                       widget.linkCats[index]
                                                           .faq!.isNotEmpty) {
+                                                    activityName = "FAQ";
+                                                    sessionName = widget
+                                                        .linkCats[index].name!;
                                                     print(
                                                         "LinkCheckkk:${widget.linkCats[index].faq}");
                                                     String? links3 = widget
@@ -522,8 +533,6 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                             SPW(15),
                                             InkWell(
                                               onTap: () async {
-                                                sessionName = widget
-                                                    .linkCats[index].name!;
                                                 if (widget.linkCats[index]
                                                             .knowledge !=
                                                         null &&
@@ -531,6 +540,10 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                                                         .linkCats[index]
                                                         .knowledge!
                                                         .isNotEmpty) {
+                                                  activityName =
+                                                      "Knowledge heck";
+                                                  sessionName = widget
+                                                      .linkCats[index].name!;
                                                   String? links4 = widget
                                                       .linkCats[index]
                                                       .knowledge;

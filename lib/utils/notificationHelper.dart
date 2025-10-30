@@ -5,7 +5,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/subjects.dart';
-
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
 import '../models/ReminderNotification.dart';
 
 final BehaviorSubject<ReminderNotification> didReceiveLocalNotificationSubject =
@@ -18,15 +20,11 @@ Future<void> initNotifications(
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
   var initializationSettingsAndroid =
       const AndroidInitializationSettings('notification');
-  var initializationSettingsIOS = DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-      onDidReceiveLocalNotification:
-          (int? id, String? title, String? body, String? payload) async {
-        didReceiveLocalNotificationSubject.add(ReminderNotification(
-            id: id, title: title, body: body, payload: payload));
-      });
+  var initializationSettingsIOS = const DarwinInitializationSettings(
+    requestAlertPermission: false,
+    requestBadgePermission: false,
+    requestSoundPermission: false,
+  );
   var initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings,
@@ -67,17 +65,21 @@ Future<String> _downloadAndSaveFile(String url, String fileName) async {
 }
 
 Future<void> showNotification(
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin, String title, String body,
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
+    String title,
+    String body,
     {String? imageUrl}) async {
   // Initialize Android notification details
   AndroidNotificationDetails androidPlatformChannelSpecifics;
 
   if (imageUrl != null && imageUrl.isNotEmpty) {
     // Download the image
-    final String largeIconPath = await _downloadAndSaveFile(imageUrl, 'largeIcon');
+    final String largeIconPath =
+        await _downloadAndSaveFile(imageUrl, 'largeIcon');
 
     // Use BigPictureStyleInformation for displaying the image
-    final BigPictureStyleInformation bigPictureStyleInformation = BigPictureStyleInformation(
+    final BigPictureStyleInformation bigPictureStyleInformation =
+        BigPictureStyleInformation(
       FilePathAndroidBitmap(largeIconPath),
     );
 
@@ -139,6 +141,11 @@ Future<void> scheduleNotification(
     String id,
     String body,
     DateTime scheduledNotificationDateTime) async {
+  // Initialize time zones if not already done
+  tz.initializeTimeZones();
+  final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+  tz.setLocalLocation(tz.getLocation(currentTimeZone));
+
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
     id,
     'Reminder notifications',
@@ -147,13 +154,20 @@ Future<void> scheduleNotification(
     // sound: const RawResourceAndroidNotificationSound('alert_call_tune'),
   );
   var iOSPlatformChannelSpecifics = const DarwinNotificationDetails();
-  // const IOSNotificationDetails(sound: 'alert_call_tune.aiff');
-  const DarwinNotificationDetails();
   var platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics);
-  await flutterLocalNotificationsPlugin.schedule(0, 'Reminder', body,
-      scheduledNotificationDateTime, platformChannelSpecifics);
+
+  // await flutterLocalNotificationsPlugin.zonedSchedule(
+  //   0,
+  //   'Reminder',
+  //   body,
+  //   tz.TZDateTime.from(scheduledNotificationDateTime, tz.local),
+  //   platformChannelSpecifics,
+  //   androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+  //   // uiLocalNotificationDateInterpretation:
+  //   //     UILocalNotificationDateInterpretation.absoluteTime,
+  // );
 }
 
 Future<void> scheduleNotificationPeriodically(
@@ -172,7 +186,8 @@ Future<void> scheduleNotificationPeriodically(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics);
   await flutterLocalNotificationsPlugin.periodicallyShow(
-      0, 'Reminder', body, interval, platformChannelSpecifics);
+      0, 'Reminder', body, interval, platformChannelSpecifics,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle);
 }
 
 void requestIOSPermissions(

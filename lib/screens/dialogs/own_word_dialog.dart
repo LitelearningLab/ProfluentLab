@@ -24,7 +24,8 @@ import 'sentence_result_dialog.dart';
 import 'speech_analytics_dialog.dart';
 
 class OwnWordDialog extends StatefulWidget {
-  OwnWordDialog({Key? key, required this.isFromWord, this.word}) : super(key: key);
+  OwnWordDialog({Key? key, required this.isFromWord, this.word})
+      : super(key: key);
   final bool isFromWord;
   final String? word;
 
@@ -182,7 +183,11 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
 
         FirebaseHelper db = new FirebaseHelper();
         AuthState userDatas = Provider.of<AuthState>(context, listen: false);
+        String company = await SharedPref.getSavedString("companyId");
+        String batch = await SharedPref.getSavedString("batch");
         db.saveWordListReport(
+          companyId: company,
+          batch: batch,
           isPractice: false,
           company: userDatas.appUser?.company ?? "",
           name: userDatas.appUser?.UserMname,
@@ -213,7 +218,8 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
     Get.dialog(
       Container(
         child: Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
           child: SpeechAnalyticsDialog(
             true,
             isShowDidNotCatch: notCatch,
@@ -249,7 +255,8 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
               // color: Color(0xCC000000),
               child: Dialog(
                 // backgroundColor: AppColors.black,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0)),
                 //this right here
                 child: SentenceResultDialog(
                   correctedWidget: value.formatedWords,
@@ -431,9 +438,10 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
     int startIndex = 0;
 
     for (final match in numberPattern.allMatches(inputString)) {
-      final int number = int.parse(match.group(0)!); // Extract and parse the number
-      final String numberText =
-          convertToWordsWithAnd(number); // Use the modified method to convert number to words with "and"
+      final int number =
+          int.parse(match.group(0)!); // Extract and parse the number
+      final String numberText = convertToWordsWithAnd(
+          number); // Use the modified method to convert number to words with "and"
 
       // Append the text before the number
       outputBuffer.write(inputString.substring(startIndex, match.start));
@@ -483,7 +491,8 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Dialog(
           backgroundColor: AppColors.trans,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           //this right here
           child: Container(
             // height: 275,
@@ -497,28 +506,38 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  height: isSplitScreen ? getFullWidgetHeight(height: 70) : getWidgetHeight(height: 70),
+                  height: isSplitScreen
+                      ? getFullWidgetHeight(height: 70)
+                      : getWidgetHeight(height: 70),
                   alignment: Alignment.center,
                   decoration: new BoxDecoration(
-                    borderRadius:
-                        new BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
+                    borderRadius: new BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0)),
                     color: Color(0xff34425D),
                     // boxShadow: [new BoxShadow(color: Colors.grey, blurRadius: 3.0, offset: new Offset(1.0, 1.0))],
                   ),
                   child: Text(_title,
-                      style: TextStyle(fontSize: kText.scale(20), fontFamily: Keys.fontFamily, color: Colors.white)),
+                      style: TextStyle(
+                          fontSize: kText.scale(20),
+                          fontFamily: Keys.fontFamily,
+                          color: Colors.white)),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: getWidgetWidth(width: 15),
-                      vertical: isSplitScreen ? getFullWidgetHeight(height: 5) : getWidgetHeight(height: 5)),
+                      vertical: isSplitScreen
+                          ? getFullWidgetHeight(height: 5)
+                          : getWidgetHeight(height: 5)),
                   child: TextFormField(
                     controller: _text,
                     cursorColor: Colors.white,
-                    style: TextStyle(color: Colors.white, fontSize: kText.scale(17)),
+                    style: TextStyle(
+                        color: Colors.white, fontSize: kText.scale(17)),
                     decoration: InputDecoration(
                       hintText: "Type the word...",
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: kText.scale(15)),
+                      hintStyle: TextStyle(
+                          color: Colors.grey, fontSize: kText.scale(15)),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xff34425D)),
                       ),
@@ -528,10 +547,14 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
                     ),
                   ),
                 ),
-                SizedBox(height: isSplitScreen ? getFullWidgetHeight(height: 10) : getWidgetHeight(height: 10)),
+                SizedBox(
+                    height: isSplitScreen
+                        ? getFullWidgetHeight(height: 10)
+                        : getWidgetHeight(height: 10)),
                 if (_lastWord.length > 0)
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 15)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: getWidgetWidth(width: 15)),
                     child: SizedBox(
                       //   height: isSplitScreen ?  getFullWidgetHeight(height: 12) : getWidgetHeight(height:80),
                       width: displayWidth(context),
@@ -539,8 +562,14 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(width: getWidgetWidth(width: 15)),
-                          SizedBox(height: isSplitScreen ? getFullWidgetHeight(height: 5) : getWidgetHeight(height: 5)),
-                          Text(widget.isFromWord ? "Last Searched Term: " : "Last sentence tried: ",
+                          SizedBox(
+                              height: isSplitScreen
+                                  ? getFullWidgetHeight(height: 5)
+                                  : getWidgetHeight(height: 5)),
+                          Text(
+                              widget.isFromWord
+                                  ? "Last Searched Term: "
+                                  : "Last sentence tried: ",
                               style: TextStyle(
                                 fontSize: kText.scale(12),
                                 fontWeight: FontWeight.bold,
@@ -554,14 +583,19 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
                               print(" last word clickedd");
                             },
                             child: SizedBox(
-                              height: isSplitScreen ? getFullWidgetHeight(height: 50) : getWidgetHeight(height: 50),
+                              height: isSplitScreen
+                                  ? getFullWidgetHeight(height: 50)
+                                  : getWidgetHeight(height: 50),
                               width: displayHeight(context),
                               // color: Colors.blue,
                               child: Text(
-                                  convertNumbersToText(convertSpecialChars(_text.text)).isEmpty
+                                  convertNumbersToText(
+                                              convertSpecialChars(_text.text))
+                                          .isEmpty
                                       ? _lastWord.capitalizeFirst!
                                       : convertNumbersToText(
-                                          convertSpecialChars(_text.text).capitalizeFirst!,
+                                          convertSpecialChars(_text.text)
+                                              .capitalizeFirst!,
                                         ),
                                   // maxLines: 5,
                                   softWrap: true, // Allow wrapping to next line
@@ -580,14 +614,18 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
 
                 //SizedBox(height: isSplitScreen ?  getFullWidgetHeight(height: 10) : getWidgetHeight(height:10)),
                 Container(
-                    height: isSplitScreen ? getFullWidgetHeight(height: 85) : getWidgetHeight(height: 85),
+                    height: isSplitScreen
+                        ? getFullWidgetHeight(height: 85)
+                        : getWidgetHeight(height: 85),
                     width: displayWidth(context),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Container(
                           width: displayWidth(context) * 0.3,
-                          height: isSplitScreen ? getFullWidgetHeight(height: 85) : getWidgetHeight(height: 85),
+                          height: isSplitScreen
+                              ? getFullWidgetHeight(height: 85)
+                              : getWidgetHeight(height: 85),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -595,24 +633,30 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
                               IconButton(
                                   icon: Icon(
                                     Icons.play_circle_outline,
-                                    size: isSplitScreen ? getFullWidgetHeight(height: 35) : getWidgetHeight(height: 35),
+                                    size: isSplitScreen
+                                        ? getFullWidgetHeight(height: 35)
+                                        : getWidgetHeight(height: 35),
                                     color: Colors.white,
                                   ),
                                   onPressed: () {
                                     _isCorrect = null;
                                     setState(() {});
                                     if (_text.text.isNotEmpty) {
-                                      _newVoiceText = convertNumbersToText(convertSpecialChars(_text.text));
+                                      _newVoiceText = convertNumbersToText(
+                                          convertSpecialChars(_text.text));
                                       _speak();
-                                      FocusManager.instance.primaryFocus?.unfocus();
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
                                     } else {
                                       //  _newVoiceText = "Please write word";
-                                      FocusManager.instance.primaryFocus?.unfocus();
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
                                       Toast.show("Please type the word",
                                           duration: Toast.lengthShort,
                                           gravity: Toast.bottom,
                                           backgroundColor: AppColors.white,
-                                          textStyle: TextStyle(color: AppColors.black),
+                                          textStyle:
+                                              TextStyle(color: AppColors.black),
                                           backgroundRadius: 10);
                                     }
                                   }),
@@ -628,7 +672,9 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
                         ),
                         Container(
                           width: displayWidth(context) * 0.3,
-                          height: isSplitScreen ? getFullWidgetHeight(height: 85) : getWidgetHeight(height: 85),
+                          height: isSplitScreen
+                              ? getFullWidgetHeight(height: 85)
+                              : getWidgetHeight(height: 85),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -636,17 +682,22 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
                               IconButton(
                                   icon: Icon(
                                     Icons.mic_none_rounded,
-                                    size: isSplitScreen ? getFullWidgetHeight(height: 35) : getWidgetHeight(height: 35),
-                                    color: /*_text.text.isEmpty ? Color.fromARGB(255, 95, 95, 95) : */ Colors.white,
+                                    size: isSplitScreen
+                                        ? getFullWidgetHeight(height: 35)
+                                        : getWidgetHeight(height: 35),
+                                    color: /*_text.text.isEmpty ? Color.fromARGB(255, 95, 95, 95) : */
+                                        Colors.white,
                                   ),
                                   onPressed: _text.text.isEmpty
                                       ? () {
-                                          FocusManager.instance.primaryFocus?.unfocus();
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
                                           Toast.show("Please type the word",
                                               duration: Toast.lengthShort,
                                               gravity: Toast.bottom,
                                               backgroundColor: AppColors.white,
-                                              textStyle: TextStyle(color: AppColors.black),
+                                              textStyle: TextStyle(
+                                                  color: AppColors.black),
                                               backgroundRadius: 10);
                                         }
                                       : () {
@@ -654,15 +705,27 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
                                           setState(() {});
                                           // _newVoiceText = convertNumbersToText(convertSpecialChars(_text.text));
                                           _showDialog(
-                                              convertNumbersToText(convertSpecialChars(_text.text)), false, context);
-                                          if (_newVoiceText != "Please write word") if (widget.isFromWord)
+                                              convertNumbersToText(
+                                                  convertSpecialChars(
+                                                      _text.text)),
+                                              false,
+                                              context);
+                                          if (_newVoiceText !=
+                                              "Please write word") if (widget.isFromWord)
                                             SharedPref.saveString(
-                                                "lastTriedWord", convertNumbersToText(convertSpecialChars(_text.text)));
+                                                "lastTriedWord",
+                                                convertNumbersToText(
+                                                    convertSpecialChars(
+                                                        _text.text)));
                                           else
-                                            SharedPref.saveString("lastTriedSentence",
-                                                convertNumbersToText(convertSpecialChars(_text.text)));
+                                            SharedPref.saveString(
+                                                "lastTriedSentence",
+                                                convertNumbersToText(
+                                                    convertSpecialChars(
+                                                        _text.text)));
                                           // SharedPref.saveString("lastTriedSentence", );
-                                          FocusManager.instance.primaryFocus?.unfocus();
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
                                         }),
                               Text("Pratice",
                                   textAlign: TextAlign.center,
@@ -680,12 +743,17 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
                   ListTile(
                     title: Text(
                       "Pronunciation Analysis Result",
-                      style:
-                          TextStyle(color: Color(0xFF6C63FF), fontSize: kText.scale(13), fontFamily: Keys.fontFamily),
+                      style: TextStyle(
+                          color: Color(0xFF6C63FF),
+                          fontSize: kText.scale(13),
+                          fontFamily: Keys.fontFamily),
                     ),
                     subtitle: Text(
                       "Note: This result only indicates intelligibility and does not confirm the accuracy of pronunciation.",
-                      style: TextStyle(color: AppColors.white, fontSize: kText.scale(10), fontFamily: Keys.fontFamily),
+                      style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: kText.scale(10),
+                          fontFamily: Keys.fontFamily),
                     ),
                     trailing: Icon(
                       _isCorrect! ? Icons.check_circle : Icons.cancel,
@@ -694,7 +762,10 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
                     ),
                   ),
                 if (_isCorrect != null)
-                  SizedBox(height: isSplitScreen ? getFullWidgetHeight(height: 25) : getWidgetHeight(height: 25)),
+                  SizedBox(
+                      height: isSplitScreen
+                          ? getFullWidgetHeight(height: 25)
+                          : getWidgetHeight(height: 25)),
                 // SPH(20),
               ],
             ),

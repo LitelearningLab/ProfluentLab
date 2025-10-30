@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:litelearninglab/API/api.dart';
 import 'package:litelearninglab/common_widgets/boom_menu_item.dart' as bm;
@@ -22,11 +21,11 @@ import 'package:litelearninglab/screens/dialogs/speech_analytics_dialog.dart';
 import 'package:litelearninglab/screens/sentences/sentences_screen.dart';
 import 'package:litelearninglab/screens/word_screen/widgets/drop_down_word_item.dart';
 import 'package:litelearninglab/states/auth_state.dart';
+import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/encrypt_data.dart';
 import 'package:litelearninglab/utils/firebase_helper.dart';
 import 'package:litelearninglab/utils/firebase_helper_RTD.dart';
 import 'package:litelearninglab/utils/shared_pref.dart';
-import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:litelearninglab/utils/utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -66,7 +65,8 @@ class SentenceScreen extends StatefulWidget {
   }
 }
 
-class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObserver {
+class _SentenceScreenState extends State<SentenceScreen>
+    with WidgetsBindingObserver {
   FirebaseHelperRTD db = new FirebaseHelperRTD();
   List<Sentence> _sentences = [];
   Sentence? _selectedSentence;
@@ -80,6 +80,7 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
   String load = "";
   String main = "";
   List<bool> isDownloaded = [];
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -92,13 +93,18 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
     print("load2 : ${load}");
     print("main3 : ${main}");
     _getSentences(isRefresh: false);
-    _playerStateSubscription = _audioPlayerManager.onPlayerStateChanged.listen((event) {
+    _playerStateSubscription =
+        _audioPlayerManager.onPlayerStateChanged.listen((event) {
       if (event == PlayerState.playing) {
         _isPlaying = true;
-      } else {
+        isLoading = false;
+      } else if (event == PlayerState.completed ||
+          event == PlayerState.stopped) {
         _isPlaying = false;
+        isLoading = false; // Audio stopped or completed, hide loading
       }
-      setState(() {});
+
+      setState(() {}); // Reflect changes in UI
     });
   }
 
@@ -108,13 +114,15 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
     setState(() {
       _isLoading = true;
     });
-    if ((searchTerm == null || searchTerm.length == 0) && !isRefresh) setState(() {});
+    if ((searchTerm == null || searchTerm.length == 0) && !isRefresh)
+      setState(() {});
     _sentences = [];
     print("load : ${widget.load}");
     print("load length : ${widget.load.length}");
     if (widget.load.length > 0) {
       print("from firebase");
-      _sentences = await db.getFollowUps("SentenceConstructionLab", widget.main, widget.load);
+      _sentences = await db.getFollowUps(
+          "SentenceConstructionLab", widget.main, widget.load);
       for (int i = 0; i < _sentences.length; i++) {
         print("sentence doc text: ${_sentences[i].text}");
         print("sentence doc key: ${_sentences[i].key}");
@@ -136,7 +144,9 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
       for (Sentence wr in sentences) {
         print(wr.cat);
         if ((wr.isFav == 1 && widget.filterLoad == null) ||
-            (wr.isFav == 1 && widget.filterLoad != null && widget.filterLoad == wr.cat)) {
+            (wr.isFav == 1 &&
+                widget.filterLoad != null &&
+                widget.filterLoad == wr.cat)) {
           _sentences.add(wr);
         }
       }
@@ -163,8 +173,10 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
     bool isFirstTime = await _isFirstTimeUser(userId);
     print("userId:$userId");
     print("titleTrim:${widget.load.removeAllWhitespace}");
-    bool mainTitleSentenceFirstTime = prefs.getBool(widget.main.removeAllWhitespace) ?? false;
-    bool sentenceFirstTime = prefs.getBool(widget.load.removeAllWhitespace) ?? false;
+    bool mainTitleSentenceFirstTime =
+        prefs.getBool(widget.main.removeAllWhitespace) ?? false;
+    bool sentenceFirstTime =
+        prefs.getBool(widget.load.removeAllWhitespace) ?? false;
     print("checkload: ${widget.load.removeAllWhitespace}");
     if (sentenceFirstTime == false) {
       print("djfijdovigjrdfigjv");
@@ -203,9 +215,10 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
         if (_sentences[i].isPriority == "true") {
           print("dsjfirjfiejf");
           print("isPriorityStatus:${_sentences[i].isPriority}");
-          final downloadController = Provider.of<AuthState>(context, listen: false);
-          localPath1 = await Utils.downloadFile(
-              userDatas, _sentences[i].file!, '${_sentences[i].text}.mp3', '$appDocPath/${widget.load}');
+          final downloadController =
+              Provider.of<AuthState>(context, listen: false);
+          localPath1 = await Utils.downloadFile(userDatas, _sentences[i].file!,
+              '${_sentences[i].text}.mp3', '$appDocPath/${widget.load}');
           eLocalPath1 = EncryptData.encryptFile(localPath1, userDatas);
           try {
             await File(localPath1).delete();
@@ -291,17 +304,30 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
   //    }
   // }
 
-  Future<void> _play(String sentence, int index, {required String url, String? localPath}) async {
+  Future<void> _play(String sentence, int index,
+      {required String url, String? localPath}) async {
     FirebaseHelper db = new FirebaseHelper();
     AuthState userDatas = Provider.of<AuthState>(context, listen: false);
     String? eLocalPath;
     _currentPlayingIndex = index;
-
+    isLoading = true;
+    setState(() {});
+    await Future.delayed(Duration(seconds: 1), () {
+      if (isLoading && _currentPlayingIndex == index) {
+        print("⚠️ Timeout: Resetting UI after 5 seconds");
+        // isLoading = false;
+        // _isPlaying = true;
+        print("it is hitting here");
+        setState(() {});
+      }
+    });
     try {
       print("AUDIO PLAY STARTEDddddddddd");
       print("*********URL : : : $url");
-      await _audioPlayerManager.stop();
-      await _audioPlayerManager.play(url, localPath: localPath, context: context, decodedPath: (val) {
+      // await _audioPlayerManager.stop();
+
+      await _audioPlayerManager.play(url,
+          localPath: localPath, context: context, decodedPath: (val) {
         eLocalPath = val;
       });
       print("Audio play Completeddddddd : $eLocalPath");
@@ -340,7 +366,8 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
   void _showDialog(String word, bool notCatch, BuildContext context) async {
     Get.dialog(Container(
       child: Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
         child: SpeechAnalyticsDialog(
           false,
           isShowDidNotCatch: notCatch,
@@ -351,12 +378,14 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
         ),
       ),
     )).then((value) {
-      if (value != null && value.isCorrect == "true" || value.isCorrect == "false") {
+      if (value != null && value.isCorrect == "true" ||
+          value.isCorrect == "false") {
         showDialog(
           context: context,
           builder: (BuildContext buildContext) {
             return Dialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25.0)),
               child: SentenceResultDialog(
                 correctedWidget: value.formatedWords,
                 score: value.wordPer,
@@ -385,8 +414,11 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
     print("url : $url");
     try {
       print("responseeeeeeee");
-      var response = await http.post(Uri.parse(url),
-          body: {"userid": userId, "practicetype": "Sentence Construction Lab Report", "action": action});
+      var response = await http.post(Uri.parse(url), body: {
+        "userid": userId,
+        "practicetype": "Sentence Construction Lab Report",
+        "action": action
+      });
 
       print("response start practice : ${response.body}");
     } catch (e) {
@@ -396,189 +428,220 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
 
   @override
   Widget build(BuildContext context) {
-    return BackgroundWidget(
-        appBar: CommonAppBar(
-          title: widget.title,
-          onPressBool: true,
-          onPressedEvent: () {
-            print("backkk buttonn tappeedddddddd");
-            if (widget.check == null) {
-              Navigator.pop(context);
-            } else if (widget.check!) {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SentenceScreen(
-                            index: widget.index,
-                            itemWordList: widget.itemWordList,
-                            user: widget.user,
-                            title: widget.itemWordList![widget.index!].title ?? "",
-                            load: widget.itemWordList![widget.index!].title ?? "",
-                            main: widget.load,
-                            // check: true,
-                          )));
-            }
-          },
-          // height: displayHeight(context) / 12.6875,
-        ),
-        body: _sentences.length == 0 && !_isLoading
-            ? Center(
-                child: Text(
-                  "List is empty",
-                  style: TextStyle(color: AppColors.white, fontFamily: Keys.fontFamily),
-                ),
-              )
-            : Stack(
-                children: [
-                  ListView.builder(
-                      padding: EdgeInsets.only(top: 10),
-                      itemCount: _sentences.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        print("AUDIO URL: ${_sentences[index].file}");
-                        return DropDownWordItem(
-                          index: index,
-                          isDownloaded: _sentences[index].localPath != null && _sentences[index].localPath!.isNotEmpty,
-                          localPath: _sentences[index].localPath,
-                          load: widget.load,
-                          maintitle: widget.title,
-                          url: _sentences[index].file,
-                          onExpansionChanged: (val) {
-                            if (val) {
-                              _selectedSentence = _sentences[index];
-                              setState(() {});
-                            }
-                          },
-                          initiallyExpanded: _selectedSentence != null && _selectedSentence == _sentences[index],
-                          isFav: _sentences[index].isFav!,
-                          wordId: _sentences[index].id!,
-                          isWord: false,
-                          isRefresh: (val) {
-                            if (val) _getSentences(isRefresh: true);
-                          },
-                          title: _sentences[index].text!,
-                          onTapForThreePlayerStop: () {},
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 30, right: 30),
-                              child: Container(
-                                height: 59,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
-                                  color: Colors.white,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    InkWell(
-                                      onTap: () async {
-                                        print('INDEX : : : $index');
-                                        if (_isPlaying && _currentPlayingIndex == index) {
-                                          print("checkkkkkk222222222222");
-                                          _audioPlayerManager.stop();
-                                        } else {
-                                          startPractice(actionType: 'listening');
-                                          print("checkkkkkk111111111111");
-                                          _play(
-                                            _sentences[index].text!, index,
-                                            url: _sentences[index].file!,
-                                            // localPath:
-                                            //     _sentences[index].localPath!,
-                                          );
+    return PopScope(
+      onPopInvoked: ((didPop) {
+        stopTimerMainCategory();
+      }),
+      child: BackgroundWidget(
+          appBar: CommonAppBar(
+            title: widget.title,
+            onPressBool: true,
+            onPressedEvent: () {
+              print("backkk buttonn tappeedddddddd");
+              if (widget.check == null) {
+                Navigator.pop(context);
+              } else if (widget.check!) {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SentenceScreen(
+                              index: widget.index,
+                              itemWordList: widget.itemWordList,
+                              user: widget.user,
+                              title:
+                                  widget.itemWordList![widget.index!].title ??
+                                      "",
+                              load: widget.itemWordList![widget.index!].title ??
+                                  "",
+                              main: widget.load,
+                              // check: true,
+                            )));
+              }
+            },
+            // height: displayHeight(context) / 12.6875,
+          ),
+          body: _sentences.length == 0 && !_isLoading
+              ? Center(
+                  child: Text(
+                    "List is empty",
+                    style: TextStyle(
+                        color: AppColors.white, fontFamily: Keys.fontFamily),
+                  ),
+                )
+              : Stack(
+                  children: [
+                    ListView.builder(
+                        padding: EdgeInsets.only(top: 10),
+                        itemCount: _sentences.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          print("AUDIO URL: ${_sentences[index].file}");
+                          return DropDownWordItem(
+                            index: index,
+                            isDownloaded: _sentences[index].localPath != null &&
+                                _sentences[index].localPath!.isNotEmpty,
+                            localPath: _sentences[index].localPath,
+                            load: widget.load,
+                            maintitle: widget.title,
+                            url: _sentences[index].file,
+                            onExpansionChanged: (val) {
+                              if (val) {
+                                _selectedSentence = _sentences[index];
+                                setState(() {});
+                              }
+                            },
+                            initiallyExpanded: _selectedSentence != null &&
+                                _selectedSentence == _sentences[index],
+                            isFav: _sentences[index].isFav!,
+                            wordId: _sentences[index].id!,
+                            isWord: false,
+                            isRefresh: (val) {
+                              if (val) _getSentences(isRefresh: true);
+                            },
+                            title: _sentences[index].text!,
+                            onTapForThreePlayerStop: () {},
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 30, right: 30),
+                                child: Container(
+                                  height: 59,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10)),
+                                    color: Colors.white,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      InkWell(
+                                        onTap: () async {
+                                          print('INDEX : : : $index');
+                                          if (_isPlaying &&
+                                              _currentPlayingIndex == index) {
+                                            _audioPlayerManager.stop();
+                                          } else {
+                                            startPractice(
+                                                actionType: 'listening');
+                                            _play(
+                                                _sentences[index].text!, index,
+                                                url: _sentences[index].file!);
+                                          }
+                                        },
+                                        child: Row(
+                                          children: [
+                                            SPW(35),
+                                            Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                if (isLoading &&
+                                                    _currentPlayingIndex ==
+                                                        index)
+                                                  SizedBox(
+                                                    height: 18,
+                                                    width: 18,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                            strokeWidth: 2),
+                                                  )
+                                                else
+                                                  Icon(
+                                                    _isPlaying &&
+                                                            _currentPlayingIndex ==
+                                                                index
+                                                        ? Icons
+                                                            .pause_circle_outline
+                                                        : Icons
+                                                            .play_circle_outline,
+                                                    color: AppColors.black,
+                                                  ),
+                                              ],
+                                            ),
+                                            SPW(5),
+                                            Text(
+                                              "Native Speaker",
+                                              style: TextStyle(fontSize: 13),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
 
-                                          /* String? sentenceFileUrl = _sentences[index].file;
-                                          print("sentenceFileUrl:${_sentences[index].file}");
+                                      // if (_isPlaying)
+                                      //   InkWell(
+                                      //       onTap: () {
+                                      //         _audioPlayerManager.stop();
+                                      //       },
+                                      //       child: Icon(
+                                      // Icons.pause_circle_outline,
+                                      // color: AppColors.black,
+                                      //       )),
+                                      InkWell(
+                                        onTap: () async {
+                                          startPractice(actionType: 'practice');
+                                          _showDialog(_sentences[index].text!,
+                                              false, context);
+                                          String? sentenceFileUrl =
+                                              _sentences[index].file;
+                                          print(
+                                              "sentenceFileUrl:${_sentences[index].file}");
                                           fileUrl?.add(sentenceFileUrl!);
-                                          FirebaseFirestore firestore = FirebaseFirestore.instance;
-                                          String userId = await SharedPref.getSavedString('userId');
-                                          DocumentReference wordFileUrlDocument =
-                                              firestore.collection('proFluentEnglishReport').doc(userId);
+                                          FirebaseFirestore firestore =
+                                              FirebaseFirestore.instance;
+                                          String userId =
+                                              await SharedPref.getSavedString(
+                                                  'userId');
+                                          DocumentReference
+                                              wordFileUrlDocument = firestore
+                                                  .collection(
+                                                      'proFluentEnglishReport')
+                                                  .doc(userId);
 
                                           await wordFileUrlDocument.update({
-                                            'SentencesTapped': FieldValue.arrayUnion([_sentences[index].file]),
+                                            'SentencesTapped':
+                                                FieldValue.arrayUnion(
+                                                    [_sentences[index].file]),
                                           }).then((_) {
-                                            print('Link added to Firestore: ${_sentences[index].file}');
+                                            print(
+                                                'Link added to Firestore: ${_sentences[index].file}');
                                           }).catchError((e) {
-                                            print('Error updating Firestore: $e');
+                                            print(
+                                                'Error updating Firestore: $e');
                                           });
-                                          print("fileUrl:${_sentences[index].file}");
-                                          print("sdhhvgfrhngkihri");*/
-                                        }
-                                      },
-                                      child: Row(
-                                        children: [
-                                          SPW(35),
-                                          Icon(
-                                            _isPlaying && _currentPlayingIndex == index
-                                                ? Icons.pause_circle_outline
-                                                : Icons.play_circle_outline,
-                                            color: AppColors.black,
-                                          ),
-                                          SPW(5),
-                                          Text(
-                                            "Native Speaker",
-                                            style: TextStyle(fontSize: 13),
-                                          ),
-                                        ],
+                                          print(
+                                              "fileUrl:${_sentences[index].file}");
+                                          print("sdhhvgfrhngkihri");
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.mic,
+                                            ),
+                                            SPW(5),
+                                            Text(
+                                              "Practice",
+                                              style: TextStyle(fontSize: 13),
+                                            ),
+                                            SPW(35),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    // if (_isPlaying)
-                                    //   InkWell(
-                                    //       onTap: () {
-                                    //         _audioPlayerManager.stop();
-                                    //       },
-                                    //       child: Icon(
-                                    // Icons.pause_circle_outline,
-                                    // color: AppColors.black,
-                                    //       )),
-                                    InkWell(
-                                      onTap: () async {
-                                        startPractice(actionType: 'practice');
-                                        _showDialog(_sentences[index].text!, false, context);
-                                        String? sentenceFileUrl = _sentences[index].file;
-                                        print("sentenceFileUrl:${_sentences[index].file}");
-                                        fileUrl?.add(sentenceFileUrl!);
-                                        FirebaseFirestore firestore = FirebaseFirestore.instance;
-                                        String userId = await SharedPref.getSavedString('userId');
-                                        DocumentReference wordFileUrlDocument =
-                                            firestore.collection('proFluentEnglishReport').doc(userId);
-
-                                        await wordFileUrlDocument.update({
-                                          'SentencesTapped': FieldValue.arrayUnion([_sentences[index].file]),
-                                        }).then((_) {
-                                          print('Link added to Firestore: ${_sentences[index].file}');
-                                        }).catchError((e) {
-                                          print('Error updating Firestore: $e');
-                                        });
-                                        print("fileUrl:${_sentences[index].file}");
-                                        print("sdhhvgfrhngkihri");
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.mic,
-                                          ),
-                                          SPW(5),
-                                          Text(
-                                            "Practice",
-                                            style: TextStyle(fontSize: 13),
-                                          ),
-                                          SPW(35),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      }),
-                  if (_isLoading) Center(child: CircularProgressIndicator(color: Colors.white))
-                ],
-              ),
-        floatingActionButton: buildBoomMenu());
+                            ],
+                          );
+                        }),
+                    if (_isLoading)
+                      Center(
+                          child: CircularProgressIndicator(color: Colors.white))
+                  ],
+                ),
+          floatingActionButton: buildBoomMenu()),
+    );
   }
 
   BoomMenu buildBoomMenu() {
@@ -594,7 +657,8 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
           bm.MenuItem(
             child: Container(
               padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+              decoration:
+                  BoxDecoration(color: Colors.white, shape: BoxShape.circle),
               child: Icon(
                 Icons.home,
                 color: Colors.grey,
@@ -612,8 +676,10 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
           bm.MenuItem(
             child: Container(
                 padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                child: Image.asset("assets/images/filter.png", color: Colors.grey)),
+                decoration:
+                    BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                child: Image.asset("assets/images/filter.png",
+                    color: Colors.grey)),
             title: "Filter Priority",
             titleColor: Colors.white,
             backgroundColor: Colors.transparent,
@@ -621,7 +687,8 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
               print("user : $sentenceRepeatUser");
               print("main : $sentenceRepeatLoad");
               SharedPreferences prefs = await SharedPreferences.getInstance();
-              await prefs.setStringList('SentenceScreen', ["Priority List", "", sentenceRepeatLoad]);
+              await prefs.setStringList(
+                  'SentenceScreen', ["Priority List", "", sentenceRepeatLoad]);
               await prefs.setString('lastAccess', 'SentenceScreen');
               Navigator.pushReplacement(
                   context,
@@ -638,14 +705,17 @@ class _SentenceScreenState extends State<SentenceScreen> with WidgetsBindingObse
           bm.MenuItem(
             child: Container(
                 padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                child: Image.asset("assets/images/filter_all.png", color: Colors.grey)),
+                decoration:
+                    BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                child: Image.asset("assets/images/filter_all.png",
+                    color: Colors.grey)),
             title: "Filter All Priority",
             titleColor: Colors.white,
             backgroundColor: Colors.transparent,
             onTap: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
-              await prefs.setStringList('SentenceScreen', ["All Priority List", "", widget.load]);
+              await prefs.setStringList(
+                  'SentenceScreen', ["All Priority List", "", widget.load]);
               await prefs.setString('lastAccess', 'SentenceScreen');
               Navigator.pushReplacement(
                   context,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:intl/intl.dart';
@@ -5,6 +7,7 @@ import 'package:litelearninglab/models/ProLab.dart';
 import 'package:litelearninglab/models/SpeechLab.dart';
 import 'package:litelearninglab/models/UserM.dart';
 import 'package:litelearninglab/models/Word.dart';
+import 'package:litelearninglab/utils/shared_pref.dart';
 
 import '../models/InteracticeSimulationMain.dart';
 import '../models/ProcessLearningMain.dart';
@@ -19,13 +22,17 @@ class FirebaseHelper {
   factory FirebaseHelper() => _instance;
   final _userNode = FirestoreService<UserM>('UserNode');
   final _proLabReports = FirestoreService<ProLab>('proLabReports');
-  final _errorsFromSpeechReports = FirestoreService<ProLab>('errorsFromSpeechReports');
+  final _errorsFromSpeechReports =
+      FirestoreService<ProLab>('errorsFromSpeechReports');
   final _sentLabCollection = FirestoreService<SpeechLab>('sentLabReports');
   final _callFlowCollection = FirestoreService<SpeechLab>('callFlowReports');
-  final _processLearningCollection = FirestoreService<ProcessLearningMain>('processLearning');
-  final _interacticeSimulationMainCollection = FirestoreService<InteracticeSimulationMain>('interactiveSimulations');
+  final _processLearningCollection =
+      FirestoreService<ProcessLearningMain>('processLearning');
+  final _interacticeSimulationMainCollection =
+      FirestoreService<InteracticeSimulationMain>('interactiveSimulations');
   final _softSkillsCollection = FirestoreService<SoftSkills>('softSkills');
-  final _prolfuentCollection = FirestoreService<ProfluentEnglish>('profluentEnglish');
+  final _prolfuentCollection =
+      FirestoreService<ProfluentEnglish>('profluentEnglish');
 
   FirebaseHelper.internal();
 
@@ -41,7 +48,8 @@ class FirebaseHelper {
       ['userId', '==', userID],
     ];
 
-    return await _proLabReports.getWhere(conditions, orderBy: "date", descending: true);
+    return await _proLabReports.getWhere(conditions,
+        orderBy: "date", descending: true);
   }
 
   Future<List<SpeechLab>> getSpeechLabReports(String userID) async {
@@ -67,25 +75,30 @@ class FirebaseHelper {
   }
 
   Future<List<ProcessLearningMain>> getProcessLearning() async {
-    return await _processLearningCollection.getAllDocuments(orderBy: 'order', descending: true);
+    return await _processLearningCollection.getAllDocuments(
+        orderBy: 'order', descending: true);
   }
 
   Future<List<InteracticeSimulationMain>> getInteractiveSimuations() async {
-    return await _interacticeSimulationMainCollection.getAllDocuments(orderBy: 'order', descending: true);
+    return await _interacticeSimulationMainCollection.getAllDocuments(
+        orderBy: 'order', descending: true);
   }
 
   Future<List<SoftSkills>> getSoftSkills() async {
-    return await _softSkillsCollection.getAllDocuments(orderBy: 'order', descending: true);
+    return await _softSkillsCollection.getAllDocuments(
+        orderBy: 'order', descending: true);
   }
 
   Future<List<ProfluentEnglish>> getProfluentEnglish() async {
-    return await _prolfuentCollection.getAllDocuments(orderBy: 'order', descending: true);
+    return await _prolfuentCollection.getAllDocuments(
+        orderBy: 'order', descending: true);
   }
 
   //get manually stored words
 
   Future<List<Word>> getWordSamples() async {
-    final documentReference = FirebaseFirestore.instance.collection('wordSamples');
+    final documentReference =
+        FirebaseFirestore.instance.collection('wordSamples');
     final snapshot = await documentReference.get();
     return snapshot.docs.map((doc) => Word.fromMap(doc.data())).toList();
   }
@@ -125,6 +138,8 @@ class FirebaseHelper {
     print("jhihihihi : $main");
     print("jhihihihi : $load");
     date = DateFormat('dd-MMM-yyyy').format(DateTime.now());
+    String companyId = await SharedPref.getSavedString("companyId");
+    String batch = await SharedPref.getSavedString("batch");
     final conditions = [
       ['userId', '==', userID],
       ['sentence', '==', sentence],
@@ -171,12 +186,15 @@ class FirebaseHelper {
           existingDoc[0].focusWord = focusWordMap;
         } else {
           focusWords.add(score.toStringAsFixed(2));
-          existingDoc[0].focusWord?.putIfAbsent(DateFormat('HH:mm:ss').format(DateTime.now()), () => focusWords);
+          existingDoc[0].focusWord?.putIfAbsent(
+              DateFormat('HH:mm:ss').format(DateTime.now()), () => focusWords);
         }
       }
 
       print(focusWords);
       print(existingDoc.first.toMap());
+      existingDoc[0].companyId = companyId;
+      existingDoc[0].batch = batch;
       await _sentLabCollection.updateDocument(existingDoc[0], docId!);
     } else {
       print("sentebce else part 1");
@@ -196,11 +214,14 @@ class FirebaseHelper {
         "load": load,
         "main": main,
         "timeCal": DateTime.now().millisecondsSinceEpoch,
+        'companyId': companyId,
+        'batch': batch
       });
       if (focusWords != null && focusWords.isNotEmpty) {
         data.focusWord = {};
         focusWords.add(score.toStringAsFixed(2));
-        data.focusWord?.putIfAbsent(DateFormat('HH:mm:ss').format(DateTime.now()), () => focusWords);
+        data.focusWord?.putIfAbsent(
+            DateFormat('HH:mm:ss').format(DateTime.now()), () => focusWords);
       }
 
       await _sentLabCollection.addDocument(data);
@@ -253,6 +274,8 @@ class FirebaseHelper {
       String? main}) async {
     print("checkkkk>>>>>>>>>>>>>>>>>>>>>");
     date = DateFormat('dd-MMM-yyyy').format(DateTime.now());
+    String companyId = await SharedPref.getSavedString("companyId");
+    String batch = await SharedPref.getSavedString("batch");
     final conditions = [
       ['userId', '==', userID],
       ['sentence', '==', sentence],
@@ -303,12 +326,15 @@ class FirebaseHelper {
           print("checkkkkk55555");
           //existingDoc[0].focusWord?.putIfAbsent('focusedScore', () => score.toStringAsFixed(2));
           focusWords.add(score.toStringAsFixed(2));
-          existingDoc[0].focusWord?.putIfAbsent(DateFormat('HH:mm:ss').format(DateTime.now()), () => focusWords);
+          existingDoc[0].focusWord?.putIfAbsent(
+              DateFormat('HH:mm:ss').format(DateTime.now()), () => focusWords);
         }
       }
 
       print(focusWords);
       print(existingDoc.first.toMap());
+      existingDoc[0].batch = batch;
+      existingDoc[0].companyId = companyId;
       await _callFlowCollection.updateDocument(existingDoc[0], docId!);
     } else {
       print("check22222222222222");
@@ -328,12 +354,15 @@ class FirebaseHelper {
         "load": load,
         "main": main,
         "timeCal": DateTime.now().millisecondsSinceEpoch,
+        'companyId': companyId,
+        'batch': batch
       });
       if (focusWords != null && focusWords.isNotEmpty) {
         print("djfhehriehiehifrewweewhriwe");
         data.focusWord = {};
         focusWords.add(score.toStringAsFixed(2));
-        data.focusWord?.putIfAbsent(DateFormat('HH:mm:ss').format(DateTime.now()), () => focusWords);
+        data.focusWord?.putIfAbsent(
+            DateFormat('HH:mm:ss').format(DateTime.now()), () => focusWords);
       }
 
       await _callFlowCollection.addDocument(data);
@@ -368,6 +397,8 @@ class FirebaseHelper {
 
   Future<void> saveWordListReport(
       {required String company,
+      required String companyId,
+      required String batch,
       String? name,
       required int time,
       required String userID,
@@ -377,12 +408,15 @@ class FirebaseHelper {
       String? city,
       String? load,
       String? title,
+      String? lastAttempt,
       String? timeCal,
       required String date,
       bool isPractice = true,
       bool isCorrect = false}) async {
-    print("checkkingggg>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    print(
+        "checkkingggg>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     date = DateFormat('dd-MMM-yyyy').format(DateTime.now());
+
     final conditions = [
       ['userId', '==', userID],
       ['word', '==', word],
@@ -406,8 +440,12 @@ class FirebaseHelper {
           print("else part calleddd");
           existingDoc[0].pracatt = (existingDoc[0].pracatt ?? 0) + 1;
           existingDoc[0].timeCal = DateTime.now().millisecondsSinceEpoch;
+          existingDoc[0].lastAttempt = DateTime.now().toString();
         }
       }
+
+      existingDoc[0].batch = batch;
+      existingDoc[0].companyId = companyId;
 
       await _proLabReports.updateDocument(existingDoc[0], docId!);
     } else {
@@ -423,6 +461,9 @@ class FirebaseHelper {
         'title': title,
         'company': company,
         'timeCal': DateTime.now().millisecondsSinceEpoch,
+        'lastAttempt': DateTime.now().toString(),
+        'companyId': companyId,
+        'batch': batch
       });
       print("dfdjnfijjij");
       if (isPractice) {
@@ -499,10 +540,12 @@ class FirebaseHelper {
     ];
     try {
       final data = await _userNode.getWhere(conditions);
-      print("Data received: $data");
-      print("data printing>>>");
-      print(data.toString());
+      log("Data received: $data");
+      log("data printing>>>");
+      log(data.toString());
+      log("${data.first.UserMname}");
       if (data.length > 0) {
+        log("data length is there");
         return data.first;
       }
     } catch (e) {
@@ -515,6 +558,65 @@ class FirebaseHelper {
   Future<void> setUserImei(String imei, String model, String userID) async {
     String? fcmToken = await _firebaseMessaging.getToken();
     print("fcmtoken : $fcmToken");
-    await _userNode.updateDocument(UserM(imei: imei, model: model, fcmKey: fcmToken), userID);
+    await _userNode.updateDocument(
+        UserM(
+            firstTImeLogin: DateTime.now().toString(),
+            imei: imei,
+            model: model,
+            fcmKey: fcmToken,
+            lastLogin: DateTime.now().toString()),
+        userID);
+  }
+
+  Future<void> setLastLogin(String userId) async {
+    await _userNode.updateDocument(
+        UserM(lastLogin: DateTime.now().toString()), userId);
+  }
+
+  Future<void> updateCompanyAndUser(String companyName, String userId) async {
+    final firestore = FirebaseFirestore.instance;
+
+    try {
+      final companyQuery = await firestore
+          .collection('companies')
+          .where('name', isEqualTo: companyName)
+          .limit(1)
+          .get();
+
+      if (companyQuery.docs.isEmpty) {
+        print("Company not found");
+        return;
+      }
+
+      final companyDoc = companyQuery.docs.first;
+      final companyRef = companyDoc.reference;
+
+      final userRef = firestore.collection('users').doc(userId);
+      final userSnapshot = await userRef.get();
+
+      if (!userSnapshot.exists) {
+        print("User not found");
+        return;
+      }
+
+      final userData = userSnapshot.data();
+      final fieldValue = userData?['lastLogin'];
+
+      if (fieldValue == null || fieldValue == "") {
+        await userRef.update({
+          'lasLogin': DateTime.now().toString(),
+        });
+
+        await companyRef.update({
+          'activeactiveusers': FieldValue.increment(1),
+        });
+
+        print("User and company updated");
+      } else {
+        print("User field already has a value");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 }

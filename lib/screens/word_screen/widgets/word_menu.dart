@@ -52,9 +52,11 @@ class _WordMenuState extends State<WordMenu> {
     print("url : $url");
     try {
       print("responseeeeeeee");
-      var response = await http.post(Uri.parse(url), body: {"userid": userId, "type": action, "word": word});
+      var response = await http.post(Uri.parse(url),
+          body: {"userid": userId, "type": action, "word": word});
 
-      print("response for pronunciation lab report for practice : ${response.body}");
+      print(
+          "response for pronunciation lab report for practice : ${response.body}");
     } catch (e) {
       print("error login : $e");
     }
@@ -70,10 +72,14 @@ class _WordMenuState extends State<WordMenu> {
     print("url : $url");
     try {
       print("responseeeeeeee");
-      var response = await http.post(Uri.parse(url),
-          body: {"userid": userId, "practicetype": "Pronunciation Sound Lab Report", "action": action});
+      var response = await http.post(Uri.parse(url), body: {
+        "userid": userId,
+        "practicetype": "Pronunciation Sound Lab Report",
+        "action": action
+      });
 
-      print("response start practice for pronunciation lab reportttt : ${response.body}");
+      print(
+          "response start practice for pronunciation lab reportttt : ${response.body}");
     } catch (e) {
       print("error login : $e");
     }
@@ -162,17 +168,21 @@ class _WordMenuState extends State<WordMenu> {
                     : ElevatedButton.icon(
                         onPressed: () async {
                           print("practice button tappedd");
-                          pronunciationLabReport(actionType: "practice", word: widget.text);
+                          pronunciationLabReport(
+                              actionType: "practice", word: widget.text);
                           startPractice(actionType: 'practice');
                           widget.onTapMic();
                           String? fileUrl = widget.url;
                           print("checkkkk:${widget.text}");
                           print("urll checkkk:${fileUrl}");
                           wordsFileUrl.add(fileUrl!);
-                          FirebaseFirestore firestore = FirebaseFirestore.instance;
-                          String userId = await SharedPref.getSavedString('userId');
-                          DocumentReference wordFileUrlDocument =
-                              firestore.collection('proFluentEnglishReport').doc(userId);
+                          FirebaseFirestore firestore =
+                              FirebaseFirestore.instance;
+                          String userId =
+                              await SharedPref.getSavedString('userId');
+                          DocumentReference wordFileUrlDocument = firestore
+                              .collection('proFluentEnglishReport')
+                              .doc(userId);
 
                           await wordFileUrlDocument.update({
                             'WordsTapped': FieldValue.arrayUnion([widget.url]),
@@ -208,22 +218,13 @@ class _WordMenuState extends State<WordMenu> {
                               fontWeight: FontWeight.w600),
                         ),
                         style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(Color(0xFF6C63FF)),
+                            backgroundColor:
+                                MaterialStatePropertyAll(Color(0xFF6C63FF)),
                             shape: MaterialStatePropertyAll(
-                                ContinuousRectangleBorder(borderRadius: BorderRadius.circular(15)))),
+                                ContinuousRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)))),
                       ),
               ),
-              // InkWell(
-              //   onTap: widget.onTapMic, //              speech.isListening
-              //   //                  ? null
-              //   //                  : startListening,
-
-              //   child: Icon(
-              //     Icons.mic,
-              //     color: AppColors.white,
-              //     size: 25,
-              //   ),
-              // ),
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -240,7 +241,10 @@ class _WordMenuState extends State<WordMenu> {
                   FittedBox(
                     child: Text(
                       widget.pronun ?? "",
-                      style: TextStyle(color: AppColors.white, fontSize: 20, fontFamily: Keys.fontFamily),
+                      style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: 20,
+                          fontFamily: Keys.fontFamily),
                     ),
                   )
                 ],
@@ -252,12 +256,18 @@ class _WordMenuState extends State<WordMenu> {
             ListTile(
               title: Text(
                 "Pronunciation Analysis Result",
-                style: TextStyle(color: Color(0xFF6C63FF), fontSize: 13, fontFamily: Keys.fontFamily),
+                style: TextStyle(
+                    color: Color(0xFF6C63FF),
+                    fontSize: 13,
+                    fontFamily: Keys.fontFamily),
               ),
               subtitle: Text(
                 "Note: This result only indicates intelligibility and does not confirm the accuracy of pronunciation.",
                 style: TextStyle(
-                    color: AppColors.white, fontSize: 12, fontFamily: Keys.fontFamily, fontWeight: FontWeight.w500),
+                    color: AppColors.white,
+                    fontSize: 12,
+                    fontFamily: Keys.fontFamily,
+                    fontWeight: FontWeight.w500),
               ),
               /*  trailing: Icon(
                 widget.isCorrect! ? Icons.check_circle : Icons.cancel_rounded,
@@ -267,7 +277,9 @@ class _WordMenuState extends State<WordMenu> {
               trailing: Container(
                 height: 40,
                 width: 40,
-                child: Image.asset(widget.isCorrect! ? "assets/images/right.png" : "assets/images/wrong.png"),
+                child: Image.asset(widget.isCorrect!
+                    ? "assets/images/right.png"
+                    : "assets/images/wrong.png"),
               ),
             ),
           SPH(10)
@@ -288,7 +300,10 @@ List<TextSpan> _buildTextSpans(String text) {
         spans.add(TextSpan(
           text: buffer.toString(),
           style: TextStyle(
-              color: AppColors.white, fontSize: 20, fontWeight: FontWeight.w500, fontFamily: Keys.lucidaFontFamily),
+              color: AppColors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              fontFamily: Keys.lucidaFontFamily),
         ));
         buffer.clear();
       }
@@ -297,7 +312,10 @@ List<TextSpan> _buildTextSpans(String text) {
       spans.add(TextSpan(
         text: ' ${buffer.toString()} ',
         style: TextStyle(
-            color: Colors.yellow, fontSize: 20, fontWeight: FontWeight.w700, fontFamily: Keys.lucidaFontFamily),
+            color: Colors.yellow,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            fontFamily: Keys.lucidaFontFamily),
       ));
       buffer.clear();
       isWithinParentheses = false;
@@ -309,7 +327,10 @@ List<TextSpan> _buildTextSpans(String text) {
     spans.add(TextSpan(
       text: buffer.toString(),
       style: TextStyle(
-          color: AppColors.white, fontSize: 20, fontWeight: FontWeight.w500, fontFamily: Keys.lucidaFontFamily),
+          color: AppColors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
+          fontFamily: Keys.lucidaFontFamily),
     ));
   }
 

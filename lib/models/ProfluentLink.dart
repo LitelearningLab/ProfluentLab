@@ -10,15 +10,16 @@ class ProfluentLink implements Jsonable {
   ProfluentSubLink? links;
   String? videoLink;
   List<SoundPracticeModel>? soundsPractice;
+  String? ulr;
 
-  ProfluentLink({
-    this.id,
-    this.name,
-    this.link,
-    this.links,
-    this.videoLink,
-    this.soundsPractice,
-  });
+  ProfluentLink(
+      {this.id,
+      this.name,
+      this.link,
+      this.links,
+      this.videoLink,
+      this.soundsPractice,
+      this.ulr});
 
   ProfluentLink.map(dynamic obj) {
     this.id = obj['id'];
@@ -27,6 +28,7 @@ class ProfluentLink implements Jsonable {
     this.videoLink = obj['videoLink'];
     this.links = obj['links'];
     this.soundsPractice = obj['soundsPractice'];
+    this.ulr = obj['ULR'];
   }
 
   @override
@@ -52,6 +54,9 @@ class ProfluentLink implements Jsonable {
     if (soundsPractice != null) {
       map['soundsPractice'] = soundsPractice;
     }
+    if (ulr != null) {
+      map['ULR'] = ulr;
+    }
 
     return map;
   }
@@ -67,26 +72,28 @@ class ProfluentLink implements Jsonable {
     this.videoLink = map['videoLink'];
     this.soundsPractice = map['soundsPractice'] != null
         ? (map['soundsPractice'] as List)
-        .map((i) => SoundPracticeModel.fromMap(i))
-        .toList()
+            .map((i) => SoundPracticeModel.fromMap(i))
+            .toList()
         : null;
+    this.ulr = map['ULR'];
   }
 
   factory ProfluentLink.fromJson(DocumentSnapshot doc) {
     Map map = doc.data() as Map;
     return ProfluentLink(
-      id: doc.id,
-      name: map['name'],
-      link: map['link'],
-      videoLink: map['videoLink'],
-      links:
-          map['links'] != null ? ProfluentSubLink.fromMap(map['links']) : null,
-      soundsPractice: map['soundsPractice'] != null
-          ? (map['soundsPractice'] as List)
-          .map((i) => SoundPracticeModel.fromMap(i))
-          .toList()
-          : null,
-    );
+        id: doc.id,
+        name: map['name'],
+        link: map['link'],
+        videoLink: map['videoLink'],
+        links: map['links'] != null
+            ? ProfluentSubLink.fromMap(map['links'])
+            : null,
+        soundsPractice: map['soundsPractice'] != null
+            ? (map['soundsPractice'] as List)
+                .map((i) => SoundPracticeModel.fromMap(i))
+                .toList()
+            : null,
+        ulr: map['ULR']);
   }
 }
 
@@ -150,9 +157,9 @@ class SoundPracticeModel implements Jsonable {
   }
 
   Map<String, dynamic> toJson() => {
-    'file': file,
-    'pronun': pronun,
-    'syllables': syllabels,
-    'text': text,
-  };
+        'file': file,
+        'pronun': pronun,
+        'syllables': syllabels,
+        'text': text,
+      };
 }

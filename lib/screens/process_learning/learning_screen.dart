@@ -23,10 +23,15 @@ import '../webview/webview_screen.dart';
 import '../word_screen/widgets/drop_down_word_item.dart';
 
 class LearningScreen extends StatefulWidget {
-  LearningScreen({Key? key, required this.title, required this.linkCats})
+  LearningScreen(
+      {Key? key,
+      required this.title,
+      required this.linkCats,
+      required this.icon})
       : super(key: key);
   final String title;
   final List<ProcessLearningLink> linkCats;
+  final String icon;
 
   @override
   _LearningScreenState createState() {
@@ -316,17 +321,15 @@ class _LearningScreenState extends State<LearningScreen> {
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal:
                                                           getWidgetWidth(
-                                                              width: 8),
+                                                              width: 1),
                                                       vertical: isSplitScreen
                                                           ? getFullWidgetHeight(
-                                                              height: 8)
+                                                              height: 5)
                                                           : getWidgetHeight(
-                                                              height: 8)),
+                                                              height: 5)),
                                                   child: ImageIcon(
                                                     AssetImage(
-                                                      skillController
-                                                              .softSkillData[
-                                                          index]['icon'],
+                                                      widget.icon,
                                                     ),
                                                   ),
                                                   // Image.asset(

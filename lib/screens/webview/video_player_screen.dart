@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:litelearninglab/screens/webview/widgets/videoplayer_controller.dart';
 import 'package:litelearninglab/screens/webview/widgets/videoplayer_controller.dart';
 import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
@@ -29,6 +29,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   late Future<void> _initializeVideoPlayerFuture;
   bool _isBackShow = false;
   bool _isPlaying = false;
+  bool _showingButtons = false;
+  bool _isControllerVisible = false;
+  Timer? _hideControllerTimer;
 
   double _currentSliderValue = 0.0;
 
@@ -37,7 +40,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   @override
   void initState() {
     super.initState();
-
+    startTimerMainCategory("name");
     // Add the observer for lifecycle events
     WidgetsBinding.instance.addObserver(this);
     _initializeVideoPlayerFuture = initVideoPlayer(url: widget.url);
@@ -54,25 +57,20 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    // Print statements based on the app's lifecycle state
-    switch (state) {
-      case AppLifecycleState.paused:
-        log("User navigated to another app or attended a call.");
-        break;
-      case AppLifecycleState.resumed:
-        log("User returned to the app.");
-        break;
-      case AppLifecycleState.inactive:
-        log("App is inactive (e.g., during a phone call).");
-        break;
-      case AppLifecycleState.detached:
-        log("App is closed or detached.");
-        break;
+  showingButton() async {
+    if (_showingButtons) {
+      _showingButtons = false;
+      setState(() {});
+      return;
     }
+    _showingButtons = true;
+    setState(() {});
+    await Future.delayed(Duration(seconds: 2));
+    if (_showingButtons) {
+      _showingButtons = false;
+      setState(() {});
+    }
+    return;
   }
 
   Future<void> initVideoPlayer({required String url}) async {
@@ -149,13 +147,51 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     _controller.play();
   }
 
-  String formatDuration(Duration duration) {
+  String _formatDuration(Duration duration) {
     var remaining = duration - _controller.value.position;
     String minutes =
         remaining.inMinutes.remainder(60).toString().padLeft(2, '0');
     String seconds =
         remaining.inSeconds.remainder(60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
+  }
+
+  void toggleControllerVisibility() {
+    if (_isControllerVisible) {
+      // If currently visible, make it immediately invisible
+      _hideControllerTimer?.cancel(); // Cancel any existing hide timer
+      setState(() {
+        _isControllerVisible = false;
+      });
+    } else {
+      // If currently invisible, show it
+      _showController();
+    }
+  }
+
+  void _showController() {
+    // if (_isControllerVisible) {
+    // If currently visible, make it immediately invisible
+    _hideControllerTimer?.cancel(); // Cancel any existing hide timer
+    // }
+    setState(() {
+      _isControllerVisible = true;
+    });
+
+    // Cancel any existing timer
+    // _hideControllerTimer?.cancel();
+
+    // Start a new timer to hide the controller
+    _hideControllerTimer = Timer(Duration(seconds: 4), () {
+      setState(() {
+        _isControllerVisible = false;
+      });
+    });
+  }
+
+  void togglePlayPauseControllerVisibility() {
+    // Always show the controller for the play/pause action
+    _showController();
   }
 
   @override
@@ -200,7 +236,124 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                                   ),
                                 ],
                               ))
-                            : Chewie(controller: _chewieController)),
+                            : Stack(
+                                children: [
+                                  GestureDetector(
+                                      onTap: () {
+                                        toggleControllerVisibility();
+                                      },
+                                      child: VideoPlayer(_controller)),
+                                  if (_isControllerVisible)
+                                    Positioned(
+                                      bottom: 0,
+                                      left: 0,
+                                      right: 0,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          togglePlayPauseControllerVisibility();
+                                        },
+                                        child: Container(
+                                          color: Colors.black.withOpacity(0.4),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              ValueListenableBuilder(
+                                                  valueListenable: _controller,
+                                                  builder: (context,
+                                                      VideoPlayerValue value,
+                                                      child) {
+                                                    return IconButton(
+                                                      onPressed: () {
+                                                        if (_controller
+                                                            .value.isPlaying) {
+                                                          _controller.pause();
+                                                        } else {
+                                                          _controller.play();
+                                                        }
+                                                      },
+                                                      icon: Icon(
+                                                        _controller
+                                                                .value.isPlaying
+                                                            ? Icons.pause
+                                                            : Icons.play_arrow,
+                                                        color: Colors.white,
+                                                        size: 30,
+                                                      ),
+                                                    );
+                                                  }),
+                                              ValueListenableBuilder(
+                                                valueListenable: _controller,
+                                                builder: (context,
+                                                    VideoPlayerValue value,
+                                                    child) {
+                                                  return Text(
+                                                    _formatDuration(
+                                                        value.position),
+                                                    style: const TextStyle(
+                                                        color: Colors.white),
+                                                  );
+                                                },
+                                              ),
+                                              Text(
+                                                " / ",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              ValueListenableBuilder(
+                                                valueListenable: _controller,
+                                                builder: (context,
+                                                    VideoPlayerValue value,
+                                                    child) {
+                                                  return Text(
+                                                    _formatDuration(
+                                                        value.duration),
+                                                    style: const TextStyle(
+                                                        color: Colors.white),
+                                                  );
+                                                },
+                                              ),
+                                              ValueListenableBuilder(
+                                                valueListenable: _controller,
+                                                builder: (context,
+                                                    VideoPlayerValue value,
+                                                    child) {
+                                                  return Expanded(
+                                                    child: Slider(
+                                                      value: value.position
+                                                          .inMilliseconds
+                                                          .toDouble(),
+                                                      min: 0,
+                                                      max: value.duration
+                                                          .inMilliseconds
+                                                          .toDouble(),
+                                                      onChanged: (newValue) {
+                                                        _controller.seekTo(
+                                                          Duration(
+                                                              milliseconds:
+                                                                  newValue
+                                                                      .toInt()),
+                                                        );
+                                                      },
+                                                      activeColor: Colors.white,
+                                                      inactiveColor:
+                                                          Colors.grey,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                              // **Current Time**
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              )),
                   ),
                   Positioned(
                       top: 20,

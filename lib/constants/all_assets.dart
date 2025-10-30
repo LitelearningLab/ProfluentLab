@@ -1,4 +1,9 @@
 class AllAssets {
+  static const String workersCompensation =
+      "assets/images/Worker Compensation.png";
+  static const String federalInsurance = "assets/images/Federal Insurance.png";
+  static const String blueCross = "assets/images/Blue Cross.png";
+  static const String autoInsurance = "assets/images/Auto Insurance.png";
   static const String icon = 'assets/images/icon.png';
   static const String watermark = 'assets/images/watermark.png';
   static const String arr1 = 'assets/images/arr1.png';
@@ -105,8 +110,10 @@ class AllAssets {
   static const String arpurpleEllipse = 'assets/images/ar_purpleEllipse.png';
   static const String arpinkEllipse = 'assets/images/ar_pinkEllipse.png';
   static const String plRevenueCircle = 'assets/images/PL_REvenueCircle.png';
-  static const String plWorkersCompensation = 'assets/images/PL_workersCompensation.png';
-  static const String plFederalInsurance = 'assets/images/PL_federalInsurance.png';
+  static const String plWorkersCompensation =
+      'assets/images/PL_workersCompensation.png';
+  static const String plFederalInsurance =
+      'assets/images/PL_federalInsurance.png';
   static const String plAutoInsurance = 'assets/images/PL_autoInsurance.png';
   static const String plAccountRec = 'assets/images/PL_accountRec.png';
   static const String plBLueCross = 'assets/images/PL_blueCross.png';

@@ -22,7 +22,8 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin<SplashScreen>, TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with AfterLayoutMixin<SplashScreen>, TickerProviderStateMixin {
   Animation<double>? animation;
   AnimationController? animationController;
   @override
@@ -47,7 +48,8 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin<Splas
 
   @override
   void afterFirstLayout(BuildContext context) {
-    animationController = AnimationController(vsync: this, duration: Duration(seconds: 3));
+    animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 3));
     animation = Tween<double>(begin: 1000, end: 0).animate(animationController!)
       ..addListener(() {
         setState(() {});
@@ -66,10 +68,40 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin<Splas
     kHeight = MediaQuery.of(context).size.height;
     kWidth = MediaQuery.of(context).size.width;
     kText = MediaQuery.of(context).textScaler;
-    print("kHeight : $kHeight");
-    print("kwidth : $kWidth");
-    return Scaffold(
-        body:
-            Container(color: Colors.white, padding: EdgeInsets.zero, height: kHeight, width: kWidth, child: Lottie.asset("assets/images/Anima-new-reso.json")));
+
+    if (kIsWeb) {
+      // Web Index Style UI
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF293750)),
+              ),
+              SizedBox(height: 24),
+              Text(
+                "Profluent AR",
+                style: TextStyle(
+                  fontSize: 38,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF293750),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      // Mobile-style animated Lottie splash
+      return Scaffold(
+          body: Container(
+              color: Colors.white,
+              padding: EdgeInsets.zero,
+              height: kHeight,
+              width: kWidth,
+              child: Lottie.asset("assets/images/Anima-new-reso.json")));
+    }
   }
 }

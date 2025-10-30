@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorful_tab/flutter_colorful_tab.dart';
+// import 'package:flutter_colorful_tab/flutter_colorful_tab.dart';
 import 'package:litelearninglab/common_widgets/background_widget.dart';
 import 'package:litelearninglab/common_widgets/common_app_bar.dart';
 import 'package:litelearninglab/constants/all_assets.dart';
@@ -18,12 +19,14 @@ import 'package:litelearninglab/screens/profluent_english/widgets/top_catetgorie
 import 'package:litelearninglab/screens/webview/webview_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
+import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/firebase_helper.dart';
 import 'package:litelearninglab/utils/firebase_helper_RTD.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:flutter_colorful_tab/flutter_colorful_tab.dart';
 
 import '../../utils/shared_pref.dart';
 import 'lab_screen.dart';
@@ -69,6 +72,7 @@ class _ProfluentEnglishModifiedScreenState
   void initState() {
     super.initState();
     // startTimerMainCategory("Profluent English");
+    mianCategoryTitile = "Profluent English";
     user = Provider.of<AuthState>(context, listen: false);
     controller = AutoScrollController(
         viewportBoundaryGetter: () =>
@@ -512,6 +516,8 @@ class _ProfluentEnglishModifiedScreenState
                             ),
                             InkWell(
                               onTap: () async {
+                                subCategoryTitile =
+                                    "Fast Track\nPronunciation For AR";
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -642,127 +648,143 @@ class _ProfluentEnglishModifiedScreenState
                                 height: isSplitScreen
                                     ? getFullWidgetHeight(height: 14)
                                     : getWidgetHeight(height: 14)),
-                            /*TabBar(
-                               padding: EdgeInsets.zero,
-                                splashFactory: InkSplash.splashFactory,
-                                splashBorderRadius: BorderRadius.circular(30),
-                                enableFeedback: false,
-                                indicatorPadding: EdgeInsets.symmetric(vertical: isSplitScreen ?  getFullWidgetHeight(height: 9) : getWidgetHeight(height:9)),
-                                onTap: (int) async {
-                                  print('/////////// $int');
-                                  _onTabChanged(int);
-                                  setState(() {
-                                    _selectedTabIndex=int;
-                                    expansionTileIndex1 = -1;
-                                    expansionTileIndex2 = -1;
-                                  });
-                                },
-                                labelPadding: EdgeInsets.only(right: getWidgetWidth(width: 12)),
-                                dividerColor: Colors.transparent,
-                                tabAlignment: TabAlignment.start,
-                                labelColor: Colors.white,
-                                isScrollable: true,
-                                physics: AlwaysScrollableScrollPhysics(),
-                                unselectedLabelColor: Color(0xFF99A0AE),
-                                indicatorColor: Color(0xFF6C63FE),
-                                indicatorSize: TabBarIndicatorSize.label,
-                                indicator: BoxDecoration(borderRadius: BorderRadius.circular(30), color: Color(0xFF6C63FE)),
-                               unselectedLabelStyle: TextStyle(fontSize: kText.textScaleFactor),
-
-                                tabs: [
-
-                                  Tab(
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 20)),
-                                        child: Text(
-                                          'Important Sounds',
-                                          style: TextStyle(
-                                              color: _selectedTabIndex == 0 ? Colors.white : Color(0xFF99A0AE),
-                                              fontSize: kText.scale(12),
-                                              fontFamily: 'Roboto',
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Tab(
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 20)),
-                                        child: Text(
-                                          'Vowels',
-                                          style: TextStyle(
-                                              color: _selectedTabIndex == 1 ? Colors.white : Color(0xFF99A0AE),
-                                              fontSize: kText.scale(12),
-                                              fontFamily: 'Roboto',
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Tab(
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 20)),
-                                        child: Text(
-                                          'Consonants',
-                                          style: TextStyle(
-                                              color: _selectedTabIndex == 2 ? Colors.white : Color(0xFF99A0AE),
-                                              fontSize: kText.scale(12),
-                                              fontFamily: 'Roboto',
-                                              fontWeight: FontWeight.w500),
-                                         ),
-                                      ),
-                                    ),
-                                  ),
-
-                                ],
-                              ),*/
-                            ColorfulTabBar(
-                              verticalTabPadding: 5,
-                              alignment: TabAxisAlignment.end,
+                            TabBar(
+                              padding: EdgeInsets.zero,
+                              splashFactory: InkSplash.splashFactory,
+                              splashBorderRadius: BorderRadius.circular(30),
+                              enableFeedback: false,
+                              indicatorPadding: EdgeInsets.symmetric(
+                                  vertical: isSplitScreen
+                                      ? getFullWidgetHeight(height: 9)
+                                      : getWidgetHeight(height: 9)),
+                              onTap: (int) async {
+                                print('/////////// $int');
+                                _onTabChanged(int);
+                                setState(() {
+                                  _selectedTabIndex = int;
+                                  expansionTileIndex1 = -1;
+                                  expansionTileIndex2 = -1;
+                                });
+                              },
+                              labelPadding: EdgeInsets.only(
+                                  right: getWidgetWidth(width: 12)),
+                              dividerColor: Colors.transparent,
+                              tabAlignment: TabAlignment.start,
                               labelColor: Colors.white,
-                              unselectedLabelColor: Color(0XFF99A0AE),
-                              selectedHeight: 32,
-                              unselectedHeight: 32,
-                              tabShape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(200)),
-                              indicatorHeight: 0,
+                              isScrollable: true,
+                              physics: AlwaysScrollableScrollPhysics(),
+                              unselectedLabelColor: Color(0xFF99A0AE),
+                              indicatorColor: Color(0xFF6C63FE),
+                              indicatorSize: TabBarIndicatorSize.label,
+                              indicator: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color: Color(0xFF6C63FE)),
+                              unselectedLabelStyle:
+                                  TextStyle(fontSize: kText.textScaleFactor),
                               tabs: [
-                                TabItem(
-                                    title: Text(
-                                      "10 Important Sounds",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
+                                Tab(
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              getWidgetWidth(width: 20)),
+                                      child: Text(
+                                        'Important Sounds',
+                                        style: TextStyle(
+                                            color: _selectedTabIndex == 0
+                                                ? Colors.white
+                                                : Color(0xFF99A0AE),
+                                            fontSize: kText.scale(12),
+                                            fontFamily: 'Roboto',
+                                            fontWeight: FontWeight.w500),
+                                      ),
                                     ),
-                                    color: Color(0XFF6C63FE),
-                                    unselectedColor: Color(0XFF34425D)),
-                                TabItem(
-                                    title: Text(
-                                      "Vowels",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                                Tab(
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              getWidgetWidth(width: 20)),
+                                      child: Text(
+                                        'Vowels',
+                                        style: TextStyle(
+                                            color: _selectedTabIndex == 1
+                                                ? Colors.white
+                                                : Color(0xFF99A0AE),
+                                            fontSize: kText.scale(12),
+                                            fontFamily: 'Roboto',
+                                            fontWeight: FontWeight.w500),
+                                      ),
                                     ),
-                                    color: Color(0XFF6C63FE),
-                                    unselectedColor: Color(0XFF34425D)),
-                                TabItem(
-                                    title: Text(
-                                      "Consonants",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                                Tab(
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              getWidgetWidth(width: 20)),
+                                      child: Text(
+                                        'Consonants',
+                                        style: TextStyle(
+                                            color: _selectedTabIndex == 2
+                                                ? Colors.white
+                                                : Color(0xFF99A0AE),
+                                            fontSize: kText.scale(12),
+                                            fontFamily: 'Roboto',
+                                            fontWeight: FontWeight.w500),
+                                      ),
                                     ),
-                                    color: Color(0XFF6C63FE),
-                                    unselectedColor: Color(0XFF34425D)),
+                                  ),
+                                ),
                               ],
-                              //  controller: _tabController,
                             ),
+                            // ColorfulTabBar(
+                            //   verticalTabPadding: 5,
+                            //   alignment: TabAxisAlignment.end,
+                            //   labelColor: Colors.white,
+                            //   unselectedLabelColor: Color(0XFF99A0AE),
+                            //   selectedHeight: 32,
+                            //   unselectedHeight: 32,
+                            //   tabShape: RoundedRectangleBorder(
+                            //       borderRadius: BorderRadius.circular(200)),
+                            //   indicatorHeight: 0,
+                            //   tabs: [
+                            //     TabItem(
+                            //         title: Text(
+                            //           "10 Important Sounds",
+                            //           style: TextStyle(
+                            //               fontSize: 12,
+                            //               fontWeight: FontWeight.w500),
+                            //         ),
+                            //         color: Color(0XFF6C63FE),
+                            //         unselectedColor: Color(0XFF34425D)),
+                            //     TabItem(
+                            //         title: Text(
+                            //           "Vowels",
+                            //           style: TextStyle(
+                            //               fontSize: 12,
+                            //               fontWeight: FontWeight.w500),
+                            //         ),
+                            //         color: Color(0XFF6C63FE),
+                            //         unselectedColor: Color(0XFF34425D)),
+                            //     TabItem(
+                            //         title: Text(
+                            //           "Consonants",
+                            //           style: TextStyle(
+                            //               fontSize: 12,
+                            //               fontWeight: FontWeight.w500),
+                            //         ),
+                            //         color: Color(0XFF6C63FE),
+                            //         unselectedColor: Color(0XFF34425D)),
+                            //   ],
+                            //   //  controller: _tabController,
+                            // ),
                             SizedBox(
                               height: isSplitScreen
                                   ? getFullWidgetHeight(height: 18)
@@ -801,6 +823,11 @@ class _ProfluentEnglishModifiedScreenState
                                               child: InkWell(
                                                 splashColor: Colors.transparent,
                                                 onTap: () async {
+                                                  subCategoryTitile =
+                                                      "Important Sounds";
+                                                  sessionName = importantSounds
+                                                      .subcategories![index]
+                                                      .name!;
                                                   print(
                                                       "title check:${importantSounds.subcategories![index].name}");
                                                   print(
@@ -849,6 +876,10 @@ class _ProfluentEnglishModifiedScreenState
                                                     MaterialPageRoute(
                                                       builder: (context) =>
                                                           ProfluentSubScreen(
+                                                        ulr: importantSounds
+                                                            .subcategories![
+                                                                index]
+                                                            .ulr,
                                                         title:
                                                             _categories[index]
                                                                 .category!,
@@ -981,7 +1012,9 @@ class _ProfluentEnglishModifiedScreenState
                                                       }
                                                     }
                                                   });
-                                                  print("expanded:${expanded}");
+                                                  subCategoryTitile =
+                                                      vowels[index].category!;
+                                                  log("expanded:${expanded}");
                                                   // _handleExpansion(index, expanded);
                                                   // setState(() {
                                                   //   print("checkkkk");
@@ -1109,12 +1142,22 @@ class _ProfluentEnglishModifiedScreenState
                                                                     "sound practice : $soundPractice");
                                                                 print(
                                                                     "sound practice length: ${soundPractice.length}");
+                                                                sessionName = vowels[
+                                                                        index]
+                                                                    .subcategories![
+                                                                        subIndex]
+                                                                    .name!;
                                                                 Navigator.push(
                                                                   context,
                                                                   MaterialPageRoute(
                                                                     builder:
                                                                         (context) =>
                                                                             ProfluentSubScreen(
+                                                                      ulr: vowels[
+                                                                              index]
+                                                                          .subcategories![
+                                                                              subIndex]
+                                                                          .ulr,
                                                                       title: vowels[
                                                                               index]
                                                                           .subcategories![
@@ -1252,13 +1295,19 @@ class _ProfluentEnglishModifiedScreenState
                                                     expansionTileIndex2 ==
                                                         index,
                                                 onExpansionChanged: (expanded) {
+                                                  log("checking");
+                                                  subCategoryTitile = consonants[
+                                                          index]
+                                                      .category!
+                                                      .replaceFirst(
+                                                          'Consonants Sounds: ',
+                                                          '');
                                                   setState(() {
                                                     expansionTileIndex2 = index;
                                                   });
                                                   if (consonants.length - 2 <=
                                                       index) {
-                                                    print(
-                                                        "function calleddddd");
+                                                    log("function calleddddd");
                                                     WidgetsBinding.instance
                                                         .addPostFrameCallback(
                                                             (_) {
@@ -1367,12 +1416,22 @@ class _ProfluentEnglishModifiedScreenState
                                                                 "sound practice : $soundPractice");
                                                             print(
                                                                 "sound practice length: ${soundPractice.length}");
+                                                            sessionName = consonants[
+                                                                    index]
+                                                                .subcategories![
+                                                                    subIndex]
+                                                                .name!;
                                                             Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
                                                                         ProfluentSubScreen(
+                                                                  ulr: consonants[
+                                                                          index]
+                                                                      .subcategories![
+                                                                          subIndex]
+                                                                      .ulr!,
                                                                   title: consonants[
                                                                           index]
                                                                       .subcategories![

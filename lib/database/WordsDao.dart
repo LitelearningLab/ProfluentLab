@@ -16,7 +16,8 @@ class WordsDao implements Dao<Word> {
   final isPriority = 'isPriority';
 
   @override
-  String get createTableQuery => "CREATE TABLE $tableName($columnId INTEGER PRIMARY KEY,"
+  String get createTableQuery =>
+      "CREATE TABLE $tableName($columnId INTEGER PRIMARY KEY,"
       " $key TEXT,"
       " $_columnFile TEXT,"
       " $_columnPronun TEXT,"

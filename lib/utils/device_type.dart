@@ -1,8 +1,7 @@
 import 'dart:io';
-
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:litelearninglab/constants/keys.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class DeviceScreenInfo {
   static String getDevicePlatform() {

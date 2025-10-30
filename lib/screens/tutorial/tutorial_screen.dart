@@ -4,6 +4,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:litelearninglab/screens/webview/widgets/videoplayer_controller.dart';
 import 'package:litelearninglab/screens/webview/widgets/videoplayer_controller.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/shared_pref.dart';
@@ -23,7 +24,8 @@ class TutorialScreen extends StatefulWidget {
   }
 }
 
-class _TutorialScreenState extends State<TutorialScreen> with AfterLayoutMixin<TutorialScreen> {
+class _TutorialScreenState extends State<TutorialScreen>
+    with AfterLayoutMixin<TutorialScreen> {
   late VideoPlayerController _controller;
   late ChewieController _chewieController;
   late Future<void> _initializeVideoPlayerFuture;
@@ -122,14 +124,17 @@ class _TutorialScreenState extends State<TutorialScreen> with AfterLayoutMixin<T
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     _controller.play();
   }
 
   String formatDuration(Duration duration) {
     var remaining = duration - _controller.value.position;
-    String minutes = remaining.inMinutes.remainder(60).toString().padLeft(2, '0');
-    String seconds = remaining.inSeconds.remainder(60).toString().padLeft(2, '0');
+    String minutes =
+        remaining.inMinutes.remainder(60).toString().padLeft(2, '0');
+    String seconds =
+        remaining.inSeconds.remainder(60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
   }
 
@@ -167,7 +172,8 @@ class _TutorialScreenState extends State<TutorialScreen> with AfterLayoutMixin<T
                                     child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      CircularProgressIndicator(color: Colors.white),
+                                      CircularProgressIndicator(
+                                          color: Colors.white),
                                       SizedBox(
                                         height: 10,
                                       ),
@@ -184,12 +190,18 @@ class _TutorialScreenState extends State<TutorialScreen> with AfterLayoutMixin<T
                           //left: 20,
                           right: 20,
                           child: Container(
-                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle, color: Colors.white),
                             child: IconButton(
                                 onPressed: () async {
                                   _resetOrientation();
-                                  AuthState authState = Provider.of<AuthState>(context, listen: false);
-                                  await SharedPref.saveBool("tutorialchecking", true);
+                                  AuthState authState = Provider.of<AuthState>(
+                                      context,
+                                      listen: false);
+                                  await SharedPref.saveBool(
+                                      "tutorialchecking", true);
+                                  await SharedPref.saveBool(
+                                      "isFirstTutorial", true);
                                   authState.checkAuthChanging();
                                   authState.checkAuthStatus();
                                 },
@@ -198,7 +210,8 @@ class _TutorialScreenState extends State<TutorialScreen> with AfterLayoutMixin<T
                     ],
                   );
                 } else {
-                  return Center(child: CircularProgressIndicator(color: Colors.white));
+                  return Center(
+                      child: CircularProgressIndicator(color: Colors.white));
                 }
               },
             ),

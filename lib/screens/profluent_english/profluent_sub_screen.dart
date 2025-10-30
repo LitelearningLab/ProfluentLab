@@ -1,13 +1,16 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:litelearninglab/API/api.dart';
 import 'package:litelearninglab/constants/all_assets.dart';
 import 'package:litelearninglab/constants/keys.dart';
 import 'package:litelearninglab/screens/profluent_english/new_profluent_english_screen.dart';
-import 'package:litelearninglab/screens/profluent_english/widgets/video_player_controller.dart';
+// import 'package:litelearninglab/screens/profluent_english/widgets/video_player_controller.dart';
 import 'package:litelearninglab/screens/profluent_english/word_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
@@ -32,12 +35,14 @@ class ProfluentSubScreen extends StatefulWidget {
       required this.links,
       required this.load,
       required this.title,
+      this.ulr,
       this.soundPractice})
       : super(key: key);
   final ProfluentSubLink links;
   final String load;
   final String title;
   final List<Word>? soundPractice;
+  String? ulr;
 
   @override
   _ProfluentSubScreenState createState() {
@@ -51,7 +56,7 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
   late Future<VideoPlayerController> _initializeVideoPlayerFuture;
   bool _isPlaying = false;
   late AutoScrollController controller;
-  late ChewieController _chewieController;
+  // late ChewieController _chewieController;
   bool _isCorrect = false;
   String _selectedWord = "";
   List<Word> _words = [];
@@ -59,11 +64,15 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
   bool isLoading = false;
   bool _isControllerVisible = false;
   Timer? _hideControllerTimer;
+  int checkUrl = 0;
+  bool _isControllerInitializing = false;
+  bool _hasInitError = false;
 
   @override
   void initState() {
     super.initState();
-    startTimerSubCategory(profluentEnglish, widget.load);
+    log("entering to the sound page init state. ");
+    startTimerMainCategory("name");
 
     soundPractice = widget.soundPractice!;
 
@@ -76,7 +85,7 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
   refreshScreen(int no) {
     _initializeVideoPlayerFuture = _initVideoPlayer(url: widget.links.v1!);
     setState(() {
-      _isPlaying = false;
+      _isPlaying = true;
     });
   }
 
@@ -93,68 +102,42 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
   }
 
   Future<VideoPlayerController> _initVideoPlayer({required String url}) async {
-    print("sjifjgirji");
-    _controller = VideoPlayerController.networkUrl(Uri.parse(url));
-
-    await _initializeChewieController();
-
-    return _controller;
-  }
-
-  _initializeChewieController() async {
+    log("printing url : ${url}");
+    _isControllerInitializing = true;
+    _hasInitError = false;
     _isPlaying = false;
     setState(() {});
-    // await _controller.initialize();
-    _chewieController = ChewieController(
-        errorBuilder: (context, errorMessage) {
-          print("error message:${errorMessage}");
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline_outlined,
-                  color: Colors.white,
-                ),
-                SizedBox(
-                  height: isSplitScreen
-                      ? getFullWidgetHeight(height: 10)
-                      : getWidgetHeight(height: 10),
-                ),
-                Text(
-                  'Playback error!',
-                  style: TextStyle(color: Colors.white),
-                )
-              ],
-            ),
-          );
-        },
-        customControls: CustomController(),
-        showControlsOnInitialize: true,
-        videoPlayerController: _controller,
-        autoInitialize: true,
-        autoPlay: true,
-        showOptions: false,
-        showControls: false,
-        allowFullScreen: false,
-        fullScreenByDefault: false,
-        looping: false,
-        cupertinoProgressColors: ChewieProgressColors(
-            playedColor: Colors.white,
-            bufferedColor: Color(0XFFD6D6D6),
-            backgroundColor: Colors.grey,
-            handleColor: Colors.grey),
-        materialProgressColors: ChewieProgressColors(
-            playedColor: Colors.white,
-            bufferedColor: Color(0XFFD6D6D6),
-            backgroundColor: Colors.grey,
-            handleColor: Colors.grey));
-    // controllerChecking=true;
-    await _controller.initialize();
-    _isPlaying = true;
-    setState(() {});
 
-    //  return controllerChecking;
+    try {
+      final file = await DefaultCacheManager().getSingleFile(url);
+      _controller = VideoPlayerController.file(
+        file,
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+      );
+      await _controller.initialize();
+      await _controller.setVolume(1);
+      await _controller.play();
+      _isPlaying = true;
+      setState(() {});
+    } catch (e1) {
+      try {
+        _controller = VideoPlayerController.networkUrl(
+          Uri.parse(url),
+          videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+        );
+        await _controller.initialize();
+        await _controller.setVolume(1);
+        await _controller.play();
+        _isPlaying = true;
+        setState(() {});
+      } catch (e2) {
+        log("Video init failed: $e2");
+        _hasInitError = true;
+      }
+    }
+
+    _isControllerInitializing = false;
+    return _controller;
   }
 
   Future<void> getSoundPracticeWords() async {
@@ -176,11 +159,16 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     print("disposeddddd");
-    _controller.dispose();
-    _controller.pause();
-    _chewieController.dispose();
+    log("disposed");
+    try {
+      // _chewieController.dispose();
+      await _controller.dispose();
+    } catch (e) {
+      print("Error disposing old controllers: $e");
+    }
+
     super.dispose();
   }
 
@@ -194,69 +182,62 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
   }
 
   void _onClick(int index) async {
+    // if (_selected == index) return;
+    isLoading = true;
     _isPlaying = false;
+    _selected = index;
     setState(() {});
-    print("index : $index");
-    print("_selected : $_selected");
 
-    String selectedText = getLetter(widget.load);
-    if (_selected != index) {
-      late String url;
-      if (index == 0) {
-        url = widget.links.v1!;
-        print("indexxxx>>>> 0 :${url}");
-        // url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
-      } else if (index == 1) {
-        url = widget.links.v2!;
-        print("indexxxx>>>> 1 :${url}");
-        //url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
-      } else if (index == 2) {
-        url = widget.links.v3!;
-        print("indexxxx>>>> 2:${url}");
-        //url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
-      } else if (index == 3) {
-        url = widget.links.v4!;
-        print("indexxxx>>>> 3 :${url}");
-        //url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4";
-      } else if (index == 4) {
-        url = widget.links.v5!;
-        //  url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
-        print("indexxxx>>>> 4:${url}");
-        //url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4";
-      } else if (index == 5) {
-        _controller.pause();
-        print("dkjd i du du d ");
-        await getSoundPracticeWords();
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => WordScreenProfluentEnglish(
-                      title: 'Words',
-                      load: 'Words',
-                      soundPractice: soundPractice,
-                    )));
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => WordScreenProfluentEnglish(
-        //               title: 'Words',
-        //               load: 'Words',
-        //               soundPractice: widget.soundPractice!,
-        //             )));
-      }
-      if (index != 5) {
-        _controller.pause();
-        _controller.dispose();
+    log("index inside the onclick : $index");
 
-        _controller = VideoPlayerController.networkUrl(Uri.parse(url));
-        _controller.initialize().then((_) async {
-          //    _chewieController.dispose();
-          await _initializeChewieController();
-          setState(() {});
-        });
-      }
-      _selected = index;
+    // Pause and dispose the current controller if it exists
+    if (_controller.value.isInitialized) {
+      await _controller.pause();
+      await _controller.dispose();
     }
+
+    // Choose URL based on index
+    late String url;
+    if (index >= 0 && index <= 4) {
+      url = index == 0
+          ? widget.links.v1!
+          : index == 1
+              ? widget.links.v2!
+              : index == 2
+                  ? widget.links.v3!
+                  : index == 3
+                      ? widget.links.v4!
+                      : widget.links.v5!;
+    } else if (index == 5) {
+      await _controller.pause();
+      await getSoundPracticeWords();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WordScreenProfluentEnglish(
+            title: 'Words',
+            load: 'Words',
+            soundPractice: soundPractice,
+          ),
+        ),
+      );
+
+      return;
+    }
+
+    // Reinitialize the controller with new URL
+    final file = await DefaultCacheManager().getSingleFile(url);
+    _controller = VideoPlayerController.file(file);
+
+    await _controller.initialize();
+    _controller.setLooping(false);
+    _controller.setVolume(1.0);
+    _controller.play();
+    _controller.addListener(() => setState(() {}));
+    // isLoading = false;
+    _isPlaying = true;
+
+    setState(() {});
   }
 
   void toggleControllerVisibility() {
@@ -371,10 +352,11 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // _initializeVideoPlayerFuture = _initVideoPlayer(url: widget.links.v1!);
     return PopScope(
       onPopInvoked: (didPop) {
         // if (!didPop) {
-        stopTimerSubCategory();
+        stopTimerMainCategory();
         // }
       },
       child: BackgroundWidget(
@@ -394,37 +376,66 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                 children: [
                   SizedBox(
                       width: kWidth,
-                      height: _chewieController
-                              .videoPlayerController.value.isInitialized
-                          ? kWidth /
-                              _chewieController
-                                  .videoPlayerController.value.aspectRatio
+                      height: _controller.value.isInitialized
+                          ? kWidth / _controller.value.aspectRatio
                           : displayWidth(context),
                       child: _isPlaying == false
-                          ? Center(
-                              child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(color: Colors.white),
-                                SizedBox(
-                                  height: isSplitScreen
-                                      ? getFullWidgetHeight(height: 10)
-                                      : getWidgetHeight(height: 10),
-                                ),
-                                Text(
-                                  'Loading...',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ))
+                          ? _hasInitError
+                              ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.error,
+                                          color: Colors.white, size: 48),
+                                      SizedBox(height: 16),
+                                      Text("Video failed to load",
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          try {
+                                            // Forcefully dispose current controllers before retrying
+                                            await _controller.pause();
+                                            await _controller.dispose();
+                                            // _chewieController.dispose();
+                                          } catch (e) {
+                                            log("Error disposing controllers before retry: $e");
+                                          }
+
+                                          _initializeVideoPlayerFuture =
+                                              _initVideoPlayer(
+                                                  url: widget.links.v1!);
+                                          setState(() {});
+                                        },
+                                        child: Text("Retry"),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Center(
+                                  child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircularProgressIndicator(
+                                        color: Colors.white),
+                                    SizedBox(
+                                      height: isSplitScreen
+                                          ? getFullWidgetHeight(height: 10)
+                                          : getWidgetHeight(height: 10),
+                                    ),
+                                    Text(
+                                      'Loading...',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ))
                           : Stack(
                               children: [
                                 GestureDetector(
                                     onTap: () {
                                       toggleControllerVisibility();
                                     },
-                                    child:
-                                        Chewie(controller: _chewieController)),
+                                    child: VideoPlayer(_controller)),
                                 if (_isControllerVisible)
                                   Positioned(
                                     bottom: 0,
@@ -556,6 +567,9 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                         return InkWell(
                           splashColor: Colors.transparent,
                           onTap: () async {
+                            log("entering and priniting the index ${index}");
+                            // if (checkUrl != index) {
+                            // checkUrl = index;
                             if (((widget.links.v1 == null ||
                                         widget.links.v1!.isEmpty) &&
                                     index == 0) ||
@@ -574,8 +588,8 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                 ((widget.links.words == null ||
                                         widget.links.words!.isEmpty) &&
                                     index == 5)) {
-                              _controller.pause();
-                              _controller.dispose();
+                              await _controller.pause();
+                              await _controller.dispose();
 
                               repeatLoads = widget.load;
 
@@ -611,12 +625,14 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                   refreshScreen(2);
                                   // }
                                 });
-                                _controller.pause();
-                                _controller.dispose();
+                                await _controller.pause();
+                                await _controller.dispose();
                               } else {
+                                log("else part is working");
                                 _onClick(index);
                               }
                             }
+                            // }
                             setState(() {});
                           },
                           child: Container(
@@ -707,14 +723,26 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                         horizontal: getWidgetWidth(width: 10),
                         vertical: isSplitScreen
                             ? getFullWidgetHeight(height: 10)
-                            : getWidgetHeight(height: 20)),
-                    child: Text(
-                      widget.load,
-                      style: TextStyle(
-                          color: AppColors.white,
-                          fontFamily: Keys.fontFamily,
-                          fontWeight: FontWeight.w500,
-                          fontSize: kText.scale(15)),
+                            : getWidgetHeight(height: 10)),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Usual Letter Representations",
+                          style: TextStyle(
+                              color: AppColors.pinkishGrey,
+                              fontFamily: Keys.fontFamily,
+                              fontWeight: FontWeight.w500,
+                              fontSize: kText.scale(15)),
+                        ),
+                        Text(
+                          widget.ulr ?? "Empty",
+                          style: TextStyle(
+                              color: AppColors.white,
+                              fontFamily: Keys.fontFamily,
+                              fontWeight: FontWeight.w500,
+                              fontSize: kText.scale(15)),
+                        ),
+                      ],
                     ),
                   ),
                   const Spacer(),

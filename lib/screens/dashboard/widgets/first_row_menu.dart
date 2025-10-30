@@ -85,7 +85,8 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
 
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     if (userId != null && userId.isNotEmpty) {
-      DocumentReference softSkills = firestore.collection('softSkillReports').doc(userId);
+      DocumentReference softSkills =
+          firestore.collection('softSkillReports').doc(userId);
       DocumentSnapshot snapshot = await softSkills.get();
       if (snapshot.exists && snapshot.data() != null) {
         setState(() {
@@ -152,7 +153,10 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
       wordsProgressPE = wordsTapped.length;
       sentenceProgressPE = sentenceTapped.length;
     } else {
-      await FirebaseFirestore.instance.collection('proFluentEnglishReport').doc(userId).set({
+      await FirebaseFirestore.instance
+          .collection('proFluentEnglishReport')
+          .doc(userId)
+          .set({
         'WordsTapped': [],
         'SentencesTapped': [],
         'userId': userId,
@@ -213,43 +217,74 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
       if (_processLeaning[i].subcategories != null) {
         print("categories name: ${_processLeaning[i].subcategories}");
         for (int j = 0; j < _processLeaning[i].subcategories!.length; j++) {
-          print("processLearning Subcategoreis length:${_processLeaning[i].subcategories!.length}");
+          print(
+              "processLearning Subcategoreis length:${_processLeaning[i].subcategories!.length}");
           if (_processLeaning[i].subcategories![j].link != null) {
             if (_processLeaning[i].subcategories![j].link!.isNotEmpty) {
-              print("linkCheckkkk:${_processLeaning[i].subcategories![j].link!.isNotEmpty}");
+              print(
+                  "linkCheckkkk:${_processLeaning[i].subcategories![j].link!.isNotEmpty}");
               print("linkkkkkkk:${_processLeaning[i].subcategories![j].link}");
               activeLinkCountPL += 1;
             }
           }
           if (_processLeaning[i].subcategories![j].linkCats != null) {
             print("sdmkmgmrgmv");
-            for (int z = 0; z < _processLeaning[i].subcategories![j].linkCats!.length; z++) {
+            for (int z = 0;
+                z < _processLeaning[i].subcategories![j].linkCats!.length;
+                z++) {
               print("samkdmv");
-              if (_processLeaning[i].subcategories![j].linkCats![z].simulation != null) {
-                if (_processLeaning[i].subcategories![j].linkCats![z].simulation!.isNotEmpty) {
-                  print("simulationLink:${_processLeaning[i].subcategories![j].linkCats![z].simulation!}");
+              if (_processLeaning[i]
+                      .subcategories![j]
+                      .linkCats![z]
+                      .simulation !=
+                  null) {
+                if (_processLeaning[i]
+                    .subcategories![j]
+                    .linkCats![z]
+                    .simulation!
+                    .isNotEmpty) {
+                  print(
+                      "simulationLink:${_processLeaning[i].subcategories![j].linkCats![z].simulation!}");
                   print("dfdjj");
                   activeSimulationCountPL += 1;
                   print("activeSimulationCountPL:${activeSimulationCountPL}");
                 }
               }
-              if (_processLeaning[i].subcategories![j].linkCats![z].video != null) {
-                if (_processLeaning[i].subcategories![j].linkCats![z].video!.isNotEmpty) {
-                  print("videoLinkkk:${_processLeaning[i].subcategories![j].linkCats![z].video!}");
+              if (_processLeaning[i].subcategories![j].linkCats![z].video !=
+                  null) {
+                if (_processLeaning[i]
+                    .subcategories![j]
+                    .linkCats![z]
+                    .video!
+                    .isNotEmpty) {
+                  print(
+                      "videoLinkkk:${_processLeaning[i].subcategories![j].linkCats![z].video!}");
                   activeVideoCountPL += 1;
                   print("activeVideoCountPl:$activeVideoCountPL");
                 }
               }
-              if (_processLeaning[i].subcategories![j].linkCats![z].faq != null) {
-                if (_processLeaning[i].subcategories![j].linkCats![z].faq!.isNotEmpty) {
-                  print("faqLink:${_processLeaning[i].subcategories![j].linkCats![z].faq!}");
+              if (_processLeaning[i].subcategories![j].linkCats![z].faq !=
+                  null) {
+                if (_processLeaning[i]
+                    .subcategories![j]
+                    .linkCats![z]
+                    .faq!
+                    .isNotEmpty) {
+                  print(
+                      "faqLink:${_processLeaning[i].subcategories![j].linkCats![z].faq!}");
                   activeFAQCountPL += 1;
                   print("activeFAQCountPl:$activeFAQCountPL");
                 }
               }
-              if (_processLeaning[i].subcategories![j].linkCats![z].knowledge != null) {
-                if (_processLeaning[i].subcategories![j].linkCats![z].knowledge!.isNotEmpty) {
-                  print("knowledgeLink:${_processLeaning[i].subcategories![j].linkCats![z].knowledge!}");
+              if (_processLeaning[i].subcategories![j].linkCats![z].knowledge !=
+                  null) {
+                if (_processLeaning[i]
+                    .subcategories![j]
+                    .linkCats![z]
+                    .knowledge!
+                    .isNotEmpty) {
+                  print(
+                      "knowledgeLink:${_processLeaning[i].subcategories![j].linkCats![z].knowledge!}");
                   activeKnowledgePL += 1;
                   print("activeKnowledgePL:$activeKnowledgePL");
                 }
@@ -257,8 +292,11 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
             }
           }
         }
-        totalActiveLinkCountPL =
-            activeLinkCountPL + activeSimulationCountPL + activeVideoCountPL + activeFAQCountPL + activeKnowledgePL;
+        totalActiveLinkCountPL = activeLinkCountPL +
+            activeSimulationCountPL +
+            activeVideoCountPL +
+            activeFAQCountPL +
+            activeKnowledgePL;
         print("activeLinkCountPL:${activeLinkCountPL}");
         print('activeSimulationCountPl:$activeSimulationCountPL');
         print('activeVideoCountPL:$activeVideoCountPL');
@@ -270,7 +308,8 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
     }
 
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DocumentReference processLearningReport = firestore.collection('processLearningReports').doc(userId);
+    DocumentReference processLearningReport =
+        firestore.collection('processLearningReports').doc(userId);
 
     DocumentSnapshot snapshot = await processLearningReport.get();
 
@@ -278,16 +317,21 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
       print("snapshotAlreadyExists");
       setState(() {
         processLearningLinks = List<String>.from(snapshot['isLink']);
-        processLearningProgressBar = processLearningLinks.length / totalActiveLinkCountPL;
+        processLearningProgressBar =
+            processLearningLinks.length / totalActiveLinkCountPL;
         print("processLearningProgressBar:$processLearningProgressBar");
         print("processLearningLinkLenth:${processLearningLinks.length}");
         print("totalActiveLinkCountPL:${totalActiveLinkCountPL}");
       });
     }
+    String company = await SharedPref.getSavedString("companyId");
+    String batch = await SharedPref.getSavedString("batch");
     await processLearningReport.set({
       'activeLink': totalActiveLinkCountPL,
       'isLink': processLearningLinks,
       'userId': userId,
+      'batch': batch,
+      "companyId": company
     }).then((_) {
       print(userId);
     }).catchError((e) {
@@ -300,19 +344,22 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
     String userId = await SharedPref.getSavedString('userId');
     print("userIdfdhfihi:$userId");
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DocumentReference arCallSimulations = firestore.collection('arCallSimulationsReport').doc(userId);
+    DocumentReference arCallSimulations =
+        firestore.collection('arCallSimulationsReport').doc(userId);
     print("arcallsimulation:$arCallSimulations");
     DocumentSnapshot snapshot = await arCallSimulations.get();
     print("Document Exists: ${snapshot.exists}");
     if (snapshot.exists && snapshot.data() != null) {
       print("snapshotAlreadyExistsarcallll");
-      List<String> tempArCallSimulationsLinks = List<String>.from(snapshot['isLink']);
+      List<String> tempArCallSimulationsLinks =
+          List<String>.from(snapshot['isLink']);
 
       setState(() {
         print("dsfeiofeif");
         arCallSimulationsLinks = tempArCallSimulationsLinks;
         print("arCallSimulationsLinks: $arCallSimulationsLinks");
-        arCallSimulationsProgressBar = arCallSimulationsLinks.length / TotalActiveLinkCount;
+        arCallSimulationsProgressBar =
+            arCallSimulationsLinks.length / TotalActiveLinkCount;
         print("arCallSimulationsProgressBar: $arCallSimulationsProgressBar");
         print("TotalActiveLinkCount:$TotalActiveLinkCount");
         print("activeLinkCount: ${activeLinkCount}");
@@ -360,7 +407,8 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
             print("activeLink3Count: $activeLink3Count");
           }
         }
-        TotalActiveLinkCount = activeLink1Count + activeLink2Count + activeLink3Count;
+        TotalActiveLinkCount =
+            activeLink1Count + activeLink2Count + activeLink3Count;
         print("totalActivelinkCount: ${TotalActiveLinkCount}");
       }
     }
@@ -393,7 +441,8 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
               height: getWidgetHeight(height: 153.41),
               width: getWidgetWidth(width: 228),
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(10)),
                 color: const Color(0xFFFFFFFF),
                 image: DecorationImage(
                   image: AssetImage(widget.menuImage),
@@ -462,7 +511,8 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                                   ),
                                   isLoading
                                       ? Container(
-                                          margin: EdgeInsets.only(left: getWidgetWidth(width: 30)),
+                                          margin: EdgeInsets.only(
+                                              left: getWidgetWidth(width: 30)),
                                           height: getWidgetHeight(height: 7.62),
                                           width: getWidgetHeight(height: 7.62),
                                           child: CircularProgressIndicator(
@@ -472,31 +522,52 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                                       : Column(
                                           children: [
                                             LinearPercentIndicator(
-                                              barRadius: const Radius.circular(50),
+                                              barRadius:
+                                                  const Radius.circular(50),
                                               // width: displayWidth(context)/2.652,
-                                              width: getWidgetWidth(width: 141.35),
+                                              width:
+                                                  getWidgetWidth(width: 141.35),
                                               // lineHeight: displayHeight(context)/105.867,
-                                              lineHeight: getWidgetHeight(height: 6),
-                                              percent: widget.menu == "Soft Skills"
+                                              lineHeight:
+                                                  getWidgetHeight(height: 6),
+                                              percent: widget.menu ==
+                                                      "Soft Skills"
                                                   ? softSkillProgressBar
-                                                  : widget.menu == "AR Call Simulation"
+                                                  : widget.menu ==
+                                                          "AR Call Simulation"
                                                       ? arCallSimulationsProgressBar
-                                                      : widget.menu == "Process Learning"
+                                                      : widget.menu ==
+                                                              "Process Learning"
                                                           ? processLearningProgressBar
                                                           : 0.44,
-                                              backgroundColor: const Color(0xFFFFFFFF),
-                                              progressColor: const Color(0xFF6C63FE),
+                                              backgroundColor:
+                                                  const Color(0xFFFFFFFF),
+                                              progressColor:
+                                                  const Color(0xFF6C63FE),
                                             ),
                                             SizedBox(
                                               height: 5,
                                             ),
                                             Text(
                                               widget.menu == "Soft Skills"
-                                                  ? (softSkillProgressBar * 100).round().toString() + '%'
-                                                  : widget.menu == "AR Call Simulation"
-                                                      ? (arCallSimulationsProgressBar * 100).round().toString() + '%'
-                                                      : widget.menu == "Process Learning"
-                                                          ? (processLearningProgressBar * 100).round().toString() + '%'
+                                                  ? (softSkillProgressBar * 100)
+                                                          .round()
+                                                          .toString() +
+                                                      '%'
+                                                  : widget.menu ==
+                                                          "AR Call Simulation"
+                                                      ? (arCallSimulationsProgressBar *
+                                                                  100)
+                                                              .round()
+                                                              .toString() +
+                                                          '%'
+                                                      : widget.menu ==
+                                                              "Process Learning"
+                                                          ? (processLearningProgressBar *
+                                                                      100)
+                                                                  .round()
+                                                                  .toString() +
+                                                              '%'
                                                           : "0",
                                               style: TextStyle(
                                                 fontFamily: Keys.fontFamily,
@@ -511,7 +582,8 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                               )
                             : isLoading
                                 ? Container(
-                                    margin: EdgeInsets.only(left: getWidgetWidth(width: 30)),
+                                    margin: EdgeInsets.only(
+                                        left: getWidgetWidth(width: 30)),
                                     height: getWidgetHeight(height: 7.62),
                                     width: getWidgetHeight(height: 7.62),
                                     child: CircularProgressIndicator(
@@ -521,7 +593,9 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                                 : Row(
                                     children: [
                                       Text(
-                                        widget.menu == "Profluent English" ? " ${wordsProgressPE.toString()}" : "0",
+                                        widget.menu == "Profluent English"
+                                            ? " ${wordsProgressPE.toString()}"
+                                            : "0",
                                         style: TextStyle(
                                           fontFamily: 'Roboto',
                                           fontWeight: FontWeight.w400,
@@ -535,13 +609,16 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                                         style: TextStyle(
                                           fontFamily: 'Roboto',
                                           fontWeight: FontWeight.w400,
-                                          color: const Color.fromARGB(125, 255, 255, 255),
+                                          color: const Color.fromARGB(
+                                              125, 255, 255, 255),
                                           fontSize: 14,
                                           letterSpacing: 0,
                                         ),
                                       ),
                                       Text(
-                                        widget.menu == "Profluent English" ? sentenceProgressPE.toString() : "0",
+                                        widget.menu == "Profluent English"
+                                            ? sentenceProgressPE.toString()
+                                            : "0",
                                         style: TextStyle(
                                           fontFamily: 'Roboto',
                                           fontWeight: FontWeight.w400,
@@ -555,7 +632,8 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                                         style: TextStyle(
                                           fontFamily: 'Roboto',
                                           fontWeight: FontWeight.w400,
-                                          color: const Color.fromARGB(125, 255, 255, 255),
+                                          color: const Color.fromARGB(
+                                              125, 255, 255, 255),
                                           fontSize: 14,
                                           letterSpacing: 0,
                                         ),

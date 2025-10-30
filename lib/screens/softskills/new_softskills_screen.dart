@@ -8,6 +8,7 @@ import 'package:litelearninglab/constants/app_colors.dart';
 import 'package:litelearninglab/models/SoftSkills.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
+import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -42,6 +43,7 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
   void initState() {
     super.initState();
     // startTimerMainCategory("Soft Skills");
+    mianCategoryTitile = "Soft Skills";
     controller = AutoScrollController(
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
@@ -252,6 +254,7 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
                                   child: InkWell(
                                     splashColor: Colors.transparent,
                                     onTap: () async {
+                                      sessionName = _categories[index].name!;
                                       if (_categories[index].link != null) {
                                         if (_categories[index].link!.isEmpty ||
                                             _categories[index].link == null) {
@@ -271,6 +274,9 @@ class _ProcessLearningScreenState extends State<NewSoftSkillsScreen> {
                                           SharedPreferences prefs =
                                               await SharedPreferences
                                                   .getInstance();
+
+                                          // await prefs.setString('lastAccess',
+                                          //     'NewSoftSkillsScreen');
                                           await prefs.setStringList(
                                               'InAppWebViewPage', [
                                             _categories[index].link!,

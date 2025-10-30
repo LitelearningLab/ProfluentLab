@@ -26,7 +26,8 @@ class AudioPlayerManager {
     _initAudioPlayer();
   }
 
-  Stream<PlayerState> get onPlayerStateChanged => _audioPlayer.onPlayerStateChanged;
+  Stream<PlayerState> get onPlayerStateChanged =>
+      _audioPlayer.onPlayerStateChanged;
 
   void _initAudioPlayer() {
     _audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
@@ -38,7 +39,8 @@ class AudioPlayerManager {
       _duration = duration;
     });
 
-    _positionSubscription = _audioPlayer.onDurationChanged.listen((p) => _position = p);
+    _positionSubscription =
+        _audioPlayer.onDurationChanged.listen((p) => _position = p);
 
     _playerCompleteSubscription = _audioPlayer.onPlayerComplete.listen((event) {
       print("completeddddddddd");
@@ -70,11 +72,13 @@ class AudioPlayerManager {
       print('***********//////AUDIO Done');
       ;
       audioController.isAudioDone = true;
-      print("local Path>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+      print(
+          "local Path>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
       print(localPath);
       // await _audioPlayer.setPlaybackRate(5);
-      return await _audioPlayer
-          .play(localPath != null && localPath != "ERROR" ? DeviceFileSource(newPth) : UrlSource(url));
+      return await _audioPlayer.play(localPath != null && localPath != "ERROR"
+          ? DeviceFileSource(newPth)
+          : UrlSource(url));
     } catch (e) {
       print('***********//////AUDIO FAILED');
       audioController.isAudioDone = false;
@@ -99,11 +103,13 @@ class AudioPlayerManager {
       print('***********//////AUDIO Done');
       ;
       audioController.isAudioDone = true;
-      print("local Path>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+      print(
+          "local Path>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
       print(localPath);
       await _audioPlayer.setPlaybackRate(0.8);
-      return await _audioPlayer
-          .play(localPath != null && localPath != "ERROR" ? DeviceFileSource(newPth) : UrlSource(url));
+      return await _audioPlayer.play(localPath != null && localPath != "ERROR"
+          ? DeviceFileSource(newPth)
+          : UrlSource(url));
     } catch (e) {
       print('***********//////AUDIO FAILED');
       audioController.isAudioDone = false;

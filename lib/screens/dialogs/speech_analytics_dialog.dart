@@ -53,7 +53,8 @@ class SpeechAnalyticsDialog extends StatefulWidget {
   }
 }
 
-class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with AfterLayoutMixin<SpeechAnalyticsDialog> {
+class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog>
+    with AfterLayoutMixin<SpeechAnalyticsDialog> {
   bool _isShowDidNotCatch = false;
   bool _isDismissed = false;
   double level = 0.0;
@@ -113,7 +114,8 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
   // }
 
   Future<void> _initSpeechState() async {
-    bool hasSpeech = await speech.initialize(onError: errorListener, onStatus: statusListener);
+    bool hasSpeech = await speech.initialize(
+        onError: errorListener, onStatus: statusListener);
     if (hasSpeech) {
       print("ojudsoudududuhdudu badhusha");
       var systemLocale = await speech.systemLocale();
@@ -167,23 +169,34 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
       builder: (BuildContext context) {
         var controller = Provider.of<AuthState>(context, listen: false);
         return AlertDialog(
-            insetPadding: EdgeInsets.only(left: kWidth / 32.35, right: kWidth / 32.75),
-            actionsPadding: EdgeInsets.only(right: kWidth / 26.2, left: kWidth / 26.2, bottom: kHeight / 28.4),
+            insetPadding:
+                EdgeInsets.only(left: kWidth / 32.35, right: kWidth / 32.75),
+            actionsPadding: EdgeInsets.only(
+                right: kWidth / 26.2,
+                left: kWidth / 26.2,
+                bottom: kHeight / 28.4),
             actionsAlignment: MainAxisAlignment.spaceBetween,
             title: Text(
               'Permission Required',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600, color: Colors.white),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(fontWeight: FontWeight.w600, color: Colors.white),
             ),
             content: Text(
               'Cannot proceed without permission',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
             ),
             actions: [
               Center(
                 child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: Color(0XFF293750)),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0XFF293750)),
                     onPressed: () async {
                       print("goooooo checkeddddddddddddddddd");
                       await openAppSettings();
@@ -191,10 +204,10 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
                     },
                     child: Text(
                       'Go',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displaySmall
-                          ?.copyWith(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15),
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                          fontSize: 15),
                     )),
               ),
             ],
@@ -430,9 +443,10 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
     int startIndex = 0;
 
     for (final match in numberPattern.allMatches(inputString)) {
-      final int number = int.parse(match.group(0)!); // Extract and parse the number
-      final String numberText =
-          convertToWordsWithAnd(number); // Use the modified method to convert number to words with "and"
+      final int number =
+          int.parse(match.group(0)!); // Extract and parse the number
+      final String numberText = convertToWordsWithAnd(
+          number); // Use the modified method to convert number to words with "and"
 
       // Append the text before the number
       outputBuffer.write(inputString.substring(startIndex, match.start));
@@ -475,7 +489,8 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
     }
   }
 
-  List<List<String>> compareAndAlignSegments(List<String> actual, List<String> heard) {
+  List<List<String>> compareAndAlignSegments(
+      List<String> actual, List<String> heard) {
     List<List<String>> result = [];
     int heardIndex = 0; // Pointer for `heard` list
     for (int i = 0; i < actual.length; i++) {
@@ -528,7 +543,7 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
 
 // Helper to check if a string is numeric
 
-  void resultListener(SpeechRecognitionResult result) {
+  void resultListener(SpeechRecognitionResult result) async {
     if (!result.finalResult) {
       setState(() {
         lastWords += result.recognizedWords + " ";
@@ -581,7 +596,10 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
               child: AutoSizeText(
                 actWord,
                 minFontSize: 15,
-                style: TextStyle(fontSize: 15, fontFamily: Keys.fontFamily, color: Colors.green),
+                style: TextStyle(
+                    fontSize: 15,
+                    fontFamily: Keys.fontFamily,
+                    color: Colors.green),
               ),
             ); /*Text(
               actWord,
@@ -603,7 +621,10 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
               padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
               child: Text(
                 actWord,
-                style: TextStyle(fontSize: 15, fontFamily: Keys.fontFamily, color: Colors.red),
+                style: TextStyle(
+                    fontSize: 15,
+                    fontFamily: Keys.fontFamily,
+                    color: Colors.red),
               ));
           formatedWords.add(wi);
         } else {
@@ -617,8 +638,12 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
       print("correctPer:${correctPer}");
       _isCorrect = correctPer == 100.0;
       _isCorrect
-          ? endPractice(practiceType: "Pronunciation Sound Lab Report", successCount: "correct")
-          : endPractice(practiceType: "Pronunciation Sound Lab Report", successCount: "wrong");
+          ? endPractice(
+              practiceType: "Pronunciation Sound Lab Report",
+              successCount: "correct")
+          : endPractice(
+              practiceType: "Pronunciation Sound Lab Report",
+              successCount: "wrong");
       print("iscorrecttttt:${_isCorrect}");
     }
 
@@ -632,9 +657,12 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
       if (_timer.isActive) {
         _timer.cancel();
       }
-
+      String company = await SharedPref.getSavedString("companyId");
+      String batch = await SharedPref.getSavedString("batch");
       if (widget.isWord)
         db.saveWordListReport(
+            companyId: company,
+            batch: batch,
             time: _start,
             company: userDatas.appUser?.company ?? "",
             name: userDatas.appUser?.UserMname,
@@ -742,7 +770,8 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
       startListening();
     }
     print("statusListener");
-    print("Received listener status: $status, listening: ${speech.isListening}");
+    print(
+        "Received listener status: $status, listening: ${speech.isListening}");
 
 //    print(_context);
 //     setState(() {
@@ -776,7 +805,9 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
             Container(
               height: 75,
               decoration: new BoxDecoration(
-                borderRadius: new BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
+                borderRadius: new BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0)),
                 color: Color(0xff34425D),
                 // boxShadow: [new BoxShadow(color: Colors.grey, blurRadius: 3.0, offset: new Offset(1.0, 1.0))],
               ),
@@ -833,7 +864,8 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
                 Container(
                   alignment: Alignment.center,
                   //height: 180,
-                  padding: EdgeInsets.only(right: 5, left: 5, top: 20, bottom: 20),
+                  padding:
+                      EdgeInsets.only(right: 5, left: 5, top: 20, bottom: 20),
                   // decoration: BoxDecoration(
                   //   image: DecorationImage(
                   //     image: AssetImage(AllAssets.wordbackk),
@@ -871,7 +903,8 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
                   color: Color(0XFF34425D),
                   width: 400,
                   child: Padding(
-                    padding: EdgeInsets.only(right: 5, left: 5, top: 20, bottom: 15),
+                    padding:
+                        EdgeInsets.only(right: 5, left: 5, top: 20, bottom: 15),
                     child: Text("Didn't catch that.\nTry speaking again!",
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -904,7 +937,10 @@ class SpeechAnalyticsDialogState extends State<SpeechAnalyticsDialog> with After
               if (_isShowDidNotCatch)
                 Text("Touch mic when ready",
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColors.white, fontFamily: Keys.fontFamily, fontSize: 12)),
+                    style: TextStyle(
+                        color: AppColors.white,
+                        fontFamily: Keys.fontFamily,
+                        fontSize: 12)),
               SPH(15),
             ],
           ),

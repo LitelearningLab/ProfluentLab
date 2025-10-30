@@ -8,6 +8,7 @@ import 'package:litelearninglab/models/SentenceCat.dart';
 import 'package:litelearninglab/screens/sentences/sentence_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
+import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/firebase_helper_RTD.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:provider/provider.dart';
@@ -88,6 +89,8 @@ class _SentencesScreenState extends State<SentencesScreen> {
                             InkWell(
                               splashColor: Colors.transparent,
                               onTap: () async {
+                                sessionName2 = _sentCat[index].title ?? "";
+                                startTimerMainCategory("name");
                                 sentenceRepeatUser = widget.user;
                                 sentenceRepeatLoad =
                                     _sentCat[index].title ?? "";

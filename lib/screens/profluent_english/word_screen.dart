@@ -29,6 +29,7 @@ import 'package:litelearninglab/utils/audio_player_manager.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
 import 'package:litelearninglab/utils/firebase_helper.dart';
 import 'package:litelearninglab/utils/firebase_helper_RTD.dart';
+import 'package:litelearninglab/utils/shared_pref.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:provider/provider.dart';
 import 'package:litelearninglab/common_widgets/boom_menu_item.dart' as bm;
@@ -53,7 +54,8 @@ class WordScreenProfluentEnglish extends StatefulWidget {
   final List<Word> soundPractice;
 
   @override
-  State<WordScreenProfluentEnglish> createState() => _WordScreenProfluentEnglishState();
+  State<WordScreenProfluentEnglish> createState() =>
+      _WordScreenProfluentEnglishState();
 }
 
 class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
@@ -104,7 +106,8 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
         'cat': word.cat ?? '',
         'localPath': word.localPath ?? '',
         'isFav': word.isFav?.toString() ?? '', // Convert int to String
-        'isPlaying': word.isPlaying?.toString() ?? 'false' // Convert bool to String
+        'isPlaying':
+            word.isPlaying?.toString() ?? 'false' // Convert bool to String
       };
     }).toList();
   }
@@ -117,7 +120,8 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
     WordsDatabaseRepository dbRef = WordsDatabaseRepository(dbb);
     List<Word> wordsList = await dbRef.getWords();
     print('words list length :${wordsList.length}');
-    soundPractice = wordsList.where((element) => element.cat == widget.load).toList();
+    soundPractice =
+        wordsList.where((element) => element.cat == widget.load).toList();
     print("soundkfidj:${soundPractice.length}");
     isloading = false;
     setState(() {});
@@ -128,7 +132,8 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     controller = AutoScrollController(
-        viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+        viewportBoundaryGetter: () =>
+            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
         axis: Axis.vertical);
 
     // getSoundPracticeWords();
@@ -300,7 +305,8 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
   }
 
   void _startSearch() {
-    ModalRoute.of(context)?.addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
+    ModalRoute.of(context)
+        ?.addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
 
     setState(() {
       _isSearching = true;
@@ -342,7 +348,8 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
     Get.dialog(
       Container(
         child: Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
           child: SpeechAnalyticsDialog(
             true,
             isShowDidNotCatch: notCatch,
@@ -353,7 +360,8 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
         ),
       ),
     ).then((value) {
-      if (value != null && value.isCorrect == "true" || value.isCorrect == "false") {
+      if (value != null && value.isCorrect == "true" ||
+          value.isCorrect == "false") {
         _selectedWord = word;
         _isCorrect = value.isCorrect == "true" ? true : false;
         setState(() {});
@@ -379,8 +387,9 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
         words[i].isPlaying = true;
         isPlaying1[i].value = true;
         setState(() {});
-        await _audioPlayerManager.play(words[i].file!, context: context, localPath: words[i].localPath,
-            decodedPath: (val) {
+        await _audioPlayerManager.play(words[i].file!,
+            context: context,
+            localPath: words[i].localPath, decodedPath: (val) {
           eLocalPath = val;
         });
         await Future.delayed(Duration(seconds: 2));
@@ -395,8 +404,12 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
         if (eLocalPath != null && eLocalPath!.isNotEmpty) {
           await Future.delayed(Duration(seconds: 3));
         }
+        String company = await SharedPref.getSavedString("companyId");
+        String batch = await SharedPref.getSavedString("batch");
 
         _firestore.saveWordListReport(
+            companyId: company,
+            batch: batch,
             isPractice: false,
             company: userDatas.appUser!.company!,
             name: userDatas.appUser!.UserMname,
@@ -516,7 +529,9 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
                                   length: words.length,
                                   index: index,
                                   // isPlaying: words[index].isPlaying1,
-                                  isDownloaded: words[index].localPath != null && words[index].localPath!.isNotEmpty,
+                                  isDownloaded:
+                                      words[index].localPath != null &&
+                                          words[index].localPath!.isNotEmpty,
                                   maintitle: 'words',
                                   onExpansionChanged: (val) {
                                     _toggleExpansion(index);
@@ -532,7 +547,8 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
                                       _selectedWordOnClick = words[index].text;
                                       setState(() {});
                                       if (words.length - 2 <= index) {
-                                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
                                           _scrollToItem(index);
                                         });
                                       }
@@ -555,13 +571,16 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
                                     WordMenu(
                                       pronun: words[index].pronun!,
                                       selectedWord: _selectedWord,
-                                      isCorrect: _selectedWord == words[index].text && _isCorrect,
+                                      isCorrect:
+                                          _selectedWord == words[index].text &&
+                                              _isCorrect,
                                       text: words[index].text!,
                                       syllables: words[index].syllables!,
                                       url: words[index].file!,
                                       onTapHeadphone: () async {},
                                       onTapMic: () async {
-                                        _showDialog(words[index].text!, false, context);
+                                        _showDialog(
+                                            words[index].text!, false, context);
                                       },
                                     )
                                   ],
@@ -570,7 +589,9 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
                             }),
                       ),
                       Container(
-                        height: isSplitScreen ? getFullWidgetHeight(height: 60) : getWidgetHeight(height: 60),
+                        height: isSplitScreen
+                            ? getFullWidgetHeight(height: 60)
+                            : getWidgetHeight(height: 60),
                         width: kWidth,
                         decoration: BoxDecoration(
                           color: Color(0xFF34445F),
@@ -581,54 +602,83 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
                             IconButton(
                                 icon: ImageIcon(
                                   AssetImage(AllAssets.bottomHome),
-                                  color: context.read<AuthState>().currentIndex == 0
-                                      ? Color(0xFFAAAAAA)
-                                      : Color.fromARGB(132, 170, 170, 170),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                              0
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170),
                                 ),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(0);
                                   Navigator.pushReplacement(
-                                      context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
                                 }),
                             IconButton(
                                 icon: ImageIcon(AssetImage(AllAssets.bottomPL),
-                                    color: context.read<AuthState>().currentIndex == 1
+                                    color: context
+                                                .read<AuthState>()
+                                                .currentIndex ==
+                                            1
                                         ? Color(0xFFAAAAAA)
                                         : Color.fromARGB(132, 170, 170, 170)),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(1);
                                   Navigator.pushReplacement(
-                                      context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
                                 }),
                             IconButton(
                                 icon: ImageIcon(AssetImage(AllAssets.bottomIS),
-                                    color: context.read<AuthState>().currentIndex == 2
+                                    color: context
+                                                .read<AuthState>()
+                                                .currentIndex ==
+                                            2
                                         ? Color(0xFFAAAAAA)
                                         : Color.fromARGB(132, 170, 170, 170)),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(2);
                                   Navigator.pushReplacement(
-                                      context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
                                 }),
                             IconButton(
                                 icon: ImageIcon(AssetImage(AllAssets.bottomPE),
-                                    color: context.read<AuthState>().currentIndex == 3
+                                    color: context
+                                                .read<AuthState>()
+                                                .currentIndex ==
+                                            3
                                         ? Color(0xFFAAAAAA)
                                         : Color.fromARGB(132, 170, 170, 170)),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(3);
                                   Navigator.pushReplacement(
-                                      context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
                                 }),
                             IconButton(
                                 icon: ImageIcon(AssetImage(AllAssets.bottomPT),
-                                    color: context.read<AuthState>().currentIndex == 4
+                                    color: context
+                                                .read<AuthState>()
+                                                .currentIndex ==
+                                            4
                                         ? Color(0xFFAAAAAA)
                                         : Color.fromARGB(132, 170, 170, 170)),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(4);
                                   Navigator.pushReplacement(
-                                      context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
                                 }),
                           ],
                         ),
@@ -658,12 +708,17 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
               child: Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: getWidgetWidth(width: 12),
-                    vertical: isSplitScreen ? getFullWidgetHeight(height: 12) : getWidgetHeight(height: 12)),
-                decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                    vertical: isSplitScreen
+                        ? getFullWidgetHeight(height: 12)
+                        : getWidgetHeight(height: 12)),
+                decoration:
+                    BoxDecoration(color: Colors.white, shape: BoxShape.circle),
                 child: Icon(
                   Icons.home,
                   color: Colors.grey,
-                  size: isSplitScreen ? getFullWidgetHeight(height: 18) : getWidgetHeight(height: 18),
+                  size: isSplitScreen
+                      ? getFullWidgetHeight(height: 18)
+                      : getWidgetHeight(height: 18),
                 ),
               ),
               title: "Home",
@@ -671,19 +726,27 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
               backgroundColor: Color(0x00000000),
               onTap: () {
                 context.read<AuthState>().changeIndex(0);
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BottomNavigation()));
               },
             ),
             bm.MenuItem(
               child: Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: getWidgetWidth(width: 12),
-                    vertical: isSplitScreen ? getFullWidgetHeight(height: 12) : getWidgetHeight(height: 12)),
-                decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                    vertical: isSplitScreen
+                        ? getFullWidgetHeight(height: 12)
+                        : getWidgetHeight(height: 12)),
+                decoration:
+                    BoxDecoration(color: Colors.white, shape: BoxShape.circle),
                 child: Icon(
                   Icons.keyboard,
                   color: Colors.grey,
-                  size: isSplitScreen ? getFullWidgetHeight(height: 18) : getWidgetHeight(height: 18),
+                  size: isSplitScreen
+                      ? getFullWidgetHeight(height: 18)
+                      : getWidgetHeight(height: 18),
                 ),
               ),
               title: "Try Unlisted Words",
@@ -710,8 +773,11 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
               child: Container(
                   padding: EdgeInsets.symmetric(
                       horizontal: getWidgetWidth(width: 12),
-                      vertical: isSplitScreen ? getFullWidgetHeight(height: 12) : getWidgetHeight(height: 12)),
-                  decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                      vertical: isSplitScreen
+                          ? getFullWidgetHeight(height: 12)
+                          : getWidgetHeight(height: 12)),
+                  decoration: BoxDecoration(
+                      color: Colors.white, shape: BoxShape.circle),
                   child: Image.asset("assets/images/filter.png",
                       color: Colors
                           .grey) /*
@@ -736,7 +802,8 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
                     MaterialPageRoute(
                         builder: (context) => WordScreen(
                             // index: 5,
-                            itemWordList: convertWordListToMapList(widget.soundPractice),
+                            itemWordList:
+                                convertWordListToMapList(widget.soundPractice),
                             //controllerList: widget.controllerList,
                             title: "Priority List",
                             load: "",
@@ -751,8 +818,10 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
             bm.MenuItem(
               child: Container(
                   padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                  child: Image.asset("assets/images/filter_all.png", color: Colors.grey)),
+                  decoration: BoxDecoration(
+                      color: Colors.white, shape: BoxShape.circle),
+                  child: Image.asset("assets/images/filter_all.png",
+                      color: Colors.grey)),
               title: "Filter All Priority",
               titleColor: Colors.white,
               backgroundColor: Colors.transparent,

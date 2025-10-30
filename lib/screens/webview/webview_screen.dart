@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:after_layout/after_layout.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -35,6 +35,7 @@ class _InAppWebViewPageState extends State<InAppWebViewPage>
   @override
   void initState() {
     super.initState();
+
     startTimerMainCategory("name");
     // Add the observer for lifecycle events
     WidgetsBinding.instance.addObserver(this);
@@ -64,21 +65,6 @@ class _InAppWebViewPageState extends State<InAppWebViewPage>
       ]);
     }
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.inactive) {
-      log("App is inactive (e.g., Home button pressed or screen lock)");
-    } else if (state == AppLifecycleState.paused) {
-      log("App is in background");
-    } else if (state == AppLifecycleState.resumed) {
-      log("App is in foreground");
-    } else if (state == AppLifecycleState.detached) {
-      log("App is detached");
-    }
   }
 
   @override
@@ -120,15 +106,33 @@ class _InAppWebViewPageState extends State<InAppWebViewPage>
                             onLoad = true;
                           });
                         },
-                        initialUrlRequest:
-                            URLRequest(url: Uri.parse(widget.url)),
+                        initialUrlRequest: URLRequest(url: WebUri(widget.url)),
                         initialOptions: InAppWebViewGroupOptions(
                           crossPlatform: InAppWebViewOptions(
-                            mediaPlaybackRequiresUserGesture: false,
+                              mediaPlaybackRequiresUserGesture: false,
+                              disableContextMenu: true),
+                          android: AndroidInAppWebViewOptions(
+                            // Disable file access
+                            allowFileAccess: false,
+                            // Disable content access
+                            allowContentAccess: false,
+                          ),
+                          ios: IOSInAppWebViewOptions(
+                            // Disable file access on iOS
+                            allowsLinkPreview: false,
                           ),
                         ),
                         onWebViewCreated: (InAppWebViewController controller) {
                           // _webViewController = controller;
+                        },
+                        onDownloadStartRequest: (controller, request) async {
+                          // Block all download requests
+                          return;
+                        },
+                        shouldOverrideUrlLoading:
+                            (controller, navigationAction) async {
+                          // You can add additional URL filtering here if needed
+                          return NavigationActionPolicy.ALLOW;
                         },
                         androidOnPermissionRequest:
                             (InAppWebViewController controller, String origin,
@@ -143,21 +147,32 @@ class _InAppWebViewPageState extends State<InAppWebViewPage>
                 ],
               ),
             ),
-            Positioned(
-              top: 20,
-              left: 10,
-              child: Container(
-                decoration:
-                    BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                child: IconButton(
-                  onPressed: () {
-                    stopTimerMainCategory();
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.arrow_back),
+            if (!kIsWeb)
+              Positioned(
+                bottom: 20,
+                left: 10,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // light shadow
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: Offset(0, 2), // subtle downward shadow
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      stopTimerMainCategory();
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.arrow_back),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

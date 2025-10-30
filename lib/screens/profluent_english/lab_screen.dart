@@ -1,20 +1,12 @@
-import 'dart:convert';
+import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:litelearninglab/API/api.dart';
 import 'package:litelearninglab/common_widgets/background_widget.dart';
-import 'package:litelearninglab/common_widgets/bottom_navigation_bar_common.dart';
 import 'package:litelearninglab/common_widgets/common_app_bar.dart';
 import 'package:litelearninglab/constants/all_assets.dart';
-import 'package:litelearninglab/main.dart';
-import 'package:litelearninglab/models/ProfluentEnglish.dart';
-import 'package:litelearninglab/screens/call_flow/call_flow_cat_screen.dart';
+// import 'package:litelearninglab/screens/call_flow/call_flow_cat_screen.dart';
 import 'package:litelearninglab/screens/dashboard/widgets/new_submenu_items.dart';
-import 'package:litelearninglab/screens/dashboard/widgets/sub_menu_item.dart';
 import 'package:litelearninglab/screens/grammar_check/grammar_check_screen.dart';
-import 'package:litelearninglab/screens/sentences/sentence_screen.dart';
 import 'package:litelearninglab/screens/sentences/sentences_screen.dart';
 import 'package:litelearninglab/screens/word_screen/word_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
@@ -46,17 +38,15 @@ class LabScreen extends StatefulWidget {
 class _LabScreenState extends State<LabScreen> {
   @override
   void initState() {
-    startTimerSubCategory(profluentEnglish, widget.title);
     super.initState();
+    subCategoryTitile = widget.title;
   }
 
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<AuthState>(context, listen: false);
     return PopScope(
-      onPopInvoked: (didPop) {
-        stopTimerSubCategory();
-      },
+      onPopInvoked: (didPop) {},
       child: BackgroundWidget(
         // bottomNav: BottomNavigationBarCommon(),
         appBar: widget.pLIconKey
@@ -73,7 +63,10 @@ class _LabScreenState extends State<LabScreen> {
                 // height: displayHeight(context) / 12.6875,
               ),
         body: Padding(
-          padding: EdgeInsets.only(top: isSplitScreen ? getFullWidgetHeight(height: 13) : getWidgetHeight(height: 13)),
+          padding: EdgeInsets.only(
+              top: isSplitScreen
+                  ? getFullWidgetHeight(height: 13)
+                  : getWidgetHeight(height: 13)),
           child: Column(
             children: [
               Expanded(
@@ -85,56 +78,96 @@ class _LabScreenState extends State<LabScreen> {
                         children: [
                           NewSubMenuItem(
                             onTap: () async {
+                              // if (widget.title == "Grammer Lab") {
+                              //   startTimerMainCategory("name");
+                              // }
+                              log("${widget.title}"); // startTimerMainCategory("name");
+                              sessionName = widget.itemList[index]['title'];
                               print("indexcheckk:${index}");
                               repeatLoads = widget.itemList[index]['load'];
-                              print("title : ${widget.itemList[index]['title']}");
+                              print(
+                                  "title : ${widget.itemList[index]['title']}");
                               print("user : ${widget.user}");
                               print("load : ${widget.itemList[index]['load']}");
                               print("itemList:${widget.itemList}");
-                              print("checkkk:${widget.itemList[index]['load']}");
-                              if (widget.itemList == controller.callFlowPracticeLabList) {
+                              print(
+                                  "checkkk:${widget.itemList[index]['load']}");
+                              if (widget.itemList ==
+                                  controller.callFlowPracticeLabList) {
                                 print("dkpdidid u u d hdh");
                                 print(widget.itemList[index]['title']);
                                 print(widget.itemList[index]['load']);
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                await prefs.setStringList('CallFlowCatScreen', [widget.itemList[index]['title'] ?? "", widget.itemList[index]['load']]);
-                                await prefs.setString('lastAccess', 'CallFlowCatScreen');
-                              } else if (widget.itemList == controller.sentenceConstructionLabList) {
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                await prefs.setStringList('SentencesScreen', [widget.itemList[index]['title'] ?? "", widget.itemList[index]['load'] ?? ""]);
-                                await prefs.setString('lastAccess', 'SentencesScreen');
-                              } else if (widget.itemList == controller.pronunciationLabList) {
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                await prefs.setStringList('WordScreen', [widget.itemList[index]['title'], widget.itemList[index]['load']]);
-                                await prefs.setString('lastAccess', 'WordScreen');
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.setStringList('CallFlowCatScreen', [
+                                  widget.itemList[index]['title'] ?? "",
+                                  widget.itemList[index]['load']
+                                ]);
+                                await prefs.setString(
+                                    'lastAccess', 'CallFlowCatScreen');
+                              } else if (widget.itemList ==
+                                  controller.sentenceConstructionLabList) {
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.setStringList('SentencesScreen', [
+                                  widget.itemList[index]['title'] ?? "",
+                                  widget.itemList[index]['load'] ?? ""
+                                ]);
+                                await prefs.setString(
+                                    'lastAccess', 'SentencesScreen');
+                              } else if (widget.itemList ==
+                                  controller.pronunciationLabList) {
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.setStringList('WordScreen', [
+                                  widget.itemList[index]['title'],
+                                  widget.itemList[index]['load']
+                                ]);
+                                await prefs.setString(
+                                    'lastAccess', 'WordScreen');
                               }
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => widget.itemList == controller.pronunciationLabList
+                                  builder: (context) => widget.itemList ==
+                                          controller.pronunciationLabList
                                       ? WordScreen(
                                           index: index,
                                           itemWordList: widget.itemList,
-                                          controllerList: controller.pronunciationLabList,
-                                          title: widget.itemList[index]['title'],
+                                          controllerList:
+                                              controller.pronunciationLabList,
+                                          title: widget.itemList[index]
+                                              ['title'],
                                           load: widget.itemList[index]['load'],
                                         )
-                                      : widget.itemList == controller.sentenceConstructionLabList
+                                      : widget.itemList ==
+                                              controller
+                                                  .sentenceConstructionLabList
                                           ? SentencesScreen(
-                                              title: widget.itemList[index]['title'],
+                                              title: widget.itemList[index]
+                                                  ['title'],
                                               user: widget.user,
-                                              load: widget.itemList[index]['load'],
+                                              load: widget.itemList[index]
+                                                  ['load'],
                                             )
-                                          : widget.itemList == controller.callFlowPracticeLabList
-                                              ? CallFlowCatScreen(
-                                                  title: widget.itemList[index]['title'],
-                                                  user: widget.user,
-                                                  load: widget.itemList[index]['load'],
-                                                )
-                                              : GrammarCheckScreen(
-                                                  title: widget.itemList[index]['title'],
-                                                  load: widget.itemList[index]['load'],
-                                                ),
+                                          :
+                                          // widget.itemList ==
+                                          //         controller
+                                          //             .callFlowPracticeLabList
+                                          //     ? CallFlowCatScreen(
+                                          //         title: widget.itemList[index]
+                                          //             ['title'],
+                                          //         user: widget.user,
+                                          //         load: widget.itemList[index]
+                                          //             ['load'],
+                                          //       )
+                                          //     :
+                                          GrammarCheckScreen(
+                                              title: widget.itemList[index]
+                                                  ['title'],
+                                              load: widget.itemList[index]
+                                                  ['load'],
+                                            ),
                                 ),
                               );
                             },
@@ -153,7 +186,9 @@ class _LabScreenState extends State<LabScreen> {
                     }),
               ),
               Container(
-                height: isSplitScreen ? getFullWidgetHeight(height: 60) : getWidgetHeight(height: 60),
+                height: isSplitScreen
+                    ? getFullWidgetHeight(height: 60)
+                    : getWidgetHeight(height: 60),
                 width: kWidth,
                 decoration: BoxDecoration(
                   color: Color(0xFF34445F),
@@ -164,39 +199,64 @@ class _LabScreenState extends State<LabScreen> {
                     IconButton(
                         icon: ImageIcon(
                           AssetImage(AllAssets.bottomHome),
-                          color: context.read<AuthState>().currentIndex == 0 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170),
+                          color: context.read<AuthState>().currentIndex == 0
+                              ? Color(0xFFAAAAAA)
+                              : Color.fromARGB(132, 170, 170, 170),
                         ),
                         onPressed: () {
                           context.read<AuthState>().changeIndex(0);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BottomNavigation()));
                         }),
                     IconButton(
                         icon: ImageIcon(AssetImage(AllAssets.bottomPL),
-                            color: context.read<AuthState>().currentIndex == 1 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                            color: context.read<AuthState>().currentIndex == 1
+                                ? Color(0xFFAAAAAA)
+                                : Color.fromARGB(132, 170, 170, 170)),
                         onPressed: () {
                           context.read<AuthState>().changeIndex(1);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BottomNavigation()));
                         }),
                     IconButton(
                         icon: ImageIcon(AssetImage(AllAssets.bottomIS),
-                            color: context.read<AuthState>().currentIndex == 2 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                            color: context.read<AuthState>().currentIndex == 2
+                                ? Color(0xFFAAAAAA)
+                                : Color.fromARGB(132, 170, 170, 170)),
                         onPressed: () {
                           context.read<AuthState>().changeIndex(2);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BottomNavigation()));
                         }),
                     IconButton(
                         icon: ImageIcon(AssetImage(AllAssets.bottomPE),
-                            color: context.read<AuthState>().currentIndex == 3 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                            color: context.read<AuthState>().currentIndex == 3
+                                ? Color(0xFFAAAAAA)
+                                : Color.fromARGB(132, 170, 170, 170)),
                         onPressed: () {
                           context.read<AuthState>().changeIndex(3);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BottomNavigation()));
                         }),
                     IconButton(
                         icon: ImageIcon(AssetImage(AllAssets.bottomPT),
-                            color: context.read<AuthState>().currentIndex == 4 ? Color(0xFFAAAAAA) : Color.fromARGB(132, 170, 170, 170)),
+                            color: context.read<AuthState>().currentIndex == 4
+                                ? Color(0xFFAAAAAA)
+                                : Color.fromARGB(132, 170, 170, 170)),
                         onPressed: () {
                           context.read<AuthState>().changeIndex(4);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BottomNavigation()));
                         }),
                   ],
                 ),

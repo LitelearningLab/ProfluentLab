@@ -40,6 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   getUserDetails() async {
     isLoading = true;
+
     city = await SharedPref.getSavedString('newCity');
     country = await SharedPref.getSavedString('newCountry');
     companyName = await SharedPref.getSavedString('companyName') ?? "";
@@ -66,23 +67,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
           : ListView(
               children: [
                 Container(
-                  height: isSplitScreen ? getFullWidgetHeight(height: 100) : getWidgetHeight(height: 100),
+                  height: isSplitScreen
+                      ? getFullWidgetHeight(height: 100)
+                      : getWidgetHeight(height: 100),
                   padding: EdgeInsets.symmetric(
-                      horizontal: getWidgetWidth(width: 20), vertical: isSplitScreen ? getFullWidgetHeight(height: 20) : getWidgetHeight(height: 20)),
+                      horizontal: getWidgetWidth(width: 20),
+                      vertical: isSplitScreen
+                          ? getFullWidgetHeight(height: 20)
+                          : getWidgetHeight(height: 20)),
                   color: Color(0xFF293750),
                   child: Center(
                     child: Text(
                       userDatas.appUser?.UserMname ?? "",
-                      style: TextStyle(fontFamily: Keys.fontFamily, color: Colors.white, fontSize: 25),
+                      style: TextStyle(
+                          fontFamily: Keys.fontFamily,
+                          color: Colors.white,
+                          fontSize: 25),
                     ),
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   child: Container(
-                      height: isSplitScreen ? getFullWidgetHeight(height: 50) : getWidgetHeight(height: 50),
-                      decoration:
-                          BoxDecoration(color: Color(0XFF314162), borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7))),
+                      height: isSplitScreen
+                          ? getFullWidgetHeight(height: 50)
+                          : getWidgetHeight(height: 50),
+                      decoration: BoxDecoration(
+                          color: Color(0XFF314162),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(7),
+                              topRight: Radius.circular(7))),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Row(
@@ -92,14 +106,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               backgroundColor: Color(0XFF5248fe),
                               child: Image.asset(
                                 "assets/images/mobile_profile.png",
-                                height: isSplitScreen ? getFullWidgetHeight(height: 20) : getWidgetHeight(height: 20),
+                                height: isSplitScreen
+                                    ? getFullWidgetHeight(height: 20)
+                                    : getWidgetHeight(height: 20),
                                 width: getWidgetWidth(width: 20),
                               ),
                             ),
                             SizedBox(width: getWidgetWidth(width: 15)),
                             Text(
                               " +91 ${userDatas.appUser?.mobile ?? ""}",
-                              style: TextStyle(fontFamily: Keys.fontFamily, color: Colors.white, fontSize: 15),
+                              style: TextStyle(
+                                  fontFamily: Keys.fontFamily,
+                                  color: Colors.white,
+                                  fontSize: 15),
                             ),
                           ],
                         ),
@@ -111,11 +130,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),*/
                       ),
                 ),
-                SizedBox(height: isSplitScreen ? getFullWidgetHeight(height: 3) : getWidgetHeight(height: 3)),
+                SizedBox(
+                    height: isSplitScreen
+                        ? getFullWidgetHeight(height: 3)
+                        : getWidgetHeight(height: 3)),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 10)),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: getWidgetWidth(width: 10)),
                   child: Container(
-                      height: isSplitScreen ? getFullWidgetHeight(height: 50) : getWidgetHeight(height: 50),
+                      height: isSplitScreen
+                          ? getFullWidgetHeight(height: 50)
+                          : getWidgetHeight(height: 50),
                       decoration: BoxDecoration(
                         color: Color(0XFF314162),
                       ),
@@ -128,14 +153,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               backgroundColor: Color(0XFF47bad0),
                               child: Image.asset(
                                 "assets/images/arroba_profile.png",
-                                height: isSplitScreen ? getFullWidgetHeight(height: 15) : getWidgetHeight(height: 15),
+                                height: isSplitScreen
+                                    ? getFullWidgetHeight(height: 15)
+                                    : getWidgetHeight(height: 15),
                                 width: getWidgetWidth(width: 15),
                               ),
                             ),
                             SizedBox(width: getWidgetWidth(width: 15)),
                             Text(
                               userDatas.appUser?.email ?? "",
-                              style: TextStyle(fontFamily: Keys.fontFamily, color: Colors.white, fontSize: 15),
+                              style: TextStyle(
+                                  fontFamily: Keys.fontFamily,
+                                  color: Colors.white,
+                                  fontSize: 15),
                             ),
                           ],
                         ),
@@ -147,11 +177,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),*/
                       ),
                 ),
-                SizedBox(height: isSplitScreen ? getFullWidgetHeight(height: 3) : getWidgetHeight(height: 3)),
+                SizedBox(
+                    height: isSplitScreen
+                        ? getFullWidgetHeight(height: 3)
+                        : getWidgetHeight(height: 3)),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 10)),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: getWidgetWidth(width: 10)),
                   child: Container(
-                      height: isSplitScreen ? getFullWidgetHeight(height: 50) : getWidgetHeight(height: 50),
+                      height: isSplitScreen
+                          ? getFullWidgetHeight(height: 50)
+                          : getWidgetHeight(height: 50),
                       decoration: BoxDecoration(
                         color: Color(0XFF314162),
                       ),
@@ -164,13 +200,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               backgroundColor: Color(0XFF47da6d),
                               child: Image.asset(
                                 "assets/images/hierarchical_profile.png",
-                                height: isSplitScreen ? getFullWidgetHeight(height: 15) : getWidgetHeight(height: 15),
+                                height: isSplitScreen
+                                    ? getFullWidgetHeight(height: 15)
+                                    : getWidgetHeight(height: 15),
                                 width: getWidgetWidth(width: 15),
                               ),
                             ),
                             SizedBox(width: getWidgetWidth(width: 15)),
                             Text(
-                              toBeginningOfSentenceCase(userDatas.appUser?.company ?? companyName) ?? '',
+                              toBeginningOfSentenceCase(
+                                      userDatas.appUser?.company ??
+                                          companyName) ??
+                                  '',
                               style: TextStyle(
                                 fontFamily: Keys.fontFamily,
                                 color: Colors.white,
@@ -187,11 +228,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),*/
                       ),
                 ),
-                SizedBox(height: isSplitScreen ? getFullWidgetHeight(height: 3) : getWidgetHeight(height: 3)),
+                SizedBox(
+                    height: isSplitScreen
+                        ? getFullWidgetHeight(height: 3)
+                        : getWidgetHeight(height: 3)),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 10)),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: getWidgetWidth(width: 10)),
                   child: Container(
-                      height: isSplitScreen ? getFullWidgetHeight(height: 50) : getWidgetHeight(height: 50),
+                      height: isSplitScreen
+                          ? getFullWidgetHeight(height: 50)
+                          : getWidgetHeight(height: 50),
                       decoration: BoxDecoration(
                         color: Color(0XFF314162),
                       ),
@@ -204,7 +251,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               backgroundColor: Color(0XFFf5a716),
                               child: Image.asset(
                                 "assets/images/maps_flags_profile.png",
-                                height: isSplitScreen ? getFullWidgetHeight(height: 15) : getWidgetHeight(height: 15),
+                                height: isSplitScreen
+                                    ? getFullWidgetHeight(height: 15)
+                                    : getWidgetHeight(height: 15),
                                 width: getWidgetWidth(width: 15),
                               ),
                             ),
@@ -227,13 +276,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),*/
                       ),
                 ),
-                SizedBox(height: isSplitScreen ? getFullWidgetHeight(height: 3) : getWidgetHeight(height: 3)),
+                SizedBox(
+                    height: isSplitScreen
+                        ? getFullWidgetHeight(height: 3)
+                        : getWidgetHeight(height: 3)),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 10)),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: getWidgetWidth(width: 10)),
                   child: Container(
-                      height: isSplitScreen ? getFullWidgetHeight(height: 50) : getWidgetHeight(height: 50),
+                      height: isSplitScreen
+                          ? getFullWidgetHeight(height: 50)
+                          : getWidgetHeight(height: 50),
                       decoration: BoxDecoration(
-                          color: Color(0XFF314162), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7))),
+                          color: Color(0XFF314162),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(7),
+                              bottomRight: Radius.circular(7))),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Row(
@@ -243,14 +301,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               backgroundColor: Color(0XFFf66b5c),
                               child: Image.asset(
                                 "assets/images/calendar_profile.png",
-                                height: isSplitScreen ? getFullWidgetHeight(height: 15) : getWidgetHeight(height: 15),
+                                height: isSplitScreen
+                                    ? getFullWidgetHeight(height: 15)
+                                    : getWidgetHeight(height: 15),
                                 width: getWidgetWidth(width: 15),
                               ),
                             ),
                             SizedBox(width: 15),
                             Text(
                               "Active from ${DateFormat('dd-MM-yyyy').format(DateTime.parse(joinDate))} to ${DateFormat('dd-MM-yyyy').format(DateTime.parse(endDate))} ",
-                              style: TextStyle(fontFamily: Keys.fontFamily, color: Colors.white, fontSize: 15),
+                              style: TextStyle(
+                                  fontFamily: Keys.fontFamily,
+                                  color: Colors.white,
+                                  fontSize: 15),
                             ),
                           ],
                         ),
@@ -262,21 +325,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),*/
                       ),
                 ),
-                SizedBox(height: isSplitScreen ? getFullWidgetHeight(height: 16) : getWidgetHeight(height: 16)),
+                SizedBox(
+                    height: isSplitScreen
+                        ? getFullWidgetHeight(height: 16)
+                        : getWidgetHeight(height: 16)),
                 Container(
                   margin: EdgeInsets.symmetric(
-                      horizontal: getWidgetWidth(width: 5), vertical: isSplitScreen ? getFullWidgetHeight(height: 5) : getWidgetHeight(height: 5)),
+                      horizontal: getWidgetWidth(width: 5),
+                      vertical: isSplitScreen
+                          ? getFullWidgetHeight(height: 5)
+                          : getWidgetHeight(height: 5)),
                   child: Card(
                     elevation: 0,
                     margin: EdgeInsets.symmetric(horizontal: 5),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(7), topLeft: Radius.circular(7)), // Adjust the radius as needed
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(7),
+                          topLeft: Radius.circular(
+                              7)), // Adjust the radius as needed
                     ),
                     color: Color(0XFF314162),
                     child: ListTile(
                       title: Text(
                         "Your login is tagged to this device, and you cannot use this login in any other mobile phone. If you need to change the mobile number or device, please raise a request through your trainer or manager.",
-                        style: TextStyle(fontFamily: Keys.fontFamily, color: Colors.white, fontSize: 15),
+                        style: TextStyle(
+                            fontFamily: Keys.fontFamily,
+                            color: Colors.white,
+                            fontSize: 15),
                       ),
                     ),
                   ),
@@ -288,12 +363,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     margin: EdgeInsets.symmetric(horizontal: 5),
                     color: Color(0XFF314162),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(bottomRight: Radius.circular(7), bottomLeft: Radius.circular(7)), // Adjust the radius as needed
+                      borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(7),
+                          bottomLeft: Radius.circular(
+                              7)), // Adjust the radius as needed
                     ),
                     child: ListTile(
                       title: Text(
                         "Your access validity is based on the subscription status of your employer / institute. If you have any questions on your access validity, please contact your trainer or manager.",
-                        style: TextStyle(fontFamily: Keys.fontFamily, color: Colors.white, fontSize: 15),
+                        style: TextStyle(
+                            fontFamily: Keys.fontFamily,
+                            color: Colors.white,
+                            fontSize: 15),
                       ),
                     ),
                   ),

@@ -58,7 +58,8 @@ class Utils {
         print('/////////////////TRUE');
         var bytes = await consolidateHttpClientResponseBytes(response);
         filePath = '$dir/$fileName';
-        print("///////////////Download File path : $filePath *****************");
+        print(
+            "///////////////Download File path : $filePath *****************");
         file = await File(filePath).create(recursive: true);
         await file.writeAsBytes(bytes);
         downloadController.isDownloaded = true;
@@ -76,7 +77,8 @@ class Utils {
       ///g!ZS84%8t=QFR
     }
     print("File Path : : : ${filePath}");
-    print("file>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : isDownloaded : ${downloadController.isDownloaded}");
+    print(
+        "file>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : isDownloaded : ${downloadController.isDownloaded}");
 
     return filePath;
   }

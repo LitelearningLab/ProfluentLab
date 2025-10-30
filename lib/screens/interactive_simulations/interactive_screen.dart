@@ -40,7 +40,8 @@ class _ProcessLearningScreenState extends State<InteractiveScreen> {
   void initState() {
     super.initState();
     controller = AutoScrollController(
-        viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+        viewportBoundaryGetter: () =>
+            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
         axis: Axis.vertical);
 
     _getWords();
@@ -90,7 +91,8 @@ class _ProcessLearningScreenState extends State<InteractiveScreen> {
                       itemCount: _categories.length,
                       // scrollDirection: Axis.horizontal,
                       itemBuilder: (BuildContext context, int index) {
-                        isPlaying = List.generate(_categories.length, (index) => false.obs);
+                        isPlaying = List.generate(
+                            _categories.length, (index) => false.obs);
                         // print(_categories[index].toMap());
                         return AutoScrollTag(
                           key: ValueKey(_categories[index].category),
@@ -106,7 +108,9 @@ class _ProcessLearningScreenState extends State<InteractiveScreen> {
                             child: DropDownWordItem(
                               index: index,
                               underContruction:
-                                  _categories[index].underconstruction != null && _categories[index].underconstruction!,
+                                  _categories[index].underconstruction !=
+                                          null &&
+                                      _categories[index].underconstruction!,
                               load: "widget.load",
                               // isPlaying: false,
                               isButtonsVisible: false,
@@ -115,23 +119,35 @@ class _ProcessLearningScreenState extends State<InteractiveScreen> {
                               // expKey: expansionTile,
                               onExpansionChanged: (val) async {
                                 if (_categories[index].subcategories != null) {
-                                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                                  await prefs.setString('lastAccess', 'InteracticeCatScreen');
-                                  await prefs.setString('InteracticeCatScreen', _categories[index].category ?? "");
-                                  final box = await Hive.openBox<InteractiveLinkHive>('InteractiveLinkBox');
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  await prefs.setString(
+                                      'lastAccess', 'InteracticeCatScreen');
+                                  await prefs.setString('InteracticeCatScreen',
+                                      _categories[index].category ?? "");
+                                  final box =
+                                      await Hive.openBox<InteractiveLinkHive>(
+                                          'InteractiveLinkBox');
                                   InteractiveLinkHive prHive =
-                                      InteractiveLinkHive(item: _categories[index].subcategories!);
+                                      InteractiveLinkHive(
+                                          item: _categories[index]
+                                              .subcategories!);
                                   box.put('InteracticeCatScreen', prHive);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => InteracticeCatScreen(
-                                                linkCats: _categories[index].subcategories!,
-                                                title: _categories[index].category ?? "",
+                                          builder: (context) =>
+                                              InteracticeCatScreen(
+                                                linkCats: _categories[index]
+                                                    .subcategories!,
+                                                title: _categories[index]
+                                                        .category ??
+                                                    "",
                                               )));
                                 }
                                 // } else if (val) {
-                                _selectedWordOnClick = _categories[index].category;
+                                _selectedWordOnClick =
+                                    _categories[index].category;
                                 setState(() {});
                                 // }
                               },
@@ -143,8 +159,9 @@ class _ProcessLearningScreenState extends State<InteractiveScreen> {
                               //   //     _selectedWordOnClick != null &&
                               //   //         _selectedWordOnClick == _words[index].text);
                               // },
-                              initiallyExpanded:
-                                  _selectedWordOnClick != null && _selectedWordOnClick == _categories[index].category,
+                              initiallyExpanded: _selectedWordOnClick != null &&
+                                  _selectedWordOnClick ==
+                                      _categories[index].category,
                               isWord: false,
                               isRefresh: (val) {
                                 // if (val) _getWords(isRefresh: true);

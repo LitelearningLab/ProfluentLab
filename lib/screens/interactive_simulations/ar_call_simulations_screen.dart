@@ -2,12 +2,16 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:litelearninglab/common_widgets/spacings.dart';
 import 'package:litelearninglab/constants/all_assets.dart';
 import 'package:litelearninglab/constants/app_colors.dart';
+import 'package:litelearninglab/hiveDb/new_interactive_simulator_hivedb.dart';
 import 'package:litelearninglab/models/InteracticeSimulationMain.dart';
 import 'package:litelearninglab/screens/interactive_simulations/widgets/ar_grid_tile.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
+import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -73,6 +77,7 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
   void initState() {
     super.initState();
     // startTimerMainCategory("AR Call Simulation");
+    mianCategoryTitile = "AR Call Simulation";
     controller = AutoScrollController(
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
@@ -194,58 +199,88 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                   )
                 : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: SingleChildScrollView(
+                    child: SizedBox(
+                      width: displayWidth(context),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
                             height: isSplitScreen
                                 ? getFullWidgetHeight(height: 24)
                                 : getWidgetHeight(height: 24),
                           ),
-                          Container(
-                            // height: displayHeight(context) * 0.2,
-                            height: isSplitScreen
-                                ? getFullWidgetHeight(height: 100)
-                                : getWidgetHeight(height: 100),
-                            width: displayWidth(context),
-                            // color: Colors.amber,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Indulge in Lifelike Immersive Learning!',
-                                  style: TextStyle(
+                          // Text(
+                          //   'Indulge in Lifelike Immersive Learning!',
+                          //   style: TextStyle(
+                          //       fontFamily: 'Roboto',
+                          //       fontWeight: FontWeight.w500,
+                          //       color: Colors.white,
+                          //       letterSpacing: 0,
+                          //       fontSize: kText.scale(16)),
+                          // ),
+                          // Text(
+                          //   'Be Ready & Confident For AR Calls.',
+                          //   style: TextStyle(
+                          //     fontWeight: FontWeight.w500,
+                          //     color: Colors.white,
+                          //     fontSize: kText.scale(15),
+                          //     fontFamily: 'Roboto',
+                          //     letterSpacing: 0,
+                          //   ),
+                          // ),
+                          // SizedBox(
+                          //     height: isSplitScreen
+                          //         ? getFullWidgetHeight(height: 10)
+                          //         : getWidgetHeight(height: 10)),
+                          // Text(
+                          //   'Practice Fearlessly...',
+                          //   style: TextStyle(
+                          //       fontWeight: FontWeight.w400,
+                          //       color: Color(0xFF6C63FF),
+                          //       fontSize: kText.scale(31),
+                          //       fontFamily: 'Kaushan',
+                          //       letterSpacing: 0),
+                          // ),
+                          Flexible(
+                            child: Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        'Indulge in Lifelike Immersive Learning! ',
+                                    style: TextStyle(
                                       fontFamily: 'Roboto',
                                       fontWeight: FontWeight.w500,
                                       color: Colors.white,
                                       letterSpacing: 0,
-                                      fontSize: kText.scale(16)),
-                                ),
-                                Text(
-                                  'Be Ready & Confident For AR Calls.',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                    fontSize: kText.scale(15),
-                                    fontFamily: 'Roboto',
-                                    letterSpacing: 0,
+                                      fontSize: kText.scale(16),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                    height: isSplitScreen
-                                        ? getFullWidgetHeight(height: 10)
-                                        : getWidgetHeight(height: 10)),
-                                Text(
-                                  'Practice Fearlessly...',
-                                  style: TextStyle(
+                                  TextSpan(
+                                    text: 'Be Ready & Confident For AR Calls. ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                      fontSize: kText.scale(15),
+                                      fontFamily: 'Roboto',
+                                      letterSpacing: 0,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'Practice Fearlessly...',
+                                    style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: Color(0xFF6C63FF),
                                       fontSize: kText.scale(31),
                                       fontFamily: 'Kaushan',
-                                      letterSpacing: 0),
-                                ),
-                              ],
+                                      letterSpacing: 0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              softWrap: true,
+                              overflow: TextOverflow.visible,
                             ),
                           ),
                           SizedBox(
@@ -253,232 +288,291 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                 ? getFullWidgetHeight(height: 20)
                                 : getWidgetHeight(height: 20),
                           ),
-                          Row(
-                            children: [
-                              Column(
-                                children: [
-                                  ARGridTile(
-                                    onTap: () async {
-                                      print(
-                                          '================////// ${_categories[0].category}');
-                                      if (_categories[0].subcategories !=
-                                          null) {
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        await prefs.setString('lastAccess',
-                                            'InteracticeCatScreen');
-                                        await prefs.setString(
-                                            'InteracticeCatScreen',
-                                            _categories[0].category ?? "");
-                                        // final box = await Hive.openBox<InteractiveLinkHive>('InteractiveLinkBox');
-                                        // InteractiveLinkHive prHive =
-                                        //     InteractiveLinkHive(item: _categories[0].subcategories!);
-                                        // box.put('InteracticeCatScreen', prHive);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                InteracticeCatScreen(
-                                              linkCats:
-                                                  _categories[0].subcategories!,
-                                              title:
-                                                  _categories[0].category ?? "",
+                          SizedBox(
+                            width: displayWidth(context),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  children: [
+                                    ARGridTile(
+                                      height: kWidth > 500
+                                          ? displayHeight(context) * 0.30
+                                          : null,
+                                      width: kWidth > 500
+                                          ? displayWidth(context) * 0.35
+                                          : null,
+                                      onTap: () async {
+                                        print(
+                                            '================////// ${_categories[0].category}');
+                                        if (_categories[0].subcategories !=
+                                            null) {
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          await prefs.setString('lastAccess',
+                                              'InteracticeCatScreen');
+                                          await prefs.setString(
+                                              'InteracticeCatScreen',
+                                              _categories[0].category ?? "");
+                                          final box = await Hive.openBox<
+                                                  InteractiveLinkHive>(
+                                              'InteractiveLinkBox');
+                                          InteractiveLinkHive prHive =
+                                              InteractiveLinkHive(
+                                                  item: _categories[0]
+                                                      .subcategories!);
+                                          box.put(
+                                              'InteracticeCatScreen', prHive);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  InteracticeCatScreen(
+                                                linkCats: _categories[0]
+                                                    .subcategories!,
+                                                title:
+                                                    _categories[0].category ??
+                                                        "",
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      } else {
-                                        Toast.show("Work in progress",
-                                            duration: Toast.lengthShort,
-                                            gravity: Toast.bottom,
-                                            backgroundColor: AppColors.white,
-                                            textStyle: TextStyle(
-                                                color: AppColors.black),
-                                            backgroundRadius: 10);
-                                      }
-                                      // } else if (val) {
-                                      _selectedWordOnClick =
-                                          _categories[0].category;
-                                      setState(() {});
-                                      // }
-                                    },
-                                    tileColor: gridTileDatas[0]['tileColor'],
-                                    title: gridTileDatas[0]['title']!,
-                                    icon: gridTileDatas[0]['image'],
-                                    ellipse: gridTileDatas[0]['ellipse'],
-                                  ),
-                                  // SPH(displayHeight(context) * 0.0246),
-                                  SizedBox(
-                                    height: isSplitScreen
-                                        ? getFullWidgetHeight(height: 20)
-                                        : getWidgetHeight(height: 20),
-                                  ),
-                                  ARGridTile(
-                                    onTap: () async {
-                                      if (_categories[3].subcategories !=
-                                          null) {
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        await prefs.setString('lastAccess',
-                                            'InteracticeCatScreen');
-                                        await prefs.setString(
-                                            'InteracticeCatScreen',
-                                            _categories[3].category ?? "");
-                                        // final box = await Hive.openBox<InteractiveLinkHive>('InteractiveLinkBox');
-                                        // InteractiveLinkHive prHive = InteractiveLinkHive(item: _categories[3].subcategories!);
-                                        // box.put('InteracticeCatScreen', prHive);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                InteracticeCatScreen(
-                                              linkCats:
-                                                  _categories[3].subcategories!,
-                                              title: _categories[3].category ??
-                                                  "", //4822126141 , 4911567682
+                                          );
+                                        } else {
+                                          Toast.show("Work in progress",
+                                              duration: Toast.lengthShort,
+                                              gravity: Toast.bottom,
+                                              backgroundColor: AppColors.white,
+                                              textStyle: TextStyle(
+                                                  color: AppColors.black),
+                                              backgroundRadius: 10);
+                                        }
+                                        // } else if (val) {
+                                        _selectedWordOnClick =
+                                            _categories[0].category;
+                                        setState(() {});
+                                        // }
+                                      },
+                                      tileColor: gridTileDatas[0]['tileColor'],
+                                      title: gridTileDatas[0]['title']!,
+                                      icon: gridTileDatas[0]['image'],
+                                      ellipse: gridTileDatas[0]['ellipse'],
+                                    ),
+                                    // SPH(displayHeight(context) * 0.0246),
+                                    SizedBox(
+                                      height: isSplitScreen
+                                          ? getFullWidgetHeight(height: 20)
+                                          : getWidgetHeight(height: 20),
+                                    ),
+                                    ARGridTile(
+                                      height: kWidth > 500
+                                          ? displayHeight(context) * 0.30
+                                          : null,
+                                      width: kWidth > 500
+                                          ? displayWidth(context) * 0.35
+                                          : null,
+                                      onTap: () async {
+                                        if (_categories[3].subcategories !=
+                                            null) {
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          await prefs.setString('lastAccess',
+                                              'InteracticeCatScreen');
+                                          await prefs.setString(
+                                              'InteracticeCatScreen',
+                                              _categories[3].category ?? "");
+                                          final box = await Hive.openBox<
+                                                  InteractiveLinkHive>(
+                                              'InteractiveLinkBox');
+                                          InteractiveLinkHive prHive =
+                                              InteractiveLinkHive(
+                                                  item: _categories[3]
+                                                      .subcategories!);
+                                          box.put(
+                                              'InteracticeCatScreen', prHive);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  InteracticeCatScreen(
+                                                linkCats: _categories[3]
+                                                    .subcategories!,
+                                                title: _categories[3]
+                                                        .category ??
+                                                    "", //4822126141 , 4911567682
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      } else {
-                                        Toast.show("Work in progress",
-                                            duration: Toast.lengthShort,
-                                            gravity: Toast.bottom,
-                                            backgroundColor: AppColors.white,
-                                            textStyle: TextStyle(
-                                                color: AppColors.black),
-                                            backgroundRadius: 10);
-                                      }
-                                      // } else if (val) {
-                                      _selectedWordOnClick =
-                                          _categories[3].category;
-                                      setState(() {});
-                                      // }
-                                    },
-                                    tileColor: gridTileDatas[3]['tileColor'],
-                                    title: gridTileDatas[3]['title']!,
-                                    icon: gridTileDatas[3]['image'],
-                                    ellipse: gridTileDatas[3]['ellipse'],
-                                  ),
-                                ],
-                              ),
-                              // SPW(displayWidth(context) * 0.0533),
-                              Spacer(),
-                              Column(
-                                children: [
-                                  // SPH(displayHeight(context) * 0.05),
-                                  SizedBox(
-                                    height: isSplitScreen
-                                        ? getFullWidgetHeight(height: 40)
-                                        : getWidgetHeight(height: 40),
-                                  ),
-                                  ARGridTile(
-                                    onTap: () async {
-                                      print(
-                                          '================////// ${_categories[1].category}');
-                                      if (_categories[1].subcategories !=
-                                          null) {
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        await prefs.setString('lastAccess',
-                                            'InteracticeCatScreen');
-                                        await prefs.setString(
-                                            'InteracticeCatScreen',
-                                            _categories[1].category ?? "");
-                                        // final box = await Hive.openBox<InteractiveLinkHive>('InteractiveLinkBox');
-                                        // InteractiveLinkHive prHive = InteractiveLinkHive(item: _categories[1].subcategories!);
-                                        // box.put('InteracticeCatScreen', prHive);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                InteracticeCatScreen(
-                                              linkCats:
-                                                  _categories[1].subcategories!,
-                                              title:
-                                                  _categories[1].category ?? "",
+                                          );
+                                        } else {
+                                          Toast.show("Work in progress",
+                                              duration: Toast.lengthShort,
+                                              gravity: Toast.bottom,
+                                              backgroundColor: AppColors.white,
+                                              textStyle: TextStyle(
+                                                  color: AppColors.black),
+                                              backgroundRadius: 10);
+                                        }
+                                        // } else if (val) {
+                                        _selectedWordOnClick =
+                                            _categories[3].category;
+                                        setState(() {});
+                                        // }
+                                      },
+                                      tileColor: gridTileDatas[3]['tileColor'],
+                                      title: gridTileDatas[3]['title']!,
+                                      icon: gridTileDatas[3]['image'],
+                                      ellipse: gridTileDatas[3]['ellipse'],
+                                    ),
+                                  ],
+                                ),
+                                SPW(displayWidth(context) * 0.046),
+                                // Spacer(),
+                                // SizedBox(
+                                //   width: getWidgetWidth(width: 16),
+                                // ),
+                                Column(
+                                  children: [
+                                    // SPH(displayHeight(context) * 0.05),
+                                    SizedBox(
+                                      height: isSplitScreen
+                                          ? getFullWidgetHeight(height: 40)
+                                          : getWidgetHeight(height: 40),
+                                    ),
+                                    ARGridTile(
+                                      height: kWidth > 500
+                                          ? displayHeight(context) * 0.30
+                                          : null,
+                                      width: kWidth > 500
+                                          ? displayWidth(context) * 0.35
+                                          : null,
+                                      onTap: () async {
+                                        print(
+                                            '================////// ${_categories[1].category}');
+                                        if (_categories[1].subcategories !=
+                                            null) {
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          await prefs.setString('lastAccess',
+                                              'InteracticeCatScreen');
+                                          await prefs.setString(
+                                              'InteracticeCatScreen',
+                                              _categories[1].category ?? "");
+                                          final box = await Hive.openBox<
+                                                  InteractiveLinkHive>(
+                                              'InteractiveLinkBox');
+                                          InteractiveLinkHive prHive =
+                                              InteractiveLinkHive(
+                                                  item: _categories[1]
+                                                      .subcategories!);
+                                          box.put(
+                                              'InteracticeCatScreen', prHive);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  InteracticeCatScreen(
+                                                linkCats: _categories[1]
+                                                    .subcategories!,
+                                                title:
+                                                    _categories[1].category ??
+                                                        "",
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      } else {
-                                        Toast.show("Work in progress",
-                                            duration: Toast.lengthShort,
-                                            gravity: Toast.bottom,
-                                            backgroundColor: AppColors.white,
-                                            textStyle: TextStyle(
-                                                color: AppColors.black),
-                                            backgroundRadius: 10);
-                                      }
-                                      // } else if (val) {
-                                      _selectedWordOnClick =
-                                          _categories[1].category;
-                                      setState(() {});
-                                      // }
-                                    },
-                                    tileColor: gridTileDatas[1]['tileColor'],
-                                    title: gridTileDatas[1]['title']!,
-                                    icon: gridTileDatas[1]['image'],
-                                    ellipse: gridTileDatas[1]['ellipse'],
-                                  ),
-                                  // SPH(displayHeight(context) * 0.0246),
-                                  SizedBox(
-                                    height: isSplitScreen
-                                        ? getFullWidgetHeight(height: 20)
-                                        : getWidgetHeight(height: 20),
-                                  ),
-                                  ARGridTile(
-                                    onTap: () async {
-                                      print(
-                                          '================////// ${_categories[2].category}');
-                                      if (_categories[2].subcategories !=
-                                          null) {
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        await prefs.setString('lastAccess',
-                                            'InteracticeCatScreen');
-                                        await prefs.setString(
-                                            'InteracticeCatScreen',
-                                            _categories[2].category ?? "");
-                                        // final box = await Hive.openBox<InteractiveLinkHive>('InteractiveLinkBox');
-                                        // InteractiveLinkHive prHive = InteractiveLinkHive(item: _categories[2].subcategories!);
-                                        // box.put('InteracticeCatScreen', prHive);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                InteracticeCatScreen(
-                                              linkCats:
-                                                  _categories[2].subcategories!,
-                                              title:
-                                                  _categories[2].category ?? "",
+                                          );
+                                        } else {
+                                          Toast.show("Work in progress",
+                                              duration: Toast.lengthShort,
+                                              gravity: Toast.bottom,
+                                              backgroundColor: AppColors.white,
+                                              textStyle: TextStyle(
+                                                  color: AppColors.black),
+                                              backgroundRadius: 10);
+                                        }
+                                        // } else if (val) {
+                                        _selectedWordOnClick =
+                                            _categories[1].category;
+                                        setState(() {});
+                                        // }
+                                      },
+                                      tileColor: gridTileDatas[1]['tileColor'],
+                                      title: gridTileDatas[1]['title']!,
+                                      icon: gridTileDatas[1]['image'],
+                                      ellipse: gridTileDatas[1]['ellipse'],
+                                    ),
+                                    // SPH(displayHeight(context) * 0.0246),
+                                    SizedBox(
+                                      height: isSplitScreen
+                                          ? getFullWidgetHeight(height: 20)
+                                          : getWidgetHeight(height: 20),
+                                    ),
+                                    ARGridTile(
+                                      height: kWidth > 500
+                                          ? displayHeight(context) * 0.30
+                                          : null,
+                                      width: kWidth > 500
+                                          ? displayWidth(context) * 0.35
+                                          : null,
+                                      onTap: () async {
+                                        print(
+                                            '================////// ${_categories[2].category}');
+                                        if (_categories[2].subcategories !=
+                                            null) {
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          await prefs.setString('lastAccess',
+                                              'InteracticeCatScreen');
+                                          await prefs.setString(
+                                              'InteracticeCatScreen',
+                                              _categories[2].category ?? "");
+                                          final box = await Hive.openBox<
+                                                  InteractiveLinkHive>(
+                                              'InteractiveLinkBox');
+                                          InteractiveLinkHive prHive =
+                                              InteractiveLinkHive(
+                                                  item: _categories[2]
+                                                      .subcategories!);
+                                          box.put(
+                                              'InteracticeCatScreen', prHive);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  InteracticeCatScreen(
+                                                linkCats: _categories[2]
+                                                    .subcategories!,
+                                                title:
+                                                    _categories[2].category ??
+                                                        "",
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      } else {
-                                        Toast.show("Work in progress",
-                                            duration: Toast.lengthShort,
-                                            gravity: Toast.bottom,
-                                            backgroundColor: AppColors.white,
-                                            textStyle: TextStyle(
-                                                color: AppColors.black),
-                                            backgroundRadius: 10);
-                                      }
-                                      // } else if (val) {
-                                      _selectedWordOnClick =
-                                          _categories[2].category;
-                                      setState(() {});
-                                      // }
-                                    },
-                                    tileColor: gridTileDatas[2]['tileColor'],
-                                    title: gridTileDatas[2]['title']!,
-                                    icon: gridTileDatas[2]['image'],
-                                    ellipse: gridTileDatas[2]['ellipse'],
-                                  ),
-                                ],
-                              ),
-                            ],
+                                          );
+                                        } else {
+                                          Toast.show("Work in progress",
+                                              duration: Toast.lengthShort,
+                                              gravity: Toast.bottom,
+                                              backgroundColor: AppColors.white,
+                                              textStyle: TextStyle(
+                                                  color: AppColors.black),
+                                              backgroundRadius: 10);
+                                        }
+                                        // } else if (val) {
+                                        _selectedWordOnClick =
+                                            _categories[2].category;
+                                        setState(() {});
+                                        // }
+                                      },
+                                      tileColor: gridTileDatas[2]['tileColor'],
+                                      title: gridTileDatas[2]['title']!,
+                                      icon: gridTileDatas[2]['image'],
+                                      ellipse: gridTileDatas[2]['ellipse'],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(
                             height: isSplitScreen

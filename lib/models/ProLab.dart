@@ -15,21 +15,24 @@ class ProLab implements Jsonable {
   int? pracatt;
   int? time;
   int? timeCal;
+  String? batch;
+  String? companyId;
 
-  ProLab({
-    this.id,
-    this.correct,
-    this.listatt,
-    this.pracatt,
-    this.load,
-    this.lastAttempt,
-    this.userId,
-    this.date,
-    this.title,
-    this.word,
-    this.time,
-    this.timeCal,
-  });
+  ProLab(
+      {this.id,
+      this.correct,
+      this.listatt,
+      this.pracatt,
+      this.load,
+      this.lastAttempt,
+      this.userId,
+      this.date,
+      this.title,
+      this.word,
+      this.time,
+      this.timeCal,
+      this.batch,
+      this.companyId});
 
   ProLab.map(dynamic obj) {
     this.id = obj['id'];
@@ -37,6 +40,8 @@ class ProLab implements Jsonable {
     this.title = obj['title'];
     this.userId = obj['userId'];
     this.lastAttempt = obj['lastAttempt'];
+    this.batch = obj['batch'];
+    this.companyId = obj['companyId'];
 
     this.listatt = obj['listatt'];
     this.pracatt = obj['pracatt'];
@@ -51,6 +56,12 @@ class ProLab implements Jsonable {
     var map = new Map<String, dynamic>();
     if (id != null) {
       map['id'] = id;
+    }
+    if (companyId != null) {
+      map['companyId'] = companyId;
+    }
+    if (batch != null) {
+      map['batch'] = batch;
     }
     if (correct != null) {
       map['correct'] = correct;
@@ -101,7 +112,8 @@ class ProLab implements Jsonable {
     this.lastAttempt = map['lastAttempt'];
     this.date = map['date'];
     this.load = map['load'];
-
+    this.batch = map['batch'];
+    this.companyId = map['companyId'];
     this.time = map['time'];
     this.word = map['word'];
     this.timeCal = map['timeCal'];
@@ -116,6 +128,8 @@ class ProLab implements Jsonable {
         title: map['title'],
         pracatt: map['pracatt'],
         lastAttempt: map['lastAttempt'],
+        batch: map['batch'],
+        companyId: map['companyId'],
         userId: map['userId'],
         date: map['date'],
         load: map['load'],

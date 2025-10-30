@@ -1,9 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:litelearninglab/common_widgets/spacings.dart';
-import 'package:litelearninglab/constants/app_colors.dart';
-import 'package:litelearninglab/constants/keys.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 
 class NewSubMenuItem extends StatelessWidget {
@@ -29,7 +24,11 @@ class NewSubMenuItem extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: displayWidth(context),
-        padding: EdgeInsets.only(left: getWidgetWidth(width: 20), right: getWidgetWidth(width: 20), top: 7.5,bottom: 7.5),
+        padding: EdgeInsets.only(
+            left: getWidgetWidth(width: 20),
+            right: getWidgetWidth(width: 20),
+            top: 7.5,
+            bottom: 7.5),
         // onTap: onTap,
         child: Row(
           children: [
@@ -39,10 +38,8 @@ class NewSubMenuItem extends StatelessWidget {
                   Container(
                     height: getWidgetHeight(height: 36),
                     width: getWidgetWidth(width: 36),
-                    decoration: BoxDecoration(
-                      color: bgColor,
-                      shape: BoxShape.circle
-                    ),
+                    decoration:
+                        BoxDecoration(color: bgColor, shape: BoxShape.circle),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ImageIcon(

@@ -7,12 +7,16 @@ class ARGridTile extends StatelessWidget {
   final String title;
   final String icon;
   final String ellipse;
+  final double? height;
+  final double? width;
   const ARGridTile(
       {required this.onTap,
       required this.tileColor,
       required this.title,
       required this.icon,
       required this.ellipse,
+      this.height,
+      this.width,
       Key? key})
       : super(key: key);
 
@@ -24,8 +28,8 @@ class ARGridTile extends StatelessWidget {
       },
       child: Container(
         // height: displayHeight(context) * 0.233,
-        height: getWidgetHeight(height: 180),
-        width: getWidgetWidth(width: 158),
+        height: height ?? getWidgetHeight(height: 180),
+        width: width ?? getWidgetWidth(width: 158),
         // padding: EdgeInsets.symmetric(
         //     horizontal: 10, vertical: 10),
         decoration: BoxDecoration(

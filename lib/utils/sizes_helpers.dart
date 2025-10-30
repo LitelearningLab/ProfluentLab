@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:litelearninglab/utils/split_screen.dart';
 
-
-
 Size displaySize(BuildContext context) {
   //debugPrint('Size = ' + MediaQuery.of(context).size.toString());
   return MediaQuery.of(context).size;
@@ -25,10 +23,9 @@ double globalFontSize(double fontSize, BuildContext context) {
   return text.scale(fontSize);
 }
 
-  Size size=Size(0,0);
+Size size = Size(0, 0);
 
-
-  double getWidgetHeight({required double height}) {
+double getWidgetHeight({required double height}) {
   double variableHeightValue = 812 / height;
   return kHeight / variableHeightValue;
 }
@@ -43,20 +40,14 @@ double getFullWidgetHeight({required double height}) {
   return fullScreenHeight / variableHeightValue;
 }
 
-
 double kHeight = 0.0;
 double kWidth = 0.0;
 double fullScreenHeight = 805.33;
 late TextScaler kText;
 bool isSplitScreen = false;
 
-getIsSplit(BuildContext context)async{
-    isSplitScreen = MediaQuery.of(context).size.height < 500;
-    print('is split screen $isSplitScreen');
-    return isSplitScreen;
+getIsSplit(BuildContext context) async {
+  isSplitScreen = MediaQuery.of(context).size.height < 500;
+  print('is split screen $isSplitScreen');
+  return isSplitScreen;
 }
-
-
-
-
-

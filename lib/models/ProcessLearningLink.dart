@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 import '../utils/FirestoreService.dart';
-
 
 class ProcessLearningLink implements Jsonable {
   String? id;
@@ -85,5 +83,4 @@ class ProcessLearningLink implements Jsonable {
       eLearning: map['eLearning'],
     );
   }
-
 }

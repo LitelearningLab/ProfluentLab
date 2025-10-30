@@ -20,6 +20,7 @@ import 'package:litelearninglab/screens/word_screen/word_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/encrypt_data.dart';
 import 'package:litelearninglab/utils/firebase_helper.dart';
+import 'package:litelearninglab/utils/shared_pref.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -126,7 +127,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     // } else {
     //   _isPlaying = false;
     // }
-    _playerStateSubscription = audioPlayerManager.onPlayerStateChanged.listen((event) async {
+    _playerStateSubscription =
+        audioPlayerManager.onPlayerStateChanged.listen((event) async {
       Future.delayed(const Duration(seconds: 2), () {
         log("This was Triggered");
         return isPlaying[widget.index].value = false;
@@ -137,7 +139,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
 
     initConnectivity();
 
-    networkSubscription = Connectivity().onConnectivityChanged.listen((connectionResult) {
+    networkSubscription =
+        Connectivity().onConnectivityChanged.listen((connectionResult) {
       print('^^^^^^^^^^^^^^CHECKING CONNECTION');
       checkConnection(connectionResult);
     });
@@ -184,7 +187,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     }
   }
 
-  Future<void> checkConnection(List<ConnectivityResult> connectivityResult) async {
+  Future<void> checkConnection(
+      List<ConnectivityResult> connectivityResult) async {
     connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult.contains(ConnectivityResult.none)) {
@@ -220,8 +224,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     });
     // audioPlayerManager = AudioPlayerManager();
     print("Above the loading value");
-    void result =
-        await audioPlayerManager.play(url!, context: context, localPath: widget.localPath, decodedPath: (val) {
+    void result = await audioPlayerManager.play(url!,
+        context: context, localPath: widget.localPath, decodedPath: (val) {
       eLocalPath = val;
     });
     print("Below the loading value");
@@ -237,7 +241,12 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     isPlaying[widget.index].value = true;
     FirebaseHelper db = new FirebaseHelper();
     AuthState userDatas = Provider.of<AuthState>(context, listen: false);
+    String company = await SharedPref.getSavedString("companyId");
+    String batch = await SharedPref.getSavedString("batch");
+
     db.saveWordListReport(
+      companyId: company,
+      batch: batch,
       isPractice: false,
       company: userDatas.appUser!.company!,
       name: userDatas.appUser!.UserMname,
@@ -274,9 +283,10 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
 
       if (widget.isFav == null || widget.isFav == 0) {
         print("dkjfdjfdj");
-        final downloadController = Provider.of<AuthState>(context, listen: false);
-        localPath =
-            await Utils.downloadFile(downloadController, url!, '${widget.title}.mp3', '$appDocPath/${widget.load}');
+        final downloadController =
+            Provider.of<AuthState>(context, listen: false);
+        localPath = await Utils.downloadFile(downloadController, url!,
+            '${widget.title}.mp3', '$appDocPath/${widget.load}');
         eLocalPath = EncryptData.encryptFile(localPath, userDatas);
 
         try {
@@ -327,7 +337,9 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     }
     if (isFaved) {
       Toast.show(
-        !favIs ? "Removed from your priority list" : "Added to your priority list",
+        !favIs
+            ? "Removed from your priority list"
+            : "Added to your priority list",
         duration: Toast.lengthShort,
         gravity: Toast.bottom,
         backgroundColor: AppColors.white,
@@ -351,7 +363,9 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     }
     if (isFaved) {
       Toast.show(
-        !favIs ? "Removed from your priority list" : "Added to your priority list",
+        !favIs
+            ? "Removed from your priority list"
+            : "Added to your priority list",
         duration: Toast.lengthShort,
         gravity: Toast.bottom,
         backgroundColor: AppColors.white,
@@ -470,7 +484,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                           ),
                         ),
                       ),
-                      if (widget.isButtonsVisible || widget.underContruction) Spacer(),
+                      if (widget.isButtonsVisible || widget.underContruction)
+                        Spacer(),
                       if (widget.isDownloaded != null &&
                           !widget.isDownloaded! &&
                           !widget.isCheckBoxDownloading &&
@@ -485,31 +500,44 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                                   widget.isCheckBoxDownloading = true;
                                 });
                                 DatabaseProvider dbb = DatabaseProvider.get;
-                                WordsDatabaseRepository dbRef = WordsDatabaseRepository(dbb);
-                                Directory appDocDir = await getApplicationDocumentsDirectory();
+                                WordsDatabaseRepository dbRef =
+                                    WordsDatabaseRepository(dbb);
+                                Directory appDocDir =
+                                    await getApplicationDocumentsDirectory();
                                 String appDocPath = appDocDir.path;
-                                final downloadController = Provider.of<AuthState>(context, listen: false);
+                                final downloadController =
+                                    Provider.of<AuthState>(context,
+                                        listen: false);
                                 String localPath = await Utils.downloadFile(
-                                    downloadController, "", '${widget.title}.mp3', '$appDocPath/${widget.load}');
-                                AuthState userDatas = Provider.of<AuthState>(context, listen: false);
+                                    downloadController,
+                                    "",
+                                    '${widget.title}.mp3',
+                                    '$appDocPath/${widget.load}');
+                                AuthState userDatas = Provider.of<AuthState>(
+                                    context,
+                                    listen: false);
 
-                                String eLocalPath = EncryptData.encryptFile(localPath, userDatas);
+                                String eLocalPath = EncryptData.encryptFile(
+                                    localPath, userDatas);
                                 try {
                                   await File(localPath).delete();
                                 } catch (e) {
                                   print(e);
                                 }
 
-                                if (localPath == "Error code: 403" || !downloadController.isDownloaded!) {
+                                if (localPath == "Error code: 403" ||
+                                    !downloadController.isDownloaded!) {
                                   Toast.show("Failed to Download",
                                       duration: Toast.lengthShort,
                                       gravity: Toast.bottom,
                                       backgroundColor: AppColors.white,
-                                      textStyle: TextStyle(color: AppColors.black),
+                                      textStyle:
+                                          TextStyle(color: AppColors.black),
                                       backgroundRadius: 10);
                                   widget.isRefresh(true);
                                 } else {
-                                  bool isFaved = await dbRef.setDownloadPath(widget.wordId, eLocalPath);
+                                  bool isFaved = await dbRef.setDownloadPath(
+                                      widget.wordId, eLocalPath);
                                   setState(() {
                                     _isDownloading = false;
                                   });
@@ -518,7 +546,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                                         duration: Toast.lengthShort,
                                         gravity: Toast.bottom,
                                         backgroundColor: AppColors.white,
-                                        textStyle: TextStyle(color: AppColors.black),
+                                        textStyle:
+                                            TextStyle(color: AppColors.black),
                                         backgroundRadius: 10);
                                   widget.isRefresh(true);
                                 }
@@ -527,7 +556,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                                     duration: Toast.lengthShort,
                                     gravity: Toast.bottom,
                                     backgroundColor: AppColors.white,
-                                    textStyle: TextStyle(color: AppColors.black),
+                                    textStyle:
+                                        TextStyle(color: AppColors.black),
                                     backgroundRadius: 10);
                               }
                             },
@@ -557,7 +587,9 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                             ),
                           ],
                         ),
-                      if (widget.isDownloaded != null && widget.isDownloaded! && widget.isButtonsVisible)
+                      if (widget.isDownloaded != null &&
+                          widget.isDownloaded! &&
+                          widget.isButtonsVisible)
                         InkWell(
                           child: SizedBox(
                             width: displayWidth(context) / 18.75,
@@ -574,9 +606,13 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
                               width: displayWidth(context) / 18.75,
                               height: displayHeight(context) / 40.6,
                               child: Image.asset(
-                                widget.isFav == 0 ? AllAssets.save : AllAssets.saved,
+                                widget.isFav == 0
+                                    ? AllAssets.save
+                                    : AllAssets.saved,
                                 width: 18,
-                                color: widget.isFav == 0 ? Colors.white : Color(0xFF6C63FE),
+                                color: widget.isFav == 0
+                                    ? Colors.white
+                                    : Color(0xFF6C63FE),
                               ),
                             ),
                             onPressed: () async {
@@ -649,7 +685,8 @@ class AppExpansionTile extends StatefulWidget {
   AppExpansionTileState createState() => new AppExpansionTileState();
 }
 
-class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerProviderStateMixin {
+class AppExpansionTileState extends State<AppExpansionTile>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late CurvedAnimation _easeOutAnimation;
   late CurvedAnimation _easeInAnimation;
@@ -664,15 +701,18 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
   void initState() {
     super.initState();
     _controller = new AnimationController(duration: _kExpand, vsync: this);
-    _easeOutAnimation = new CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    _easeInAnimation = new CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _easeOutAnimation =
+        new CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _easeInAnimation =
+        new CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _borderColor = new ColorTween();
     _headerColor = new ColorTween();
     _iconColor = new ColorTween();
 
     _backgroundColor = new ColorTween();
 
-    _isExpanded = PageStorage.of(context)!.readState(context) ?? widget.initiallyExpanded;
+    _isExpanded =
+        PageStorage.of(context)!.readState(context) ?? widget.initiallyExpanded;
     if (_isExpanded) _controller.value = 1.0;
   }
 
@@ -719,7 +759,8 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
     return new Container(
       margin: EdgeInsets.zero,
       decoration: new BoxDecoration(
-        color: _backgroundColor.evaluate(_easeOutAnimation) ?? Colors.transparent,
+        color:
+            _backgroundColor.evaluate(_easeOutAnimation) ?? Colors.transparent,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -728,11 +769,15 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
             color: Color(0xFF293750),
             // margin: EdgeInsets.symmetric(vertical: 1),
             child: IconTheme.merge(
-              data: new IconThemeData(color: _iconColor.evaluate(_easeInAnimation)),
+              data: new IconThemeData(
+                  color: _iconColor.evaluate(_easeInAnimation)),
               child: GestureDetector(
                 onTap: toggle,
                 child: DefaultTextStyle(
-                  style: Theme.of(context!).textTheme.headline4!.copyWith(color: titleColor),
+                  style: Theme.of(context!)
+                      .textTheme
+                      .headlineMedium!
+                      .copyWith(color: titleColor),
                   child: widget.title,
                 ),
               ),
@@ -754,7 +799,7 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
     final ThemeData theme = Theme.of(context);
     _borderColor.end = theme.dividerColor;
     _headerColor
-      ..begin = theme.textTheme.headline4?.color
+      ..begin = theme.textTheme.headlineMedium?.color
       ..end = theme.primaryColor;
     _iconColor
       ..begin = theme.unselectedWidgetColor

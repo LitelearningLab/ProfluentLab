@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:litelearninglab/common_widgets/spacings.dart';
-import 'package:litelearninglab/main.dart';
 import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,13 +41,23 @@ class _CommonAppBarState extends State<CommonAppBar> {
     return SafeArea(
       child: Container(
         padding: widget.appbarIcon != null
-            ? EdgeInsets.only(bottom: isSplitScreen ? getFullWidgetHeight(height: 12) : getWidgetHeight(height: 12))
-            : EdgeInsets.only(bottom: isSplitScreen ? getFullWidgetHeight(height: 8) : getWidgetHeight(height: 8)),
-        height: isSplitScreen ? getFullWidgetHeight(height: 64) : getWidgetHeight(height: 64),
+            ? EdgeInsets.only(
+                bottom: isSplitScreen
+                    ? getFullWidgetHeight(height: 12)
+                    : getWidgetHeight(height: kWidth > 500 ? 8 : 12),
+              )
+            : EdgeInsets.only(
+                bottom: isSplitScreen
+                    ? getFullWidgetHeight(height: 8)
+                    : getWidgetHeight(height: 8)),
+        height: isSplitScreen
+            ? getFullWidgetHeight(height: 64)
+            : getWidgetHeight(height: 64),
         width: MediaQuery.of(context).size.width,
         color: Color(0xFF324265),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,8 +69,12 @@ class _CommonAppBarState extends State<CommonAppBar> {
                     : SPW(displayWidth(context) / 40),
                 widget.appbarIcon != null
                     ? Container(
-                        padding: EdgeInsets.all(displayWidth(context) / 37.5),
-                        height: isSplitScreen ? getFullWidgetHeight(height: 40) : getWidgetHeight(height: 40),
+                        padding: kWidth > 500
+                            ? EdgeInsets.all(12)
+                            : EdgeInsets.all(displayWidth(context) / 37.5),
+                        height: isSplitScreen
+                            ? getFullWidgetHeight(height: 40)
+                            : getWidgetHeight(height: 40),
                         width: getWidgetWidth(width: 40),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -69,11 +82,11 @@ class _CommonAppBarState extends State<CommonAppBar> {
                               Color(0xFF584EFF),
                               Color(0xFF6C63FE),
                             ])),
-                        child: ImageIcon(
-                          AssetImage(
-                            widget.appbarIcon!,
-                          ),
-                          size: isSplitScreen ? getFullWidgetHeight(height: 30) : getWidgetHeight(height: 30),
+                        child: Image.asset(
+                          widget.appbarIcon!,
+                          height: isSplitScreen
+                              ? getFullWidgetHeight(height: 30)
+                              : getWidgetHeight(height: 30),
                           color: Colors.white,
                         ),
                       )
@@ -82,13 +95,15 @@ class _CommonAppBarState extends State<CommonAppBar> {
                             ? widget.onPressedEvent
                             : () async {
                                 Navigator.pop(context);
-                                stopTimerSubCategory();
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
+                                // stopTimerMainCategory();
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
 
-                                String? lastAcces = prefs.getString("lastAccess");
-                                if (lastAcces == "NewSoftSkillsScreen") {
-                                  stopTimerMainCategory();
-                                }
+                                String? lastAcces =
+                                    prefs.getString("lastAccess");
+                                // if (lastAcces == "NewSoftSkillsScreen") {
+                                stopTimerMainCategory();
+                                // }
                               },
                         // onPressed: () {
                         //   print("button tapped");

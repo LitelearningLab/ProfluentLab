@@ -56,14 +56,16 @@ class WordsDatabaseRepository implements WordsRepository {
   @override
   Future<Word> delete(Word word) async {
     final db = await databaseProvider?.db();
-    await db?.delete(dao.tableName, where: dao.columnId + " = ?", whereArgs: [word.id]);
+    await db?.delete(dao.tableName,
+        where: dao.columnId + " = ?", whereArgs: [word.id]);
     return word;
   }
 
   @override
   Future<Word> update(Word word) async {
     final db = await databaseProvider?.db();
-    await db?.update(dao.tableName, dao.toMap(word), where: dao.columnId + " = ?", whereArgs: [word.id]);
+    await db?.update(dao.tableName, dao.toMap(word),
+        where: dao.columnId + " = ?", whereArgs: [word.id]);
     return word;
   }
 
@@ -105,14 +107,19 @@ class WordsDatabaseRepository implements WordsRepository {
   @override
   Future<List<Word>> getFav() async {
     final db = await databaseProvider?.db();
-    List<Map> maps = await db!.query("Select * from " + dao.tableName + " where " + dao.columnIsFav + " = 1");
+    List<Map> maps = await db!.query("Select * from " +
+        dao.tableName +
+        " where " +
+        dao.columnIsFav +
+        " = 1");
     return dao.fromList(maps);
   }
 
   @override
   Future<bool> setFav(int wordId, int fav, String localPath) async {
     final db = await databaseProvider?.db();
-    await db!.update(dao.tableName, dao.toFav(fav, localPath), where: dao.columnId + " = ?", whereArgs: [wordId]);
+    await db!.update(dao.tableName, dao.toFav(fav, localPath),
+        where: dao.columnId + " = ?", whereArgs: [wordId]);
 
     return true;
   }
@@ -120,7 +127,8 @@ class WordsDatabaseRepository implements WordsRepository {
   @override
   Future<bool> setDownloadPath(int wordId, String localPath) async {
     final db = await databaseProvider?.db();
-    await db!.update(dao.tableName, dao.toLocalPath(localPath), where: dao.columnId + " = ?", whereArgs: [wordId]);
+    await db!.update(dao.tableName, dao.toLocalPath(localPath),
+        where: dao.columnId + " = ?", whereArgs: [wordId]);
 
     return true;
   }

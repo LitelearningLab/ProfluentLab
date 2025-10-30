@@ -2,14 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:litelearninglab/common_widgets/custom_button.dart';
 import 'package:litelearninglab/constants/all_assets.dart';
 import 'package:litelearninglab/constants/app_colors.dart';
+import 'package:litelearninglab/constants/enums.dart';
 import 'package:litelearninglab/main.dart';
 import 'package:litelearninglab/screens/login/unauth_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
+import 'package:litelearninglab/utils/firebase_helper.dart';
 import 'package:litelearninglab/utils/shared_pref.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -59,76 +63,182 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
   }
 
   loginNew() async {
-    print("entering loginNew");
-    String url = baseUrl + sentOtp;
-    String mobileNumber = _usernameController.text;
-    print("url : $url");
-    print("mobile number : $mobileNumber");
     try {
-      var response = await http.post(Uri.parse(baseUrl + sentOtp), body: {"phone": mobileNumber});
-      print("response of send otp : ${response.body}");
-      var decodedResponse = jsonDecode(response.body);
-      if (decodedResponse["status"] == false) {
-        print("status is falseeee");
-        message = decodedResponse["message"] ?? "";
-        print("message is:$message");
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(message, style: TextStyle(color: Colors.white)),
-          backgroundColor: Color(0XFF34425D),
-        ));
+      final QuerySnapshot userResult = await FirebaseFirestore.instance
+          .collection('UserNode')
+          .where('mobile', isEqualTo: _usernameController.text)
+          .limit(1)
+          .get();
+
+      if (userResult.docs.isNotEmpty) {
+        final userDoc = userResult.docs.first;
+        final userData = userDoc.data() as Map<String, dynamic>;
+        final String? companyId = userData['companyid'];
+        final String? userStatus = userData['status'];
+
+        if (userStatus != "1") {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("User is inactive.",
+                style: TextStyle(color: Colors.white)),
+            backgroundColor: Color(0XFF34425D),
+          ));
+          Provider.of<AuthState>(context, listen: false).chnageAuthState();
+          return;
+        }
+
+        if (companyId == null || companyId.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Company not associated with this user.",
+                style: TextStyle(color: Colors.white)),
+            backgroundColor: Color(0XFF34425D),
+          ));
+          return;
+        }
+
+        final QuerySnapshot companyDoc = await FirebaseFirestore.instance
+            .collection('UserNode')
+            .where('_id', isEqualTo: companyId)
+            .limit(1)
+            .get();
+
+        if (companyDoc.docs.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Associated company not found.",
+                style: TextStyle(color: Colors.white)),
+            backgroundColor: Color(0XFF34425D),
+          ));
+          return;
+        }
+
+        final companydoc = companyDoc.docs.first;
+        final companydocData = companydoc.data() as Map<String, dynamic>;
+        final String? companyStatus = companydocData['status'];
+
+        if (companyStatus != "1") {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Company is inactive.",
+                style: TextStyle(color: Colors.white)),
+            backgroundColor: Color(0XFF34425D),
+          ));
+          Provider.of<AuthState>(context, listen: false).chnageAuthState();
+          return;
+        }
+
+        print("Both user and company are active");
+
+        if (kDebugMode) {
+          print("DEBUG MODE: Skipping real OTP API call");
+          mobileSendId = "debug_id";
+          otp = "123456";
+          _start = 30;
+          startTimer();
+          _isLogin = false;
+          setState(() {});
+        } else {
+          String url = baseUrl + sentOtp;
+          String mobileNumber = _usernameController.text;
+
+          try {
+            var response =
+                await http.post(Uri.parse(url), body: {"phone": mobileNumber});
+            print("response of send otp : ${response.body}");
+            var decodedResponse = jsonDecode(response.body);
+
+            if (decodedResponse["status"] == false) {
+              message = decodedResponse["message"] ?? "";
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(message, style: TextStyle(color: Colors.white)),
+                backgroundColor: Color(0XFF34425D),
+              ));
+            } else {
+              mobileSendId = decodedResponse['_id'] ?? "";
+              otp = decodedResponse['otp'] ?? "";
+              _start = 30;
+              startTimer();
+              _isLogin = false;
+              setState(() {});
+            }
+          } catch (e) {
+            print("Error sending OTP: $e");
+          }
+        }
       } else {
-        print("statuss true");
-        mobileSendId = decodedResponse['_id'] ?? "";
-        print("smdgjdigjfij: ${country}");
-        await SharedPref.saveString('userId', mobileSendId);
-        print("useridddd:${await SharedPref.getSavedString('userId')}");
-        otp = decodedResponse['otp'] ?? "";
-        print("otp is:$otp");
-        _start = 30;
-        startTimer();
-        _isLogin = false;
-        /*  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(otp, style: TextStyle(color: Colors.white)),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("This mobile number is not registered.",
+              style: TextStyle(color: Colors.white)),
           backgroundColor: Color(0XFF34425D),
-        ));*/
-        setState(() {});
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height - 100,
+            left: 20,
+            right: 20,
+          ),
+          duration: Duration(seconds: 3),
+        ));
       }
     } catch (e) {
-      print("error loginnn : $e");
+      log("Error during login: $e");
     }
   }
 
   verifyOtp() async {
     print("dgmdo");
+
     if (_otp.text.isEmpty || _otp.text.length != 6) {
-      print("mcvdmxv");
       redBox = true;
       setState(() {});
+      return;
+    }
+
+    _isLoading = true;
+    setState(() {});
+
+    if (kDebugMode) {
+      print(
+          "DEBUG MODE: Simulating OTP verification success with sample user data");
+
+      // Sample realistic data
+      String sampleUserId = "nFfXTMjBnomN0aL2HDNG";
+      String sampleAccess = "App User";
+      String sampleCity = "chennai";
+      String sampleCountry = "India";
+      String sampleCompanyName = "Peter England";
+      String sampleCompanyId = "FjrBLXdTGw1bdtKcUUvG";
+      String sampleJoinDate = "2025-05-21T12:01:28.158Z";
+      String sampleEndDate = "2030-05-21T12:01:28.158Z"; // Example future date
+
+      await SharedPref.saveBool("walkthrough", true);
+      await SharedPref.saveString('userId', sampleUserId);
+      await SharedPref.saveBool('isFirst', true);
+      await SharedPref.saveString("phoneNo", _usernameController.text);
+      await SharedPref.saveString('newCity', sampleCity);
+      await SharedPref.saveString('newCountry', sampleCountry);
+      await SharedPref.saveString('joinDate', sampleJoinDate);
+      await SharedPref.saveString("endDate", sampleEndDate);
+      await SharedPref.saveBool("isLogedInBefore", true);
+      await SharedPref.saveString('companyName', sampleCompanyName);
+
+      AuthState authState = Provider.of<AuthState>(context, listen: false);
+      authState.checkAuthStatus();
     } else {
-      _isLoading = true;
-      setState(() {});
-      print("else function callledd");
       String url = baseUrl + verifyOtpApi;
       String mobileNumber = _usernameController.text;
-      print("url : $url");
-      print("mobile number : $mobileNumber");
-      print("otp : $otp");
-      print("id : $mobileSendId");
+
       try {
-        var response = await http.post(Uri.parse(baseUrl + verifyOtpApi), body: {
+        var response = await http.post(Uri.parse(url), body: {
           "_id": mobileSendId,
-          "otp": _otp.text.trim(), //otp
+          "otp": _otp.text.trim(),
           "mobile": mobileNumber
         });
 
         print("response otp : ${response.body}");
-        print("response otp : ${response.body}");
         final result = jsonDecode(response.body);
-        print(result.runtimeType);
+        log("result priniting : ${result}");
+
         if (result["status"] == true) {
           if (result['userdata']['access'] == "company") {
             city = (result['userdata']['city0'] as List).join(',');
-            country = (result['userdata']['country0']);
+            country = result['userdata']['country0'];
             companyName = result['userdata']['companyname'];
             joinDate = result['userdata']['joindate'];
             endDate = result["userdata"]["endDate"];
@@ -139,29 +249,35 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
             country = result['userdata']['country'] ?? "";
             joinDate = result['userdata']['joindate'] ?? "";
             endDate = result["userdata"]["endDate"] ?? "";
-            print("joindateee:$joinDate");
           }
+
+          await SharedPref.saveBool("walkthrough", true);
+          await SharedPref.saveString('userId', mobileSendId);
           await SharedPref.saveBool('isFirst', true);
           await SharedPref.saveString("phoneNo", mobileNumber);
           await SharedPref.saveString('newCity', city);
           await SharedPref.saveString('newCountry', country);
           await SharedPref.saveString('joinDate', joinDate);
           await SharedPref.saveString("endDate", endDate);
+          await SharedPref.saveBool("isLogedInBefore", true);
+
           AuthState authState = Provider.of<AuthState>(context, listen: false);
           authState.checkAuthStatus();
         } else {
           redBox = true;
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(result["message"], style: TextStyle(color: Colors.white)),
+            content:
+                Text(result["message"], style: TextStyle(color: Colors.white)),
             backgroundColor: Color(0XFF34425D),
           ));
         }
       } catch (e) {
         print("error login : $e");
       }
-      _isLoading = false;
-      setState(() {});
     }
+
+    _isLoading = false;
+    setState(() {});
   }
 
   /*Future<void> _login() async {
@@ -278,8 +394,13 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
   }
 
   Widget build(BuildContext context) {
+    log("datetime${DateTime.now().toString()}");
     return UpgradeAlert(
-      dialogStyle: Platform.isAndroid ? UpgradeDialogStyle.material : UpgradeDialogStyle.cupertino,
+      dialogStyle: kIsWeb
+          ? UpgradeDialogStyle.material
+          : (Platform.isAndroid
+              ? UpgradeDialogStyle.material
+              : UpgradeDialogStyle.cupertino),
       showReleaseNotes: false,
       showIgnore: false,
       shouldPopScope: () => true,
@@ -304,12 +425,15 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
             child: SizedBox(
               height: kHeight,
               child: Padding(
-                padding: const EdgeInsets.only(top: 25),
+                padding: EdgeInsets.only(top: 25),
                 child: Form(
                   key: _formKey,
                   child: Container(
                     padding: EdgeInsets.only(
-                        top: isSplitScreen ? getFullWidgetHeight(height: 30) : getWidgetHeight(height: 30), bottom: MediaQuery.of(context).viewInsets.bottom),
+                        top: isSplitScreen
+                            ? getFullWidgetHeight(height: 30)
+                            : getWidgetHeight(height: 30),
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
                     width: kWidth,
                     decoration: BoxDecoration(color: Colors.white),
                     child: Column(
@@ -326,7 +450,11 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                                 "PROFLUENT",
                                 style: TextStyle(fontSize: 25),
                               ),
-                              Container(height: 40, width: 40, child: Image.asset("assets/images/profluent_ar_icon.png"))
+                              Container(
+                                  height: 40,
+                                  width: 40,
+                                  child: Image.asset(
+                                      "assets/images/profluent_ar_icon.png"))
                             ],
                           ),
                         ),
@@ -336,8 +464,12 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                             horizontal: getFullWidgetHeight(height: 25),
                           ),
                           child: SizedBox(
-                              height: isSplitScreen ? getFullWidgetHeight(height: 280) : getWidgetHeight(height: 280),
-                              child: Image.asset(_isLogin && !_isLoading ? 'assets/images/undraw_Messaging_app_re_aytg.png' : 'assets/images/SMSOTP.png')),
+                              height: isSplitScreen
+                                  ? getFullWidgetHeight(height: 280)
+                                  : getWidgetHeight(height: 280),
+                              child: Image.asset(_isLogin && !_isLoading
+                                  ? 'assets/images/undraw_Messaging_app_re_aytg.png'
+                                  : 'assets/images/SMSOTP.png')),
                         ),
                         SizedBox(height: 20),
                         Padding(
@@ -345,14 +477,17 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                             horizontal: getFullWidgetHeight(height: 25),
                           ),
                           child: Text(
-                            _isLogin && !_isLoading ? "Enter Your Mobile Number" : "Enter the OTP from SMS",
+                            _isLogin && !_isLoading
+                                ? "Enter Your Mobile Number"
+                                : "Enter the OTP from SMS",
                             style: TextStyle(color: Color(0XFFF8F8F8F)),
                           ),
                         ),
                         SizedBox(height: 23),
                         if (!_isLogin && !_isLoading)
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: getFullWidgetHeight(height: 25)),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: getFullWidgetHeight(height: 25)),
                             width: kWidth,
                             child: PinCodeTextField(
                               autoFocus: true,
@@ -376,7 +511,8 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                                   fieldWidth: 43,
                                   activeColor: Color(0XFFE8E8E8),
                                   disabledColor: Color(0XFFE8E8E8),
-                                  inactiveColor: redBox ? Colors.red : Color(0XFFE8E8E8),
+                                  inactiveColor:
+                                      redBox ? Colors.red : Color(0XFFE8E8E8),
                                   selectedColor: Color(0XFFE8E8E8),
                                   activeFillColor: Color(0XFFE8E8E8),
                                   inactiveFillColor: Color(0XFFE8E8E8),
@@ -442,11 +578,13 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                                     ),
                                     filled: true,
                                     enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Color(0XFFE8E8E8)),
+                                      borderSide:
+                                          BorderSide(color: Color(0XFFE8E8E8)),
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: Color(0XFFE8E8E8)),
+                                      borderSide:
+                                          BorderSide(color: Color(0XFFE8E8E8)),
                                       borderRadius: BorderRadius.circular(10.0),
                                     )),
                               ),
@@ -459,7 +597,8 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                               horizontal: getFullWidgetHeight(height: 25),
                             ),
                             child: CustomButton(
-                              buttonText: _isLogin ? "Get OTP" : "Verify & Login",
+                              buttonText:
+                                  _isLogin ? "Get OTP" : "Verify & Login",
                               onPressed: () async {
                                 print("otppp:${_otp.text.trim()}");
                                 print("fvbdvd:${otp.toString().trim()}");
@@ -469,8 +608,12 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           ),
                         if (_isLoading)
                           const Center(
-                            child:
-                                SizedBox(height: 25, width: 25, child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Color(0xff293750)))),
+                            child: SizedBox(
+                                height: 25,
+                                width: 25,
+                                child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Color(0xff293750)))),
                           ),
                         SizedBox(height: 30),
                         if (!_isLogin && !_isLoading)
@@ -482,8 +625,11 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                               },
                               child: Text(
                                 'Resend OTP',
-                                style:
-                                    TextStyle(color: Color(0XFF9D9D9D), decoration: TextDecoration.underline, decorationColor: Color(0XFFA9A9A9), fontSize: 15),
+                                style: TextStyle(
+                                    color: Color(0XFF9D9D9D),
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Color(0XFFA9A9A9),
+                                    fontSize: 15),
                               ),
                             ),
                         if (!_isLogin && !_isLoading)

@@ -61,7 +61,8 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
     super.initState();
     user = Provider.of<AuthState>(context, listen: false);
     controller = AutoScrollController(
-        viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+        viewportBoundaryGetter: () =>
+            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
         axis: Axis.vertical);
     _getWords();
   }
@@ -155,9 +156,16 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                               title: 'Pronunciation Lab',
                               imageUrl: AllAssets.pePl,
                               onTap: () async {
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                await prefs.setString('lastAccess', 'LabScreen');
-                                await prefs.setStringList('LabScreen', ['Pronunciation Lab' ?? "",controller.pronunciationLabList.join(',,') ?? "",'true']);
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.setString(
+                                    'lastAccess', 'LabScreen');
+                                await prefs.setStringList('LabScreen', [
+                                  'Pronunciation Lab' ?? "",
+                                  controller.pronunciationLabList.join(',,') ??
+                                      "",
+                                  'true'
+                                ]);
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => LabScreen(
@@ -181,16 +189,25 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                               title: 'Sentence Lab',
                               imageUrl: AllAssets.peScl,
                               onTap: () async {
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                await prefs.setString('lastAccess', 'LabScreen');
-                                await prefs.setStringList('LabScreen', ['Sentence Lab' ?? "",controller.sentenceConstructionLabList.join(',,') ?? "",'true']);
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.setString(
+                                    'lastAccess', 'LabScreen');
+                                await prefs.setStringList('LabScreen', [
+                                  'Sentence Lab' ?? "",
+                                  controller.sentenceConstructionLabList
+                                          .join(',,') ??
+                                      "",
+                                  'true'
+                                ]);
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => LabScreen(
                                       pLIconKey: true,
                                       user: user,
                                       title: 'Sentence Lab',
-                                      itemList: controller.sentenceConstructionLabList,
+                                      itemList: controller
+                                          .sentenceConstructionLabList,
                                     ),
                                   ),
                                 );
@@ -207,16 +224,25 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                               title: 'Call Flow Lab',
                               imageUrl: AllAssets.peCfpl,
                               onTap: () async {
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                await prefs.setString('lastAccess', 'LabScreen');
-                                await prefs.setStringList('LabScreen', ['Call Flow Lab' ?? "",controller.callFlowPracticeLabList.join(',,') ?? "",'true']);
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.setString(
+                                    'lastAccess', 'LabScreen');
+                                await prefs.setStringList('LabScreen', [
+                                  'Call Flow Lab' ?? "",
+                                  controller.callFlowPracticeLabList
+                                          .join(',,') ??
+                                      "",
+                                  'true'
+                                ]);
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => LabScreen(
                                       pLIconKey: true,
                                       user: user,
                                       title: 'Call Flow Lab',
-                                      itemList: controller.callFlowPracticeLabList,
+                                      itemList:
+                                          controller.callFlowPracticeLabList,
                                     ),
                                   ),
                                 );
@@ -233,7 +259,11 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                               title: 'Grammer Lab',
                               imageUrl: AllAssets.peGl,
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => GrammerCheckScreen()));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            GrammerCheckScreen()));
                               },
                               cardColor: Color(0xFFDC6379),
                             ),
@@ -251,7 +281,9 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                     Container(
                       height: getWidgetHeight(height: 96),
                       width: getWidgetWidth(width: 335),
-                      decoration: BoxDecoration(color: Color(0xFFFFFFFF), borderRadius: BorderRadius.circular(10)),
+                      decoration: BoxDecoration(
+                          color: Color(0xFFFFFFFF),
+                          borderRadius: BorderRadius.circular(10)),
                       child: Padding(
                         padding: const EdgeInsets.only(
                           left: 10,
@@ -261,13 +293,15 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(top: 10, bottom: 10),
+                              padding:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
                               child: InkWell(
                                 onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => fastTrackPronunciationScreen(
+                                        builder: (context) =>
+                                            fastTrackPronunciationScreen(
                                               title: arFAs,
                                             )),
                                   );
@@ -304,7 +338,8 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                       height: 20,
                     ),
                     SizedBox(
-                      height: MediaQuery.sizeOf(context).height - kBottomNavigationBarHeight,
+                      height: MediaQuery.sizeOf(context).height -
+                          kBottomNavigationBarHeight,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
@@ -346,64 +381,89 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                                       TabBar(
                                         padding: EdgeInsets.zero,
                                         splashFactory: InkSplash.splashFactory,
-                                        splashBorderRadius: BorderRadius.circular(30),
+                                        splashBorderRadius:
+                                            BorderRadius.circular(30),
                                         enableFeedback: false,
-                                        indicatorPadding: EdgeInsets.symmetric(vertical: 5),
+                                        indicatorPadding:
+                                            EdgeInsets.symmetric(vertical: 5),
                                         onTap: (int) async {
                                           print('/////////// $int');
                                           _onTabChanged(int);
                                           // tabarController.changeTabarIndex(int);
                                         },
-                                        labelPadding: EdgeInsets.only(right: 10),
+                                        labelPadding:
+                                            EdgeInsets.only(right: 10),
                                         dividerColor: Colors.transparent,
                                         tabAlignment: TabAlignment.start,
                                         labelColor: Colors.white,
                                         isScrollable: true,
-                                        physics: AlwaysScrollableScrollPhysics(),
+                                        physics:
+                                            AlwaysScrollableScrollPhysics(),
                                         unselectedLabelColor: Color(0xFF99A0AE),
                                         indicatorColor: Color(0xFF6C63FE),
-                                        indicatorSize: TabBarIndicatorSize.label,
+                                        indicatorSize:
+                                            TabBarIndicatorSize.label,
                                         indicator: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(30), color: Color(0xFF6C63FE)),
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            color: Color(0xFF6C63FE)),
                                         tabs: [
                                           Tab(
                                             child: Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 20),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 20),
                                               height: 40,
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(30),
-                                                color: _selectedTabIndex == 0 ? Colors.transparent : Color(0xFF34425D),
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                color: _selectedTabIndex == 0
+                                                    ? Colors.transparent
+                                                    : Color(0xFF34425D),
                                               ),
                                               child: Align(
                                                 alignment: Alignment.center,
                                                 child: Text(
                                                   'Important Sounds',
                                                   style: TextStyle(
-                                                      color: _selectedTabIndex == 0 ? Colors.white : Color(0xFF99A0AE),
+                                                      color:
+                                                          _selectedTabIndex == 0
+                                                              ? Colors.white
+                                                              : Color(
+                                                                  0xFF99A0AE),
                                                       fontSize: 12,
                                                       fontFamily: 'Roboto',
-                                                      fontWeight: FontWeight.w500),
+                                                      fontWeight:
+                                                          FontWeight.w500),
                                                 ),
                                               ),
                                             ),
                                           ),
                                           Tab(
                                             child: Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 20),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 20),
                                               height: 40,
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(30),
-                                                color: _selectedTabIndex == 1 ? Colors.transparent : Color(0xFF34425D),
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                color: _selectedTabIndex == 1
+                                                    ? Colors.transparent
+                                                    : Color(0xFF34425D),
                                               ),
                                               child: Align(
                                                 alignment: Alignment.center,
                                                 child: Text(
                                                   'Vowels',
                                                   style: TextStyle(
-                                                      color: _selectedTabIndex == 1 ? Colors.white : Color(0xFF99A0AE),
+                                                      color:
+                                                          _selectedTabIndex == 1
+                                                              ? Colors.white
+                                                              : Color(
+                                                                  0xFF99A0AE),
                                                       fontSize: 12,
                                                       fontFamily: 'Roboto',
-                                                      fontWeight: FontWeight.w500),
+                                                      fontWeight:
+                                                          FontWeight.w500),
                                                 ),
                                               ),
                                             ),
@@ -411,20 +471,29 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                                           Tab(
                                             child: Container(
                                               height: 40,
-                                              padding: EdgeInsets.symmetric(horizontal: 20),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 20),
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(30),
-                                                color: _selectedTabIndex == 2 ? Colors.transparent : Color(0xFF34425D),
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                color: _selectedTabIndex == 2
+                                                    ? Colors.transparent
+                                                    : Color(0xFF34425D),
                                               ),
                                               child: Align(
                                                 alignment: Alignment.center,
                                                 child: Text(
                                                   'Consonants',
                                                   style: TextStyle(
-                                                      color: _selectedTabIndex == 2 ? Colors.white : Color(0xFF99A0AE),
+                                                      color:
+                                                          _selectedTabIndex == 2
+                                                              ? Colors.white
+                                                              : Color(
+                                                                  0xFF99A0AE),
                                                       fontSize: 12,
                                                       fontFamily: 'Roboto',
-                                                      fontWeight: FontWeight.w500),
+                                                      fontWeight:
+                                                          FontWeight.w500),
                                                 ),
                                               ),
                                             ),
@@ -435,10 +504,14 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                                         height: 5,
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 10, bottom: 15),
+                                        padding: const EdgeInsets.only(
+                                            top: 10, bottom: 15),
                                         child: Container(
                                           // color: Colors.yellow,
-                                          height: MediaQuery.of(context).size.height * 0.53,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.53,
                                           /*  height: size.height / 2,*/
                                           width: size.width,
                                           child: TabBarView(
@@ -455,43 +528,69 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                                                   //     (context, index) => Divider(
                                                   //   color: Color(0xFF34425D),
                                                   // ),
-                                                  itemBuilder: (context, index) {
+                                                  itemBuilder:
+                                                      (context, index) {
                                                     return Column(
                                                       children: [
                                                         Padding(
-                                                          padding: const EdgeInsets.symmetric(vertical: 3),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  vertical: 3),
                                                           child: InkWell(
                                                             onTap: () {
                                                               Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
-                                                                  builder: (context) => ProfluentSubScreen(
-                                                                    title: _categories[index].category!,
-                                                                    load: importantSounds.subcategories![index].name!,
-                                                                    links: importantSounds.subcategories![index].links!,
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ProfluentSubScreen(
+                                                                    title: _categories[
+                                                                            index]
+                                                                        .category!,
+                                                                    load: importantSounds
+                                                                        .subcategories![
+                                                                            index]
+                                                                        .name!,
+                                                                    links: importantSounds
+                                                                        .subcategories![
+                                                                            index]
+                                                                        .links!,
                                                                   ),
                                                                 ),
                                                               );
                                                             },
                                                             child: Container(
-                                                              padding: EdgeInsets.symmetric(horizontal: 12),
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          12),
                                                               child: Row(
                                                                 children: [
                                                                   Text(
                                                                     '${importantSounds.subcategories![index].name}',
-                                                                    style: TextStyle(
-                                                                      letterSpacing: 0,
-                                                                      color: Colors.white,
-                                                                      fontWeight: FontWeight.w500,
-                                                                      fontFamily: 'Roboto',
-                                                                      fontSize: 15,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      letterSpacing:
+                                                                          0,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontFamily:
+                                                                          'Roboto',
+                                                                      fontSize:
+                                                                          15,
                                                                     ),
                                                                   ),
                                                                   Spacer(),
                                                                   Icon(
-                                                                    Icons.chevron_right_rounded,
+                                                                    Icons
+                                                                        .chevron_right_rounded,
                                                                     size: 30,
-                                                                    color: Color(
+                                                                    color:
+                                                                        Color(
                                                                       0xFF34445F,
                                                                     ),
                                                                   ),
@@ -501,12 +600,14 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                                                           ),
                                                         ),
                                                         Divider(
-                                                          color: Color(0xFF34425D),
+                                                          color:
+                                                              Color(0xFF34425D),
                                                         ),
                                                       ],
                                                     );
                                                   },
-                                                  itemCount: importantSounds.subcategories!.length,
+                                                  itemCount: importantSounds
+                                                      .subcategories!.length,
                                                 ),
                                               ),
                                               Scrollbar(
@@ -517,90 +618,128 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                                                   // physics: NeverScrollableScrollPhysics(),
                                                   shrinkWrap: true,
                                                   itemCount: vowels.length,
-                                                  itemBuilder: (context, index) {
-                                                    controller.expandedIndex = -1;
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    controller.expandedIndex =
+                                                        -1;
                                                     return Card(
                                                       elevation: 0,
                                                       color: Color(0xFF34425D),
                                                       child: Theme(
                                                         data: ThemeData(
-                                                          dividerColor: Colors.transparent,
+                                                          dividerColor: Colors
+                                                              .transparent,
                                                         ),
-                                                        child: Consumer<AuthState>(
-                                                            builder: (context, expansionController, _) {
+                                                        child: Consumer<
+                                                                AuthState>(
+                                                            builder: (context,
+                                                                expansionController,
+                                                                _) {
                                                           return ExpansionTile(
-                                                            key: Key(index.toString()),
-                                                            initiallyExpanded: expansionController.isExpanded(index),
-                                                            onExpansionChanged: (expanded) {
+                                                            key: Key(index
+                                                                .toString()),
+                                                            initiallyExpanded:
+                                                                expansionController
+                                                                    .isExpanded(
+                                                                        index),
+                                                            onExpansionChanged:
+                                                                (expanded) {
                                                               setState(() {
-                                                                expansionController.changeExpansion(expanded, index);
+                                                                expansionController
+                                                                    .changeExpansion(
+                                                                        expanded,
+                                                                        index);
                                                               });
                                                               //  expansionController. expandedIndex = expanded == true ? index : -1;
                                                             },
-                                                            leading: CircleAvatar(
-                                                              backgroundColor: colorList[index],
-                                                              child: Image.asset(
-                                                                AllAssets.quickLinkPL,
-                                                                scale: displayWidth(context) / 101.5,
+                                                            leading:
+                                                                CircleAvatar(
+                                                              backgroundColor:
+                                                                  colorList[
+                                                                      index],
+                                                              child:
+                                                                  Image.asset(
+                                                                AllAssets
+                                                                    .quickLinkPL,
+                                                                scale: displayWidth(
+                                                                        context) /
+                                                                    101.5,
                                                               ),
                                                             ),
                                                             title: Text(
                                                               "${vowels[index].category}",
                                                               style: TextStyle(
-                                                                  color: Colors.white,
+                                                                  color: Colors
+                                                                      .white,
                                                                   fontSize: 14,
-                                                                  fontFamily: 'Roboto',
-                                                                  letterSpacing: 0,
-                                                                  fontWeight: FontWeight.w500),
+                                                                  fontFamily:
+                                                                      'Roboto',
+                                                                  letterSpacing:
+                                                                      0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
                                                             ),
-                                                            iconColor: Colors.white,
-                                                            collapsedIconColor: Color(0xFF64748B),
+                                                            iconColor:
+                                                                Colors.white,
+                                                            collapsedIconColor:
+                                                                Color(
+                                                                    0xFF64748B),
                                                             children: [
-                                                              ListView.separated(
-                                                                separatorBuilder: (context, index) => Divider(
+                                                              ListView
+                                                                  .separated(
+                                                                separatorBuilder:
+                                                                    (context,
+                                                                            index) =>
+                                                                        Divider(
                                                                   indent: 10,
                                                                   endIndent: 10,
-                                                                  color: Color(0xFF617397),
+                                                                  color: Color(
+                                                                      0xFF617397),
                                                                 ),
-                                                                shrinkWrap: true,
-                                                                physics: NeverScrollableScrollPhysics(),
-                                                                itemCount: vowels[index].subcategories!.length,
-                                                                itemBuilder: (context, subIndex) {
+                                                                shrinkWrap:
+                                                                    true,
+                                                                physics:
+                                                                    NeverScrollableScrollPhysics(),
+                                                                itemCount: vowels[
+                                                                        index]
+                                                                    .subcategories!
+                                                                    .length,
+                                                                itemBuilder:
+                                                                    (context,
+                                                                        subIndex) {
                                                                   return Column(
                                                                     children: [
                                                                       Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.symmetric(vertical: 3),
-                                                                        child: InkWell(
-                                                                          onTap: (() {
-                                                                            if (vowels[index]
-                                                                                    .subcategories![subIndex]
-                                                                                    .link !=
+                                                                        padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                            vertical:
+                                                                                3),
+                                                                        child:
+                                                                            InkWell(
+                                                                          onTap:
+                                                                              (() {
+                                                                            if (vowels[index].subcategories![subIndex].link !=
                                                                                 null) {
                                                                               Navigator.push(
                                                                                   context,
                                                                                   MaterialPageRoute(
-                                                                                      builder: (context) =>
-                                                                                          InAppWebViewPage(
-                                                                                            url: vowels[index]
-                                                                                                .subcategories![
-                                                                                                    subIndex]
-                                                                                                .link!,
+                                                                                      builder: (context) => InAppWebViewPage(
+                                                                                            url: vowels[index].subcategories![subIndex].link!,
                                                                                           )));
                                                                             }
                                                                           }),
-                                                                          child: Padding(
-                                                                            padding: const EdgeInsets.symmetric(
-                                                                                horizontal: 20, vertical: 5),
-                                                                            child: Container(
-                                                                              padding:
-                                                                                  EdgeInsets.symmetric(horizontal: 12),
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                                                            child:
+                                                                                Container(
+                                                                              padding: EdgeInsets.symmetric(horizontal: 12),
                                                                               child: Row(
                                                                                 children: [
                                                                                   Text(
-                                                                                    vowels[index]
-                                                                                        .subcategories![subIndex]
-                                                                                        .name!,
+                                                                                    vowels[index].subcategories![subIndex].name!,
                                                                                     style: TextStyle(
                                                                                       letterSpacing: 0,
                                                                                       color: Colors.white,
@@ -615,16 +754,23 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                                                                           ),
                                                                         ),
                                                                       ),
-                                                                      if (vowels[index].subcategories!.length - 1 ==
+                                                                      if (vowels[index].subcategories!.length -
+                                                                              1 ==
                                                                           subIndex)
                                                                         Padding(
-                                                                          padding: const EdgeInsets.only(
-                                                                            bottom: 20,
+                                                                          padding:
+                                                                              const EdgeInsets.only(
+                                                                            bottom:
+                                                                                20,
                                                                           ),
-                                                                          child: Divider(
-                                                                            color: Color(0xFF617397),
-                                                                            endIndent: 20,
-                                                                            indent: 20,
+                                                                          child:
+                                                                              Divider(
+                                                                            color:
+                                                                                Color(0xFF617397),
+                                                                            endIndent:
+                                                                                20,
+                                                                            indent:
+                                                                                20,
                                                                           ),
                                                                         ),
                                                                     ],
@@ -647,79 +793,118 @@ class _ProcessLearningScreenState extends State<NewProfluentEnglishScreen> {
                                                   shrinkWrap: true,
                                                   // physics: NeverScrollableScrollPhysics(),
                                                   itemCount: consonants.length,
-                                                  itemBuilder: (context, index) {
+                                                  itemBuilder:
+                                                      (context, index) {
                                                     return Card(
                                                       elevation: 0,
                                                       color: Color(0xFF34425D),
                                                       child: Theme(
                                                         data: ThemeData(
-                                                          dividerColor: Colors.transparent,
+                                                          dividerColor: Colors
+                                                              .transparent,
                                                         ),
-                                                        child: Consumer<AuthState>(
-                                                            builder: (context, expansionController, _) {
+                                                        child: Consumer<
+                                                                AuthState>(
+                                                            builder: (context,
+                                                                expansionController,
+                                                                _) {
                                                           return ExpansionTile(
                                                             initiallyExpanded:
-                                                                expansionController.expandedIndex == index,
-                                                            onExpansionChanged: (expanded) {
+                                                                expansionController
+                                                                        .expandedIndex ==
+                                                                    index,
+                                                            onExpansionChanged:
+                                                                (expanded) {
                                                               setState(() {
-                                                                expansionController.expandedIndex =
-                                                                    expanded ? index : -1;
+                                                                expansionController
+                                                                        .expandedIndex =
+                                                                    expanded
+                                                                        ? index
+                                                                        : -1;
                                                               });
                                                             },
-                                                            leading: CircleAvatar(
-                                                              backgroundColor: colorList[index],
-                                                              child: Image.asset(
-                                                                AllAssets.quickLinkPL,
-                                                                scale: displayWidth(context) / 101.5,
+                                                            leading:
+                                                                CircleAvatar(
+                                                              backgroundColor:
+                                                                  colorList[
+                                                                      index],
+                                                              child:
+                                                                  Image.asset(
+                                                                AllAssets
+                                                                    .quickLinkPL,
+                                                                scale: displayWidth(
+                                                                        context) /
+                                                                    101.5,
                                                               ),
                                                             ),
                                                             title: Text(
                                                               "${consonants[index].category}",
                                                               style: TextStyle(
-                                                                  color: Colors.white,
+                                                                  color: Colors
+                                                                      .white,
                                                                   fontSize: 14,
-                                                                  fontFamily: 'Roboto',
-                                                                  fontWeight: FontWeight.w500),
+                                                                  fontFamily:
+                                                                      'Roboto',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
                                                             ),
-                                                            iconColor: Colors.white,
-                                                            collapsedIconColor: Color(0xFF64748B),
+                                                            iconColor:
+                                                                Colors.white,
+                                                            collapsedIconColor:
+                                                                Color(
+                                                                    0xFF64748B),
                                                             children: [
-                                                              ListView.separated(
-                                                                separatorBuilder: (context, index) => Divider(
+                                                              ListView
+                                                                  .separated(
+                                                                separatorBuilder:
+                                                                    (context,
+                                                                            index) =>
+                                                                        Divider(
                                                                   indent: 10,
                                                                   endIndent: 10,
-                                                                  color: Color(0xFF617397),
+                                                                  color: Color(
+                                                                      0xFF617397),
                                                                 ),
-                                                                shrinkWrap: true,
-                                                                physics: NeverScrollableScrollPhysics(),
-                                                                itemCount: consonants[index].subcategories!.length,
-                                                                itemBuilder: (context, subIndex) {
+                                                                shrinkWrap:
+                                                                    true,
+                                                                physics:
+                                                                    NeverScrollableScrollPhysics(),
+                                                                itemCount: consonants[
+                                                                        index]
+                                                                    .subcategories!
+                                                                    .length,
+                                                                itemBuilder:
+                                                                    (context,
+                                                                        subIndex) {
                                                                   return ListTile(
-                                                                    title: InkWell(
-                                                                      onTap: (() {
-                                                                        if (consonants[index]
-                                                                                .subcategories![subIndex]
-                                                                                .link !=
+                                                                    title:
+                                                                        InkWell(
+                                                                      onTap:
+                                                                          (() {
+                                                                        if (consonants[index].subcategories![subIndex].link !=
                                                                             null) {
                                                                           Navigator.push(
                                                                               context,
                                                                               MaterialPageRoute(
-                                                                                  builder: (context) =>
-                                                                                      InAppWebViewPage(
-                                                                                        url: consonants[index]
-                                                                                            .subcategories![subIndex]
-                                                                                            .link!,
+                                                                                  builder: (context) => InAppWebViewPage(
+                                                                                        url: consonants[index].subcategories![subIndex].link!,
                                                                                       )));
                                                                         }
                                                                       }),
-                                                                      child: Text(
+                                                                      child:
+                                                                          Text(
                                                                         consonants[index]
                                                                             .subcategories![subIndex]
                                                                             .name!,
-                                                                        style: TextStyle(
-                                                                          color: Colors.white,
-                                                                          fontFamily: 'Roboto',
-                                                                          fontSize: 13,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              Colors.white,
+                                                                          fontFamily:
+                                                                              'Roboto',
+                                                                          fontSize:
+                                                                              13,
                                                                         ),
                                                                       ),
                                                                     ),

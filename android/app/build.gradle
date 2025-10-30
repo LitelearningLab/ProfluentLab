@@ -1,3 +1,11 @@
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
+    id 'com.google.firebase.crashlytics'
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -6,24 +14,8 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
-
 def flutterVersionCode = '18'
-//if (flutterVersionCode == null) {
-//    flutterVersionCode = '12'
-//}
-
 def flutterVersionName = '2.0.1'
-//if (flutterVersionName == null) {
-//    flutterVersionName = '2.0.0'
-//}
-
-apply plugin: 'com.android.application'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-apply plugin: 'com.google.gms.google-services'
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
@@ -31,39 +23,31 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-
 android {
-    compileSdkVersion 34
-
-    lintOptions {
-        disable 'InvalidPackage'
-        checkReleaseBuilds false
-    }
+    namespace "org.mahajob.litelearninglab"
+    compileSdkVersion 36   // ✅ recommend stable (34 is safe)
+    ndkVersion "27.0.12077973"
 
     defaultConfig {
         applicationId "org.mahajob.litelearninglab"
-        minSdkVersion 21
-        targetSdkVersion 34
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
     }
+
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storeFile file("lite-key.jks")
             storePassword keystoreProperties['storePassword']
         }
     }
 
-    android {
-        ndkVersion '24.0.8215888'
-    }
-
     flavorDimensions "default"
     productFlavors {
-        //Cure Assist Indian version
         dev {
             dimension "default"
             applicationIdSuffix ".dev"
@@ -79,30 +63,43 @@ android {
             applicationId "org.profluenten.school_prototype"
             resValue "string", "app_name", "Profluent English"
         }
-
-
     }
 
     buildTypes {
         release {
-
             signingConfig signingConfigs.release
-            //signingConfig signingConfigs.release
             minifyEnabled false
-            // useProguard true
             shrinkResources false
-            //  proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    // ✅ Fix: add desugaring support for flutter_local_notifications & others
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+        checkReleaseBuilds false
     }
 }
 
 dependencies {
     implementation 'com.google.guava:guava:27.0.1-android'
-    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
-    implementation("com.google.firebase:firebase-auth")
+    implementation platform("com.google.firebase:firebase-bom:32.7.1")
+    implementation "com.google.firebase:firebase-auth"
     implementation "androidx.multidex:multidex:2.0.1"
     implementation 'androidx.browser:browser:1.3.0'
     implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
+
+    // ✅ Required for Java 8 APIs (flutter_local_notifications fix)
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
 }
 
 flutter {

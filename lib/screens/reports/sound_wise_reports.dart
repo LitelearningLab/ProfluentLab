@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_colorful_tab/flutter_colorful_tab.dart';
+// import 'package:flutter_colorful_tab/flutter_colorful_tab.dart';
 import 'package:litelearninglab/common_widgets/background_widget.dart';
 import 'package:litelearninglab/common_widgets/common_app_bar.dart';
 import 'package:litelearninglab/constants/all_assets.dart';
@@ -62,7 +62,8 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
     super.initState();
     user = Provider.of<AuthState>(context, listen: false);
     controller = AutoScrollController(
-        viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+        viewportBoundaryGetter: () =>
+            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
         axis: Axis.vertical);
     _getWords();
   }
@@ -202,7 +203,9 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                       padding: EdgeInsets.only(
                           left: getWidgetWidth(width: 20),
                           right: getWidgetWidth(width: 20),
-                          top: isSplitScreen ? getFullWidgetHeight(height: 20) : getWidgetHeight(height: 20)),
+                          top: isSplitScreen
+                              ? getFullWidgetHeight(height: 20)
+                              : getWidgetHeight(height: 20)),
                       child: Column(
                         children: [
                           Row(
@@ -221,7 +224,9 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                 width: getWidgetWidth(width: 7),
                               ),
                               SizedBox(
-                                height: isSplitScreen ? getFullWidgetHeight(height: 15) : getWidgetHeight(height: 15),
+                                height: isSplitScreen
+                                    ? getFullWidgetHeight(height: 15)
+                                    : getWidgetHeight(height: 15),
                                 width: getWidgetWidth(width: 15),
                                 child: ImageIcon(
                                   AssetImage(AllAssets.infoIcon),
@@ -231,43 +236,47 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                             ],
                           ),
                           SizedBox(
-                              height: isSplitScreen ? getFullWidgetHeight(height: 14) : getWidgetHeight(height: 14)),
-                          ColorfulTabBar(
-                            verticalTabPadding: 5,
-                            alignment: TabAxisAlignment.end,
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Color(0XFF99A0AE),
-                            selectedHeight: 32,
-                            unselectedHeight: 32,
-                            tabShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200)),
-                            indicatorHeight: 0,
-                            tabs: [
-                              TabItem(
-                                  title: Text(
-                                    "10 Important Sounds",
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                                  ),
-                                  color: Color(0XFF6C63FE),
-                                  unselectedColor: Color(0XFF34425D)),
-                              TabItem(
-                                  title: Text(
-                                    "Vowels",
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                                  ),
-                                  color: Color(0XFF6C63FE),
-                                  unselectedColor: Color(0XFF34425D)),
-                              TabItem(
-                                  title: Text(
-                                    "Consonants",
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                                  ),
-                                  color: Color(0XFF6C63FE),
-                                  unselectedColor: Color(0XFF34425D)),
-                            ],
-                            //  controller: _tabController,
-                          ),
+                              height: isSplitScreen
+                                  ? getFullWidgetHeight(height: 14)
+                                  : getWidgetHeight(height: 14)),
+                          // ColorfulTabBar(
+                          //   verticalTabPadding: 5,
+                          //   alignment: TabAxisAlignment.end,
+                          //   labelColor: Colors.white,
+                          //   unselectedLabelColor: Color(0XFF99A0AE),
+                          //   selectedHeight: 32,
+                          //   unselectedHeight: 32,
+                          //   tabShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200)),
+                          //   indicatorHeight: 0,
+                          //   tabs: [
+                          //     TabItem(
+                          //         title: Text(
+                          //           "10 Important Sounds",
+                          //           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                          //         ),
+                          //         color: Color(0XFF6C63FE),
+                          //         unselectedColor: Color(0XFF34425D)),
+                          //     TabItem(
+                          //         title: Text(
+                          //           "Vowels",
+                          //           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                          //         ),
+                          //         color: Color(0XFF6C63FE),
+                          //         unselectedColor: Color(0XFF34425D)),
+                          //     TabItem(
+                          //         title: Text(
+                          //           "Consonants",
+                          //           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                          //         ),
+                          //         color: Color(0XFF6C63FE),
+                          //         unselectedColor: Color(0XFF34425D)),
+                          //   ],
+                          //   //  controller: _tabController,
+                          // ),
                           SizedBox(
-                            height: isSplitScreen ? getFullWidgetHeight(height: 18) : getWidgetHeight(height: 18),
+                            height: isSplitScreen
+                                ? getFullWidgetHeight(height: 18)
+                                : getWidgetHeight(height: 18),
                           ),
                           Expanded(
                             // height: MediaQuery.of(context).size.height * 0.3,
@@ -283,60 +292,91 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                       Column(
                                         children: [
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
                                             children: [
                                               Container(
-                                                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 5,
+                                                      horizontal: 10),
                                                   decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(200),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              200),
                                                       color: Color(0XFF34425D)),
                                                   child: Text("Words practiced",
                                                       style: TextStyle(
                                                           fontSize: 12,
-                                                          fontWeight: FontWeight.w500,
-                                                          color: Color(0XFF99A0AE)))),
-                                              SizedBox(width: getWidgetWidth(width: 5)),
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Color(
+                                                              0XFF99A0AE)))),
+                                              SizedBox(
+                                                  width:
+                                                      getWidgetWidth(width: 5)),
                                               Container(
-                                                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 5,
+                                                      horizontal: 10),
                                                   decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(200),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              200),
                                                       color: Color(0XFF34425D)),
                                                   child: Text("Accuracy",
                                                       style: TextStyle(
                                                           fontSize: 12,
-                                                          fontWeight: FontWeight.w500,
-                                                          color: Color(0XFF99A0AE)))),
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Color(
+                                                              0XFF99A0AE)))),
                                             ],
                                           ),
                                           ListView.builder(
                                             // physics: NeverScrollableScrollPhysics(),
                                             shrinkWrap: true,
                                             padding: EdgeInsets.zero,
-                                            itemCount: importantSounds.subcategories!.length,
+                                            itemCount: importantSounds
+                                                .subcategories!.length,
                                             itemBuilder: (context, index) {
                                               return Column(
                                                 children: [
                                                   Padding(
                                                     padding: EdgeInsets.only(
                                                         top: isSplitScreen
-                                                            ? getFullWidgetHeight(height: 6)
-                                                            : getWidgetHeight(height: 6),
+                                                            ? getFullWidgetHeight(
+                                                                height: 6)
+                                                            : getWidgetHeight(
+                                                                height: 6),
                                                         bottom: isSplitScreen
-                                                            ? getFullWidgetHeight(height: 6)
-                                                            : getWidgetHeight(height: 6),
-                                                        right: getWidgetWidth(width: 5)),
+                                                            ? getFullWidgetHeight(
+                                                                height: 6)
+                                                            : getWidgetHeight(
+                                                                height: 6),
+                                                        right: getWidgetWidth(
+                                                            width: 5)),
                                                     child: InkWell(
-                                                      splashColor: Colors.transparent,
+                                                      splashColor:
+                                                          Colors.transparent,
                                                       onTap: () {
                                                         print(
                                                             "title check1:${importantSounds.subcategories![index].name}");
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                            builder: (context) => ProfluentSubScreen(
-                                                              title: _categories[index].category!,
-                                                              load: importantSounds.subcategories![index].name!,
-                                                              links: importantSounds.subcategories![index].links!,
+                                                            builder: (context) =>
+                                                                ProfluentSubScreen(
+                                                              title: _categories[
+                                                                      index]
+                                                                  .category!,
+                                                              load: importantSounds
+                                                                  .subcategories![
+                                                                      index]
+                                                                  .name!,
+                                                              links: importantSounds
+                                                                  .subcategories![
+                                                                      index]
+                                                                  .links!,
                                                             ),
                                                           ),
                                                         );
@@ -344,17 +384,33 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                                       child: Row(
                                                         children: [
                                                           Padding(
-                                                            padding: EdgeInsets.only(left: getWidgetWidth(width: 10)),
+                                                            padding: EdgeInsets.only(
+                                                                left:
+                                                                    getWidgetWidth(
+                                                                        width:
+                                                                            10)),
                                                             child: Text(
                                                               //"checking",
-                                                              importantSounds.subcategories![index].name!
-                                                                  .replaceFirst(RegExp(r'[\(\[\:].*'), ''),
+                                                              importantSounds
+                                                                  .subcategories![
+                                                                      index]
+                                                                  .name!
+                                                                  .replaceFirst(
+                                                                      RegExp(
+                                                                          r'[\(\[\:].*'),
+                                                                      ''),
                                                               style: TextStyle(
-                                                                letterSpacing: 0,
-                                                                color: Colors.white,
-                                                                fontWeight: FontWeight.w500,
-                                                                fontFamily: Keys.lucidaFontFamily,
-                                                                fontSize: kText.scale(15),
+                                                                letterSpacing:
+                                                                    0,
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontFamily: Keys
+                                                                    .lucidaFontFamily,
+                                                                fontSize: kText
+                                                                    .scale(15),
                                                               ),
                                                             ),
                                                           ),
@@ -371,7 +427,9 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                                     ),
                                                   ),
                                                   Padding(
-                                                    padding: EdgeInsets.only(right: getWidgetWidth(width: 10)),
+                                                    padding: EdgeInsets.only(
+                                                        right: getWidgetWidth(
+                                                            width: 10)),
                                                     child: Divider(
                                                       color: Color(0xFF34425D),
                                                     ),
@@ -391,7 +449,8 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                   thumbVisibility: true,
                                   child: ListView.builder(
                                     // physics: NeverScrollableScrollPhysics(),
-                                    key: Key('builder1 ${expansionTileIndex1.toString()}'),
+                                    key: Key(
+                                        'builder1 ${expansionTileIndex1.toString()}'),
                                     padding: EdgeInsets.zero,
                                     shrinkWrap: true,
                                     itemCount: vowels.length,
@@ -400,7 +459,8 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                       return Card(
                                         margin: EdgeInsets.only(
                                             bottom: isSplitScreen
-                                                ? getFullWidgetHeight(height: 14)
+                                                ? getFullWidgetHeight(
+                                                    height: 14)
                                                 : getWidgetHeight(height: 14),
                                             right: getWidgetWidth(width: 5)),
                                         elevation: 0,
@@ -409,11 +469,14 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                           data: ThemeData(
                                             dividerColor: Colors.transparent,
                                           ),
-                                          child: Consumer<AuthState>(builder: (context, expansionController, _) {
+                                          child: Consumer<AuthState>(builder:
+                                              (context, expansionController,
+                                                  _) {
                                             return ExpansionTile(
                                               // key: Key(index.toString()),
                                               //maintainState: expanded[index],
-                                              initiallyExpanded: expansionTileIndex1 == index,
+                                              initiallyExpanded:
+                                                  expansionTileIndex1 == index,
                                               onExpansionChanged: (expand) {
                                                 // expanded.clear();
                                                 //   expanded = List.generate(3, (index) => false);
@@ -422,7 +485,9 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                                   expansionTileIndex1 = index;
                                                 });
                                                 setState(() {
-                                                  for (int i = 0; i < expanded.length; i++) {
+                                                  for (int i = 0;
+                                                      i < expanded.length;
+                                                      i++) {
                                                     if (index == i) {
                                                       expanded[i] = expand;
                                                     } else {
@@ -439,10 +504,12 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                                 //  expansionController. expandedIndex = expanded == true ? index : -1;
                                               },
                                               leading: CircleAvatar(
-                                                backgroundColor: colorList[index],
+                                                backgroundColor:
+                                                    colorList[index],
                                                 child: Image.asset(
                                                   AllAssets.quickLinkPL,
-                                                  scale: displayWidth(context) / 101.5,
+                                                  scale: displayWidth(context) /
+                                                      101.5,
                                                 ),
                                               ),
                                               title: Text(
@@ -452,59 +519,99 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                                     fontSize: kText.scale(14),
                                                     fontFamily: 'Roboto',
                                                     letterSpacing: 0,
-                                                    fontWeight: FontWeight.w500),
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                               ),
                                               iconColor: Colors.white,
-                                              collapsedIconColor: Color(0xFF64748B),
+                                              collapsedIconColor:
+                                                  Color(0xFF64748B),
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsets.only(right: 10),
+                                                  padding: EdgeInsets.only(
+                                                      right: 10),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
                                                     children: [
                                                       Container(
-                                                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical: 5,
+                                                                  horizontal:
+                                                                      10),
                                                           decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.circular(200),
-                                                              color: Color(0XFF293750)),
-                                                          child: Text("Words practice",
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          200),
+                                                              color: Color(
+                                                                  0XFF293750)),
+                                                          child: Text(
+                                                              "Words practice",
                                                               style: TextStyle(
                                                                   fontSize: 12,
-                                                                  fontWeight: FontWeight.w500,
-                                                                  color: Colors.white))),
-                                                      SizedBox(width: getWidgetWidth(width: 5)),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .white))),
+                                                      SizedBox(
+                                                          width: getWidgetWidth(
+                                                              width: 5)),
                                                       Container(
-                                                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical: 5,
+                                                                  horizontal:
+                                                                      10),
                                                           decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.circular(200),
-                                                              color: Color(0XFF293750)),
-                                                          child: Text("Accuracy",
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          200),
+                                                              color: Color(
+                                                                  0XFF293750)),
+                                                          child: Text(
+                                                              "Accuracy",
                                                               style: TextStyle(
                                                                   fontSize: 12,
-                                                                  fontWeight: FontWeight.w500,
-                                                                  color: Colors.white))),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .white))),
                                                     ],
                                                   ),
                                                 ),
                                                 ListView.separated(
-                                                  separatorBuilder: (context, index) => Divider(
+                                                  separatorBuilder:
+                                                      (context, index) =>
+                                                          Divider(
                                                     indent: 10,
                                                     endIndent: 10,
                                                     color: Color(0xFF617397),
                                                   ),
                                                   shrinkWrap: true,
-                                                  physics: NeverScrollableScrollPhysics(),
-                                                  itemCount: vowels[index].subcategories!.length,
-                                                  itemBuilder: (context, subIndex) {
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  itemCount: vowels[index]
+                                                      .subcategories!
+                                                      .length,
+                                                  itemBuilder:
+                                                      (context, subIndex) {
                                                     return Column(
                                                       children: [
                                                         Padding(
                                                           padding: EdgeInsets.symmetric(
                                                               vertical: isSplitScreen
-                                                                  ? getFullWidgetHeight(height: 3)
-                                                                  : getWidgetHeight(height: 3)),
+                                                                  ? getFullWidgetHeight(
+                                                                      height: 3)
+                                                                  : getWidgetHeight(
+                                                                      height:
+                                                                          3)),
                                                           child: InkWell(
-                                                            splashColor: Colors.transparent,
+                                                            splashColor: Colors
+                                                                .transparent,
                                                             onTap: (() {
                                                               /*if (vowels[index].subcategories![subIndex].link != null) {
                                                                   Navigator.push(
@@ -521,11 +628,23 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                                               Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
-                                                                  builder: (context) => ProfluentSubScreen(
-                                                                    title: vowels[index].subcategories![subIndex].name!,
-                                                                    load: vowels[index].subcategories![subIndex].name!,
-                                                                    links: importantSounds1[index]
-                                                                        .subcategories![subIndex]
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ProfluentSubScreen(
+                                                                    title: vowels[
+                                                                            index]
+                                                                        .subcategories![
+                                                                            subIndex]
+                                                                        .name!,
+                                                                    load: vowels[
+                                                                            index]
+                                                                        .subcategories![
+                                                                            subIndex]
+                                                                        .name!,
+                                                                    links: importantSounds1[
+                                                                            index]
+                                                                        .subcategories![
+                                                                            subIndex]
                                                                         .links!,
                                                                   ),
                                                                 ),
@@ -533,23 +652,42 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                                             }),
                                                             child: Padding(
                                                               padding: EdgeInsets.symmetric(
-                                                                  horizontal: getWidgetWidth(width: 20),
+                                                                  horizontal:
+                                                                      getWidgetWidth(
+                                                                          width:
+                                                                              20),
                                                                   vertical: isSplitScreen
-                                                                      ? getFullWidgetHeight(height: 5)
-                                                                      : getWidgetHeight(height: 5)),
+                                                                      ? getFullWidgetHeight(
+                                                                          height:
+                                                                              5)
+                                                                      : getWidgetHeight(
+                                                                          height:
+                                                                              5)),
                                                               child: Container(
                                                                 padding: EdgeInsets.symmetric(
-                                                                    horizontal: getWidgetWidth(width: 12)),
+                                                                    horizontal:
+                                                                        getWidgetWidth(
+                                                                            width:
+                                                                                12)),
                                                                 child: Row(
                                                                   children: [
                                                                     Text(
-                                                                      vowels[index].subcategories![subIndex].name!,
-                                                                      style: TextStyle(
-                                                                        letterSpacing: 0,
-                                                                        color: Colors.white,
-                                                                        fontWeight: FontWeight.w500,
-                                                                        fontFamily: Keys.lucidaFontFamily,
-                                                                        fontSize: kText.scale(14),
+                                                                      vowels[index]
+                                                                          .subcategories![
+                                                                              subIndex]
+                                                                          .name!,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        letterSpacing:
+                                                                            0,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        fontFamily:
+                                                                            Keys.lucidaFontFamily,
+                                                                        fontSize:
+                                                                            kText.scale(14),
                                                                       ),
                                                                     ),
                                                                   ],
@@ -558,15 +696,25 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                                             ),
                                                           ),
                                                         ),
-                                                        if (vowels[index].subcategories!.length - 1 == subIndex)
+                                                        if (vowels[index]
+                                                                    .subcategories!
+                                                                    .length -
+                                                                1 ==
+                                                            subIndex)
                                                           Padding(
-                                                            padding: EdgeInsets.only(
+                                                            padding:
+                                                                EdgeInsets.only(
                                                               bottom: isSplitScreen
-                                                                  ? getFullWidgetHeight(height: 20)
-                                                                  : getWidgetHeight(height: 20),
+                                                                  ? getFullWidgetHeight(
+                                                                      height:
+                                                                          20)
+                                                                  : getWidgetHeight(
+                                                                      height:
+                                                                          20),
                                                             ),
                                                             child: Divider(
-                                                              color: Color(0xFF617397),
+                                                              color: Color(
+                                                                  0xFF617397),
                                                               endIndent: 20,
                                                               indent: 20,
                                                             ),
@@ -590,14 +738,16 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                   child: ListView.builder(
                                     padding: EdgeInsets.zero,
                                     shrinkWrap: true,
-                                    key: Key('builder2 ${expansionTileIndex2.toString()}'),
+                                    key: Key(
+                                        'builder2 ${expansionTileIndex2.toString()}'),
                                     // physics: NeverScrollableScrollPhysics(),
                                     itemCount: consonants.length,
                                     itemBuilder: (context, index) {
                                       return Card(
                                         margin: EdgeInsets.only(
                                             bottom: isSplitScreen
-                                                ? getFullWidgetHeight(height: 14)
+                                                ? getFullWidgetHeight(
+                                                    height: 14)
                                                 : getWidgetHeight(height: 14),
                                             right: getWidgetWidth(width: 5)),
                                         elevation: 0,
@@ -606,19 +756,24 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                           data: ThemeData(
                                             dividerColor: Colors.transparent,
                                           ),
-                                          child: Consumer<AuthState>(builder: (context, expansionController, _) {
+                                          child: Consumer<AuthState>(builder:
+                                              (context, expansionController,
+                                                  _) {
                                             return ExpansionTile(
-                                              initiallyExpanded: expansionTileIndex2 == index,
+                                              initiallyExpanded:
+                                                  expansionTileIndex2 == index,
                                               onExpansionChanged: (expanded) {
                                                 setState(() {
                                                   expansionTileIndex2 = index;
                                                 });
                                               },
                                               leading: CircleAvatar(
-                                                backgroundColor: colorList[index],
+                                                backgroundColor:
+                                                    colorList[index],
                                                 child: Image.asset(
                                                   AllAssets.quickLinkPL,
-                                                  scale: displayWidth(context) / 101.5,
+                                                  scale: displayWidth(context) /
+                                                      101.5,
                                                 ),
                                               ),
                                               title: Text(
@@ -627,54 +782,91 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                                     color: Colors.white,
                                                     fontSize: kText.scale(14),
                                                     fontFamily: 'Roboto',
-                                                    fontWeight: FontWeight.w500),
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                               ),
                                               iconColor: Colors.white,
-                                              collapsedIconColor: Color(0xFF64748B),
+                                              collapsedIconColor:
+                                                  Color(0xFF64748B),
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsets.only(right: 10),
+                                                  padding: EdgeInsets.only(
+                                                      right: 10),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
                                                     children: [
                                                       Container(
-                                                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical: 5,
+                                                                  horizontal:
+                                                                      10),
                                                           decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.circular(200),
-                                                              color: Color(0XFF293750)),
-                                                          child: Text("Words practice",
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          200),
+                                                              color: Color(
+                                                                  0XFF293750)),
+                                                          child: Text(
+                                                              "Words practice",
                                                               style: TextStyle(
                                                                   fontSize: 12,
-                                                                  fontWeight: FontWeight.w500,
-                                                                  color: Colors.white))),
-                                                      SizedBox(width: getWidgetWidth(width: 5)),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .white))),
+                                                      SizedBox(
+                                                          width: getWidgetWidth(
+                                                              width: 5)),
                                                       Container(
-                                                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical: 5,
+                                                                  horizontal:
+                                                                      10),
                                                           decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.circular(200),
-                                                              color: Color(0XFF293750)),
-                                                          child: Text("Accuracy",
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          200),
+                                                              color: Color(
+                                                                  0XFF293750)),
+                                                          child: Text(
+                                                              "Accuracy",
                                                               style: TextStyle(
                                                                   fontSize: 12,
-                                                                  fontWeight: FontWeight.w500,
-                                                                  color: Colors.white))),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .white))),
                                                     ],
                                                   ),
                                                 ),
                                                 ListView.separated(
-                                                  separatorBuilder: (context, index) => Divider(
+                                                  separatorBuilder:
+                                                      (context, index) =>
+                                                          Divider(
                                                     indent: 10,
                                                     endIndent: 10,
                                                     color: Color(0xFF617397),
                                                   ),
                                                   shrinkWrap: true,
-                                                  physics: NeverScrollableScrollPhysics(),
-                                                  itemCount: consonants[index].subcategories!.length,
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  itemCount: consonants[index]
+                                                      .subcategories!
+                                                      .length,
                                                   padding: EdgeInsets.zero,
-                                                  itemBuilder: (context, subIndex) {
+                                                  itemBuilder:
+                                                      (context, subIndex) {
                                                     return ListTile(
                                                       title: InkWell(
-                                                        splashColor: Colors.transparent,
+                                                        splashColor:
+                                                            Colors.transparent,
                                                         onTap: (() {
                                                           /*if (consonants[index].subcategories![subIndex].link != null) {
                                                               Navigator.push(
@@ -691,22 +883,38 @@ class _SoundWiseReportScreenState extends State<SoundWiseReportScreen> {
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                              builder: (context) => ProfluentSubScreen(
-                                                                title: consonants[index].subcategories![subIndex].name!,
-                                                                load: consonants[index].subcategories![subIndex].name!,
-                                                                links: importantSounds2[index]
-                                                                    .subcategories![subIndex]
+                                                              builder: (context) =>
+                                                                  ProfluentSubScreen(
+                                                                title: consonants[
+                                                                        index]
+                                                                    .subcategories![
+                                                                        subIndex]
+                                                                    .name!,
+                                                                load: consonants[
+                                                                        index]
+                                                                    .subcategories![
+                                                                        subIndex]
+                                                                    .name!,
+                                                                links: importantSounds2[
+                                                                        index]
+                                                                    .subcategories![
+                                                                        subIndex]
                                                                     .links!,
                                                               ),
                                                             ),
                                                           );
                                                         }),
                                                         child: Text(
-                                                          consonants[index].subcategories![subIndex].name!,
+                                                          consonants[index]
+                                                              .subcategories![
+                                                                  subIndex]
+                                                              .name!,
                                                           style: TextStyle(
                                                             color: Colors.white,
-                                                            fontFamily: Keys.lucidaFontFamily,
-                                                            fontSize: kText.scale(14),
+                                                            fontFamily: Keys
+                                                                .lucidaFontFamily,
+                                                            fontSize:
+                                                                kText.scale(14),
                                                           ),
                                                         ),
                                                       ),
@@ -744,7 +952,10 @@ List<TextSpan> _buildTextSpans(String text) {
         spans.add(TextSpan(
           text: buffer.toString(),
           style: TextStyle(
-              color: AppColors.white, fontSize: 20, fontWeight: FontWeight.w500, fontFamily: Keys.lucidaFontFamily),
+              color: AppColors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              fontFamily: Keys.lucidaFontFamily),
         ));
         buffer.clear();
       }
@@ -753,7 +964,10 @@ List<TextSpan> _buildTextSpans(String text) {
       spans.add(TextSpan(
         text: ' ${buffer.toString()} ',
         style: TextStyle(
-            color: Colors.yellow, fontSize: 20, fontWeight: FontWeight.w700, fontFamily: Keys.lucidaFontFamily),
+            color: Colors.yellow,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            fontFamily: Keys.lucidaFontFamily),
       ));
       buffer.clear();
       isWithinParentheses = false;
@@ -765,7 +979,10 @@ List<TextSpan> _buildTextSpans(String text) {
     spans.add(TextSpan(
       text: buffer.toString(),
       style: TextStyle(
-          color: AppColors.white, fontSize: 20, fontWeight: FontWeight.w500, fontFamily: Keys.lucidaFontFamily),
+          color: AppColors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
+          fontFamily: Keys.lucidaFontFamily),
     ));
   }
 

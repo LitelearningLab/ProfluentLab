@@ -25,7 +25,8 @@ class CustomFastTrackController extends StatefulWidget {
   }
 }
 
-class _MaterialControlsState extends State<CustomFastTrackController> with SingleTickerProviderStateMixin {
+class _MaterialControlsState extends State<CustomFastTrackController>
+    with SingleTickerProviderStateMixin {
   late PlayerNotifier notifier;
   late VideoPlayerValue _latestValue;
   double? _latestVolume;
@@ -96,7 +97,8 @@ class _MaterialControlsState extends State<CustomFastTrackController> with Singl
                         0.0,
                         notifier.hideStuff ? barHeight * 0.8 : 0.0,
                       ),
-                      child: _buildSubtitles(context, chewieController.subtitle!),
+                      child:
+                          _buildSubtitles(context, chewieController.subtitle!),
                     ),
                   _buildBottomBar(context),
                 ],
@@ -155,16 +157,18 @@ class _MaterialControlsState extends State<CustomFastTrackController> with Singl
   Widget _buildOptionsButton() {
     final options = <OptionItem>[
       OptionItem(
-        onTap: () async {
+        onTap: (context) {
           Navigator.pop(context);
           _onSpeedButtonTap();
         },
         iconData: Icons.speed,
-        title: chewieController.optionsTranslation?.playbackSpeedButtonText ?? 'Playback speed',
+        title: chewieController.optionsTranslation?.playbackSpeedButtonText ??
+            'Playback speed',
       )
     ];
 
-    if (chewieController.additionalOptions != null && chewieController.additionalOptions!(context).isNotEmpty) {
+    if (chewieController.additionalOptions != null &&
+        chewieController.additionalOptions!(context).isNotEmpty) {
       options.addAll(chewieController.additionalOptions!(context));
     }
 
@@ -184,7 +188,8 @@ class _MaterialControlsState extends State<CustomFastTrackController> with Singl
               useRootNavigator: chewieController.useRootNavigator,
               builder: (context) => OptionsDialog(
                 options: options,
-                cancelButtonText: chewieController.optionsTranslation?.cancelButtonText,
+                cancelButtonText:
+                    chewieController.optionsTranslation?.cancelButtonText,
               ),
             );
           }
@@ -286,7 +291,9 @@ class _MaterialControlsState extends State<CustomFastTrackController> with Singl
                             padding: const EdgeInsets.only(bottom: 1),
                             onPressed: _playPause,
                             icon: Icon(
-                              controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                              controller.value.isPlaying
+                                  ? Icons.pause
+                                  : Icons.play_arrow,
                               color: Colors.white,
                             )),
                         _buildPosition(iconColor),
@@ -351,7 +358,9 @@ class _MaterialControlsState extends State<CustomFastTrackController> with Singl
           ),
           child: Center(
             child: Icon(
-              chewieController.isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
+              chewieController.isFullScreen
+                  ? Icons.fullscreen_exit
+                  : Icons.fullscreen,
               color: Colors.white,
             ),
           ),
@@ -457,7 +466,9 @@ class _MaterialControlsState extends State<CustomFastTrackController> with Singl
           right: 12.0,
         ),
         child: Icon(
-          _subtitleOn ? Icons.closed_caption : Icons.closed_caption_off_outlined,
+          _subtitleOn
+              ? Icons.closed_caption
+              : Icons.closed_caption_off_outlined,
           color: _subtitleOn ? Colors.white : Colors.grey[700],
         ),
       ),
@@ -504,7 +515,8 @@ class _MaterialControlsState extends State<CustomFastTrackController> with Singl
       notifier.hideStuff = true;
 
       chewieController.toggleFullScreen();
-      _showAfterExpandCollapseTimer = Timer(const Duration(milliseconds: 300), () {
+      _showAfterExpandCollapseTimer =
+          Timer(const Duration(milliseconds: 300), () {
         setState(() {
           _cancelAndRestartTimer();
         });

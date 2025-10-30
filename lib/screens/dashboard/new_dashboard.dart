@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:after_layout/after_layout.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:litelearninglab/common_widgets/spacings.dart';
 import 'package:litelearninglab/constants/all_assets.dart';
@@ -10,7 +14,7 @@ import 'package:litelearninglab/constants/app_colors.dart';
 import 'package:litelearninglab/constants/keys.dart';
 import 'package:litelearninglab/models/InteracticeSimulationMain.dart';
 import 'package:litelearninglab/models/ProcessLearningMain.dart';
-import 'package:litelearninglab/screens/call_flow/call_flow_cat_screen.dart';
+// import 'package:litelearninglab/screens/call_flow/call_flow_cat_screen.dart';
 import 'package:litelearninglab/screens/dashboard/showcase_model.dart';
 import 'package:litelearninglab/screens/dashboard/widgets/first_row_menu.dart';
 import 'package:litelearninglab/screens/dashboard/widgets/quick_links_tile.dart';
@@ -22,6 +26,7 @@ import 'package:litelearninglab/screens/sentences/sentences_screen.dart';
 import 'package:litelearninglab/screens/softskills/new_softskills_screen.dart';
 import 'package:litelearninglab/screens/word_screen/word_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
+import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/shared_pref.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:provider/provider.dart';
@@ -107,6 +112,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
   void initState() {
     super.initState();
     user = Provider.of<AuthState>(context, listen: false);
+
     print("blackkk screenn");
     getAppUser();
     print("grey screenn");
@@ -128,6 +134,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
     setState(() {});
 
     String userId = await SharedPref.getSavedString("userId");
+
     if (userId == "") {
       await user.login();
     }
@@ -215,7 +222,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
               child: TextButton(
                   onPressed: () async {
                     Navigator.pop(context);
-                    await controller.signOut();
+                    SystemNavigator.pop();
                   },
                   style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
                       backgroundColor:
@@ -282,9 +289,11 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
         exitPopup(context);
       },
       child: UpgradeAlert(
-        dialogStyle: Platform.isAndroid
+        dialogStyle: kIsWeb
             ? UpgradeDialogStyle.material
-            : UpgradeDialogStyle.cupertino,
+            : Platform.isAndroid
+                ? UpgradeDialogStyle.material
+                : UpgradeDialogStyle.cupertino,
         showReleaseNotes: false,
         showIgnore: false,
         shouldPopScope: () => true,
@@ -581,19 +590,19 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                                                   [];
                                                           print(
                                                               "process cat screen : $CallFlowCatScreenString");
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          CallFlowCatScreen(
-                                                                            user:
-                                                                                user,
-                                                                            title:
-                                                                                CallFlowCatScreenString[0],
-                                                                            load:
-                                                                                CallFlowCatScreenString[1],
-                                                                          )));
+                                                          // Navigator.push(
+                                                          //     context,
+                                                          //     MaterialPageRoute(
+                                                          //         builder:
+                                                          //             (context) =>
+                                                          //                 CallFlowCatScreen(
+                                                          //                   user:
+                                                          //                       user,
+                                                          //                   title:
+                                                          //                       CallFlowCatScreenString[0],
+                                                          //                   load:
+                                                          //                       CallFlowCatScreenString[1],
+                                                          //                 )));
                                                         } else if (lastAccessContent ==
                                                             'InAppWebViewPage') {
                                                           List
@@ -798,6 +807,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                     FirstRowMenu(
                                       onTap: () {
                                         //------>>> first point
+                                        mianCategoryTitile = "Process Learning";
                                         context
                                             .read<AuthState>()
                                             .changeSubIndex(0);
@@ -821,6 +831,8 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                     SPW(displayWidth(context) / 18.75),
                                     FirstRowMenu(
                                       onTap: () {
+                                        mianCategoryTitile =
+                                            "AR Call Simulation";
                                         context
                                             .read<AuthState>()
                                             .changeSubIndex(0);
@@ -842,6 +854,8 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                     SPW(displayWidth(context) / 18.75),
                                     FirstRowMenu(
                                       onTap: () {
+                                        mianCategoryTitile =
+                                            "Profluent English";
                                         context
                                             .read<AuthState>()
                                             .changeSubIndex(0);
@@ -863,6 +877,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                     SPW(displayWidth(context) / 18.75),
                                     FirstRowMenu(
                                       onTap: () async {
+                                        mianCategoryTitile = "Soft Skills";
                                         print("dhndijhdbd dg");
                                         SharedPreferences prefs =
                                             await SharedPreferences
@@ -913,6 +928,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                     splashColor: Colors.transparent,
                                     onTap: () async {
                                       print("PF CLICKED");
+                                      mianCategoryTitile = "Pronunciation Lab";
                                       SharedPreferences prefs =
                                           await SharedPreferences.getInstance();
                                       await prefs.setString(
@@ -962,6 +978,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                   InkWell(
                                     splashColor: Colors.transparent,
                                     onTap: () async {
+                                      mianCategoryTitile = "Denial Management";
                                       print("DM CLICKED");
                                       print(_processLeaning[1]
                                               .subcategories![2]
@@ -973,10 +990,16 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                           'lastAccess', 'ProcessCatScreen');
                                       await prefs.setString('ProcessCatScreen',
                                           "Denial Management");
-                                      // final box = await Hive.openBox<ProcessLearningLinkHive>('newProcessLearningBox');
-                                      // //processLearningBox =await Hive.box<ProcessLearningLinkHive>('processLearningLinkBox');
-                                      // ProcessLearningLinkHive prHive = ProcessLearningLinkHive(item: _processLeaning[1].subcategories![2].linkCats);
-                                      // box.put('ProcessCatScreen', prHive);
+                                      final box = await Hive.openBox<
+                                              ProcessLearningLinkHive>(
+                                          'newProcessLearningBox');
+                                      //processLearningBox =await Hive.box<ProcessLearningLinkHive>('processLearningLinkBox');
+                                      ProcessLearningLinkHive prHive =
+                                          ProcessLearningLinkHive(
+                                              item: _processLeaning[1]
+                                                  .subcategories![2]
+                                                  .linkCats);
+                                      box.put('ProcessCatScreen', prHive);
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -1011,6 +1034,8 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                   InkWell(
                                     splashColor: Colors.transparent,
                                     onTap: () async {
+                                      mianCategoryTitile =
+                                          "AR Follow Up (Non-Denials)";
                                       if (_categories[0].subcategories !=
                                           null) {
                                         SharedPreferences prefs =
@@ -1021,10 +1046,14 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                         await prefs.setString(
                                             'InteracticeCatScreen',
                                             _categories[0].category ?? "");
-                                        // final box = await Hive.openBox<InteractiveLinkHive>('InteractiveLinkBox');
-                                        // InteractiveLinkHive prHive =
-                                        //     InteractiveLinkHive(item: _categories[0].subcategories!);
-                                        // box.put('InteracticeCatScreen', prHive);
+                                        final box = await Hive.openBox<
+                                                InteractiveLinkHive>(
+                                            'InteractiveLinkBox');
+                                        InteractiveLinkHive prHive =
+                                            InteractiveLinkHive(
+                                                item: _categories[0]
+                                                    .subcategories!);
+                                        box.put('InteracticeCatScreen', prHive);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -1058,6 +1087,8 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                   InkWell(
                                     splashColor: Colors.transparent,
                                     onTap: () async {
+                                      mianCategoryTitile =
+                                          "Interactive Learning";
                                       if (_categories[1].subcategories !=
                                           null) {
                                         SharedPreferences prefs =
@@ -1068,10 +1099,14 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                         await prefs.setString(
                                             'InteracticeCatScreen',
                                             _categories[1].category ?? "");
-                                        // final box = await Hive.openBox<InteractiveLinkHive>('InteractiveLinkBox');
-                                        // InteractiveLinkHive prHive =
-                                        //     InteractiveLinkHive(item: _categories[0].subcategories!);
-                                        // box.put('InteracticeCatScreen', prHive);
+                                        final box = await Hive.openBox<
+                                                InteractiveLinkHive>(
+                                            'InteractiveLinkBox');
+                                        InteractiveLinkHive prHive =
+                                            InteractiveLinkHive(
+                                                item: _categories[0]
+                                                    .subcategories!);
+                                        box.put('InteracticeCatScreen', prHive);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -1120,9 +1155,15 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                           await prefs.setString(
                                               'InteracticeCatScreen',
                                               _categories[3].category ?? "");
-                                          // final box = await Hive.openBox<InteractiveLinkHive>('InteractiveLinkBox');
-                                          // InteractiveLinkHive prHive = InteractiveLinkHive(item: _categories[3].subcategories!);
-                                          // box.put('InteracticeCatScreen', prHive);
+                                          final box = await Hive.openBox<
+                                                  InteractiveLinkHive>(
+                                              'InteractiveLinkBox');
+                                          InteractiveLinkHive prHive =
+                                              InteractiveLinkHive(
+                                                  item: _categories[3]
+                                                      .subcategories!);
+                                          box.put(
+                                              'InteracticeCatScreen', prHive);
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(

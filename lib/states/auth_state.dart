@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_app_installations/firebase_app_installations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +21,7 @@ import 'package:litelearninglab/screens/process_learning/new_process_learning_sc
 import 'package:litelearninglab/screens/process_learning/process_learning_screen.dart';
 import 'package:litelearninglab/screens/profluent_english/new_profluent_english_screen.dart';
 import 'package:litelearninglab/screens/profluent_english/profluent_english_modified_screen.dart';
-import 'package:litelearninglab/screens/profluent_english/profluent_english_screen.dart';
+// import 'package:litelearninglab/screens/profluent_english/profluent_english_screen.dart';
 import 'package:litelearninglab/screens/reports/call_flow_report.dart';
 import 'package:litelearninglab/screens/reports/pronunciation_report.dart';
 import 'package:litelearninglab/screens/reports/speech_report.dart';
@@ -32,6 +36,7 @@ import '../screens/reports/sound_wise_reports.dart';
 import '../utils/auth_service.dart';
 import '../utils/remote_config_service.dart';
 import '../utils/utils.dart';
+import 'package:android_id/android_id.dart';
 
 class AuthState with ChangeNotifier {
   User? _user;
@@ -134,7 +139,12 @@ class AuthState with ChangeNotifier {
     print('///////////////CONNECTION : : : $isConnected');
     notifyListeners();
   }
+
   //----------------------------------------------------------------------
+  chnageAuthState() async {
+    streamController.add(Status.userInactive);
+    notifyListeners();
+  }
 
   void checkAuthStatus() async {
     print(" e eijii u ue yue");
@@ -176,34 +186,43 @@ class AuthState with ChangeNotifier {
       // });
     });*/
 
-    final List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
+    final List<ConnectivityResult> connectivityResult =
+        await (Connectivity().checkConnectivity());
     if (connectivityResult.contains(ConnectivityResult.mobile)) {
       isConnected = true;
       notifyListeners();
       // _authService.authStateChanges.listen((User? user) async {
       checkAuth = await SharedPref.getSavedBool('checkingAuth');
-      if (kDebugMode) {
-        print("check auth checking");
-        print(checkAuth);
-      }
+
       _user = user;
       user1 = user;
       if (!isConnected) {
         print("d -d di jidj fuff dd dddddd");
         _status = Status.noNetwork;
       } else if (!checkAuth) {
-        bool checking = await SharedPref.getSavedBool("walkthrough");
-        bool isFirstTutorial = await SharedPref.getSavedBool("isFirstTutorial");
-        if (!checking) {
-          print("d -d di jidj dddddd");
+        String userId = await SharedPref.getSavedString("userId");
+        if (userId.isEmpty) {
           _status = Status.walkThrough;
-        } else if (!isFirstTutorial) {
-          print("d -d di jidj ssdd dsdsds");
-          _status = Status.tutorial;
-          //   await SharedPref.saveBool("isFirstTutorial", true);
+          // _status = Status.authenticated;
         } else {
-          print("d -d di jidj dddddd");
-          _status = Status.unauthenticated;
+          bool checking = await SharedPref.getSavedBool("walkthrough");
+          bool isFirstTutorial =
+              await SharedPref.getSavedBool("isFirstTutorial");
+          bool isLogedInBefore =
+              await SharedPref.getSavedBool("isLogedInBefore");
+          if (!checking) {
+            print("d -d di jidj dddddd4");
+            _status = Status.walkThrough;
+          } else if (isLogedInBefore) {
+            print("d -d di jidj ssdd dsdsds1");
+            _status = Status.tutorial;
+
+            //  await SharedPref.saveBool("isFirstTutorial", true);
+          } else {
+            print("d -d di jidj dddddd5");
+            _status = Status.unauthenticated;
+            // _status = Status.tutorial;
+          }
         }
       } else {
         print("d -d di jidj fuff");
@@ -220,8 +239,8 @@ class AuthState with ChangeNotifier {
       // _authService.authStateChanges.listen((User? user) async {
       checkAuth = await SharedPref.getSavedBool('checkingAuth');
       if (kDebugMode) {
-        print("check auth checking");
-        print(checkAuth);
+        // print("check auth checking");
+        print("check auth checking $checkAuth");
       }
       _user = user;
       user1 = user;
@@ -229,21 +248,32 @@ class AuthState with ChangeNotifier {
         print("d -d di jidj fuff dd dddddd");
         _status = Status.noNetwork;
       } else if (!checkAuth) {
-        bool checking = await SharedPref.getSavedBool("walkthrough");
-        bool isFirstTutorial = await SharedPref.getSavedBool("isFirstTutorial");
-        if (!checking) {
-          print("d -d di jidj dddddd");
+        String userId = await SharedPref.getSavedString("userId");
+        if (userId.isEmpty) {
           _status = Status.walkThrough;
-        } else if (!isFirstTutorial) {
-          print("d -d di jidj ssdd dsdsds");
-          _status = Status.tutorial;
-          //  await SharedPref.saveBool("isFirstTutorial", true);
+          // _status = Status.authenticated;
         } else {
-          print("d -d di jidj dddddd");
-          _status = Status.unauthenticated;
+          bool checking = await SharedPref.getSavedBool("walkthrough");
+          bool isFirstTutorial =
+              await SharedPref.getSavedBool("isFirstTutorial");
+          bool isLogedInBefore =
+              await SharedPref.getSavedBool("isLogedInBefore");
+          if (!checking) {
+            print("d -d di jidj dddddd4");
+            _status = Status.walkThrough;
+          } else if (isLogedInBefore) {
+            print("d -d di jidj ssdd dsdsds2");
+            _status = Status.tutorial;
+
+            //  await SharedPref.saveBool("isFirstTutorial", true);
+          } else {
+            print("d -d di jidj dddddd5");
+            _status = Status.unauthenticated;
+            // _status = Status.tutorial;
+          }
         }
       } else {
-        print("d -d di jidj fuff");
+        print("d -d di jidj fuff222222");
         _status = Status.authenticated;
         await login();
       }
@@ -266,18 +296,29 @@ class AuthState with ChangeNotifier {
         print("d -d di jidj fuff dd dddddd");
         _status = Status.noNetwork;
       } else if (!checkAuth) {
-        bool checking = await SharedPref.getSavedBool("walkthrough");
-        bool isFirstTutorial = await SharedPref.getSavedBool("isFirstTutorial");
-        if (!checking) {
-          print("d -d di jidj dddddd");
+        String userId = await SharedPref.getSavedString("userId");
+        if (userId.isEmpty) {
           _status = Status.walkThrough;
-        } else if (!isFirstTutorial) {
-          print("d -d di jidj ssdd dsdsds");
-          _status = Status.tutorial;
-          // await SharedPref.saveBool("isFirstTutorial", true);
+          // _status = Status.authenticated;
         } else {
-          print("d -d di jidj dddddd");
-          _status = Status.unauthenticated;
+          bool checking = await SharedPref.getSavedBool("walkthrough");
+          bool isFirstTutorial =
+              await SharedPref.getSavedBool("isFirstTutorial");
+          bool isLogedInBefore =
+              await SharedPref.getSavedBool("isLogedInBefore");
+          if (!checking) {
+            print("d -d di jidj dddddd4");
+            _status = Status.walkThrough;
+          } else if (isLogedInBefore) {
+            print("d -d di jidj ssdd dsdsds3");
+            _status = Status.tutorial;
+
+            //  await SharedPref.saveBool("isFirstTutorial", true);
+          } else {
+            print("d -d di jidj dddddd5");
+            _status = Status.unauthenticated;
+            // _status = Status.tutorial;
+          }
         }
       } else {
         print("d -d di jidj fuff");
@@ -298,6 +339,7 @@ class AuthState with ChangeNotifier {
       await checkConnectivity(result);
       // _authService.authStateChanges.listen((User? user) async {
       checkAuth = await SharedPref.getSavedBool('checkingAuth');
+
       if (kDebugMode) {
         print("check auth checking");
         print(checkAuth);
@@ -310,16 +352,19 @@ class AuthState with ChangeNotifier {
       } else if (!checkAuth) {
         bool checking = await SharedPref.getSavedBool("walkthrough");
         bool isFirstTutorial = await SharedPref.getSavedBool("isFirstTutorial");
+        bool isLogedInBefore = await SharedPref.getSavedBool("isLogedInBefore");
         if (!checking) {
-          print("d -d di jidj dddddd");
+          print("d -d di jidj dddddd4");
           _status = Status.walkThrough;
-        } else if (!isFirstTutorial) {
-          print("d -d di jidj ssdd dsdsds");
+        } else if (isLogedInBefore) {
+          print("d -d di jidj ssdd dsdsd4");
           _status = Status.tutorial;
+
           //  await SharedPref.saveBool("isFirstTutorial", true);
         } else {
-          print("d -d di jidj dddddd");
+          print("d -d di jidj dddddd5");
           _status = Status.unauthenticated;
+          // _status = Status.tutorial;
         }
       } else {
         print("d -d di jidj fuff");
@@ -332,40 +377,172 @@ class AuthState with ChangeNotifier {
     });
   }
 
+  // login() async {
+  //   String phoneNo = await SharedPref.getSavedString("phoneNo");
+  //   if (phoneNo.isNotEmpty) {
+  //     await getAppUser(phoneNo);
+  //   }
+  //   // await getAppUser(phoneNo);
+  //   // DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  //   // if (Platform.isAndroid) {
+  //   // AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+  //   // String uid = androidInfo.id ?? androidInfo.androidId ?? 'unknown';
+  //   // Returns ANDROID_ID (SSAID)
+  //   // }
+  //   String? uid = await const AndroidId().getId() ?? "unknown";
+  //   if (_appUser == null && isConnected) {
+  //     print("dd 90d 80 d8 yd8yd80yd");
+  //     String usrId = await SharedPref.getSavedString("phoneNo");
+  //     if (usrId.isEmpty) {
+  //       Status.walkThrough;
+  //     } else {
+  //       _status = Status.userNotExist;
+  //     }
+  //   } else if ((_appUser!.imei == null ||
+  //               _appUser!.imei == uid ||
+  //               _appUser!.imei!.isEmpty) &&
+  //           // _appUser!.status!.toLowerCase() == "active" ||
+  //           _appUser!.status == "1"
+  //       // _appUser!.status?.toLowerCase() == "1"
+
+  //       ) {
+  //     print("dd 90d 80 d8 dhdhdhdhdhd");
+
+  //     String model = await DeviceScreenInfo.getModelName();
+  //     log("${_appUser!.lastLogin} is printing for checking what value is coming ${_appUser!.companyId}");
+  //     String? companyName = _appUser?.companyId;
+  //     final companyQuery = await FirebaseFirestore.instance
+  //         .collection('UserNode')
+  //         .where('_id', isEqualTo: companyName)
+  //         .limit(1)
+  //         .get();
+  //     log("${companyName}");
+  //     log("${companyName} printing and functioning.");
+  //     final companyDoc = companyQuery.docs.first;
+  //     final companyRef = companyDoc.reference;
+  //     final companyData = companyDoc.data() as Map<String, dynamic>;
+  //     final String? companyStatus = companyData['status'];
+  //     log("Company status: ${companyStatus}");
+
+  //     log("company status is printing ${companyStatus}");
+  //     if (companyStatus != "1") {
+  //       _status = Status.userInactive;
+  //     } else {
+  //       if (_appUser!.lastLogin == null || _appUser!.lastLogin == "") {
+  //         if (companyName!.isNotEmpty) {
+  //           if (companyQuery.docs.isNotEmpty) {
+  //             log("company not empty");
+
+  //             await companyRef.update({
+  //               'activeusers': FieldValue.increment(1),
+  //             });
+  //           }
+  //         }
+  //       }
+
+  //       if (!kIsWeb) {
+  //         await db.setUserImei(uid!, model, _appUser!.id!);
+  //       }
+  //       _appUser?.imei = uid;
+  //       _appUser?.model = model;
+
+  //       _status = Status.authenticated;
+
+  //       _remoteConfigService = await RemoteConfigService.getInstance();
+  //       await _remoteConfigService?.initialize();
+
+  //       _eKey = _remoteConfigService?.getStringValue;
+  //     }
+
+  //     log("printing is coming or not");
+  //   } else if ((_appUser!.imei == null ||
+  //           _appUser!.imei == uid ||
+  //           _appUser!.imei!.isEmpty) &&
+  //       // _appUser!.status!.toLowerCase() == "inactive" ||
+  //       _appUser!.status == "2") {
+  //     print("dd 90d 80 d8 dhd id id d d");
+  //     _status = Status.userInactive;
+  //   } else {
+  //     print("dd 90d 80 d8  dk d djdbdhdii");
+  //     _status = Status.deviceChanged;
+  //   }
+  // }
+
+//for web new logic function
   login() async {
     String phoneNo = await SharedPref.getSavedString("phoneNo");
-    await getAppUser(phoneNo);
-    String uid = await Utils.getUUID();
-    if (_appUser == null && isConnected) {
-      print("dd 90d 80 d8 yd8yd80yd");
-      _status = Status.userNotExist;
-    } else if ((_appUser!.imei == null || _appUser!.imei == uid || _appUser!.imei!.isEmpty) &&
-            // _appUser!.status!.toLowerCase() == "active" ||
-            _appUser!.status == "1"
-        // _appUser!.status?.toLowerCase() == "1"
 
-        ) {
-      print("dd 90d 80 d8 dhdhdhdhdhd");
-      String model = await DeviceScreenInfo.getModelName();
-
-      await db.setUserImei(uid, model, _appUser!.id!);
-      _appUser?.imei = uid;
-      _appUser?.model = model;
-      _status = Status.authenticated;
-
-      _remoteConfigService = await RemoteConfigService.getInstance();
-      await _remoteConfigService?.initialize();
-
-      _eKey = _remoteConfigService?.getStringValue;
-    } else if ((_appUser!.imei == null || _appUser!.imei == uid || _appUser!.imei!.isEmpty) &&
-        // _appUser!.status!.toLowerCase() == "inactive" ||
-        _appUser!.status == "2") {
-      print("dd 90d 80 d8 dhd id id d d");
-      _status = Status.userInactive;
-    } else {
-      print("dd 90d 80 d8  dk d djdbdhdii");
-      _status = Status.deviceChanged;
+    if (phoneNo.isNotEmpty) {
+      await getAppUser(phoneNo);
     }
+
+    String? uid = await const AndroidId().getId() ?? "unknown";
+
+    if (_appUser == null && isConnected) {
+      print("User not found or no connection");
+      String usrId = await SharedPref.getSavedString("phoneNo");
+      if (usrId.isEmpty) {
+        Status.walkThrough;
+      } else {
+        _status = Status.userNotExist;
+      }
+    } else {
+      // If running on web, skip IMEI check entirely
+      if (kIsWeb) {
+        _status = Status.authenticated;
+
+        _remoteConfigService = await RemoteConfigService.getInstance();
+        await _remoteConfigService?.initialize();
+
+        _eKey = _remoteConfigService?.getStringValue;
+        return;
+      }
+
+      // For mobile platforms: Android/iOS, proceed with IMEI logic
+      String model = await DeviceScreenInfo.getModelName();
+      log("${_appUser!.lastLogin} | CompanyId: ${_appUser!.companyId}");
+
+      String? companyName = _appUser?.companyId;
+      final companyQuery = await FirebaseFirestore.instance
+          .collection('UserNode')
+          .where('_id', isEqualTo: companyName)
+          .limit(1)
+          .get();
+
+      final companyDoc = companyQuery.docs.first;
+      final companyRef = companyDoc.reference;
+      final companyData = companyDoc.data() as Map<String, dynamic>;
+      final String? companyStatus = companyData['status'];
+      log("Company status: ${companyStatus}");
+
+      if (companyStatus != "1") {
+        _status = Status.userInactive;
+      } else {
+        if (_appUser!.lastLogin == null || _appUser!.lastLogin!.isEmpty) {
+          if (companyName!.isNotEmpty && companyQuery.docs.isNotEmpty) {
+            log("Updating active users count");
+            await companyRef.update({
+              'activeusers': FieldValue.increment(1),
+            });
+          }
+        }
+
+        if (!kIsWeb) {
+          await db.setUserImei(uid!, model, _appUser!.id!);
+        }
+
+        _appUser?.imei = uid;
+        _appUser?.model = model;
+        _status = Status.authenticated;
+
+        _remoteConfigService = await RemoteConfigService.getInstance();
+        await _remoteConfigService?.initialize();
+
+        _eKey = _remoteConfigService?.getStringValue;
+      }
+    }
+
+    log("Login flow completed");
   }
 
   checkAuthChanging() async {
@@ -410,40 +587,115 @@ class AuthState with ChangeNotifier {
     notifyListeners();
   }
 
-  Future signOut() async {
-    // await _authService.signOut();
-    _status = Status.unauthenticated;
-    print("status : $_status");
-    try {
-      _user = null;
-      _appUser = null;
-    } catch (e) {
-      print("signout error : $e");
-    }
-    print("_user : $_user");
-    print("_appUser : $_appUser");
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    await SharedPref.saveBool("walkthrough", true);
-    await SharedPref.saveBool('isFirst', true);
-    await SharedPref.saveBool('checkingAuth', false);
-    await SharedPref.saveBool('firstTimeUser', false);
+  // Future signOut() async {
+  //   // await _authService.signOut();
+  //   _status = Status.unauthenticated;
+  //   print("status : $_status");
+  //   try {
+  //     _user = null;
+  //     _appUser = null;
+  //   } catch (e) {
+  //     print("signout error : $e");
+  //   }
+  //   print("_user : $_user");
+  //   print("_appUser : $_appUser");
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.remove('checkingAuth');
+  //   await prefs.remove('userId');
+  //   await prefs.remove("isFirstTutorial");
+  //   // prefs.clear();
+  //   Future.delayed(Duration(seconds: 1));
+  //   await Future.wait([
+  //     SharedPref.saveBool("walkthrough", true),
+  //     SharedPref.saveBool('checkingAuth', false),
+  //     SharedPref.saveBool('firstTimeUser', true),
+  //   ]);
 
-    // checkAuthStatus();
-    print("sign out button clickeddd");
+  //   // checkAuthStatus();
+  //   print("sign out button clickeddd");
+  //   streamController.add(_status);
+  //
+  // notifyListeners();
+  // }
+  Future signOut() async {
+    _status = Status.unauthenticated;
+    _user = null;
+    _appUser = null;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await prefs.clear(); // Clear everything or be specific:
+
+    await prefs.remove('checkingAuth');
+    await prefs.remove('userId');
+    await prefs.remove('walkthrough');
+    await prefs.remove('tutorialchecking');
+    // await prefs.remove('isFirstTutorial');
+    await prefs.remove('firstTimeUser');
+
+    SharedPref.saveBool("walkthrough", true);
     streamController.add(_status);
     notifyListeners();
   }
 
   Future<UserM?> getAppUser(String phoneNo) async {
     _appUser = await db.getUser(phoneNo);
-    if (kDebugMode) {
-      log("app id showing");
-      log("${_appUser!.id}");
+    // if (kDebugMode) {
+    //   log("app id showing");
+    //   log("${_appUser!.id}");
+    // }
+    if (_appUser!.lastLogin != null) {
+      await db.setLastLogin(_appUser!.id ?? "");
     }
+
     await SharedPref.saveString("userId", _appUser?.id ?? "");
-    log("iejfiig:${_appUser?.id ?? "revathi"}");
+    await SharedPref.saveString("companyId", _appUser?.companyId ?? "");
+    String company = await SharedPref.getSavedString("companyId");
+    String? batchName = await getUserBatchName(_appUser?.id ?? "");
+    if (batchName != null && batchName.isNotEmpty) {
+      await SharedPref.saveString("batch", batchName);
+    }
+    log("iejfiig:${_appUser?.id ?? "revathi222222, ${_appUser?.company ?? "No company name is coming"} company from local storage ${company}"}");
+    log("iejfiig: ${_appUser?.companyId ?? "No company name is coming"} company from local storage ${company}${batchName ?? "no batch name founded"}");
+
     return _appUser;
+  }
+
+  Future<String?> getUserBatchName(String userId) async {
+    try {
+      // Step 1: Query user_batch collection for the user's batch ID
+      final userBatchQuery = await FirebaseFirestore.instance
+          .collection('userbatch')
+          .where('userid', isEqualTo: userId)
+          .limit(1)
+          .get();
+
+      if (userBatchQuery.docs.isEmpty) {
+        print('No batch found for user $userId');
+        return null;
+      }
+
+      final batchId = userBatchQuery.docs.first.get('batchid');
+      if (batchId == null) {
+        print('Batch ID not found in user batch document');
+        return null;
+      }
+
+      // Step 2: Query batches collection for the batch name
+      final batchDoc = await FirebaseFirestore.instance
+          .collection('batch')
+          .doc(batchId)
+          .get();
+
+      if (!batchDoc.exists) {
+        print('Batch document $batchId not found');
+        return null;
+      }
+
+      return batchDoc.get('name');
+    } catch (e) {
+      print('Error fetching batch name: $e');
+      return null;
+    }
   }
 
   //---------------------------------------------------------
@@ -603,10 +855,30 @@ class AuthState with ChangeNotifier {
   ];
 
   List<Map<String, dynamic>> labReports = [
-    {'title': 'Pronunciation Lab report', 'icon': AllAssets.ptIcon, "page": PronunciationReport(), 'bgColor': Color(0xFF5370D4)},
-    {'title': 'Sentence Lab report', 'icon': AllAssets.ptIcon, "page": SpeechReport(), 'bgColor': Color(0xFF3DBAD3)},
-    {'title': 'Call flow practise report', 'icon': AllAssets.ptIcon, "page": CallFlowReport(), 'bgColor': Color(0xFFD6B140)},
-    {'title': 'Sound-wise Report', 'icon': AllAssets.ptIcon, "page": SoundWiseReportScreen(), 'bgColor': Color(0xFFDC6379)},
+    {
+      'title': 'Pronunciation Lab report',
+      'icon': AllAssets.ptIcon,
+      "page": PronunciationReport(),
+      'bgColor': Color(0xFF5370D4)
+    },
+    {
+      'title': 'Sentence Lab report',
+      'icon': AllAssets.ptIcon,
+      "page": SpeechReport(),
+      'bgColor': Color(0xFF3DBAD3)
+    },
+    {
+      'title': 'Call flow practise report',
+      'icon': AllAssets.ptIcon,
+      "page": CallFlowReport(),
+      'bgColor': Color(0xFFD6B140)
+    },
+    {
+      'title': 'Sound-wise Report',
+      'icon': AllAssets.ptIcon,
+      "page": SoundWiseReportScreen(),
+      'bgColor': Color(0xFFDC6379)
+    },
   ];
 
   List<Map<String, dynamic>> softSkillData = [

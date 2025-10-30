@@ -19,6 +19,7 @@ import 'package:litelearninglab/database/WordsDatabaseRepository.dart';
 import 'package:litelearninglab/database/databaseProvider.dart';
 import 'package:litelearninglab/screens/word_screen/word_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
+import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/encrypt_data.dart';
 import 'package:litelearninglab/utils/firebase_helper.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
@@ -164,6 +165,8 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
   @override
   void initState() {
     super.initState();
+    // subCategoryTitile = widget.title;
+    // startTimerMainCategory("name");
     if (widget.length != null) {
       print("widgetLength : ${widget.length}");
       isPlaying = List.generate(widget.length!, (index) => false.obs);
@@ -309,7 +312,11 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     isPlaying[widget.index].value = true;
     FirebaseHelper db = new FirebaseHelper();
     AuthState userDatas = Provider.of<AuthState>(context, listen: false);
+    String company = await SharedPref.getSavedString("companyId");
+    String batch = await SharedPref.getSavedString("batch");
     db.saveWordListReport(
+      companyId: company,
+      batch: batch,
       isPractice: false,
       company: userDatas.appUser!.company!,
       name: userDatas.appUser!.UserMname,
@@ -459,11 +466,12 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
           title: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Container(
+              padding: EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Color(0xFF34425D),
               ),
-              height: 54,
+              // height: 54,
               child: Obx(
                 () => Row(
                   children: [
@@ -966,7 +974,7 @@ class AppExpansionTileState extends State<AppExpansionTile>
                 child: DefaultTextStyle(
                   style: Theme.of(context!)
                       .textTheme
-                      .headline4!
+                      .headlineMedium!
                       .copyWith(color: titleColor),
                   child: widget.title,
                 ),
@@ -989,7 +997,7 @@ class AppExpansionTileState extends State<AppExpansionTile>
     final ThemeData theme = Theme.of(context);
     _borderColor.end = theme.dividerColor;
     _headerColor
-      ..begin = theme.textTheme.headline4?.color
+      ..begin = theme.textTheme.headlineMedium?.color
       ..end = theme.primaryColor;
     _iconColor
       ..begin = theme.unselectedWidgetColor

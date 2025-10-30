@@ -10,6 +10,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:litelearninglab/API/api.dart';
 import 'package:litelearninglab/constants/all_assets.dart';
 import 'package:litelearninglab/constants/app_colors.dart';
+import 'package:litelearninglab/hiveDb/hiveDb.dart';
 import 'package:litelearninglab/screens/process_learning/learning_screen.dart';
 import 'package:litelearninglab/screens/process_learning/process_cat_screen.dart';
 import 'package:litelearninglab/screens/webview/webview_screen.dart';
@@ -93,6 +94,7 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
   void initState() {
     super.initState();
     // startTimerMainCategory("Process Learning");
+    mianCategoryTitile = "Process Learning";
     // Add the observer for lifecycle events
     WidgetsBinding.instance.addObserver(this);
 
@@ -279,6 +281,7 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
     kHeight = MediaQuery.of(context).size.height;
     kWidth = MediaQuery.of(context).size.width;
     kText = MediaQuery.of(context).textScaler;
+    mianCategoryTitile = "Process Learning";
 
     PageController controller = PageController();
     _processLeaning.forEach((element) {
@@ -419,10 +422,23 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                                     );
                                                   } else {
                                                     print("sucesss111");
+                                                    log("${adjustedIndex}");
                                                     Navigator.push(context,
                                                         MaterialPageRoute(
                                                             builder: (context) {
                                                       return LearningScreen(
+                                                        icon: adjustedIndex == 2
+                                                            ? AllAssets
+                                                                .autoInsurance
+                                                            : adjustedIndex == 3
+                                                                ? AllAssets
+                                                                    .workersCompensation
+                                                                : adjustedIndex ==
+                                                                        4
+                                                                    ? AllAssets
+                                                                        .federalInsurance
+                                                                    : AllAssets
+                                                                        .blueCross,
                                                         title: _processLeaning[
                                                                     adjustedIndex]
                                                                 .subcategories!
@@ -623,6 +639,10 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                     itemBuilder: (context, index) {
                                       return InkWell(
                                         onTap: () async {
+                                          subCategoryTitile = _processLeaning[1]
+                                              .subcategories![index]
+                                              .name!;
+                                          log("${_processLeaning[1].category!}");
                                           sessionName = _processLeaning[1]
                                               .subcategories![index]
                                               .name!;
@@ -719,10 +739,16 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                                         .name ??
                                                     "" ??
                                                     "");
-                                            // final box = await Hive.openBox<ProcessLearningLinkHive>('newProcessLearningBox');
-                                            // // processLearningBox = await Hive.box<ProcessLearningLinkHive>('processLearningLinkBox');
-                                            // ProcessLearningLinkHive prHive = ProcessLearningLinkHive(item: _processLeaning[1].subcategories![index].linkCats);
-                                            // box.put('ProcessCatScreen', prHive);
+                                            final box = await Hive.openBox<
+                                                    ProcessLearningLinkHive>(
+                                                'newProcessLearningBox');
+                                            // processLearningBox = await Hive.box<ProcessLearningLinkHive>('processLearningLinkBox');
+                                            ProcessLearningLinkHive prHive =
+                                                ProcessLearningLinkHive(
+                                                    item: _processLeaning[1]
+                                                        .subcategories![index]
+                                                        .linkCats);
+                                            box.put('ProcessCatScreen', prHive);
 
                                             Navigator.push(
                                               context,
@@ -770,8 +796,11 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                               Icon(
                                                 Icons.chevron_right_rounded,
                                                 color: Color(0xFFD3D3D3),
-                                                size:
-                                                    displayWidth(context) / 11,
+                                                size: kWidth > 500
+                                                    ? getWidgetHeight(
+                                                        height: 40)
+                                                    : displayWidth(context) /
+                                                        11,
                                               ),
                                             ],
                                           ),

@@ -33,14 +33,16 @@ class DataItem {
   double y1;
   double y2;
   double y3;
-  DataItem({required this.x, required this.y1, required this.y2, required this.y3});
+  DataItem(
+      {required this.x, required this.y1, required this.y2, required this.y3});
 }
 
 class PerformanceTrackingScreen extends StatefulWidget {
   const PerformanceTrackingScreen({Key? key}) : super(key: key);
 
   @override
-  State<PerformanceTrackingScreen> createState() => _PerformanceTrackingScreenState();
+  State<PerformanceTrackingScreen> createState() =>
+      _PerformanceTrackingScreenState();
 }
 
 class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
@@ -55,9 +57,12 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
   WeeksModel _weeksResponse = WeeksModel.fromJson({});
   MonthsModel _monthResponse = MonthsModel.fromJson({});
 
-  PronunciationDaysModel _pronunciationDaysResponse = PronunciationDaysModel.fromJson({});
-  PronunciationWeeksModel _pronunciationWeeksResponse = PronunciationWeeksModel.fromJson({});
-  PronunciationMonthsModel _pronunciationMonthsResponse = PronunciationMonthsModel.fromJson({});
+  PronunciationDaysModel _pronunciationDaysResponse =
+      PronunciationDaysModel.fromJson({});
+  PronunciationWeeksModel _pronunciationWeeksResponse =
+      PronunciationWeeksModel.fromJson({});
+  PronunciationMonthsModel _pronunciationMonthsResponse =
+      PronunciationMonthsModel.fromJson({});
 
   PageController _pageController = PageController();
   int activePage = 0;
@@ -81,7 +86,8 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
   }
 
   double? calculateMax(List<_ChartData> datas) {
-    if (datas.isEmpty) return null; // Default max if the list is empty or less than 30
+    if (datas.isEmpty)
+      return null; // Default max if the list is empty or less than 30
 
     double maxY = datas.map((e) => e.y).reduce((a, b) => a > b ? a : b);
     double maxY1 = datas.map((e) => e.y1).reduce((a, b) => a > b ? a : b);
@@ -144,7 +150,8 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
         "userid": userId,
         "type": type,
       });
-      print("response of graph sentence and call flow report : ${response.body}");
+      print(
+          "response of graph sentence and call flow report : ${response.body}");
       if (response.statusCode == 200 && type == "5 days") {
         setState(() {});
         print("5 days response");
@@ -154,9 +161,14 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
         for (int i = 0; i < _daysResponse.data!.length; i++) {
           log("${_daysResponse.data![i].totalpracticeCount}");
           data.add(_ChartData(
-              x: _daysResponse.data![i].date!, y: _daysResponse.data![i].totallisteningcount ?? 0.0, y1: _daysResponse.data![i].totalpracticeCount ?? 0.0));
-          data1.add(_ChartData1(x: _daysResponse.data![i].date!, y: _daysResponse.data![i].averagescore ?? 0.0));
-          print("average score for 5 days responseaaaaaaaaaaa:${_pronunciationDaysResponse.data![i].averageSuccessRate!.round()}");
+              x: _daysResponse.data![i].date!,
+              y: _daysResponse.data![i].totallisteningcount ?? 0.0,
+              y1: _daysResponse.data![i].totalpracticeCount ?? 0.0));
+          data1.add(_ChartData1(
+              x: _daysResponse.data![i].date!,
+              y: _daysResponse.data![i].averagescore ?? 0.0));
+          print(
+              "average score for 5 days responseaaaaaaaaaaa:${_pronunciationDaysResponse.data![i].averageSuccessRate!.round()}");
           /* _myData.add(DataItem(
             x: DateFormat("yyyy-MM-dd").parse(_daysResponse.data![i].date!).millisecondsSinceEpoch,
             y1: _daysResponse.data![i].totallisteningcount ?? 0.0,
@@ -180,7 +192,8 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
             x: _weeksResponse.data![i].weekStart!,
             y: _weeksResponse.data![i].averageScore ?? 0.0,
           ));
-          print("average score for 5 days response:${_weeksResponse.data![i].averageScore}");
+          print(
+              "average score for 5 days response:${_weeksResponse.data![i].averageScore}");
           print("data1 List:${data1}");
           /*   _myData.add(DataItem(
             x: DateFormat("yyyy-MM-dd").parse(_weeksResponse.data![i].weekStart!).millisecondsSinceEpoch,
@@ -202,7 +215,9 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
             y: _monthResponse.data![i].totallisteningcount ?? 0.0,
             y1: _monthResponse.data![i].totalpracticecount ?? 0.0,
           ));
-          data1.add(_ChartData1(x: _monthResponse.data![i].monthStart!, y: _monthResponse.data![i].averageScore ?? 0.0));
+          data1.add(_ChartData1(
+              x: _monthResponse.data![i].monthStart!,
+              y: _monthResponse.data![i].averageScore ?? 0.0));
           /*  _myData.add(DataItem(
               x: DateFormat("yyyy-MM-dd").parse(_monthResponse.data![i].monthStart!).millisecondsSinceEpoch,
               y1: _monthResponse.data![i].totallisteningcount ?? 0.0,
@@ -239,7 +254,8 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
     if (response.statusCode == 200 && type == "5 days") {
       setState(() {});
       print("5 days response");
-      _pronunciationDaysResponse = PronunciationDaysModel.fromJson(json.decode(response.body));
+      _pronunciationDaysResponse =
+          PronunciationDaysModel.fromJson(json.decode(response.body));
       PronunciationData.clear();
       PronunciationData1.clear();
       for (int i = 0; i < _pronunciationDaysResponse.data!.length; i++) {
@@ -247,8 +263,11 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
             x: _pronunciationDaysResponse.data![i].date!,
             y: _pronunciationDaysResponse.data![i].totallisteningcount ?? 0.0,
             y1: _pronunciationDaysResponse.data![i].totalpracticecount ?? 0.0));
-        PronunciationData1.add(_ChartData1(x: _pronunciationDaysResponse.data![i].date!, y: _pronunciationDaysResponse.data![i].averageSuccessRate ?? 0.0));
-        print("average score for 5 days response:${_pronunciationDaysResponse.data![i].totalpracticecount}");
+        PronunciationData1.add(_ChartData1(
+            x: _pronunciationDaysResponse.data![i].date!,
+            y: _pronunciationDaysResponse.data![i].averageSuccessRate ?? 0.0));
+        print(
+            "average score for 5 days response:${_pronunciationDaysResponse.data![i].totalpracticecount}");
         /* _myData.add(DataItem(
             x: DateFormat("yyyy-MM-dd").parse(_daysResponse.data![i].date!).millisecondsSinceEpoch,
             y1: _daysResponse.data![i].totallisteningcount ?? 0.0,
@@ -260,19 +279,22 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
     } else if (response.statusCode == 200 && type == "4 weeks") {
       setState(() {});
       print("4 weeks response");
-      _pronunciationWeeksResponse = PronunciationWeeksModel.fromJson(json.decode(response.body));
+      _pronunciationWeeksResponse =
+          PronunciationWeeksModel.fromJson(json.decode(response.body));
       PronunciationData.clear();
       PronunciationData1.clear();
       for (int i = 0; i < _pronunciationWeeksResponse.data!.length; i++) {
         PronunciationData.add(_ChartData(
             x: _pronunciationWeeksResponse.data![i].weekStart!,
             y: _pronunciationWeeksResponse.data![i].totallisteningcount ?? 0.0,
-            y1: _pronunciationWeeksResponse.data![i].totalpracticecount ?? 0.0));
+            y1: _pronunciationWeeksResponse.data![i].totalpracticecount ??
+                0.0));
         PronunciationData1.add(_ChartData1(
           x: _pronunciationWeeksResponse.data![i].weekStart!,
           y: _pronunciationWeeksResponse.data![i].averageSuccessRate ?? 0.0,
         ));
-        print("average score for weeks days response:${_pronunciationWeeksResponse.data![i].averageSuccessRate}");
+        print(
+            "average score for weeks days response:${_pronunciationWeeksResponse.data![i].averageSuccessRate}");
         print("PronunciationData1 List:${PronunciationData1}");
         /*   _myData.add(DataItem(
             x: DateFormat("yyyy-MM-dd").parse(_weeksResponse.data![i].weekStart!).millisecondsSinceEpoch,
@@ -285,7 +307,8 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
     } else if (response.statusCode == 200 && type == "3 months") {
       setState(() {});
       print("3 months response");
-      _pronunciationMonthsResponse = PronunciationMonthsModel.fromJson(json.decode(response.body));
+      _pronunciationMonthsResponse =
+          PronunciationMonthsModel.fromJson(json.decode(response.body));
       PronunciationData.clear();
       PronunciationData1.clear();
       for (int i = 0; i < _pronunciationMonthsResponse.data!.length; i++) {
@@ -294,15 +317,18 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
           y: _pronunciationMonthsResponse.data![i].totallisteningcount ?? 0.0,
           y1: _pronunciationMonthsResponse.data![i].totalpracticecount ?? 0.0,
         ));
-        PronunciationData1.add(
-            _ChartData1(x: _pronunciationMonthsResponse.data![i].monthStart!, y: _pronunciationMonthsResponse.data![i].averageSuccessRate ?? 0.0));
+        PronunciationData1.add(_ChartData1(
+            x: _pronunciationMonthsResponse.data![i].monthStart!,
+            y: _pronunciationMonthsResponse.data![i].averageSuccessRate ??
+                0.0));
         /*  _myData.add(DataItem(
               x: DateFormat("yyyy-MM-dd").parse(_monthResponse.data![i].monthStart!).millisecondsSinceEpoch,
               y1: _monthResponse.data![i].totallisteningcount ?? 0.0,
               y2: _monthResponse.data![i].totalpracticecount ?? 0.0,
               y3: _monthResponse.data![i].averageScore ?? 0.0));*/
       }
-      print("sifigri:${_pronunciationMonthsResponse.data![0].averageSuccessRate}");
+      print(
+          "sifigri:${_pronunciationMonthsResponse.data![0].averageSuccessRate}");
     } else {
       print("errorr");
     }
@@ -318,11 +344,13 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
   Widget build(BuildContext context) {
     final controller = Provider.of<AuthState>(context, listen: false);
     kText = MediaQuery.of(context).textScaler;
+    Size size = MediaQuery.of(context).size;
     return PopScope(
       canPop: false,
       onPopInvoked: (value) {
         context.read<AuthState>().changeIndex(0);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => BottomNavigation()));
       },
       child: BackgroundWidget(
         appBar: CommonAppBar(
@@ -331,14 +359,19 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
           // height: displayHeight(context) / 12.6875,
         ),
         body: Padding(
-          padding: EdgeInsets.only(top: isSplitScreen ? getFullWidgetHeight(height: 15) : getWidgetHeight(height: 15)),
+          padding: EdgeInsets.only(
+              top: isSplitScreen
+                  ? getFullWidgetHeight(height: 15)
+                  : getWidgetHeight(height: 15)),
           child: Column(
             children: [
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8, right: 8),
                   child: Container(
-                    decoration: BoxDecoration(color: Color(0XFF35405E), borderRadius: BorderRadius.circular(5)),
+                    decoration: BoxDecoration(
+                        color: Color(0XFF35405E),
+                        borderRadius: BorderRadius.circular(5)),
                     child: PageView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: 2,
@@ -357,13 +390,18 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
                               Center(
                                   child: index == 0
                                       ? Text(
-                                          'Sentence Practice',
+                                          "Pronunciation Lab Progress",
                                           style: TextStyle(color: Colors.white),
                                         )
-                                      : Text(
-                                          'Pronunciation Lab Progress',
-                                          style: TextStyle(color: Colors.white),
-                                        )),
+                                      : index == 1
+                                          ? Text(
+                                              'Sentence Practice',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            )
+                                          : Text("Learning Time Spent",
+                                              style: TextStyle(
+                                                  color: Colors.white))),
                               if (isLoading)
                                 Expanded(
                                   child: Center(
@@ -380,52 +418,101 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
                                           child: Stack(
                                             children: [
                                               Transform(
-                                                transform: Matrix4.identity()..translate(-16.0, 0.0, 0.0),
+                                                transform: Matrix4.identity()
+                                                  ..translate(-16.0, 0.0, 0.0),
                                                 child: SfCartesianChart(
                                                   plotAreaBorderWidth: 0.0,
                                                   primaryXAxis: CategoryAxis(
-                                                      majorGridLines: MajorGridLines(width: 0, color: Colors.grey),
-                                                      majorTickLines: MajorTickLines(width: 0, color: Colors.grey),
-                                                      axisLine: AxisLine(width: 0),
-                                                      labelStyle: TextStyle(color: Colors.white)),
+                                                      majorGridLines:
+                                                          MajorGridLines(
+                                                              width: 0,
+                                                              color:
+                                                                  Colors.grey),
+                                                      majorTickLines:
+                                                          MajorTickLines(
+                                                              width: 0,
+                                                              color:
+                                                                  Colors.grey),
+                                                      axisLine:
+                                                          AxisLine(width: 0),
+                                                      labelStyle: TextStyle(
+                                                          color: Colors.white)),
                                                   primaryYAxis: NumericAxis(
-                                                    minimum: calculateMin(data) ?? 0, // Dynamic minimum
-                                                    maximum: calculateMax(data) ?? 30, // Dynamic maximum
-                                                    interval: calculateInterval(calculateMin(data) ?? 0.00, calculateMax(data) ?? 30.00, 10) ?? 3,
-                                                    majorTickLines: MajorTickLines(width: 0, color: Colors.grey),
-                                                    axisLine: AxisLine(width: 0),
-                                                    labelStyle: TextStyle(color: Colors.white),
+                                                    minimum: calculateMin(
+                                                            data) ??
+                                                        0, // Dynamic minimum
+                                                    maximum: calculateMax(
+                                                            data) ??
+                                                        30, // Dynamic maximum
+                                                    interval: calculateInterval(
+                                                            calculateMin(
+                                                                    data) ??
+                                                                0.00,
+                                                            calculateMax(
+                                                                    data) ??
+                                                                30.00,
+                                                            10) ??
+                                                        3,
+                                                    majorTickLines:
+                                                        MajorTickLines(
+                                                            width: 0,
+                                                            color: Colors.grey),
+                                                    axisLine:
+                                                        AxisLine(width: 0),
+                                                    labelStyle: TextStyle(
+                                                        color: Colors.white),
                                                     //majorGridLines: MajorGridLines(width: 0),
                                                   ),
-                                                  series: <CartesianSeries<_ChartData, String>>[
-                                                    ColumnSeries<_ChartData, String>(
+                                                  series: <CartesianSeries<
+                                                      _ChartData, String>>[
+                                                    ColumnSeries<_ChartData,
+                                                        String>(
                                                       dataSource: data,
-                                                      xValueMapper: (_ChartData data, _) => data.x,
-                                                      yValueMapper: (_ChartData data, _) => data.y,
+                                                      xValueMapper:
+                                                          (_ChartData data,
+                                                                  _) =>
+                                                              data.x,
+                                                      yValueMapper:
+                                                          (_ChartData data,
+                                                                  _) =>
+                                                              data.y,
                                                       width: 0.4,
                                                       spacing: 0.2,
                                                       color: Color(0XFF6A61FC),
-                                                      dataLabelSettings: DataLabelSettings(
+                                                      dataLabelSettings:
+                                                          DataLabelSettings(
                                                         isVisible: true,
-                                                        labelAlignment: ChartDataLabelAlignment.top,
+                                                        labelAlignment:
+                                                            ChartDataLabelAlignment
+                                                                .top,
                                                         textStyle: TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 10,
                                                         ),
                                                       ),
                                                     ),
-                                                    ColumnSeries<_ChartData, String>(
+                                                    ColumnSeries<_ChartData,
+                                                        String>(
                                                       dataSource: data,
-                                                      xValueMapper: (_ChartData data, _) => data.x,
-                                                      yValueMapper: (_ChartData data, _) => data.y1,
+                                                      xValueMapper:
+                                                          (_ChartData data,
+                                                                  _) =>
+                                                              data.x,
+                                                      yValueMapper:
+                                                          (_ChartData data,
+                                                                  _) =>
+                                                              data.y1,
                                                       width: 0.4,
                                                       spacing: 0.2,
                                                       color: Color(0XFF3DC94E),
-                                                      dataLabelSettings: DataLabelSettings(
+                                                      dataLabelSettings:
+                                                          DataLabelSettings(
                                                         // labelAlignment: ChartDataLabelAlignment.auto, // Automatically adjust alignment
                                                         // overflowMode: OverflowMode.shift,
                                                         isVisible: true,
-                                                        labelAlignment: ChartDataLabelAlignment.top,
+                                                        labelAlignment:
+                                                            ChartDataLabelAlignment
+                                                                .top,
                                                         textStyle: TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 10,
@@ -436,48 +523,86 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
                                                 ),
                                               ),
                                               Transform(
-                                                transform: Matrix4.identity()..translate(20.0, 0.0, 0.0),
+                                                transform: Matrix4.identity()
+                                                  ..translate(20.0, 0.0, 0.0),
                                                 child: SfCartesianChart(
                                                   plotAreaBorderWidth: 0.0,
                                                   primaryXAxis: CategoryAxis(
-                                                    majorGridLines: MajorGridLines(width: 0, color: Colors.grey),
-                                                    majorTickLines: MajorTickLines(width: 0, color: Colors.grey),
-                                                    labelStyle: TextStyle(color: Colors.transparent),
-                                                    axisLine: AxisLine(width: 0),
+                                                    majorGridLines:
+                                                        MajorGridLines(
+                                                            width: 0,
+                                                            color: Colors.grey),
+                                                    majorTickLines:
+                                                        MajorTickLines(
+                                                            width: 0,
+                                                            color: Colors.grey),
+                                                    labelStyle: TextStyle(
+                                                        color:
+                                                            Colors.transparent),
+                                                    axisLine:
+                                                        AxisLine(width: 0),
                                                   ),
                                                   primaryYAxis: NumericAxis(
                                                       minimum: 0,
                                                       maximum: 100,
                                                       interval: 10,
                                                       opposedPosition: true,
-                                                      labelStyle: TextStyle(color: Colors.white),
-                                                      majorGridLines: MajorGridLines(width: 0, color: Colors.grey),
-                                                      majorTickLines: MajorTickLines(width: 0, color: Colors.grey),
-                                                      axisLine: AxisLine(width: 0),
+                                                      labelStyle: TextStyle(
+                                                          color: Colors.white),
+                                                      majorGridLines:
+                                                          MajorGridLines(
+                                                              width: 0,
+                                                              color:
+                                                                  Colors.grey),
+                                                      majorTickLines:
+                                                          MajorTickLines(
+                                                              width: 0,
+                                                              color:
+                                                                  Colors.grey),
+                                                      axisLine:
+                                                          AxisLine(width: 0),
                                                       labelFormat: "{value}%",
-                                                      numberFormat: NumberFormat.compact(),
-                                                      rangePadding: ChartRangePadding.normal),
-                                                  series: <CartesianSeries<_ChartData1, String>>[
-                                                    LineSeries<_ChartData1, String>(
+                                                      numberFormat: NumberFormat
+                                                          .compact(),
+                                                      rangePadding:
+                                                          ChartRangePadding
+                                                              .normal),
+                                                  series: <CartesianSeries<
+                                                      _ChartData1, String>>[
+                                                    LineSeries<_ChartData1,
+                                                        String>(
                                                       dataSource: data1,
-                                                      xValueMapper: (_ChartData1 data, _) => data.x,
-                                                      yValueMapper: (_ChartData1 data, _) => data.y,
+                                                      xValueMapper:
+                                                          (_ChartData1 data,
+                                                                  _) =>
+                                                              data.x,
+                                                      yValueMapper:
+                                                          (_ChartData1 data,
+                                                                  _) =>
+                                                              data.y,
                                                       color: Colors.white,
-                                                      markerSettings: MarkerSettings(
+                                                      markerSettings:
+                                                          MarkerSettings(
                                                         isVisible: true,
-                                                        shape: DataMarkerType.triangle,
+                                                        shape: DataMarkerType
+                                                            .triangle,
                                                         width: 8,
                                                         height: 8,
-                                                        borderColor: Colors.yellow,
+                                                        borderColor:
+                                                            Colors.yellow,
                                                         borderWidth: 2,
                                                       ),
-                                                      dataLabelSettings: DataLabelSettings(
+                                                      dataLabelSettings:
+                                                          DataLabelSettings(
                                                         isVisible: true,
                                                         textStyle: TextStyle(
                                                           color: Colors.white,
-                                                          fontSize: kText.scale(10),
+                                                          fontSize:
+                                                              kText.scale(10),
                                                         ),
-                                                        labelAlignment: ChartDataLabelAlignment.top,
+                                                        labelAlignment:
+                                                            ChartDataLabelAlignment
+                                                                .top,
                                                       ),
                                                     ),
                                                   ],
@@ -487,177 +612,647 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
                                           ),
                                         ),
                                       )
-                                    : Expanded(
-                                        child: SizedBox(
-                                          height: 300,
-                                          child: Stack(
-                                            children: [
-                                              Transform(
-                                                transform: Matrix4.identity()..translate(-16.0, 0.0, 0.0),
-                                                child: SfCartesianChart(
-                                                  plotAreaBorderWidth: 0.0,
-                                                  primaryXAxis: CategoryAxis(
-                                                      majorGridLines: MajorGridLines(width: 0, color: Colors.grey),
-                                                      majorTickLines: MajorTickLines(width: 0, color: Colors.grey),
-                                                      axisLine: AxisLine(width: 0),
-                                                      labelStyle: TextStyle(color: Colors.white)),
-                                                  primaryYAxis: NumericAxis(
-                                                    minimum: 0,
-                                                    maximum: 30,
-                                                    interval: 3,
-                                                    majorTickLines: MajorTickLines(width: 0, color: Colors.grey),
-                                                    axisLine: AxisLine(width: 0),
-                                                    labelStyle: TextStyle(color: Colors.white),
-                                                    //majorGridLines: MajorGridLines(width: 0),
-                                                  ),
-                                                  series: <CartesianSeries<_ChartData, String>>[
-                                                    ColumnSeries<_ChartData, String>(
-                                                      dataSource: PronunciationData,
-                                                      xValueMapper: (_ChartData data, _) => data.x,
-                                                      yValueMapper: (_ChartData data, _) => data.y,
-                                                      width: 0.4,
-                                                      spacing: 0.2,
-                                                      color: Color(0XFF6A61FC),
-                                                      dataLabelSettings: DataLabelSettings(
-                                                        isVisible: true,
-                                                        labelAlignment: ChartDataLabelAlignment.top,
-                                                        textStyle: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 10,
-                                                        ),
+                                    : index == 1
+                                        ? Expanded(
+                                            child: SizedBox(
+                                              height: 300,
+                                              child: Stack(
+                                                children: [
+                                                  Transform(
+                                                    transform:
+                                                        Matrix4.identity()
+                                                          ..translate(
+                                                              -16.0, 0.0, 0.0),
+                                                    child: SfCartesianChart(
+                                                      plotAreaBorderWidth: 0.0,
+                                                      primaryXAxis: CategoryAxis(
+                                                          majorGridLines:
+                                                              MajorGridLines(
+                                                                  width: 0,
+                                                                  color: Colors
+                                                                      .grey),
+                                                          majorTickLines:
+                                                              MajorTickLines(
+                                                                  width: 0,
+                                                                  color: Colors
+                                                                      .grey),
+                                                          axisLine: AxisLine(
+                                                              width: 0),
+                                                          labelStyle: TextStyle(
+                                                              color: Colors
+                                                                  .white)),
+                                                      primaryYAxis: NumericAxis(
+                                                        minimum: 0,
+                                                        maximum: 30,
+                                                        interval: 3,
+                                                        majorTickLines:
+                                                            MajorTickLines(
+                                                                width: 0,
+                                                                color: Colors
+                                                                    .grey),
+                                                        axisLine:
+                                                            AxisLine(width: 0),
+                                                        labelStyle: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                        //majorGridLines: MajorGridLines(width: 0),
                                                       ),
+                                                      series: <CartesianSeries<
+                                                          _ChartData, String>>[
+                                                        ColumnSeries<_ChartData,
+                                                            String>(
+                                                          dataSource:
+                                                              PronunciationData,
+                                                          xValueMapper:
+                                                              (_ChartData data,
+                                                                      _) =>
+                                                                  data.x,
+                                                          yValueMapper:
+                                                              (_ChartData data,
+                                                                      _) =>
+                                                                  data.y,
+                                                          width: 0.4,
+                                                          spacing: 0.2,
+                                                          color:
+                                                              Color(0XFF6A61FC),
+                                                          dataLabelSettings:
+                                                              DataLabelSettings(
+                                                            isVisible: true,
+                                                            labelAlignment:
+                                                                ChartDataLabelAlignment
+                                                                    .top,
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 10,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        ColumnSeries<_ChartData,
+                                                            String>(
+                                                          dataSource:
+                                                              PronunciationData,
+                                                          xValueMapper:
+                                                              (_ChartData data,
+                                                                      _) =>
+                                                                  data.x,
+                                                          yValueMapper:
+                                                              (_ChartData data,
+                                                                      _) =>
+                                                                  data.y1,
+                                                          width: 0.4,
+                                                          spacing: 0.2,
+                                                          color:
+                                                              Color(0XFF3DC94E),
+                                                          dataLabelSettings:
+                                                              DataLabelSettings(
+                                                            isVisible: true,
+                                                            labelAlignment:
+                                                                ChartDataLabelAlignment
+                                                                    .top,
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 10,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
                                                     ),
-                                                    ColumnSeries<_ChartData, String>(
-                                                      dataSource: PronunciationData,
-                                                      xValueMapper: (_ChartData data, _) => data.x,
-                                                      yValueMapper: (_ChartData data, _) => data.y1,
-                                                      width: 0.4,
-                                                      spacing: 0.2,
-                                                      color: Color(0XFF3DC94E),
-                                                      dataLabelSettings: DataLabelSettings(
-                                                        isVisible: true,
-                                                        labelAlignment: ChartDataLabelAlignment.top,
-                                                        textStyle: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 10,
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                              Transform(
-                                                transform: Matrix4.identity()..translate(20.0, 0.0, 0.0),
-                                                child: SfCartesianChart(
-                                                  plotAreaBorderWidth: 0.0,
-                                                  primaryXAxis: CategoryAxis(
-                                                    majorGridLines: MajorGridLines(width: 0, color: Colors.grey),
-                                                    majorTickLines: MajorTickLines(width: 0, color: Colors.grey),
-                                                    labelStyle: TextStyle(color: Colors.transparent),
-                                                    axisLine: AxisLine(width: 0),
                                                   ),
-                                                  primaryYAxis: NumericAxis(
-                                                      minimum: 0,
-                                                      maximum: 100,
-                                                      interval: 10,
-                                                      opposedPosition: true,
-                                                      labelStyle: TextStyle(color: Colors.white),
-                                                      majorGridLines: MajorGridLines(width: 0, color: Colors.grey),
-                                                      majorTickLines: MajorTickLines(width: 0, color: Colors.grey),
-                                                      axisLine: AxisLine(width: 0),
-                                                      labelFormat: "{value}%",
-                                                      numberFormat: NumberFormat.compact(),
-                                                      rangePadding: ChartRangePadding.normal),
-                                                  series: <CartesianSeries<_ChartData1, String>>[
-                                                    LineSeries<_ChartData1, String>(
-                                                      dataSource: PronunciationData1,
-                                                      xValueMapper: (_ChartData1 data, _) => data.x,
-                                                      yValueMapper: (_ChartData1 data, _) => data.y,
-                                                      color: Colors.white,
-                                                      markerSettings: MarkerSettings(
-                                                        isVisible: true,
-                                                        shape: DataMarkerType.triangle,
-                                                        width: 8,
-                                                        height: 8,
-                                                        borderColor: Colors.yellow,
-                                                        borderWidth: 2,
+                                                  Transform(
+                                                    transform:
+                                                        Matrix4.identity()
+                                                          ..translate(
+                                                              20.0, 0.0, 0.0),
+                                                    child: SfCartesianChart(
+                                                      plotAreaBorderWidth: 0.0,
+                                                      primaryXAxis:
+                                                          CategoryAxis(
+                                                        majorGridLines:
+                                                            MajorGridLines(
+                                                                width: 0,
+                                                                color: Colors
+                                                                    .grey),
+                                                        majorTickLines:
+                                                            MajorTickLines(
+                                                                width: 0,
+                                                                color: Colors
+                                                                    .grey),
+                                                        labelStyle: TextStyle(
+                                                            color: Colors
+                                                                .transparent),
+                                                        axisLine:
+                                                            AxisLine(width: 0),
                                                       ),
-                                                      dataLabelSettings: DataLabelSettings(
-                                                        isVisible: true,
-                                                        textStyle: TextStyle(
+                                                      primaryYAxis: NumericAxis(
+                                                          minimum: 0,
+                                                          maximum: 100,
+                                                          interval: 10,
+                                                          opposedPosition: true,
+                                                          labelStyle: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                          majorGridLines:
+                                                              MajorGridLines(
+                                                                  width: 0,
+                                                                  color: Colors
+                                                                      .grey),
+                                                          majorTickLines:
+                                                              MajorTickLines(
+                                                                  width: 0,
+                                                                  color: Colors
+                                                                      .grey),
+                                                          axisLine: AxisLine(
+                                                              width: 0),
+                                                          labelFormat:
+                                                              "{value}%",
+                                                          numberFormat:
+                                                              NumberFormat
+                                                                  .compact(),
+                                                          rangePadding:
+                                                              ChartRangePadding
+                                                                  .normal),
+                                                      series: <CartesianSeries<
+                                                          _ChartData1, String>>[
+                                                        LineSeries<_ChartData1,
+                                                            String>(
+                                                          dataSource:
+                                                              PronunciationData1,
+                                                          xValueMapper:
+                                                              (_ChartData1 data,
+                                                                      _) =>
+                                                                  data.x,
+                                                          yValueMapper:
+                                                              (_ChartData1 data,
+                                                                      _) =>
+                                                                  data.y,
                                                           color: Colors.white,
-                                                          fontSize: kText.scale(10),
+                                                          markerSettings:
+                                                              MarkerSettings(
+                                                            isVisible: true,
+                                                            shape:
+                                                                DataMarkerType
+                                                                    .triangle,
+                                                            width: 8,
+                                                            height: 8,
+                                                            borderColor:
+                                                                Colors.yellow,
+                                                            borderWidth: 2,
+                                                          ),
+                                                          dataLabelSettings:
+                                                              DataLabelSettings(
+                                                            isVisible: true,
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: kText
+                                                                  .scale(10),
+                                                            ),
+                                                            labelAlignment:
+                                                                ChartDataLabelAlignment
+                                                                    .top,
+                                                          ),
                                                         ),
-                                                        labelAlignment: ChartDataLabelAlignment.top,
-                                                      ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
+                                          )
+                                        : Expanded(
+                                            child: SizedBox(
+                                              height: 300,
+                                              child: Stack(
+                                                children: [
+                                                  Transform(
+                                                    transform:
+                                                        Matrix4.identity()
+                                                          ..translate(
+                                                              -16.0, 0.0, 0.0),
+                                                    child: SfCartesianChart(
+                                                      plotAreaBorderWidth: 0.0,
+                                                      primaryXAxis: CategoryAxis(
+                                                          majorGridLines:
+                                                              MajorGridLines(
+                                                                  width: 0,
+                                                                  color: Colors
+                                                                      .grey),
+                                                          majorTickLines:
+                                                              MajorTickLines(
+                                                                  width: 0,
+                                                                  color: Colors
+                                                                      .grey),
+                                                          axisLine: AxisLine(
+                                                              width: 0),
+                                                          labelStyle: TextStyle(
+                                                              color: Colors
+                                                                  .white)),
+                                                      primaryYAxis: NumericAxis(
+                                                        minimum: 0,
+                                                        maximum: 30,
+                                                        interval: 3,
+                                                        majorTickLines:
+                                                            MajorTickLines(
+                                                                width: 0,
+                                                                color: Colors
+                                                                    .grey),
+                                                        axisLine:
+                                                            AxisLine(width: 0),
+                                                        labelStyle: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                        //majorGridLines: MajorGridLines(width: 0),
+                                                      ),
+                                                      series: <CartesianSeries<
+                                                          _ChartData, String>>[
+                                                        ColumnSeries<_ChartData,
+                                                            String>(
+                                                          dataSource:
+                                                              PronunciationData,
+                                                          xValueMapper:
+                                                              (_ChartData data,
+                                                                      _) =>
+                                                                  data.x,
+                                                          yValueMapper:
+                                                              (_ChartData data,
+                                                                      _) =>
+                                                                  data.y,
+                                                          width: 0.4,
+                                                          spacing: 0.2,
+                                                          color:
+                                                              Color(0XFF6A61FC),
+                                                          dataLabelSettings:
+                                                              DataLabelSettings(
+                                                            isVisible: true,
+                                                            labelAlignment:
+                                                                ChartDataLabelAlignment
+                                                                    .top,
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 10,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        ColumnSeries<_ChartData,
+                                                            String>(
+                                                          dataSource:
+                                                              PronunciationData,
+                                                          xValueMapper:
+                                                              (_ChartData data,
+                                                                      _) =>
+                                                                  data.x,
+                                                          yValueMapper:
+                                                              (_ChartData data,
+                                                                      _) =>
+                                                                  data.y1,
+                                                          width: 0.4,
+                                                          spacing: 0.2,
+                                                          color:
+                                                              Color(0XFF3DC94E),
+                                                          dataLabelSettings:
+                                                              DataLabelSettings(
+                                                            isVisible: true,
+                                                            labelAlignment:
+                                                                ChartDataLabelAlignment
+                                                                    .top,
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 10,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Transform(
+                                                    transform:
+                                                        Matrix4.identity()
+                                                          ..translate(
+                                                              20.0, 0.0, 0.0),
+                                                    child: SfCartesianChart(
+                                                      plotAreaBorderWidth: 0.0,
+                                                      primaryXAxis:
+                                                          CategoryAxis(
+                                                        majorGridLines:
+                                                            MajorGridLines(
+                                                                width: 0,
+                                                                color: Colors
+                                                                    .grey),
+                                                        majorTickLines:
+                                                            MajorTickLines(
+                                                                width: 0,
+                                                                color: Colors
+                                                                    .grey),
+                                                        labelStyle: TextStyle(
+                                                            color: Colors
+                                                                .transparent),
+                                                        axisLine:
+                                                            AxisLine(width: 0),
+                                                      ),
+                                                      primaryYAxis: NumericAxis(
+                                                          minimum: 0,
+                                                          maximum: 100,
+                                                          interval: 10,
+                                                          opposedPosition: true,
+                                                          labelStyle: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                          majorGridLines:
+                                                              MajorGridLines(
+                                                                  width: 0,
+                                                                  color: Colors
+                                                                      .grey),
+                                                          majorTickLines:
+                                                              MajorTickLines(
+                                                                  width: 0,
+                                                                  color: Colors
+                                                                      .grey),
+                                                          axisLine: AxisLine(
+                                                              width: 0),
+                                                          labelFormat:
+                                                              "{value}%",
+                                                          numberFormat:
+                                                              NumberFormat
+                                                                  .compact(),
+                                                          rangePadding:
+                                                              ChartRangePadding
+                                                                  .normal),
+                                                      series: <CartesianSeries<
+                                                          _ChartData1, String>>[
+                                                        LineSeries<_ChartData1,
+                                                            String>(
+                                                          dataSource:
+                                                              PronunciationData1,
+                                                          xValueMapper:
+                                                              (_ChartData1 data,
+                                                                      _) =>
+                                                                  data.x,
+                                                          yValueMapper:
+                                                              (_ChartData1 data,
+                                                                      _) =>
+                                                                  data.y,
+                                                          color: Colors.white,
+                                                          markerSettings:
+                                                              MarkerSettings(
+                                                            isVisible: true,
+                                                            shape:
+                                                                DataMarkerType
+                                                                    .triangle,
+                                                            width: 8,
+                                                            height: 8,
+                                                            borderColor:
+                                                                Colors.yellow,
+                                                            borderWidth: 2,
+                                                          ),
+                                                          dataLabelSettings:
+                                                              DataLabelSettings(
+                                                            isVisible: true,
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: kText
+                                                                  .scale(10),
+                                                            ),
+                                                            labelAlignment:
+                                                                ChartDataLabelAlignment
+                                                                    .top,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
+                              SizedBox(
+                                height: isSplitScreen
+                                    ? getFullWidgetHeight(height: 15)
+                                    : getWidgetHeight(height: 15),
+                              ),
+                              index == 2
+                                  ? Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: size.width / 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: isSplitScreen
+                                                      ? getFullWidgetHeight(
+                                                          height: 7)
+                                                      : getWidgetHeight(
+                                                          height: 7),
+                                                  width:
+                                                      getWidgetWidth(width: 10),
+                                                  decoration: BoxDecoration(
+                                                      color: Color(0XFF6A61FC)),
+                                                ),
+                                                SizedBox(
+                                                    width: getWidgetWidth(
+                                                        width: 3)),
+                                                Text(
+                                                  "Process Learning",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: kText.scale(9)),
+                                                ),
+                                                SizedBox(
+                                                  width:
+                                                      getWidgetWidth(width: 8),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: isSplitScreen
+                                                      ? getFullWidgetHeight(
+                                                          height: 7)
+                                                      : getWidgetHeight(
+                                                          height: 7),
+                                                  width:
+                                                      getWidgetWidth(width: 10),
+                                                  decoration: BoxDecoration(
+                                                      color: Color(0XFF3DC94E)),
+                                                ),
+                                                SizedBox(
+                                                    width: getWidgetWidth(
+                                                        width: 3)),
+                                                Text(
+                                                  "AR Call Simulationss",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: kText.scale(9)),
+                                                ),
+                                                SizedBox(
+                                                  width:
+                                                      getWidgetWidth(width: 8),
+                                                )
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                      ),
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: size.width / 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: isSplitScreen
+                                                      ? getFullWidgetHeight(
+                                                          height: 7)
+                                                      : getWidgetHeight(
+                                                          height: 7),
+                                                  width:
+                                                      getWidgetWidth(width: 10),
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.yellow),
+                                                ),
+                                                SizedBox(
+                                                    width: getWidgetWidth(
+                                                        width: 3)),
+                                                Text(
+                                                  "Profluent English",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: kText.scale(9)),
+                                                ),
+                                                SizedBox(
+                                                  width:
+                                                      getWidgetWidth(width: 8),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: isSplitScreen
+                                                      ? getFullWidgetHeight(
+                                                          height: 7)
+                                                      : getWidgetHeight(
+                                                          height: 7),
+                                                  width:
+                                                      getWidgetWidth(width: 10),
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white),
+                                                ),
+                                                SizedBox(
+                                                    width: getWidgetWidth(
+                                                        width: 3)),
+                                                Text(
+                                                  "Soft Skills",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: kText.scale(9)),
+                                                ),
+                                                SizedBox(
+                                                  width:
+                                                      getWidgetWidth(width: 8),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                  : Row(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: isSplitScreen
+                                                  ? getFullWidgetHeight(
+                                                      height: 7)
+                                                  : getWidgetHeight(height: 7),
+                                              width: getWidgetWidth(width: 22),
+                                              decoration: BoxDecoration(
+                                                  color: Color(0XFF6A61FC)),
+                                            ),
+                                            SizedBox(
+                                                width:
+                                                    getWidgetWidth(width: 3)),
+                                            Text(
+                                              "Process",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: kText.scale(9)),
+                                            ),
+                                            SizedBox(
+                                              width: getWidgetWidth(width: 8),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: isSplitScreen
+                                                  ? getFullWidgetHeight(
+                                                      height: 7)
+                                                  : getWidgetHeight(height: 7),
+                                              width: getWidgetWidth(width: 22),
+                                              decoration: BoxDecoration(
+                                                  color: Color(0XFF3DC94E)),
+                                            ),
+                                            SizedBox(
+                                                width:
+                                                    getWidgetWidth(width: 3)),
+                                            Text(
+                                              "Practice Attempts",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: kText.scale(9)),
+                                            ),
+                                            SizedBox(
+                                              width: getWidgetWidth(width: 8),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Image.asset(
+                                              "assets/images/Line.png",
+                                              height: isSplitScreen
+                                                  ? getFullWidgetHeight(
+                                                      height: 15)
+                                                  : getWidgetHeight(height: 15),
+                                              width: getWidgetWidth(width: 35),
+                                            ),
+                                            SizedBox(
+                                                width:
+                                                    getWidgetWidth(width: 3)),
+                                            Text(
+                                              "Speech Score",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: kText.scale(9)),
+                                            ),
+                                            SizedBox(
+                                              width: getWidgetWidth(width: 8),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                               SizedBox(
-                                height: isSplitScreen ? getFullWidgetHeight(height: 15) : getWidgetHeight(height: 15),
-                              ),
-                              Row(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        height: isSplitScreen ? getFullWidgetHeight(height: 7) : getWidgetHeight(height: 7),
-                                        width: getWidgetWidth(width: 22),
-                                        decoration: BoxDecoration(color: Color(0XFF6A61FC)),
-                                      ),
-                                      SizedBox(width: getWidgetWidth(width: 3)),
-                                      Text(
-                                        "Listening Attempts",
-                                        style: TextStyle(color: Colors.white, fontSize: kText.scale(9)),
-                                      ),
-                                      SizedBox(
-                                        width: getWidgetWidth(width: 8),
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        height: isSplitScreen ? getFullWidgetHeight(height: 7) : getWidgetHeight(height: 7),
-                                        width: getWidgetWidth(width: 22),
-                                        decoration: BoxDecoration(color: Color(0XFF3DC94E)),
-                                      ),
-                                      SizedBox(width: getWidgetWidth(width: 3)),
-                                      Text(
-                                        "Practice Attempts",
-                                        style: TextStyle(color: Colors.white, fontSize: kText.scale(9)),
-                                      ),
-                                      SizedBox(
-                                        width: getWidgetWidth(width: 8),
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        "assets/images/Line.png",
-                                        height: isSplitScreen ? getFullWidgetHeight(height: 15) : getWidgetHeight(height: 15),
-                                        width: getWidgetWidth(width: 35),
-                                      ),
-                                      SizedBox(width: getWidgetWidth(width: 3)),
-                                      Text(
-                                        "Speech Score",
-                                        style: TextStyle(color: Colors.white, fontSize: kText.scale(9)),
-                                      ),
-                                      SizedBox(
-                                        width: getWidgetWidth(width: 8),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: isSplitScreen ? getFullWidgetHeight(height: 15) : getWidgetHeight(height: 15),
+                                height: isSplitScreen
+                                    ? getFullWidgetHeight(height: 15)
+                                    : getWidgetHeight(height: 15),
                               ),
                               index == 0
                                   ? Row(
@@ -678,7 +1273,10 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
                                         _buildTimePeriodButton("3 months", 1),
                                       ],
                                     ),
-                              SizedBox(height: isSplitScreen ? getFullWidgetHeight(height: 15) : getWidgetHeight(height: 15)),
+                              SizedBox(
+                                  height: isSplitScreen
+                                      ? getFullWidgetHeight(height: 15)
+                                      : getWidgetHeight(height: 15)),
                               Center(
                                 child: SmoothPageIndicator(
                                   controller: _pageController,
@@ -712,18 +1310,26 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
                         NewSubMenuItem(
                           onTap: () async {
                             if (index == 0) {
-                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                              await prefs.setString('lastAccess', 'PronunciationReport');
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              await prefs.setString(
+                                  'lastAccess', 'PronunciationReport');
                             } else if (index == 1) {
-                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                              await prefs.setString('lastAccess', 'SpeechReport');
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              await prefs.setString(
+                                  'lastAccess', 'SpeechReport');
                             } else if (index == 2) {
-                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                              await prefs.setString('lastAccess', 'CallFlowReport');
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              await prefs.setString(
+                                  'lastAccess', 'CallFlowReport');
                             }
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => controller.labReports[index]['page']),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      controller.labReports[index]['page']),
                             );
                           },
                           backgroundImage: AllAssets.back1,
@@ -752,40 +1358,56 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
         print("period: $period");
         print("indexxxValueee:$index");
         setState(() {
-          index == 0 ? selectedTimePeriod = period : PronunciationSelectedTimePeriod = period;
-          index == 0 ? graphForSentenceAndCallFlow(type: period) : graphForPronunciationAndSounds(type: period);
+          index == 0
+              ? selectedTimePeriod = period
+              : PronunciationSelectedTimePeriod = period;
+          index == 0
+              ? graphForSentenceAndCallFlow(type: period)
+              : graphForPronunciationAndSounds(type: period);
         });
       },
       child: index == 0
           ? Container(
               alignment: Alignment.center,
-              height: isSplitScreen ? getFullWidgetHeight(height: 40) : getWidgetHeight(height: 40),
+              height: isSplitScreen
+                  ? getFullWidgetHeight(height: 40)
+                  : getWidgetHeight(height: 40),
               width: getWidgetWidth(width: 103),
               decoration: BoxDecoration(
-                  color: selectedTimePeriod == period ? Colors.white : Color(0XFF35405E),
+                  color: selectedTimePeriod == period
+                      ? Colors.white
+                      : Color(0XFF35405E),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.white)),
               child: Text(
                 period,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: selectedTimePeriod == period ? Colors.black : Colors.white,
+                  color: selectedTimePeriod == period
+                      ? Colors.black
+                      : Colors.white,
                 ),
               ),
             )
           : Container(
               alignment: Alignment.center,
-              height: isSplitScreen ? getFullWidgetHeight(height: 40) : getWidgetHeight(height: 40),
+              height: isSplitScreen
+                  ? getFullWidgetHeight(height: 40)
+                  : getWidgetHeight(height: 40),
               width: getWidgetWidth(width: 103),
               decoration: BoxDecoration(
-                  color: PronunciationSelectedTimePeriod == period ? Colors.white : Color(0XFF35405E),
+                  color: PronunciationSelectedTimePeriod == period
+                      ? Colors.white
+                      : Color(0XFF35405E),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.white)),
               child: Text(
                 period,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: PronunciationSelectedTimePeriod == period ? Colors.black : Colors.white,
+                  color: PronunciationSelectedTimePeriod == period
+                      ? Colors.black
+                      : Colors.white,
                 ),
               ),
             ),
