@@ -297,11 +297,11 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                 Column(
                                   children: [
                                     ARGridTile(
-                                      height: kWidth > 500
+                                      height: kWidth > 900
                                           ? displayHeight(context) * 0.30
                                           : null,
-                                      width: kWidth > 500
-                                          ? displayWidth(context) * 0.35
+                                      width: kWidth > 900
+                                          ? displayWidth(context) * 0.2
                                           : null,
                                       onTap: () async {
                                         print(
@@ -365,11 +365,11 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                           : getWidgetHeight(height: 20),
                                     ),
                                     ARGridTile(
-                                      height: kWidth > 500
+                                      height: kWidth > 900
                                           ? displayHeight(context) * 0.30
                                           : null,
-                                      width: kWidth > 500
-                                          ? displayWidth(context) * 0.35
+                                      width: kWidth > 900
+                                          ? displayWidth(context) * 0.2
                                           : null,
                                       onTap: () async {
                                         if (_categories[3].subcategories !=
@@ -440,11 +440,11 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                           : getWidgetHeight(height: 40),
                                     ),
                                     ARGridTile(
-                                      height: kWidth > 500
+                                      height: kWidth > 900
                                           ? displayHeight(context) * 0.30
                                           : null,
-                                      width: kWidth > 500
-                                          ? displayWidth(context) * 0.35
+                                      width: kWidth > 900
+                                          ? displayWidth(context) * 0.2
                                           : null,
                                       onTap: () async {
                                         print(
@@ -508,11 +508,11 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                           : getWidgetHeight(height: 20),
                                     ),
                                     ARGridTile(
-                                      height: kWidth > 500
+                                      height: kWidth > 900
                                           ? displayHeight(context) * 0.30
                                           : null,
-                                      width: kWidth > 500
-                                          ? displayWidth(context) * 0.35
+                                      width: kWidth > 900
+                                          ? displayWidth(context) * 0.2
                                           : null,
                                       onTap: () async {
                                         print(

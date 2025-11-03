@@ -41,12 +41,13 @@ Future<void> main() async {
     await Firebase.initializeApp();
     final appDocumentDir = await getApplicationDocumentsDirectory();
     await Hive.initFlutter(appDocumentDir.path);
+
+    Hive.registerAdapter(ProcessLearningLinkAdapter());
+    Hive.registerAdapter(ProcessLearningLinkHiveAdapter());
+    Hive.registerAdapter(InteractiveLinkHiveAdapter());
+    Hive.registerAdapter(InteractiveLinkAdapter());
   }
 
-  Hive.registerAdapter(ProcessLearningLinkAdapter());
-  Hive.registerAdapter(ProcessLearningLinkHiveAdapter());
-  Hive.registerAdapter(InteractiveLinkHiveAdapter());
-  Hive.registerAdapter(InteractiveLinkAdapter());
   FirebaseMessaging.onBackgroundMessage(Fcm.firebaseMessagingBackgroundHandler);
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(

@@ -310,11 +310,13 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                       body: SingleChildScrollView(
                         child: Padding(
                           padding: EdgeInsets.only(
-                              bottom: isSplitScreen
-                                  ? getFullWidgetHeight(height: 15)
-                                  : getWidgetHeight(height: 15),
-                              left: getWidgetWidth(width: 15),
-                              right: getWidgetWidth(width: 15)),
+                              bottom: kIsWeb
+                                  ? 20
+                                  : isSplitScreen
+                                      ? getFullWidgetHeight(height: 15)
+                                      : getWidgetHeight(height: 15),
+                              left: kIsWeb ? 20 : getWidgetWidth(width: 15),
+                              right: kIsWeb ? 20 : getWidgetWidth(width: 15)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -344,7 +346,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                                 fontSize: kText.scale(26),
                                                 fontFamily: "Quicksand",
                                                 letterSpacing: 2)),
-                                        SizedBox(width: 5),
+                                        // SizedBox(width: 5),
                                         Container(
                                             height: 40,
                                             child: Image.asset(
@@ -354,8 +356,10 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                                         height: 35)
                                                     : getWidgetHeight(
                                                         height: 35),
-                                                width:
-                                                    getWidgetWidth(width: 35))),
+                                                width: kIsWeb
+                                                    ? 45
+                                                    : getWidgetWidth(
+                                                        width: 35))),
                                         const Spacer(),
                                         ShowCaseView(
                                           globalKey: _menuBarKey,
@@ -373,8 +377,9 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                                         height: 24)
                                                     : getWidgetHeight(
                                                         height: 24),
-                                                width:
-                                                    getWidgetWidth(width: 24),
+                                                width: kIsWeb
+                                                    ? 30
+                                                    : getWidgetWidth(width: 24),
                                                 fit: BoxFit.fill,
                                               )
                                               // Icon(
@@ -443,7 +448,9 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                                     const EdgeInsets.all(8.0),
                                                 child: Container(
                                                     height: kHeight / 54.1,
-                                                    width: kWidth / 6.2,
+                                                    width: kIsWeb
+                                                        ? 80
+                                                        : kWidth / 6.2,
                                                     decoration: BoxDecoration(
                                                         color:
                                                             Color(0xFF6C63FE),
@@ -791,9 +798,11 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                               // SPH(displayHeight(context)/31.23),
                               // SPH(20),
                               SizedBox(
-                                height: isSplitScreen
-                                    ? getFullWidgetHeight(height: 26)
-                                    : getWidgetHeight(height: 26),
+                                height: kIsWeb
+                                    ? 0
+                                    : isSplitScreen
+                                        ? getFullWidgetHeight(height: 26)
+                                        : getWidgetHeight(height: 26),
                               ),
                               Container(
                                 // height: displayHeight(context) / 2.59,
@@ -828,7 +837,9 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                       menu: "Process Learning",
                                       size: size,
                                     ),
-                                    SPW(displayWidth(context) / 18.75),
+                                    SPW(kIsWeb
+                                        ? 20
+                                        : displayWidth(context) / 18.75),
                                     FirstRowMenu(
                                       onTap: () {
                                         mianCategoryTitile =
@@ -851,7 +862,9 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                       menu: "AR Call Simulation",
                                       size: size,
                                     ),
-                                    SPW(displayWidth(context) / 18.75),
+                                    SPW(kIsWeb
+                                        ? 20
+                                        : displayWidth(context) / 18.75),
                                     FirstRowMenu(
                                       onTap: () {
                                         mianCategoryTitile =
@@ -874,7 +887,9 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                       menu: "Profluent English",
                                       size: size,
                                     ),
-                                    SPW(displayWidth(context) / 18.75),
+                                    SPW(kIsWeb
+                                        ? 20
+                                        : displayWidth(context) / 18.75),
                                     FirstRowMenu(
                                       onTap: () async {
                                         mianCategoryTitile = "Soft Skills";
@@ -902,9 +917,11 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                               ),
                               // SPH(displayHeight(context) * 0.0246),
                               SizedBox(
-                                height: isSplitScreen
-                                    ? getFullWidgetHeight(height: 15)
-                                    : getWidgetHeight(height: 15),
+                                height: kIsWeb
+                                    ? 15
+                                    : isSplitScreen
+                                        ? getFullWidgetHeight(height: 15)
+                                        : getWidgetHeight(height: 15),
                               ),
                               Text(
                                 "Quick Links",

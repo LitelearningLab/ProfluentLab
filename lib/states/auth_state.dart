@@ -147,234 +147,77 @@ class AuthState with ChangeNotifier {
   }
 
   void checkAuthStatus() async {
-    print(" e eijii u ue yue");
+    print("🚀 Starting checkAuthStatus()");
 
-    ///// dont delete below function
-    /*await Connectivity().onConnectivityChanged.listen((result) async {
-      print("dd idj iojjd uhdjda inside");
-      print("prinit result : $result");
-      await checkConnectivity(result);
-      // _authService.authStateChanges.listen((User? user) async {
-      checkAuth = await SharedPref.getSavedBool('checkingAuth');
-      if (kDebugMode) {
-        print("check auth checking");
-        print(checkAuth);
-      }
-      _user = user;
-      user1 = user;
-      if (!isConnected) {
-        print("d -d di jidj fuff dd dddddd");
-        _status = Status.noNetwork;
-      }
-      else if (!checkAuth) {
-        bool checking = await SharedPref.getSavedBool("walkthrough");
-        if (checking) {
-          print("d -d di jidj ssdd dsdsds");
-          _status = Status.unauthenticated;
-        } else {
-          print("d -d di jidj dddddd");
-          _status = Status.walkThrough;
-        }
-      }
-      else {
-        print("d -d di jidj fuff");
-        _status = Status.authenticated;
-        await login();
-      }
-      streamController.add(_status); // 9778795596
-      notifyListeners();
-      // });
-    });*/
-
+    // Check initial connectivity
     final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile)) {
-      isConnected = true;
-      notifyListeners();
-      // _authService.authStateChanges.listen((User? user) async {
-      checkAuth = await SharedPref.getSavedBool('checkingAuth');
+        await Connectivity().checkConnectivity();
 
-      _user = user;
-      user1 = user;
-      if (!isConnected) {
-        print("d -d di jidj fuff dd dddddd");
-        _status = Status.noNetwork;
-      } else if (!checkAuth) {
-        String userId = await SharedPref.getSavedString("userId");
-        if (userId.isEmpty) {
-          _status = Status.walkThrough;
-          // _status = Status.authenticated;
-        } else {
-          bool checking = await SharedPref.getSavedBool("walkthrough");
-          bool isFirstTutorial =
-              await SharedPref.getSavedBool("isFirstTutorial");
-          bool isLogedInBefore =
-              await SharedPref.getSavedBool("isLogedInBefore");
-          if (!checking) {
-            print("d -d di jidj dddddd4");
-            _status = Status.walkThrough;
-          } else if (isLogedInBefore) {
-            print("d -d di jidj ssdd dsdsds1");
-            _status = Status.tutorial;
+    isConnected = connectivityResult.any((r) =>
+        r == ConnectivityResult.mobile ||
+        r == ConnectivityResult.wifi ||
+        r == ConnectivityResult.ethernet);
 
-            //  await SharedPref.saveBool("isFirstTutorial", true);
-          } else {
-            print("d -d di jidj dddddd5");
-            _status = Status.unauthenticated;
-            // _status = Status.tutorial;
-          }
-        }
+    print("📶 Connectivity: ${isConnected ? 'Connected' : 'No network'}");
+
+    await _handleAuthStatus();
+
+    // Listen for future connectivity changes
+    Connectivity().onConnectivityChanged.listen((result) async {
+      print("🔁 Connectivity changed: $result");
+      isConnected = result != ConnectivityResult.none;
+      await checkConnectivity(result);
+      await _handleAuthStatus();
+    });
+  }
+
+  /// Handles the core authentication state logic
+  Future<void> _handleAuthStatus() async {
+    notifyListeners();
+
+    checkAuth = await SharedPref.getSavedBool('checkingAuth');
+    log("🔑 checkAuth: $checkAuth");
+
+    _user = user;
+    user1 = user;
+
+    if (!isConnected) {
+      log("❌ No internet connection");
+      _status = Status.noNetwork;
+    } else if (!checkAuth) {
+      log("🧩 Checking local user state...");
+      String userId = await SharedPref.getSavedString("userId");
+      bool walkthroughDone = await SharedPref.getSavedBool("walkthrough");
+      bool isFirstTutorial = await SharedPref.getSavedBool("isFirstTutorial");
+      bool isLogedInBefore = await SharedPref.getSavedBool("isLogedInBefore");
+
+      log("   ▶ userId: $userId");
+      log("   ▶ walkthroughDone: $walkthroughDone");
+      log("   ▶ isFirstTutorial: $isFirstTutorial");
+      log("   ▶ isLogedInBefore: $isLogedInBefore");
+
+      if (!walkthroughDone) {
+        log("🎉 New user → Walkthrough screen");
+        _status = Status.walkThrough;
+      } else if (userId.isEmpty) {
+        log("👋 Logged-out old user → Login screen");
+        _status = Status.unauthenticated;
+      } else if (isLogedInBefore && !isFirstTutorial) {
+        log("📚 Returning user → Tutorial screen");
+        _status = Status.tutorial;
       } else {
-        print("d -d di jidj fuff");
-        _status = Status.authenticated;
-        await login();
+        log("🔐 Default → Login screen");
+        _status = Status.tutorial;
       }
-      streamController.add(_status); // 9778795596
-      notifyListeners();
-      // });
-    } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-      print("dd idj iojjd uhdjda inside");
-      isConnected = true;
-      notifyListeners();
-      // _authService.authStateChanges.listen((User? user) async {
-      checkAuth = await SharedPref.getSavedBool('checkingAuth');
-      if (kDebugMode) {
-        // print("check auth checking");
-        print("check auth checking $checkAuth");
-      }
-      _user = user;
-      user1 = user;
-      if (!isConnected) {
-        print("d -d di jidj fuff dd dddddd");
-        _status = Status.noNetwork;
-      } else if (!checkAuth) {
-        String userId = await SharedPref.getSavedString("userId");
-        if (userId.isEmpty) {
-          _status = Status.walkThrough;
-          // _status = Status.authenticated;
-        } else {
-          bool checking = await SharedPref.getSavedBool("walkthrough");
-          bool isFirstTutorial =
-              await SharedPref.getSavedBool("isFirstTutorial");
-          bool isLogedInBefore =
-              await SharedPref.getSavedBool("isLogedInBefore");
-          if (!checking) {
-            print("d -d di jidj dddddd4");
-            _status = Status.walkThrough;
-          } else if (isLogedInBefore) {
-            print("d -d di jidj ssdd dsdsds2");
-            _status = Status.tutorial;
-
-            //  await SharedPref.saveBool("isFirstTutorial", true);
-          } else {
-            print("d -d di jidj dddddd5");
-            _status = Status.unauthenticated;
-            // _status = Status.tutorial;
-          }
-        }
-      } else {
-        print("d -d di jidj fuff222222");
-        _status = Status.authenticated;
-        await login();
-      }
-      streamController.add(_status); // 9778795596
-      notifyListeners();
-      // });
-    } else if (connectivityResult.contains(ConnectivityResult.ethernet)) {
-      print("dd idj iojjd uhdjda inside");
-      isConnected = true;
-      notifyListeners();
-      // _authService.authStateChanges.listen((User? user) async {
-      checkAuth = await SharedPref.getSavedBool('checkingAuth');
-      if (kDebugMode) {
-        print("check auth checking");
-        print(checkAuth);
-      }
-      _user = user;
-      user1 = user;
-      if (!isConnected) {
-        print("d -d di jidj fuff dd dddddd");
-        _status = Status.noNetwork;
-      } else if (!checkAuth) {
-        String userId = await SharedPref.getSavedString("userId");
-        if (userId.isEmpty) {
-          _status = Status.walkThrough;
-          // _status = Status.authenticated;
-        } else {
-          bool checking = await SharedPref.getSavedBool("walkthrough");
-          bool isFirstTutorial =
-              await SharedPref.getSavedBool("isFirstTutorial");
-          bool isLogedInBefore =
-              await SharedPref.getSavedBool("isLogedInBefore");
-          if (!checking) {
-            print("d -d di jidj dddddd4");
-            _status = Status.walkThrough;
-          } else if (isLogedInBefore) {
-            print("d -d di jidj ssdd dsdsds3");
-            _status = Status.tutorial;
-
-            //  await SharedPref.saveBool("isFirstTutorial", true);
-          } else {
-            print("d -d di jidj dddddd5");
-            _status = Status.unauthenticated;
-            // _status = Status.tutorial;
-          }
-        }
-      } else {
-        print("d -d di jidj fuff");
-        _status = Status.authenticated;
-        await login();
-      }
-      streamController.add(_status); // 9778795596
-      notifyListeners();
-      // });
-    } else if (connectivityResult.contains(ConnectivityResult.none)) {
-      isConnected = false;
-      notifyListeners();
+    } else {
+      log("✅ Already authenticated → Proceeding to login()");
+      _status = Status.authenticated;
+      await login();
     }
 
-    await Connectivity().onConnectivityChanged.listen((result) async {
-      print("dd idj iojjd uhdjda inside");
-      print("prinit result : $result");
-      await checkConnectivity(result);
-      // _authService.authStateChanges.listen((User? user) async {
-      checkAuth = await SharedPref.getSavedBool('checkingAuth');
-
-      if (kDebugMode) {
-        print("check auth checking");
-        print(checkAuth);
-      }
-      _user = user;
-      user1 = user;
-      if (!isConnected) {
-        print("d -d di jidj fuff dd dddddd");
-        _status = Status.noNetwork;
-      } else if (!checkAuth) {
-        bool checking = await SharedPref.getSavedBool("walkthrough");
-        bool isFirstTutorial = await SharedPref.getSavedBool("isFirstTutorial");
-        bool isLogedInBefore = await SharedPref.getSavedBool("isLogedInBefore");
-        if (!checking) {
-          print("d -d di jidj dddddd4");
-          _status = Status.walkThrough;
-        } else if (isLogedInBefore) {
-          print("d -d di jidj ssdd dsdsd4");
-          _status = Status.tutorial;
-
-          //  await SharedPref.saveBool("isFirstTutorial", true);
-        } else {
-          print("d -d di jidj dddddd5");
-          _status = Status.unauthenticated;
-          // _status = Status.tutorial;
-        }
-      } else {
-        print("d -d di jidj fuff");
-        _status = Status.authenticated;
-        await login();
-      }
-      streamController.add(_status); // 9778795596
-      notifyListeners();
-      // });
-    });
+    log("📢 Status updated: $_status");
+    streamController.add(_status);
+    notifyListeners();
   }
 
   // login() async {
@@ -617,24 +460,43 @@ class AuthState with ChangeNotifier {
   //
   // notifyListeners();
   // }
-  Future signOut() async {
+  Future<void> signOut() async {
+    log("🚪 Signing out user...");
+
     _status = Status.unauthenticated;
     _user = null;
     _appUser = null;
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await prefs.clear(); // Clear everything or be specific:
+    final prefs = await SharedPreferences.getInstance();
 
-    await prefs.remove('checkingAuth');
-    await prefs.remove('userId');
-    await prefs.remove('walkthrough');
-    await prefs.remove('tutorialchecking');
-    // await prefs.remove('isFirstTutorial');
-    await prefs.remove('firstTimeUser');
+    // List all keys to be removed for clarity
+    final keysToRemove = [
+      'checkingAuth',
+      'userId',
+      'walkthrough',
+      'tutorialchecking',
+      // 'isFirstTutorial', // intentionally kept for later use
+      'firstTimeUser',
+    ];
 
-    SharedPref.saveBool("walkthrough", true);
+    for (final key in keysToRemove) {
+      if (prefs.containsKey(key)) {
+        await prefs.remove(key);
+        log("🗑️ Removed key: $key");
+      } else {
+        log("⚠️ Key not found (skipped): $key");
+      }
+    }
+
+    // Preserve walkthrough so the app doesn’t show intro again
+    await SharedPref.saveBool("walkthrough", true);
+    log("🔁 walkthrough flag reset to true");
+
+    // Update state
     streamController.add(_status);
     notifyListeners();
+
+    log("✅ Sign-out complete. Status: $_status");
   }
 
   Future<UserM?> getAppUser(String phoneNo) async {

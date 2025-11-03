@@ -422,7 +422,7 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
     return InkWell(
       onTap: widget.onTap,
       child: Container(
-        width: getWidgetWidth(width: 228),
+        width: kIsWeb ? 320 : getWidgetWidth(width: 228),
         height: getWidgetHeight(height: 313.39),
         decoration: BoxDecoration(
           color: const Color(0xff34425D),
@@ -525,8 +525,10 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                                               barRadius:
                                                   const Radius.circular(50),
                                               // width: displayWidth(context)/2.652,
-                                              width:
-                                                  getWidgetWidth(width: 141.35),
+                                              width: kIsWeb
+                                                  ? 220
+                                                  : getWidgetWidth(
+                                                      width: 141.35),
                                               // lineHeight: displayHeight(context)/105.867,
                                               lineHeight:
                                                   getWidgetHeight(height: 6),

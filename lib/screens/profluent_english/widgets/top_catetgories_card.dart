@@ -1,4 +1,5 @@
 // import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
@@ -48,7 +49,7 @@ class _PETopCategoriesCardState extends State<PETopCategoriesCard> {
           top: 12,
         ),
         height: getWidgetHeight(height: 147),
-        width: size.width * 0.45,
+        width: kIsWeb ? size.width * 0.2 : size.width * 0.45,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: widget.cardColor,

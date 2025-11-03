@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:litelearninglab/common_widgets/spacings.dart';
 import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
@@ -70,12 +71,12 @@ class _CommonAppBarState extends State<CommonAppBar> {
                 widget.appbarIcon != null
                     ? Container(
                         padding: kWidth > 500
-                            ? EdgeInsets.all(12)
+                            ? EdgeInsets.all(10)
                             : EdgeInsets.all(displayWidth(context) / 37.5),
                         height: isSplitScreen
                             ? getFullWidgetHeight(height: 40)
                             : getWidgetHeight(height: 40),
-                        width: getWidgetWidth(width: 40),
+                        width: kIsWeb ? 40 : getWidgetWidth(width: 40),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             gradient: LinearGradient(colors: [
@@ -120,7 +121,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
                       ),
                 widget.appbarIcon != null
                     ? SizedBox(
-                        width: getWidgetWidth(width: 14),
+                        width: kIsWeb ? 20 : getWidgetWidth(width: 14),
                       )
                     : SizedBox(
                         width: getWidgetWidth(width: 5),

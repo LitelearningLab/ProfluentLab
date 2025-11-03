@@ -293,9 +293,11 @@ class _ProfluentEnglishModifiedScreenState
                         child: Column(
                           children: [
                             Container(
-                              height: isSplitScreen
-                                  ? getFullWidgetHeight(height: 142)
-                                  : getWidgetHeight(height: 142),
+                              height: kIsWeb
+                                  ? 250
+                                  : isSplitScreen
+                                      ? getFullWidgetHeight(height: 142)
+                                      : getWidgetHeight(height: 142),
                               width: size.width,
                               child: ListView(
                                 padding: EdgeInsets.zero,
@@ -306,7 +308,9 @@ class _ProfluentEnglishModifiedScreenState
                                     height: isSplitScreen
                                         ? getFullWidgetHeight(height: 88.28)
                                         : getWidgetHeight(height: 88.28),
-                                    width: getWidgetWidth(width: 96.11),
+                                    width: kIsWeb
+                                        ? 100
+                                        : getWidgetWidth(width: 96.11),
                                     title: 'Pronunciation Lab',
                                     imageUrl: AllAssets.pePl,
                                     onTap: () async {
@@ -352,7 +356,8 @@ class _ProfluentEnglishModifiedScreenState
                                   ),
                                   // SPW(10),
                                   SizedBox(
-                                    width: getWidgetWidth(width: 14),
+                                    width:
+                                        kIsWeb ? 20 : getWidgetWidth(width: 14),
                                   ),
                                   PETopCategoriesCard(
                                     height: isSplitScreen
@@ -404,7 +409,8 @@ class _ProfluentEnglishModifiedScreenState
                                   ),
                                   // SPW(10),
                                   SizedBox(
-                                    width: getWidgetWidth(width: 14),
+                                    width:
+                                        kIsWeb ? 20 : getWidgetWidth(width: 14),
                                   ),
                                   PETopCategoriesCard(
                                     height: isSplitScreen
@@ -456,7 +462,8 @@ class _ProfluentEnglishModifiedScreenState
                                   ),
                                   // SPW(10),
                                   SizedBox(
-                                    width: 14,
+                                    width:
+                                        kIsWeb ? 20 : getWidgetWidth(width: 14),
                                   ),
                                   PETopCategoriesCard(
                                     height: isSplitScreen
@@ -654,9 +661,11 @@ class _ProfluentEnglishModifiedScreenState
                               splashBorderRadius: BorderRadius.circular(30),
                               enableFeedback: false,
                               indicatorPadding: EdgeInsets.symmetric(
-                                  vertical: isSplitScreen
-                                      ? getFullWidgetHeight(height: 9)
-                                      : getWidgetHeight(height: 9)),
+                                  vertical: kIsWeb
+                                      ? 2
+                                      : isSplitScreen
+                                          ? getFullWidgetHeight(height: 9)
+                                          : getWidgetHeight(height: 9)),
                               onTap: (int) async {
                                 print('/////////// $int');
                                 _onTabChanged(int);
@@ -675,7 +684,7 @@ class _ProfluentEnglishModifiedScreenState
                               physics: AlwaysScrollableScrollPhysics(),
                               unselectedLabelColor: Color(0xFF99A0AE),
                               indicatorColor: Color(0xFF6C63FE),
-                              indicatorSize: TabBarIndicatorSize.label,
+                              indicatorSize: TabBarIndicatorSize.tab,
                               indicator: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
                                   color: Color(0xFF6C63FE)),
@@ -1027,8 +1036,10 @@ class _ProfluentEnglishModifiedScreenState
                                                       colorList[index],
                                                   child: Image.asset(
                                                     AllAssets.quickLinkPL,
-                                                    scale:
-                                                        displayWidth(context) /
+                                                    scale: kIsWeb
+                                                        ? 3
+                                                        : displayWidth(
+                                                                context) /
                                                             101.5,
                                                   ),
                                                 ),
@@ -1181,8 +1192,9 @@ class _ProfluentEnglishModifiedScreenState
                                                               }),
                                                               child: Padding(
                                                                 padding: EdgeInsets.symmetric(
-                                                                    horizontal:
-                                                                        getWidgetWidth(
+                                                                    horizontal: kIsWeb
+                                                                        ? 20
+                                                                        : getWidgetWidth(
                                                                             width:
                                                                                 20),
                                                                     vertical: isSplitScreen
@@ -1196,8 +1208,9 @@ class _ProfluentEnglishModifiedScreenState
                                                                     Container(
                                                                   padding: EdgeInsets.symmetric(
                                                                       horizontal:
-                                                                          getWidgetWidth(
-                                                                              width: 12)),
+                                                                          kIsWeb
+                                                                              ? 0
+                                                                              : getWidgetWidth(width: 12)),
                                                                   child: Row(
                                                                     children: [
                                                                       Text(
@@ -1320,8 +1333,10 @@ class _ProfluentEnglishModifiedScreenState
                                                       colorList[index],
                                                   child: Image.asset(
                                                     AllAssets.quickLinkPL,
-                                                    scale:
-                                                        displayWidth(context) /
+                                                    scale: kIsWeb
+                                                        ? 3
+                                                        : displayWidth(
+                                                                context) /
                                                             101.5,
                                                   ),
                                                 ),

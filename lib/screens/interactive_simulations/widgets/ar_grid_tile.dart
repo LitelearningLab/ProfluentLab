@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 
@@ -65,8 +66,8 @@ class ARGridTile extends StatelessWidget {
                     child: SizedBox(
                       // height: displayHeight(context) * 0.061,
                       // width: displayWidth(context) * 0.133,
-                      height: 50,
-                      width: 50,
+                      height: kIsWeb ? 120 : 50,
+                      width: kIsWeb ? 120 : 50,
                       child: Image.asset(
                         icon,
                         // gridTileDatas[0]['image'],
@@ -85,7 +86,7 @@ class ARGridTile extends StatelessWidget {
                 child: Image.asset(
                   ellipse,
                   // gridTileDatas[0]['ellipse'],
-                  scale: 3.5,
+                  scale: kIsWeb ? 1.6 : 3.5,
                 ),
               ),
             ),

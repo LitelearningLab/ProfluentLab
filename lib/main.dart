@@ -2,10 +2,17 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:litelearninglab/hiveDb/hiveDb.dart';
+import 'package:litelearninglab/hiveDb/new_interactive_simulator_hive_model.dart';
+import 'package:litelearninglab/hiveDb/new_interactive_simulator_hivedb.dart';
+import 'package:litelearninglab/hiveDb/new_process_hive_adapter.dart';
 import 'package:litelearninglab/screens/dashboard/school_dashboard.dart';
 import 'package:litelearninglab/screens/login/new_login_screen.dart';
 import 'package:litelearninglab/screens/login/unauth_screen.dart';
@@ -17,6 +24,7 @@ import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
 import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/fcm.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 
@@ -42,7 +50,29 @@ final MaterialColor customColor = MaterialColor(0xFF293750, colorSwatch);
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   print("hejeo e hh uh ");
-  await Firebase.initializeApp();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: 'AIzaSyDGyQDDDN3dt7-jr3gSmCy12Ij24c25_Xs',
+        appId: '1:620147953805:web:7e001c3a9822dc5cb752c4',
+        messagingSenderId: '620147953805',
+        projectId: 'lite-learning-lab',
+        authDomain: 'lite-learning-lab.firebaseapp.com',
+        databaseURL: 'https://lite-learning-lab.firebaseio.com',
+        storageBucket: 'lite-learning-lab.appspot.com',
+      ),
+    );
+    await Hive.initFlutter();
+  } else {
+    await Firebase.initializeApp();
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    await Hive.initFlutter(appDocumentDir.path);
+
+    Hive.registerAdapter(ProcessLearningLinkAdapter());
+    Hive.registerAdapter(ProcessLearningLinkHiveAdapter());
+    Hive.registerAdapter(InteractiveLinkHiveAdapter());
+    Hive.registerAdapter(InteractiveLinkAdapter());
+  }
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemNavigationBarColor: Color(0xFF293750),
