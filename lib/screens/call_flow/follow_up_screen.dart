@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 // import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -675,45 +676,47 @@ class followUpscreenState extends State<FollowUpScreen> {
                 color: Colors.white,
               ),
             ),
-            actions: [
-              (isDownloading && !downloadController.isAllDownloaded)
-                  ? SizedBox(
-                      width: getWidgetWidth(width: 20),
-                      height: isSplitScreen
-                          ? getFullWidgetHeight(height: 20)
-                          : getWidgetHeight(height: 20),
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                      ))
-                  : downloadController.isAllDownloaded &&
-                          !downloadController.isDownloadError
-                      ? InkWell(
-                          onTap: () {},
-                          child: Icon(
-                            Icons.file_download_done,
-                            color: AppColors.white,
-                          ),
-                        )
-                      : InkWell(
-                          // onTap: downloadAll,
-                          onTap: () async {
-                            isDownloading = true;
-                            setState(() {});
-                            downloadAll(downloadController, widget.load);
-                          },
-                          child: Container(
-                              height: isSplitScreen
-                                  ? getFullWidgetHeight(height: 18.6)
-                                  : getWidgetHeight(height: 18.6),
-                              width: getWidgetWidth(width: 19.8),
-                              child: Image.asset(AllAssets.downloading)),
-                          /* child: Icon(
+            actions: kIsWeb
+                ? []
+                : [
+                    (isDownloading && !downloadController.isAllDownloaded)
+                        ? SizedBox(
+                            width: getWidgetWidth(width: 20),
+                            height: isSplitScreen
+                                ? getFullWidgetHeight(height: 20)
+                                : getWidgetHeight(height: 20),
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ))
+                        : downloadController.isAllDownloaded &&
+                                !downloadController.isDownloadError
+                            ? InkWell(
+                                onTap: () {},
+                                child: Icon(
+                                  Icons.file_download_done,
+                                  color: AppColors.white,
+                                ),
+                              )
+                            : InkWell(
+                                // onTap: downloadAll,
+                                onTap: () async {
+                                  isDownloading = true;
+                                  setState(() {});
+                                  downloadAll(downloadController, widget.load);
+                                },
+                                child: Container(
+                                    height: isSplitScreen
+                                        ? getFullWidgetHeight(height: 18.6)
+                                        : getWidgetHeight(height: 18.6),
+                                    width: getWidgetWidth(width: 19.8),
+                                    child: Image.asset(AllAssets.downloading)),
+                                /* child: Icon(
                       Icons.file_download,
                       color: AppColors.white,
                     ),*/
-                        ),
-              SizedBox(width: getWidgetWidth(width: 20))
-            ],
+                              ),
+                    SizedBox(width: getWidgetWidth(width: 20))
+                  ],
           ),
           body: Stack(
             children: [
@@ -791,8 +794,8 @@ class followUpscreenState extends State<FollowUpScreen> {
                                       Flexible(
                                         child: Container(
                                           padding: EdgeInsets.symmetric(
-                                              horizontal:
-                                                  getWidgetWidth(width: 10),
+                                              horizontal: getWidgetWidth(
+                                                  width: kIsWeb ? 0 : 10),
                                               vertical: isSplitScreen
                                                   ? getFullWidgetHeight(
                                                       height: 10)
@@ -842,344 +845,28 @@ class followUpscreenState extends State<FollowUpScreen> {
                                                           height: 5)
                                                       : getWidgetHeight(
                                                           height: 5)),
-                                              Row(
-                                                children: [
-                                                  // if (!_isPlaying)
-                                                  InkWell(
-                                                    onTap: () async {
-                                                      print(
-                                                          "playyyyyyyyyyyyyyyyyyyyyyyyy");
-                                                      startPractice(
-                                                          actionType:
-                                                              'listening');
-                                                      if (_isPlaying &&
-                                                          _currentPlayingIndex ==
-                                                              index) {
-                                                        _audioPlayerManager
-                                                            .stop();
-                                                      } else {
-                                                        _play(
-                                                          downloadController
-                                                              .followUps[index]
-                                                              .file!,
-                                                          // convertNumbersToText(convertSpecialChars(
-                                                          downloadController
-                                                                  .followUps[
-                                                                      index]
-                                                                  .text ??
-                                                              ""
-                                                          // ))
-                                                          ,
-                                                          index,
-                                                          context,
-                                                          localPath:
-                                                              downloadController
-                                                                  .followUps[
-                                                                      index]
-                                                                  .localPath,
-                                                        );
-                                                        String?
-                                                            sentenceFileUrl =
-                                                            downloadController
-                                                                .followUps[
-                                                                    index]
-                                                                .file;
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      getWidgetWidth(width: 8),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    // if (!_isPlaying)
+                                                    InkWell(
+                                                      onTap: () async {
                                                         print(
-                                                            "sentenceScenerioFileUrl:${downloadController.followUps[index].file}");
-                                                        fileUrl?.add(
-                                                            sentenceFileUrl!);
-
-                                                        /* FirebaseFirestore firestore = FirebaseFirestore.instance;
-                                                        String userId = await SharedPref.getSavedString('userId');
-                                                        DocumentReference wordFileUrlDocument =
-                                                            firestore.collection('proFluentEnglishReport').doc(userId);
-        
-                                                        await wordFileUrlDocument.update({
-                                                          'SentencesTapped': FieldValue.arrayUnion(
-                                                              [downloadController.followUps[index].file]),
-                                                        }).then((_) {
-                                                          print(
-                                                              'Link added to Firestore: ${downloadController.followUps[index].file}');
-                                                        }).catchError((e) {
-                                                          print('Error updating Firestore: $e');
-                                                        });*/
-                                                        print(
-                                                            "fileUrl:${downloadController.followUps[index].file}");
-                                                        print(
-                                                            "sdhhvgfrhngkihri");
-                                                        log(downloadController
-                                                                .followUps[
-                                                                    index]
-                                                                .localPath ??
-                                                            "no local path exist");
-                                                        log("${downloadController.followUps[index].file.toString()}");
-                                                        log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                                                        log("${downloadController.followUps[index].text.toString()}");
-                                                        downloadController
-                                                            .followUps
-                                                            .forEach((element) {
-                                                          log("${element.text}");
-                                                        });
-                                                      }
-
-                                                      // _play(followUps[index].file!, convertNumbersToText(convertSpecialChars(followUps[index].text ?? "")), index,
-                                                      //     localPath: followUps[index].localPath);
-                                                      // log("${followUps[index].file.toString()}");
-                                                      // log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                                                      // log("${followUps[index].text.toString()}");
-                                                      // followUps.forEach((element) {
-                                                      //   log("${element.text}");
-                                                      // });
-                                                    },
-                                                    child: _isAudioPlayed ==
-                                                                false &&
-                                                            _currentPlayingIndex ==
-                                                                index
-                                                        ? Icon(
-                                                            Icons.info_outlined,
-                                                            color: Colors.red,
-                                                            size: isSplitScreen
-                                                                ? getFullWidgetHeight(
-                                                                    height: 30)
-                                                                : getWidgetHeight(
-                                                                    height: 30),
-                                                          )
-                                                        : _isAudioLoading &&
-                                                                _currentPlayingIndex ==
-                                                                    index
-                                                            ? SizedBox(
-                                                                height: isSplitScreen
-                                                                    ? getFullWidgetHeight(
-                                                                        height:
-                                                                            30)
-                                                                    : getWidgetHeight(
-                                                                        height:
-                                                                            30),
-                                                                width:
-                                                                    getWidgetWidth(
-                                                                        width:
-                                                                            30),
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          5.0),
-                                                                  child:
-                                                                      CircularProgressIndicator(
-                                                                    color: Color(
-                                                                        0xff6C63FE),
-                                                                    strokeWidth:
-                                                                        2.5,
-                                                                  ),
-                                                                ))
-                                                            : Icon(
-                                                                _isPlaying &&
-                                                                        _currentPlayingIndex ==
-                                                                            index
-                                                                    ? Icons
-                                                                        .pause_circle_outline
-                                                                    : Icons
-                                                                        .play_circle_outline,
-                                                                color: Color(
-                                                                    0xff6C63FE),
-                                                                size: isSplitScreen
-                                                                    ? getFullWidgetHeight(
-                                                                        height:
-                                                                            30)
-                                                                    : getWidgetHeight(
-                                                                        height:
-                                                                            30),
-                                                              ),
-                                                    // child: Icon(
-                                                    //   Icons.play_circle_outline,
-                                                    //   color: Color(0xff71b800),
-                                                    //   size: 30,
-                                                    // ),
-                                                  ),
-                                                  // if (_isPlaying)
-                                                  //   InkWell(
-                                                  //       onTap: () {
-                                                  //         _audioPlayerManager.stop();
-                                                  //       },
-                                                  //       child: Icon(
-                                                  //         Icons.pause_circle_outline,
-                                                  //         color: Color(0xff71b800),
-                                                  //         size: 30,
-                                                  //       )),
-                                                  SizedBox(
-                                                      width: getWidgetWidth(
-                                                          width: 17)),
-                                                  InkWell(
-                                                    onTap: () async {
-                                                      print(
-                                                          "miccccccccccccccccccccccccccccccc");
-                                                      startPractice(
-                                                          actionType:
-                                                              'practice');
-                                                      _audioPlayerManager
-                                                          .stop();
-                                                      _isAudioLoading = false;
-                                                      _showDialog(
-                                                          // convertNumbersToText(convertSpecialChars(
-                                                          downloadController
-                                                                  .followUps[
-                                                                      index]
-                                                                  .text ??
-                                                              ""
-                                                          // ))
-                                                          ,
-                                                          false,
-                                                          context);
-                                                      String? sentenceFileUrl =
-                                                          downloadController
-                                                              .followUps[index]
-                                                              .file;
-                                                      print(
-                                                          "sentenceScenerioFileUrl:${downloadController.followUps[index].file}");
-                                                      fileUrl?.add(
-                                                          sentenceFileUrl!);
-
-                                                      FirebaseFirestore
-                                                          firestore =
-                                                          FirebaseFirestore
-                                                              .instance;
-                                                      String userId =
-                                                          await SharedPref
-                                                              .getSavedString(
-                                                                  'userId');
-                                                      DocumentReference
-                                                          wordFileUrlDocument =
-                                                          firestore
-                                                              .collection(
-                                                                  'proFluentEnglishReport')
-                                                              .doc(userId);
-
-                                                      await wordFileUrlDocument
-                                                          .update({
-                                                        'SentencesTapped':
-                                                            FieldValue
-                                                                .arrayUnion([
-                                                          downloadController
-                                                              .followUps[index]
-                                                              .file
-                                                        ]),
-                                                      }).then((_) {
-                                                        print(
-                                                            'Link added to Firestore: ${downloadController.followUps[index].file}');
-                                                      }).catchError((e) {
-                                                        print(
-                                                            'Error updating Firestore: $e');
-                                                      });
-                                                      print(
-                                                          "fileUrl:${downloadController.followUps[index].file}");
-                                                      print("sdhhvgfrhngkihri");
-                                                    },
-                                                    child: Icon(
-                                                      Icons.mic,
-                                                      size: isSplitScreen
-                                                          ? getFullWidgetHeight(
-                                                              height: 30)
-                                                          : getWidgetHeight(
-                                                              height: 30),
-                                                      color: Color(0xffFFFFFF),
-                                                    ),
-                                                  ),
-                                                  // SPW(15),
-                                                  // Image.asset(
-                                                  //   AllAssets.dfb,
-                                                  //   width: 30,
-                                                  //   color: Colors.white,
-                                                  // ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                          width: getWidgetWidth(width: 11)),
-                                      Image.asset(
-                                        AllAssets.sender,
-                                        width: getWidgetWidth(width: 40),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                      height: isSplitScreen
-                                          ? getFullWidgetHeight(height: 26)
-                                          : getWidgetHeight(height: 26))
-                                ],
-                              );
-                            } else {
-                              return Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Image.asset(
-                                        AllAssets.receiver,
-                                        width: getWidgetWidth(width: 40),
-                                      ),
-                                      SizedBox(width: 11),
-                                      Flexible(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal:
-                                                  getWidgetWidth(width: 15),
-                                              vertical: isSplitScreen
-                                                  ? getFullWidgetHeight(
-                                                      height: 10)
-                                                  : getWidgetHeight(
-                                                      height: 10)),
-                                          decoration: new BoxDecoration(
-                                            borderRadius: new BorderRadius.only(
-                                              topRight: Radius.circular(24.5),
-                                              bottomLeft: Radius.circular(24.5),
-                                              bottomRight:
-                                                  Radius.circular(24.5),
-                                            ),
-                                            color: Color(0XFF37496C),
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                downloadController
-                                                        .followUps[index]
-                                                        .text ??
-                                                    "",
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    color: Color(0xFFFFFFFF),
-                                                    fontFamily: Keys.fontFamily,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: kText.scale(14)),
-                                              ),
-                                              SizedBox(
-                                                  height: isSplitScreen
-                                                      ? getFullWidgetHeight(
-                                                          height: 5)
-                                                      : getWidgetHeight(
-                                                          height: 5)),
-                                              Row(
-                                                children: [
-                                                  // if (!_isPlaying)
-                                                  InkWell(
-                                                    onTap: () async {
-                                                      if (_isPlaying &&
-                                                          _currentPlayingIndex ==
-                                                              index) {
-                                                        _audioPlayerManager
-                                                            .stop();
-                                                      } else {
-                                                        print(
-                                                            "listening tapped");
+                                                            "playyyyyyyyyyyyyyyyyyyyyyyyy");
                                                         startPractice(
                                                             actionType:
                                                                 'listening');
-                                                        _play(
+                                                        if (_isPlaying &&
+                                                            _currentPlayingIndex ==
+                                                                index) {
+                                                          _audioPlayerManager
+                                                              .stop();
+                                                        } else {
+                                                          _play(
                                                             downloadController
                                                                 .followUps[
                                                                     index]
@@ -1198,8 +885,165 @@ class followUpscreenState extends State<FollowUpScreen> {
                                                                 downloadController
                                                                     .followUps[
                                                                         index]
-                                                                    .localPath);
+                                                                    .localPath,
+                                                          );
+                                                          String?
+                                                              sentenceFileUrl =
+                                                              downloadController
+                                                                  .followUps[
+                                                                      index]
+                                                                  .file;
+                                                          print(
+                                                              "sentenceScenerioFileUrl:${downloadController.followUps[index].file}");
+                                                          fileUrl?.add(
+                                                              sentenceFileUrl!);
 
+                                                          /* FirebaseFirestore firestore = FirebaseFirestore.instance;
+                                                          String userId = await SharedPref.getSavedString('userId');
+                                                          DocumentReference wordFileUrlDocument =
+                                                              firestore.collection('proFluentEnglishReport').doc(userId);
+                                                        
+                                                          await wordFileUrlDocument.update({
+                                                            'SentencesTapped': FieldValue.arrayUnion(
+                                                                [downloadController.followUps[index].file]),
+                                                          }).then((_) {
+                                                            print(
+                                                                'Link added to Firestore: ${downloadController.followUps[index].file}');
+                                                          }).catchError((e) {
+                                                            print('Error updating Firestore: $e');
+                                                          });*/
+                                                          print(
+                                                              "fileUrl:${downloadController.followUps[index].file}");
+                                                          print(
+                                                              "sdhhvgfrhngkihri");
+                                                          log(downloadController
+                                                                  .followUps[
+                                                                      index]
+                                                                  .localPath ??
+                                                              "no local path exist");
+                                                          log("${downloadController.followUps[index].file.toString()}");
+                                                          log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                                                          log("${downloadController.followUps[index].text.toString()}");
+                                                          downloadController
+                                                              .followUps
+                                                              .forEach(
+                                                                  (element) {
+                                                            log("${element.text}");
+                                                          });
+                                                        }
+
+                                                        // _play(followUps[index].file!, convertNumbersToText(convertSpecialChars(followUps[index].text ?? "")), index,
+                                                        //     localPath: followUps[index].localPath);
+                                                        // log("${followUps[index].file.toString()}");
+                                                        // log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                                                        // log("${followUps[index].text.toString()}");
+                                                        // followUps.forEach((element) {
+                                                        //   log("${element.text}");
+                                                        // });
+                                                      },
+                                                      child: _isAudioPlayed ==
+                                                                  false &&
+                                                              _currentPlayingIndex ==
+                                                                  index
+                                                          ? Icon(
+                                                              Icons
+                                                                  .info_outlined,
+                                                              color: Colors.red,
+                                                              size: isSplitScreen
+                                                                  ? getFullWidgetHeight(
+                                                                      height:
+                                                                          30)
+                                                                  : getWidgetHeight(
+                                                                      height:
+                                                                          30),
+                                                            )
+                                                          : _isAudioLoading &&
+                                                                  _currentPlayingIndex ==
+                                                                      index
+                                                              ? SizedBox(
+                                                                  height: isSplitScreen
+                                                                      ? getFullWidgetHeight(
+                                                                          height:
+                                                                              30)
+                                                                      : getWidgetHeight(
+                                                                          height:
+                                                                              30),
+                                                                  width:
+                                                                      getWidgetWidth(
+                                                                          width:
+                                                                              30),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            5.0),
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      color: Color(
+                                                                          0xff6C63FE),
+                                                                      strokeWidth:
+                                                                          2.5,
+                                                                    ),
+                                                                  ))
+                                                              : Icon(
+                                                                  _isPlaying &&
+                                                                          _currentPlayingIndex ==
+                                                                              index
+                                                                      ? Icons
+                                                                          .pause_circle_outline
+                                                                      : Icons
+                                                                          .play_circle_outline,
+                                                                  color: Color(
+                                                                      0xff6C63FE),
+                                                                  size: isSplitScreen
+                                                                      ? getFullWidgetHeight(
+                                                                          height:
+                                                                              30)
+                                                                      : getWidgetHeight(
+                                                                          height:
+                                                                              30),
+                                                                ),
+                                                      // child: Icon(
+                                                      //   Icons.play_circle_outline,
+                                                      //   color: Color(0xff71b800),
+                                                      //   size: 30,
+                                                      // ),
+                                                    ),
+                                                    // if (_isPlaying)
+                                                    //   InkWell(
+                                                    //       onTap: () {
+                                                    //         _audioPlayerManager.stop();
+                                                    //       },
+                                                    //       child: Icon(
+                                                    //         Icons.pause_circle_outline,
+                                                    //         color: Color(0xff71b800),
+                                                    //         size: 30,
+                                                    //       )),
+                                                    SizedBox(
+                                                        width: getWidgetWidth(
+                                                            width: 17)),
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        print(
+                                                            "miccccccccccccccccccccccccccccccc");
+                                                        startPractice(
+                                                            actionType:
+                                                                'practice');
+                                                        _audioPlayerManager
+                                                            .stop();
+                                                        _isAudioLoading = false;
+                                                        _showDialog(
+                                                            // convertNumbersToText(convertSpecialChars(
+                                                            downloadController
+                                                                    .followUps[
+                                                                        index]
+                                                                    .text ??
+                                                                ""
+                                                            // ))
+                                                            ,
+                                                            false,
+                                                            context);
                                                         String?
                                                             sentenceFileUrl =
                                                             downloadController
@@ -1247,177 +1091,108 @@ class followUpscreenState extends State<FollowUpScreen> {
                                                             "fileUrl:${downloadController.followUps[index].file}");
                                                         print(
                                                             "sdhhvgfrhngkihri");
-                                                      }
-
-                                                      // _play(followUps[index].file!, convertNumbersToText(convertSpecialChars(followUps[index].text ?? "")), index,
-                                                      //     localPath: followUps[index].localPath);
-                                                    },
-                                                    child: _isAudioPlayed ==
-                                                                false &&
-                                                            _currentPlayingIndex ==
-                                                                index
-                                                        ? Icon(
-                                                            Icons.info_outlined,
-                                                            color: Colors.red,
-                                                            size: isSplitScreen
-                                                                ? getFullWidgetHeight(
-                                                                    height: 30)
-                                                                : getWidgetHeight(
-                                                                    height: 30),
-                                                          )
-                                                        : _isAudioLoading &&
-                                                                _currentPlayingIndex ==
-                                                                    index
-                                                            ? SizedBox(
-                                                                height: isSplitScreen
-                                                                    ? getFullWidgetHeight(
-                                                                        height:
-                                                                            30)
-                                                                    : getWidgetHeight(
-                                                                        height:
-                                                                            30),
-                                                                width:
-                                                                    getWidgetWidth(
-                                                                        width:
-                                                                            30),
-                                                                child: Padding(
-                                                                  padding: EdgeInsets.symmetric(
-                                                                      horizontal: getWidgetWidth(
-                                                                          width:
-                                                                              5),
-                                                                      vertical: isSplitScreen
-                                                                          ? getFullWidgetHeight(
-                                                                              height:
-                                                                                  5)
-                                                                          : getWidgetHeight(
-                                                                              height: 5)),
-                                                                  child:
-                                                                      CircularProgressIndicator(
-                                                                    color: Color(
-                                                                        0xff6C63FE),
-                                                                    strokeWidth:
-                                                                        2.5,
-                                                                  ),
-                                                                ))
-                                                            : Icon(
-                                                                _isPlaying &&
-                                                                        _currentPlayingIndex ==
-                                                                            index
-                                                                    ? Icons
-                                                                        .pause_circle_outline
-                                                                    : Icons
-                                                                        .play_circle_outline,
-                                                                color: Color(
-                                                                    0xff6C63FE),
-                                                                size: isSplitScreen
-                                                                    ? getFullWidgetHeight(
-                                                                        height:
-                                                                            30)
-                                                                    : getWidgetHeight(
-                                                                        height:
-                                                                            30),
-                                                              ),
-                                                    // child: Icon(
-                                                    //   Icons.play_circle_outline,
-                                                    //   color: Color(0xff0588e2),
-                                                    //   size: 30,
-                                                    // ),
-                                                  ),
-                                                  // if (_isPlaying)
-                                                  //   InkWell(
-                                                  //       onTap: () {
-                                                  //         _audioPlayerManager.stop();
-                                                  //       },
-                                                  //       child: Icon(
-                                                  //         Icons.pause_circle_outline,
-                                                  //         color: Color(0xff0588e2),
-                                                  //         size: 30,
-                                                  //       )),
-                                                  SizedBox(
-                                                      width: getWidgetWidth(
-                                                          width: 17)),
-                                                  InkWell(
-                                                    child: Icon(
-                                                      Icons.mic,
-                                                      size: isSplitScreen
-                                                          ? getFullWidgetHeight(
-                                                              height: 30)
-                                                          : getWidgetHeight(
-                                                              height: 30),
-                                                      color: Color(0xffFFFFFF),
+                                                      },
+                                                      child: Icon(
+                                                        Icons.mic,
+                                                        size: isSplitScreen
+                                                            ? getFullWidgetHeight(
+                                                                height: 30)
+                                                            : getWidgetHeight(
+                                                                height: 30),
+                                                        color:
+                                                            Color(0xffFFFFFF),
+                                                      ),
                                                     ),
-                                                    onTap: () async {
-                                                      print(
-                                                          "mic button tappedd");
-                                                      startPractice(
-                                                          actionType:
-                                                              'practice');
-                                                      _audioPlayerManager
-                                                          .stop();
-                                                      _isAudioLoading = false;
-                                                      _showDialog(
-                                                          // convertNumbersToText(convertSpecialChars(
-                                                          downloadController
-                                                                  .followUps[
-                                                                      index]
-                                                                  .text ??
-                                                              "",
-                                                          // )),
-                                                          false,
-                                                          context);
-                                                      String? sentenceFileUrl =
-                                                          downloadController
-                                                              .followUps[index]
-                                                              .file;
-                                                      print(
-                                                          "sentenceScenerioFileUrl:${downloadController.followUps[index].file}");
-                                                      fileUrl?.add(
-                                                          sentenceFileUrl!);
-
-                                                      FirebaseFirestore
-                                                          firestore =
-                                                          FirebaseFirestore
-                                                              .instance;
-                                                      String userId =
-                                                          await SharedPref
-                                                              .getSavedString(
-                                                                  'userId');
-                                                      DocumentReference
-                                                          wordFileUrlDocument =
-                                                          firestore
-                                                              .collection(
-                                                                  'proFluentEnglishReport')
-                                                              .doc(userId);
-
-                                                      await wordFileUrlDocument
-                                                          .update({
-                                                        'SentencesTapped':
-                                                            FieldValue
-                                                                .arrayUnion([
-                                                          downloadController
-                                                              .followUps[index]
-                                                              .file
-                                                        ]),
-                                                      }).then((_) {
-                                                        print(
-                                                            'Link added to Firestore: ${downloadController.followUps[index].file}');
-                                                      }).catchError((e) {
-                                                        print(
-                                                            'Error updating Firestore: $e');
-                                                      });
-                                                      print(
-                                                          "fileUrl:${downloadController.followUps[index].file}");
-                                                      print("sdhhvgfrhngkihri");
-                                                    },
-                                                  ),
-                                                  // SPW(15),
-                                                  // Image.asset(
-                                                  //   AllAssets.dfb,
-                                                  //   color: Color(0xff0b298f),
-                                                  //   width: 30,
-                                                  // ),
-                                                ],
+                                                    // SPW(15),
+                                                    // Image.asset(
+                                                    //   AllAssets.dfb,
+                                                    //   width: 30,
+                                                    //   color: Colors.white,
+                                                    // ),
+                                                  ],
+                                                ),
                                               ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                          width: getWidgetWidth(
+                                              width: kIsWeb ? 6 : 11)),
+                                      Image.asset(
+                                        AllAssets.sender,
+                                        width: getWidgetWidth(
+                                            width: kIsWeb ? 10 : 40),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                      height: isSplitScreen
+                                          ? getFullWidgetHeight(height: 26)
+                                          : getWidgetHeight(height: 26))
+                                ],
+                              );
+                            } else {
+                              return Column(
+                                children: [
+                                  Row(
+                                    // mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Image.asset(
+                                        AllAssets.receiver,
+                                        width: kIsWeb
+                                            ? getWidgetWidth(width: 10)
+                                            : getWidgetWidth(width: 40),
+                                      ),
+                                      SizedBox(width: 11),
+                                      Flexible(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: getWidgetWidth(
+                                                  width: kIsWeb ? 8 : 15),
+                                              vertical: isSplitScreen
+                                                  ? getFullWidgetHeight(
+                                                      height: 10)
+                                                  : getWidgetHeight(
+                                                      height: 10)),
+                                          decoration: new BoxDecoration(
+                                            borderRadius: new BorderRadius.only(
+                                              topRight: Radius.circular(24.5),
+                                              bottomLeft: Radius.circular(24.5),
+                                              bottomRight:
+                                                  Radius.circular(24.5),
+                                            ),
+                                            color: Color(0XFF37496C),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                downloadController
+                                                        .followUps[index]
+                                                        .text ??
+                                                    "",
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    color: Color(0xFFFFFFFF),
+                                                    fontFamily: Keys.fontFamily,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: kText.scale(14)),
+                                              ),
+                                              SizedBox(
+                                                  height: isSplitScreen
+                                                      ? getFullWidgetHeight(
+                                                          height: 5)
+                                                      : getWidgetHeight(
+                                                          height: 5)),
+                                              if (kIsWeb)
+                                                SizedBox(
+                                                  height: getWidgetHeight(
+                                                      height: 20),
+                                                )
                                             ],
                                           ),
                                         ),

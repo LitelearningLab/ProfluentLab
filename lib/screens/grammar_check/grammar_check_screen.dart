@@ -69,50 +69,69 @@ class _GrammarCheckScreenState extends State<GrammarCheckScreen> {
       developer.log("No data found or incorrect data format", name: 'getDatabaseGrammar');
     }
   }*/
-  getDatabaseGrammar() async {
-    _isLoading = true;
-    print("sodjifjw");
-    DatabaseReference refer =
-        FirebaseDatabase.instance.ref('/GrammarCheckConstructionLab');
-    await refer.get().then((DataSnapshot data) async {
-      print("dpodjodjod");
-      print("widgetload:${widget.load}");
-      print(data.value.runtimeType);
-      print(data.value as Map);
-      _grammarData = data.value as Map<Object?, Object?>;
-      dataMap = (data.value! as Map)[widget.load];
-      print("data map : ${dataMap.runtimeType}");
-      print("data map length : ${dataMap.length}");
-      for (int i = 0; i < dataMap.length; i++) {
-        print("title dcccccc : ${dataMap['001']}");
+  Future<void> getDatabaseGrammar() async {
+    try {
+      _isLoading = true;
+      setState(() {});
+      print("Fetching grammar data...");
+      // String collectionName = widget.load=="Denial Management"
+
+      final ref = FirebaseDatabase.instance.ref('/GrammarCheckConstructionLab');
+      final snapshot = await ref.get();
+
+      if (!snapshot.exists) {
+        print("❌ No data found in GrammarCheckConstructionLab.");
+        _isLoading = false;
+        setState(() {});
+        return;
       }
+
+      final data = snapshot.value as Map<Object?, Object?>?;
+      print(
+          "✅ Raw data fetched: ${data.runtimeType} ${data?.length.toString()}");
+
+      if (data == null) {
+        print("❌ Data is null.");
+        _isLoading = false;
+        setState(() {});
+        return;
+      }
+
+      _grammarData = data;
+
+      final selectedData = data[widget.load];
+      if (selectedData == null) {
+        print("⚠️ No data found for key: ${widget.load}");
+        _isLoading = false;
+        setState(() {});
+        return;
+      }
+
+      if (selectedData is! Map<Object?, Object?>) {
+        print("❌ Expected Map but got ${selectedData.runtimeType}");
+        _isLoading = false;
+        setState(() {});
+        return;
+      }
+
+      dataMap = selectedData;
       entriesList = dataMap.entries.toList();
       grammarMap = dataMap;
-      print("grammar map : $grammarMap");
-      print("entrylist length : ${entriesList.length}");
-      /*var keys = data.children;
-      // var data = snap.snapshot.value;
-      grammarFinalList.clear();
 
-      for (DataSnapshot key in keys) {
-        // print(key.value);
-        var data = json.decode(json.encode(key.value));
-        print(data);
-        GrammerCheckModel d = new GrammerCheckModel();
-        d.Exercise = data['Exercise'] ?? "";
-        d.Learningmodule = data['Learning module'] ?? "";
+      print("✅ Data map type: ${dataMap.runtimeType}");
+      print("✅ Entries length: ${entriesList.length}");
+      print("✅ Grammar map keys: ${grammarMap.keys}");
 
-        grammarFinalList.add(d);
+      for (final entry in dataMap.entries) {
+        print("📘 ${entry.key} => ${entry.value}");
       }
-      print("grammarFinalList : $grammarFinalList");*/
-      //developer.log(data.value as Map);
-      //print("grammarCheck : ${grammarCheck.grammarCheckConstructionLab?.partsOfSpeech!.adjectives!.learningModule}");
-      print(data.value as Map);
-      print("fkfjif ");
-      print((data.value! as Map)[widget.load]);
+    } catch (e, stack) {
+      print("🔥 Error in getDatabaseGrammar: $e");
+      print(stack);
+    } finally {
       _isLoading = false;
       setState(() {});
-    });
+    }
   }
 
   /*void _getSentCat() async {
@@ -222,6 +241,7 @@ class _GrammarCheckScreenState extends State<GrammarCheckScreen> {
                               padding:
                                   const EdgeInsets.only(left: 30, right: 30),
                               child: Container(
+                                width: displayWidth(context),
                                 height: 59,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(
@@ -230,8 +250,10 @@ class _GrammarCheckScreenState extends State<GrammarCheckScreen> {
                                   color: Color(0xff293750),
                                 ),
                                 child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: [
-                                    SPW(35),
+                                    // SPW(35),
                                     // if (!_isPlaying)
                                     InkWell(
                                       onTap: () async {
@@ -277,7 +299,7 @@ class _GrammarCheckScreenState extends State<GrammarCheckScreen> {
                                         ],
                                       ),
                                     ),
-                                    Spacer(),
+                                    // Spacer(),
                                     InkWell(
                                       onTap: () async {
                                         sessionName2 =
@@ -320,8 +342,8 @@ class _GrammarCheckScreenState extends State<GrammarCheckScreen> {
                                         ],
                                       ),
                                     ),
-                                    SPW(20),
-                                    Spacer(),
+                                    // SPW(20),
+                                    // Spacer(),
                                   ],
                                 ),
                               ),

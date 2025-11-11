@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:litelearninglab/API/api.dart';
 import 'package:litelearninglab/common_widgets/spacings.dart';
@@ -157,6 +158,7 @@ class _WordMenuState extends State<WordMenu> {
           SizedBox(
             height: 10,
           ),
+
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: ListTile(
@@ -165,65 +167,69 @@ class _WordMenuState extends State<WordMenu> {
                 width: 120,
                 child: widget.syllables.isEmpty
                     ? null
-                    : ElevatedButton.icon(
-                        onPressed: () async {
-                          print("practice button tappedd");
-                          pronunciationLabReport(
-                              actionType: "practice", word: widget.text);
-                          startPractice(actionType: 'practice');
-                          widget.onTapMic();
-                          String? fileUrl = widget.url;
-                          print("checkkkk:${widget.text}");
-                          print("urll checkkk:${fileUrl}");
-                          wordsFileUrl.add(fileUrl!);
-                          FirebaseFirestore firestore =
-                              FirebaseFirestore.instance;
-                          String userId =
-                              await SharedPref.getSavedString('userId');
-                          DocumentReference wordFileUrlDocument = firestore
-                              .collection('proFluentEnglishReport')
-                              .doc(userId);
+                    : !kIsWeb
+                        ? ElevatedButton.icon(
+                            onPressed: () async {
+                              print("practice button tappedd");
+                              pronunciationLabReport(
+                                  actionType: "practice", word: widget.text);
+                              startPractice(actionType: 'practice');
+                              widget.onTapMic();
+                              String? fileUrl = widget.url;
+                              print("checkkkk:${widget.text}");
+                              print("urll checkkk:${fileUrl}");
+                              wordsFileUrl.add(fileUrl!);
+                              FirebaseFirestore firestore =
+                                  FirebaseFirestore.instance;
+                              String userId =
+                                  await SharedPref.getSavedString('userId');
+                              DocumentReference wordFileUrlDocument = firestore
+                                  .collection('proFluentEnglishReport')
+                                  .doc(userId);
 
-                          await wordFileUrlDocument.update({
-                            'WordsTapped': FieldValue.arrayUnion([widget.url]),
-                          }).then((_) {
-                            print('Link added to Firestore: ${widget.url}');
-                          }).catchError((e) {
-                            print('Error updating Firestore: $e');
-                          });
-                          print("fileUrl:${widget.url}");
-                          print("sdhhvgfrhngkihri");
-                        }
-                        //              speech.isListening
-                        //                  ? null
-                        //                  : startListening,
-                        ,
-                        icon: SizedBox(
-                          // height: displayHeight(context)/45.11,
-                          // width: displayWidth(context)/20.8,
-                          height: 18,
-                          width: 18,
-                          child: ImageIcon(
-                            AssetImage(AllAssets.micIcon),
-                            color: Colors.white,
-                          ),
-                        ),
-                        label: Text(
-                          'Practice',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: Keys.fontFamily,
-                              fontSize: 14,
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStatePropertyAll(Color(0xFF6C63FF)),
-                            shape: MaterialStatePropertyAll(
-                                ContinuousRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)))),
-                      ),
+                              await wordFileUrlDocument.update({
+                                'WordsTapped':
+                                    FieldValue.arrayUnion([widget.url]),
+                              }).then((_) {
+                                print('Link added to Firestore: ${widget.url}');
+                              }).catchError((e) {
+                                print('Error updating Firestore: $e');
+                              });
+                              print("fileUrl:${widget.url}");
+                              print("sdhhvgfrhngkihri");
+                            }
+                            //              speech.isListening
+                            //                  ? null
+                            //                  : startListening,
+                            ,
+                            icon: SizedBox(
+                              // height: displayHeight(context)/45.11,
+                              // width: displayWidth(context)/20.8,
+                              height: 18,
+                              width: 18,
+                              child: ImageIcon(
+                                AssetImage(AllAssets.micIcon),
+                                color: Colors.white,
+                              ),
+                            ),
+                            label: Text(
+                              'Practice',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: Keys.fontFamily,
+                                  fontSize: 14,
+                                  letterSpacing: 0,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStatePropertyAll(Color(0xFF6C63FF)),
+                                shape: MaterialStatePropertyAll(
+                                    ContinuousRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15)))),
+                          )
+                        : SizedBox.shrink(),
               ),
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

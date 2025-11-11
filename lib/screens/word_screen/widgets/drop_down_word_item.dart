@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -260,61 +261,79 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
 
   Future<void> _play(int index) async {
     print("check1");
+
     final audioController = Provider.of<AuthState>(context, listen: false);
+
+    // 🔹 Update UI loading states
     setState(() {
-      audioLoading[widget.index].value = true;
       for (int i = 0; i < audioLoading.length; i++) {
-        if (i == widget.index) {
-          audioLoading[widget.index].value = true;
-        } else {
-          audioLoading[i].value = false;
-        }
+        audioLoading[i].value = (i == widget.index);
       }
-      //_isAudioLoading = true;
       _isAudioPlayed = true;
-      // print("isAudioLoading: ${_isAudioLoading}");
-      print("audioLoading :${audioLoading[widget.index].value}");
-      // _currentPLayingIndex = index;
     });
+
     widget.onTapForThreePlayerStop;
     log("play button clicked>>>>>>>>>>>>>>>>>>>>>>>>>>>fedgrg");
+
     isAllPlaying3 = false;
     isAllPlaying = false;
     setState(() {});
+
     String? eLocalPath;
     await audioPlayerManager.stop();
+
     setState(() {
       audioLoading[widget.index].value = true;
-      //  _isAudioLoading = true;
-      // _currentPLayingIndex = index;
     });
-    // audioPlayerManager = AudioPlayerManager();
-    print("Above the loading value");
-    void result = await audioPlayerManager.play(url!,
-        context: context, localPath: widget.localPath, decodedPath: (val) {
-      eLocalPath = val;
-    });
-    print("urllll:${url}");
-    print("context:${context}");
-    print("local pathhhh:${widget.localPath}");
 
+    print("Above the loading value");
+
+    // 🔹 WEB / MOBILE Split
+    if (kIsWeb) {
+      // 🌐 WEB MODE — Stream directly, no local file access
+      print("WEB MODE: Streaming audio directly from URL");
+      await audioPlayerManager.play(
+        url!,
+        context: context,
+        decodedPath: null, // skip decoded path on web
+      );
+    } else {
+      // 📱 MOBILE MODE — Uses local caching
+      print("MOBILE MODE: Using local path if available");
+      await audioPlayerManager.play(
+        url!,
+        context: context,
+        localPath: widget.localPath,
+        decodedPath: (val) {
+          eLocalPath = val;
+        },
+      );
+    }
+
+    print("urllll: $url");
+    print("context: $context");
+    print("local pathhhh: ${widget.localPath}");
     print("Below the loading value");
+
+    // 🔹 Update UI after play
     setState(() {
       audioLoading[widget.index].value = false;
-      // _isAudioLoading = false;
-      _isAudioPlayed = audioController.isAudioDone!;
+      _isAudioPlayed = audioController.isAudioDone ?? false;
     });
+
     int previousIndex = isPlaying.indexWhere((element) => element.value);
-    print("previousIndex $previousIndex");
     if (previousIndex != -1) {
       isPlaying[previousIndex].value = false;
     }
     isPlaying[widget.index].value = true;
-    FirebaseHelper db = new FirebaseHelper();
+
+    // 🔹 Save report to Firebase
+    FirebaseHelper db = FirebaseHelper();
     AuthState userDatas = Provider.of<AuthState>(context, listen: false);
     String company = await SharedPref.getSavedString("companyId");
     String batch = await SharedPref.getSavedString("batch");
-    db.saveWordListReport(
+
+    await db.saveWordListReport(
       companyId: company,
       batch: batch,
       isPractice: false,
@@ -330,12 +349,18 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
       time: 1,
       date: DateFormat('dd-MMM-yyyy').format(DateTime.now()),
     );
-    if (eLocalPath != null && eLocalPath!.isNotEmpty) {
+
+    // 🔹 Delete temp file (mobile only)
+    if (!kIsWeb && eLocalPath != null && eLocalPath!.isNotEmpty) {
       try {
         await File(eLocalPath!).delete();
-      } catch (e) {}
+        print("🗑️ Temporary file deleted: $eLocalPath");
+      } catch (e) {
+        print("⚠️ Error deleting temp file: $e");
+      }
     }
-    return result;
+
+    print("✅ Audio playback completed successfully.");
   }
 
   Future<void> _handleFavoriteToggle() async {
@@ -454,399 +479,412 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
     final size = MediaQuery.of(context).size;
     return Theme(
       data: theme,
-      child: AppExpansionTile(
-        key: expansionTile,
-        onExpansionChanged: widget.onExpansionChanged,
-        // titleText: widget.title,
-        // onClick: widget.onClick,
-        initiallyExpanded: widget.initiallyExpanded,
-        title: ListTile(
-          contentPadding: EdgeInsets.zero,
-          minVerticalPadding: 3.8,
-          title: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Color(0xFF34425D),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: getWidgetWidth(width: kIsWeb ? 10 : 0),
+        ),
+        child: AppExpansionTile(
+          key: expansionTile,
+          onExpansionChanged: widget.onExpansionChanged,
+          // titleText: widget.title,
+          // onClick: widget.onClick,
+          initiallyExpanded: widget.initiallyExpanded,
+          title: ListTile(
+            contentPadding: EdgeInsets.zero,
+            minVerticalPadding: 3.8,
+            title: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
               ),
-              // height: 54,
-              child: Obx(
-                () => Row(
-                  children: [
-                    // SPW(10),
-                    SizedBox(
-                      width: 13,
-                    ),
-                    if (!isPlaying[widget.index].value && widget.isWord)
-                      InkWell(
-                          onTap: () async {
-                            print('play iconnnnn tappeddd');
-                            pronunciationLabReport(
-                                actionType: "listening", word: widget.title);
-                            startPractice(actionType: 'listening');
-                            print("widgetIndex:${widget.index}");
-                            print("check:${widget.title}");
-                            _play(widget.index);
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xFF34425D),
+                ),
+                // height: 54,
+                child: Obx(
+                  () => Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      // SPW(10),
+                      SizedBox(
+                        // color: Colors.amber,
+                        width: 13,
+                        height: getWidgetHeight(height: 40),
+                      ),
+                      if (!isPlaying[widget.index].value && widget.isWord)
+                        InkWell(
+                            onTap: () async {
+                              print('play iconnnnn tappeddd');
+                              pronunciationLabReport(
+                                  actionType: "listening", word: widget.title);
+                              startPractice(actionType: 'listening');
+                              print("widgetIndex:${widget.index}");
+                              print("check:${widget.title}");
+                              _play(widget.index);
 
-                            /*  String? fileUrl = widget.url;
-                            wordsFileUrl.add(fileUrl!);
-                            FirebaseFirestore firestore = FirebaseFirestore.instance;
-                            String userId = await SharedPref.getSavedString('userId');
-                            DocumentReference wordFileUrlDocument =
-                                firestore.collection('proFluentEnglishReport').doc(userId);
+                              /*  String? fileUrl = widget.url;
+                              wordsFileUrl.add(fileUrl!);
+                              FirebaseFirestore firestore = FirebaseFirestore.instance;
+                              String userId = await SharedPref.getSavedString('userId');
+                              DocumentReference wordFileUrlDocument =
+                                  firestore.collection('proFluentEnglishReport').doc(userId);
+        
+                              await wordFileUrlDocument.update({
+                                'WordsTapped': FieldValue.arrayUnion([widget.url]),
+                              }).then((_) {
+                                print('Link added to Firestore: ${widget.url}');
+                              }).catchError((e) {
+                                print('Error updating Firestore: $e');
+                              });
+                              print("fileUrl:${widget.url}");
+                              print("sdhhvgfrhngkihri");*/
+                            },
+                            child: audioLoading[widget.index]
+                                    .value //_isAudioLoading
+                                // && _currentPLayingIndex == widget.index
+                                ? SizedBox(
+                                    height: 25,
+                                    width: 25,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(3.0),
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: AppColors.white,
+                                      ),
+                                    ))
+                                : !_isAudioPlayed
+                                    ? Icon(
+                                        Icons.info_outline,
+                                        color: Colors.red,
+                                        size: 25,
+                                      )
+                                    : ImageIcon(
+                                        AssetImage(AllAssets.roundPlay),
+                                        color: widget.isFav == 0
+                                            ? Colors.white
+                                            : Color(0xFF6C63FE),
+                                      )
+                            // Icon(
+                            //     Icons.play_circle_outline,
+                            //     color: AppColors.white,
+                            //     size: 25,
+                            //   ),
+                            ),
+                      if (isPlaying[widget.index].value && widget.isWord)
+                        // if (isPlaying[widget.index].value && widget.isWord && _currentPLayingIndex == widget.index)
+                        InkWell(
+                            onTap: () {
+                              isAllPlaying3 = false;
+                              isAllPlaying = false;
+                              isPlaying[widget.index].value = false;
+                              setState(() {});
+                              audioPlayerManager.stop();
+                            },
+                            child: !_isAudioPlayed
+                                ? Icon(
+                                    Icons.info_outline,
+                                    color: Colors.red,
+                                    size: 25,
+                                  )
+                                : Icon(
+                                    Icons.pause_circle_outline,
+                                    color: Color(0xFF6C63FE),
+                                    size: 25,
+                                  )),
 
-                            await wordFileUrlDocument.update({
-                              'WordsTapped': FieldValue.arrayUnion([widget.url]),
-                            }).then((_) {
-                              print('Link added to Firestore: ${widget.url}');
-                            }).catchError((e) {
-                              print('Error updating Firestore: $e');
-                            });
-                            print("fileUrl:${widget.url}");
-                            print("sdhhvgfrhngkihri");*/
-                          },
-                          child:
-                              audioLoading[widget.index].value //_isAudioLoading
-                                  // && _currentPLayingIndex == widget.index
-                                  ? SizedBox(
-                                      height: 25,
-                                      width: 25,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(3.0),
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: AppColors.white,
-                                        ),
-                                      ))
-                                  : !_isAudioPlayed
-                                      ? Icon(
-                                          Icons.info_outline,
-                                          color: Colors.red,
-                                          size: 25,
-                                        )
-                                      : ImageIcon(
-                                          AssetImage(AllAssets.roundPlay),
-                                          color: widget.isFav == 0
-                                              ? Colors.white
-                                              : Color(0xFF6C63FE),
-                                        )
-                          // Icon(
-                          //     Icons.play_circle_outline,
-                          //     color: AppColors.white,
-                          //     size: 25,
-                          //   ),
+                      SPW(10),
+                      SizedBox(
+                        width: widget.isWord
+                            ? displayWidth(context) * 0.48
+                            : widget.underContruction
+                                ? displayWidth(context) * 0.55
+                                : !widget.isButtonsVisible
+                                    ? displayWidth(context) * 0.75
+                                    : displayWidth(context) * 0.56,
+                        child: Text(
+                          widget.title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: Keys.fontFamily,
+                            letterSpacing: 0,
                           ),
-                    if (isPlaying[widget.index].value && widget.isWord)
-                      // if (isPlaying[widget.index].value && widget.isWord && _currentPLayingIndex == widget.index)
-                      InkWell(
-                          onTap: () {
-                            isAllPlaying3 = false;
-                            isAllPlaying = false;
-                            isPlaying[widget.index].value = false;
-                            setState(() {});
-                            audioPlayerManager.stop();
-                          },
-                          child: !_isAudioPlayed
-                              ? Icon(
-                                  Icons.info_outline,
-                                  color: Colors.red,
-                                  size: 25,
-                                )
-                              : Icon(
-                                  Icons.pause_circle_outline,
-                                  color: Color(0xFF6C63FE),
-                                  size: 25,
-                                )),
-
-                    SPW(10),
-                    SizedBox(
-                      width: widget.isWord
-                          ? displayWidth(context) * 0.48
-                          : widget.underContruction
-                              ? displayWidth(context) * 0.55
-                              : !widget.isButtonsVisible
-                                  ? displayWidth(context) * 0.75
-                                  : displayWidth(context) * 0.56,
-                      child: Text(
-                        widget.title,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: Keys.fontFamily,
-                          letterSpacing: 0,
                         ),
                       ),
-                    ),
-                    if (widget.isButtonsVisible || widget.underContruction)
-                      Spacer(),
-                    if (widget.isDownloaded != null &&
-                        !widget.isDownloaded! &&
-                        !widget.isCheckBoxDownloading &&
-                        !_isDownloading &&
-                        widget.isButtonsVisible)
-                      InkWell(
-                          onTap: () async {
-                            if (_isConnected) {
-                              setState(() {
-                                log("downloading startttt");
-                                print(
-                                    "widget.isDownloaded:${widget.isDownloaded}");
-                                // _isDownloading = true;
-                                widget.isCheckBoxDownloading = true;
-                              });
-                              var dbRef;
-                              if (widget.isWord) {
-                                print("widger.isWord:${widget.isWord}");
-                                print("snjdndfnfkndk");
-                                DatabaseProvider dbb = DatabaseProvider.get;
-                                dbRef = WordsDatabaseRepository(dbb);
-                              } else {
-                                print("sndkndnvkndkvncknvkcn");
-                                SentDatabaseProvider dbb =
-                                    SentDatabaseProvider.get;
-                                dbRef = SentencesDatabaseRepository(dbb);
-                              }
-                              Directory appDocDir =
-                                  await getApplicationDocumentsDirectory();
-                              String appDocPath = appDocDir.path;
-                              final downloadController = Provider.of<AuthState>(
-                                  context,
-                                  listen: false);
-                              String localPath = await Utils.downloadFile(
-                                  downloadController,
-                                  url!,
-                                  '${widget.title}.mp3',
-                                  '$appDocPath/${widget.load}');
-                              AuthState userDatas = Provider.of<AuthState>(
-                                  context,
-                                  listen: false);
-
-                              String eLocalPath =
-                                  EncryptData.encryptFile(localPath, userDatas);
-                              try {
-                                await File(localPath).delete();
-                              } catch (e) {
-                                print("The Expection is :$e");
-                              }
-
-                              if (localPath == "Error code: 403" ||
-                                  !downloadController.isDownloaded!) {
-                                Toast.show("Failed to Download",
-                                    duration: Toast.lengthShort,
-                                    gravity: Toast.bottom,
-                                    backgroundColor: AppColors.white,
-                                    textStyle:
-                                        TextStyle(color: AppColors.black),
-                                    backgroundRadius: 10);
-                                widget.isRefresh(true);
-                              } else {
-                                print("dnnfdknfkdnf");
-                                bool isFaved = await dbRef.setDownloadPath(
-                                    widget.wordId, eLocalPath!);
+                      if (widget.isButtonsVisible || widget.underContruction)
+                        Spacer(),
+                      if (widget.isDownloaded != null &&
+                          !widget.isDownloaded! &&
+                          !widget.isCheckBoxDownloading &&
+                          !_isDownloading &&
+                          widget.isButtonsVisible &&
+                          !kIsWeb)
+                        InkWell(
+                            onTap: () async {
+                              if (_isConnected) {
                                 setState(() {
-                                  _isDownloading = false;
+                                  log("downloading startttt");
+                                  print(
+                                      "widget.isDownloaded:${widget.isDownloaded}");
+                                  // _isDownloading = true;
+                                  widget.isCheckBoxDownloading = true;
                                 });
-                                if (isFaved)
-                                  Toast.show("File downloaded",
+                                var dbRef;
+                                if (widget.isWord) {
+                                  print("widger.isWord:${widget.isWord}");
+                                  print("snjdndfnfkndk");
+                                  DatabaseProvider dbb = DatabaseProvider.get;
+                                  dbRef = WordsDatabaseRepository(dbb);
+                                } else {
+                                  print("sndkndnvkndkvncknvkcn");
+                                  SentDatabaseProvider dbb =
+                                      SentDatabaseProvider.get;
+                                  dbRef = SentencesDatabaseRepository(dbb);
+                                }
+                                Directory appDocDir =
+                                    await getApplicationDocumentsDirectory();
+                                String appDocPath = appDocDir.path;
+                                final downloadController =
+                                    Provider.of<AuthState>(context,
+                                        listen: false);
+                                String localPath = await Utils.downloadFile(
+                                    downloadController,
+                                    url!,
+                                    '${widget.title}.mp3',
+                                    '$appDocPath/${widget.load}');
+                                AuthState userDatas = Provider.of<AuthState>(
+                                    context,
+                                    listen: false);
+
+                                String eLocalPath = EncryptData.encryptFile(
+                                    localPath, userDatas);
+                                try {
+                                  await File(localPath).delete();
+                                } catch (e) {
+                                  print("The Expection is :$e");
+                                }
+
+                                if (localPath == "Error code: 403" ||
+                                    !downloadController.isDownloaded!) {
+                                  Toast.show("Failed to Download",
                                       duration: Toast.lengthShort,
                                       gravity: Toast.bottom,
                                       backgroundColor: AppColors.white,
                                       textStyle:
                                           TextStyle(color: AppColors.black),
                                       backgroundRadius: 10);
-                                widget.isRefresh(true);
+                                  widget.isRefresh(true);
+                                } else {
+                                  print("dnnfdknfkdnf");
+                                  bool isFaved = await dbRef.setDownloadPath(
+                                      widget.wordId, eLocalPath!);
+                                  setState(() {
+                                    _isDownloading = false;
+                                  });
+                                  if (isFaved)
+                                    Toast.show("File downloaded",
+                                        duration: Toast.lengthShort,
+                                        gravity: Toast.bottom,
+                                        backgroundColor: AppColors.white,
+                                        textStyle:
+                                            TextStyle(color: AppColors.black),
+                                        backgroundRadius: 10);
+                                  widget.isRefresh(true);
+                                }
+                              } else {
+                                Toast.show("No network connection",
+                                    duration: Toast.lengthShort,
+                                    gravity: Toast.bottom,
+                                    backgroundColor: AppColors.white,
+                                    textStyle:
+                                        TextStyle(color: AppColors.black),
+                                    backgroundRadius: 10);
                               }
-                            } else {
-                              Toast.show("No network connection",
-                                  duration: Toast.lengthShort,
-                                  gravity: Toast.bottom,
-                                  backgroundColor: AppColors.white,
-                                  textStyle: TextStyle(color: AppColors.black),
-                                  backgroundRadius: 10);
-                            }
-                          },
+                            },
+                            child: SizedBox(
+                              // width: displayWidth(context) / 18.75,
+                              // height: displayHeight(context) / 40.6,
+                              height: 19,
+                              width: 19,
+                              child: ImageIcon(
+                                AssetImage(AllAssets.download),
+                                color: Colors.white,
+                                // size: size.height * 0.03,
+                              ),
+                            )
+                            //  Icon(
+                            //   Icons.file_download,
+                            //   color: AppColors.white,
+                            // ),
+                            ),
+                      if (widget.isCheckBoxDownloading)
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 19,
+                              height: 19,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      if (widget.isDownloaded != null &&
+                          widget.isDownloaded! &&
+                          widget.isButtonsVisible &&
+                          !kIsWeb)
+                        InkWell(
                           child: SizedBox(
                             // width: displayWidth(context) / 18.75,
                             // height: displayHeight(context) / 40.6,
                             height: 19,
                             width: 19,
-                            child: ImageIcon(
-                              AssetImage(AllAssets.download),
-                              color: Colors.white,
-                              // size: size.height * 0.03,
+                            child: Icon(
+                              Icons.file_download_done,
+                              color: Color(0xFF6C63FE),
                             ),
-                          )
-                          //  Icon(
-                          //   Icons.file_download,
-                          //   color: AppColors.white,
-                          // ),
-                          ),
-                    if (widget.isCheckBoxDownloading)
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 19,
-                            height: 19,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    if (widget.isDownloaded != null &&
-                        widget.isDownloaded! &&
-                        widget.isButtonsVisible)
-                      InkWell(
-                        child: SizedBox(
-                          // width: displayWidth(context) / 18.75,
-                          // height: displayHeight(context) / 40.6,
-                          height: 19,
-                          width: 19,
-                          child: Icon(
-                            Icons.file_download_done,
-                            color: Color(0xFF6C63FE),
                           ),
                         ),
-                      ),
-                    if (!_isDownloading && widget.isButtonsVisible)
-                      IconButton(
-                          icon: SizedBox(
-                            // width: displayWidth(context) / 18.75,
-                            // height: displayHeight(context) / 40.6,
-                            height: 19,
-                            width: 19,
-                            child: Image.asset(
-                              widget.isFav == 0
-                                  ? AllAssets.save
-                                  : AllAssets.saved,
-                              width: 18,
-                              color: widget.isFav == 0
-                                  ? Colors.white
-                                  : Color(0xFF6C63FE),
+                      if (!_isDownloading && widget.isButtonsVisible && !kIsWeb)
+                        IconButton(
+                            icon: SizedBox(
+                              // width: displayWidth(context) / 18.75,
+                              // height: displayHeight(context) / 40.6,
+                              height: 19,
+                              width: 19,
+                              child: Image.asset(
+                                widget.isFav == 0
+                                    ? AllAssets.save
+                                    : AllAssets.saved,
+                                width: 18,
+                                color: widget.isFav == 0
+                                    ? Colors.white
+                                    : Color(0xFF6C63FE),
+                              ),
                             ),
-                          ),
-                          onPressed: () async {
-                            log("priorityListHandling>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                            await _handleFavoriteToggle();
-                            // if (widget.isWord == true) {
-                            //   loading = true;
-                            //   setState(() {
-                            //     _isDownloading = true;
-                            //   });
-                            //   DatabaseProvider dbb = DatabaseProvider.get;
-                            //   WordsDatabaseRepository dbRef = WordsDatabaseRepository(dbb);
-                            //   if (widget.isFav == null || widget.isFav == 0) {
-                            //     Directory appDocDir = await getApplicationDocumentsDirectory();
-                            //     String appDocPath = appDocDir.path;
-                            //     String localPath = await Utils.downloadFile(url!, '${widget.title}.mp3', '$appDocPath/${widget.load}');
+                            onPressed: () async {
+                              log("priorityListHandling>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                              await _handleFavoriteToggle();
+                              // if (widget.isWord == true) {
+                              //   loading = true;
+                              //   setState(() {
+                              //     _isDownloading = true;
+                              //   });
+                              //   DatabaseProvider dbb = DatabaseProvider.get;
+                              //   WordsDatabaseRepository dbRef = WordsDatabaseRepository(dbb);
+                              //   if (widget.isFav == null || widget.isFav == 0) {
+                              //     Directory appDocDir = await getApplicationDocumentsDirectory();
+                              //     String appDocPath = appDocDir.path;
+                              //     String localPath = await Utils.downloadFile(url!, '${widget.title}.mp3', '$appDocPath/${widget.load}');
 
-                            //     String eLocalPath = EncryptData.encryptFile(localPath, context);
-                            //     try {
-                            //       await File(localPath).delete();
-                            //     } catch (e) {}
+                              //     String eLocalPath = EncryptData.encryptFile(localPath, context);
+                              //     try {
+                              //       await File(localPath).delete();
+                              //     } catch (e) {}
 
-                            //     bool isFaved = await dbRef.setFav(widget.wordId, 1, eLocalPath);
-                            //     setState(() {
-                            //       _isDownloading = false;
-                            //     });
-                            //     if (isFaved)
-                            //       Toast.show("Added to your priority list",
-                            //           duration: Toast.lengthShort,
-                            //           gravity: Toast.bottom,
-                            //           backgroundColor: AppColors.white,
-                            //           textStyle: TextStyle(color: AppColors.black),
-                            //           backgroundRadius: 10);
-                            //   } else {
-                            //     setState(() {
-                            //       _isDownloading = true;
-                            //     });
-                            //     bool isFaved = await dbRef.setFav(widget.wordId, 0, widget.localPath!);
-                            //     widget.isFav = isFaved ? 1 : 0;
-                            //     setState(() {
-                            //       _isDownloading = false;
-                            //     });
-                            //     if (isFaved) {
-                            //       Toast.show("Removed from your priority list",
-                            //           duration: Toast.lengthShort,
-                            //           gravity: Toast.bottom,
-                            //           backgroundColor: AppColors.white,
-                            //           textStyle: TextStyle(color: AppColors.black),
-                            //           backgroundRadius: 10);
-                            //       // try {
-                            //       //   File(widget.localPath!).delete();
-                            //       // } catch (e) {}
-                            //     }
-                            //   }
-                            // } else {
-                            //   SentDatabaseProvider dbb = SentDatabaseProvider.get;
-                            //   SentencesDatabaseRepository dbRef = SentencesDatabaseRepository(dbb);
-                            //   if (widget.isFav == null || widget.isFav == 0) {
-                            //     Directory appDocDir = await getApplicationDocumentsDirectory();
-                            //     String appDocPath = appDocDir.path;
-                            //     String localPath = await Utils.downloadFile(url!, '${widget.title}.mp3', '$appDocPath/${widget.load}');
+                              //     bool isFaved = await dbRef.setFav(widget.wordId, 1, eLocalPath);
+                              //     setState(() {
+                              //       _isDownloading = false;
+                              //     });
+                              //     if (isFaved)
+                              //       Toast.show("Added to your priority list",
+                              //           duration: Toast.lengthShort,
+                              //           gravity: Toast.bottom,
+                              //           backgroundColor: AppColors.white,
+                              //           textStyle: TextStyle(color: AppColors.black),
+                              //           backgroundRadius: 10);
+                              //   } else {
+                              //     setState(() {
+                              //       _isDownloading = true;
+                              //     });
+                              //     bool isFaved = await dbRef.setFav(widget.wordId, 0, widget.localPath!);
+                              //     widget.isFav = isFaved ? 1 : 0;
+                              //     setState(() {
+                              //       _isDownloading = false;
+                              //     });
+                              //     if (isFaved) {
+                              //       Toast.show("Removed from your priority list",
+                              //           duration: Toast.lengthShort,
+                              //           gravity: Toast.bottom,
+                              //           backgroundColor: AppColors.white,
+                              //           textStyle: TextStyle(color: AppColors.black),
+                              //           backgroundRadius: 10);
+                              //       // try {
+                              //       //   File(widget.localPath!).delete();
+                              //       // } catch (e) {}
+                              //     }
+                              //   }
+                              // } else {
+                              //   SentDatabaseProvider dbb = SentDatabaseProvider.get;
+                              //   SentencesDatabaseRepository dbRef = SentencesDatabaseRepository(dbb);
+                              //   if (widget.isFav == null || widget.isFav == 0) {
+                              //     Directory appDocDir = await getApplicationDocumentsDirectory();
+                              //     String appDocPath = appDocDir.path;
+                              //     String localPath = await Utils.downloadFile(url!, '${widget.title}.mp3', '$appDocPath/${widget.load}');
 
-                            //     String eLocalPath = EncryptData.encryptFile(localPath, context);
-                            //     try {
-                            //       await File(localPath).delete();
-                            //     } catch (e) {}
+                              //     String eLocalPath = EncryptData.encryptFile(localPath, context);
+                              //     try {
+                              //       await File(localPath).delete();
+                              //     } catch (e) {}
 
-                            //     bool isFaved = await dbRef.setFav(widget.wordId, 1, eLocalPath);
-                            //     if (isFaved)
-                            //       Toast.show("Added to your priority list",
-                            //           duration: Toast.lengthShort,
-                            //           gravity: Toast.bottom,
-                            //           backgroundColor: AppColors.white,
-                            //           textStyle: TextStyle(color: AppColors.black),
-                            //           backgroundRadius: 10);
-                            //   } else {
-                            //     bool isFaved = await dbRef.setFav(widget.wordId, 0, widget.localPath!);
-                            //     if (isFaved) {
-                            //       Toast.show("Removed from your priority list",
-                            //           duration: Toast.lengthShort,
-                            //           gravity: Toast.bottom,
-                            //           backgroundColor: AppColors.white,
-                            //           textStyle: TextStyle(color: AppColors.black),
-                            //           backgroundRadius: 10);
-                            //       try {
-                            //         // File(widget.localPath!).delete();
-                            //       } catch (e) {}
-                            //     }
-                            //   }
-                            // }
-                            // widget.isRefresh(true);
-                            // loading = false;
-                            // setState(() {});
-                          }),
-                    if (_isDownloading && widget.isButtonsVisible || loading)
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
+                              //     bool isFaved = await dbRef.setFav(widget.wordId, 1, eLocalPath);
+                              //     if (isFaved)
+                              //       Toast.show("Added to your priority list",
+                              //           duration: Toast.lengthShort,
+                              //           gravity: Toast.bottom,
+                              //           backgroundColor: AppColors.white,
+                              //           textStyle: TextStyle(color: AppColors.black),
+                              //           backgroundRadius: 10);
+                              //   } else {
+                              //     bool isFaved = await dbRef.setFav(widget.wordId, 0, widget.localPath!);
+                              //     if (isFaved) {
+                              //       Toast.show("Removed from your priority list",
+                              //           duration: Toast.lengthShort,
+                              //           gravity: Toast.bottom,
+                              //           backgroundColor: AppColors.white,
+                              //           textStyle: TextStyle(color: AppColors.black),
+                              //           backgroundRadius: 10);
+                              //       try {
+                              //         // File(widget.localPath!).delete();
+                              //       } catch (e) {}
+                              //     }
+                              //   }
+                              // }
+                              // widget.isRefresh(true);
+                              // loading = false;
+                              // setState(() {});
+                            }),
+                      if (_isDownloading && widget.isButtonsVisible || loading)
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    if (widget.underContruction)
-                      InkWell(
-                        child: Image.asset(
-                          AllAssets.workInProgress,
-                          // color: AppColors.white,
-                          width: 45,
-                          height: 45,
+                          ],
                         ),
-                      ),
-                    if (_isDownloading || widget.underContruction) SPW(15),
-                  ],
+                      if (widget.underContruction)
+                        InkWell(
+                          child: Image.asset(
+                            AllAssets.workInProgress,
+                            // color: AppColors.white,
+                            width: 45,
+                            height: 45,
+                          ),
+                        ),
+                      if (_isDownloading || widget.underContruction) SPW(15),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
+          children: widget.children,
         ),
-        children: widget.children,
       ),
     );
   }
@@ -955,7 +993,7 @@ class AppExpansionTileState extends State<AppExpansionTile>
     final Color? titleColor = _headerColor.evaluate(_easeInAnimation);
 
     return new Container(
-      margin: EdgeInsets.zero,
+      // margin: EdgeInsets.zero,
       decoration: new BoxDecoration(
         color:
             _backgroundColor.evaluate(_easeOutAnimation) ?? Colors.transparent,

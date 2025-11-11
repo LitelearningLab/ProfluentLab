@@ -86,7 +86,7 @@ class ARGridTile extends StatelessWidget {
                 child: Image.asset(
                   ellipse,
                   // gridTileDatas[0]['ellipse'],
-                  scale: kIsWeb ? 1.6 : 3.5,
+                  scale: kIsWeb ? 2 : 3.5,
                 ),
               ),
             ),

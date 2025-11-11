@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -109,49 +110,71 @@ class _SentenceScreenState extends State<SentenceScreen>
   }
 
   void _getSentences({String? searchTerm, required bool isRefresh}) async {
-    print("slkdhj i ii id od o d ou ou");
-    print("search term : $searchTerm");
+    print("Loading sentences...");
+    print("searchTerm: $searchTerm");
+
     setState(() {
       _isLoading = true;
     });
-    if ((searchTerm == null || searchTerm.length == 0) && !isRefresh)
-      setState(() {});
-    _sentences = [];
-    print("load : ${widget.load}");
-    print("load length : ${widget.load.length}");
-    if (widget.load.length > 0) {
-      print("from firebase");
-      _sentences = await db.getFollowUps(
-          "SentenceConstructionLab", widget.main, widget.load);
-      for (int i = 0; i < _sentences.length; i++) {
-        print("sentence doc text: ${_sentences[i].text}");
-        print("sentence doc key: ${_sentences[i].key}");
-        print("sentence doc id: ${_sentences[i].id}");
-        print("sentence doc isFav: ${_sentences[i].isFav}");
-        print("sentence doc cat: ${_sentences[i].cat}");
-        print("sentence doc localPath: ${_sentences[i].localPath}");
-        print("sentence doc file: ${_sentences[i].file}");
-      }
-      isPlaying = List.generate(_sentences.length, (index) => false.obs);
-      isDownloaded = List.generate(_sentences.length, (index) => false);
-      await _checkAndPerformInitialFav();
-    } else {
-      print("local db");
-      SentDatabaseProvider dbb = SentDatabaseProvider.get;
-      SentencesDatabaseRepository dbRef = SentencesDatabaseRepository(dbb);
-      List<Sentence> sentences = await dbRef.getWords();
 
-      for (Sentence wr in sentences) {
-        print(wr.cat);
-        if ((wr.isFav == 1 && widget.filterLoad == null) ||
-            (wr.isFav == 1 &&
-                widget.filterLoad != null &&
-                widget.filterLoad == wr.cat)) {
-          _sentences.add(wr);
+    // Always clear previous data
+    _sentences = [];
+
+    print("load : ${widget.load}");
+    print("main : ${widget.main}");
+
+    try {
+      if (widget.load.isNotEmpty) {
+        print(
+            ">>> Fetching sentences from Firebase (category: ${widget.load})");
+
+        // Always fetch directly from Firebase on web
+        _sentences = await db.getFollowUps(
+          "SentenceConstructionLab",
+          widget.main,
+          widget.load,
+        );
+
+        // Clean up localPath for web (avoid nulls / files)
+        if (kIsWeb) {
+          for (var s in _sentences) {
+            s.localPath = null; // disable local path
+          }
+        }
+
+        // Initialize play/download states
+        isPlaying = List.generate(_sentences.length, (_) => false.obs);
+        isDownloaded = List.generate(_sentences.length, (_) => false);
+
+        await _checkAndPerformInitialFav();
+      } else {
+        // Fallback for local usage (non-web)
+        if (!kIsWeb) {
+          print(">>> Fetching from local database");
+          SentDatabaseProvider dbb = SentDatabaseProvider.get;
+          SentencesDatabaseRepository dbRef = SentencesDatabaseRepository(dbb);
+          List<Sentence> sentences = await dbRef.getWords();
+
+          for (Sentence wr in sentences) {
+            if ((wr.isFav == 1 && widget.filterLoad == null) ||
+                (wr.isFav == 1 &&
+                    widget.filterLoad != null &&
+                    widget.filterLoad == wr.cat)) {
+              _sentences.add(wr);
+            }
+          }
+        } else {
+          // Web cannot use local DB, so skip
+          print("⚠️ Local DB not supported on Web. Skipping local fetch.");
         }
       }
+
+      print("✅ Loaded ${_sentences.length} sentences");
+    } catch (e, st) {
+      print("❌ Error loading sentences: $e");
+      print(st);
     }
-    print("local path isssssssssssssssssss ${_sentences[0].localPath}");
+
     _isLoading = false;
     setState(() {});
   }
@@ -513,7 +536,7 @@ class _SentenceScreenState extends State<SentenceScreen>
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceAround,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
@@ -578,56 +601,58 @@ class _SentenceScreenState extends State<SentenceScreen>
                                       // Icons.pause_circle_outline,
                                       // color: AppColors.black,
                                       //       )),
-                                      InkWell(
-                                        onTap: () async {
-                                          startPractice(actionType: 'practice');
-                                          _showDialog(_sentences[index].text!,
-                                              false, context);
-                                          String? sentenceFileUrl =
-                                              _sentences[index].file;
-                                          print(
-                                              "sentenceFileUrl:${_sentences[index].file}");
-                                          fileUrl?.add(sentenceFileUrl!);
-                                          FirebaseFirestore firestore =
-                                              FirebaseFirestore.instance;
-                                          String userId =
-                                              await SharedPref.getSavedString(
-                                                  'userId');
-                                          DocumentReference
-                                              wordFileUrlDocument = firestore
-                                                  .collection(
-                                                      'proFluentEnglishReport')
-                                                  .doc(userId);
+                                      if (!kIsWeb)
+                                        InkWell(
+                                          onTap: () async {
+                                            startPractice(
+                                                actionType: 'practice');
+                                            _showDialog(_sentences[index].text!,
+                                                false, context);
+                                            String? sentenceFileUrl =
+                                                _sentences[index].file;
+                                            print(
+                                                "sentenceFileUrl:${_sentences[index].file}");
+                                            fileUrl?.add(sentenceFileUrl!);
+                                            FirebaseFirestore firestore =
+                                                FirebaseFirestore.instance;
+                                            String userId =
+                                                await SharedPref.getSavedString(
+                                                    'userId');
+                                            DocumentReference
+                                                wordFileUrlDocument = firestore
+                                                    .collection(
+                                                        'proFluentEnglishReport')
+                                                    .doc(userId);
 
-                                          await wordFileUrlDocument.update({
-                                            'SentencesTapped':
-                                                FieldValue.arrayUnion(
-                                                    [_sentences[index].file]),
-                                          }).then((_) {
+                                            await wordFileUrlDocument.update({
+                                              'SentencesTapped':
+                                                  FieldValue.arrayUnion(
+                                                      [_sentences[index].file]),
+                                            }).then((_) {
+                                              print(
+                                                  'Link added to Firestore: ${_sentences[index].file}');
+                                            }).catchError((e) {
+                                              print(
+                                                  'Error updating Firestore: $e');
+                                            });
                                             print(
-                                                'Link added to Firestore: ${_sentences[index].file}');
-                                          }).catchError((e) {
-                                            print(
-                                                'Error updating Firestore: $e');
-                                          });
-                                          print(
-                                              "fileUrl:${_sentences[index].file}");
-                                          print("sdhhvgfrhngkihri");
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.mic,
-                                            ),
-                                            SPW(5),
-                                            Text(
-                                              "Practice",
-                                              style: TextStyle(fontSize: 13),
-                                            ),
-                                            SPW(35),
-                                          ],
+                                                "fileUrl:${_sentences[index].file}");
+                                            print("sdhhvgfrhngkihri");
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.mic,
+                                              ),
+                                              SPW(5),
+                                              Text(
+                                                "Practice",
+                                                style: TextStyle(fontSize: 13),
+                                              ),
+                                              SPW(35),
+                                            ],
+                                          ),
                                         ),
-                                      ),
                                     ],
                                   ),
                                 ),

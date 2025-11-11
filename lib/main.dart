@@ -135,7 +135,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Profluent',
+      title: 'Profluent AR',
       theme: ThemeData(
           scaffoldBackgroundColor: Color(0xFF293750),
           fontFamily: Keys.fontFamily,

@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 // import 'package:flutter/widgets.dart';
@@ -372,35 +375,82 @@ class _WordScreenState extends State<WordScreen>
 
   void _getWords({String? searchTerm, required bool isRefresh}) async {
     print("getwordsscalleddddddd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    print("searchTerm: ${searchTerm}");
+    print("searchTerm: $searchTerm");
+
     _isLoading = true;
     startTimerMainCategory("name");
     sessionName = widget.title;
-    if ((searchTerm == null || searchTerm.length == 0) && !isRefresh)
-      setState(() {});
-    _words = [];
-    if (widget.load.length > 0) {
-      print("show the data from the firebase");
-      _words = await db.getWords(widget.load);
 
+    if ((searchTerm == null || searchTerm.isEmpty) && !isRefresh)
+      setState(() {});
+
+    _words = [];
+
+    // MAIN FETCH LOGIC
+    if (widget.load.isNotEmpty) {
+      print("Loading data for category: ${widget.load}");
+
+      if (kIsWeb) {
+        // 🟢 WEB MODE — Directly from Firebase (no DB insert)
+        print("Running in WEB environment — fetching directly from Firebase");
+        final FirebaseDatabase _database = FirebaseDatabase.instance;
+
+        await _database
+            .ref(widget.load)
+            .orderByValue()
+            .once()
+            .then((DatabaseEvent snap) {
+          var keys = snap.snapshot.children;
+          List<Word> tempWords = [];
+
+          for (DataSnapshot key in keys) {
+            var data = json.decode(json.encode(key.value));
+            Word d = Word()
+              ..id = 0
+              ..file = data['file'] ?? ""
+              ..pronun = data['pronun'] ?? ""
+              ..syllables = data['syllables']?.toString() ?? ""
+              ..text = data['text']?.toString() ?? ""
+              ..cat = widget.load
+              ..isFav = 0
+              ..isPriority = data['isPriority'] ?? ""
+              ..localPath = data['path'] ?? "";
+
+            tempWords.add(d);
+          }
+
+          _words = tempWords;
+          print("✅ Words fetched from Firebase (web): ${_words.length}");
+        });
+      } else {
+        // 🔵 MOBILE MODE — Local DB + Firebase caching
+        print("Running in MOBILE environment — using local DB/Firebase cache");
+        _words = await db.getWords(widget.load);
+      }
+
+      // Common for both
       isPlaying = List.generate(_words.length, (index) => false.obs);
-      // isPlaying = List.generate(_words.length, (index) => false);
-      print('list first item from local:${_words.first.localPath}');
+
+      if (_words.isNotEmpty) {
+        print('First local word path: ${_words.first.localPath}');
+      }
 
       await _checkAndPerformInitialFav();
     } else {
-      print("show the data from the database");
-      print("djfijuif");
+      // 🔶 Local Favorites (or offline fallback)
+      print("Showing data from local database (favorites, offline, etc.)");
+
       DatabaseProvider dbb = DatabaseProvider.get;
       WordsDatabaseRepository dbRef = WordsDatabaseRepository(dbb);
       List<Word> words = await dbRef.getWords();
-      isPlaying = List.generate(_words.length, (index) => false.obs);
-      // isPlaying = List.generate(_words.length, (index) => false);
+
+      isPlaying = List.generate(words.length, (index) => false.obs);
+
       for (Word wr in words) {
-        if ((wr.isFav == 1 && widget.filterLoad == null) ||
-            (wr.isFav == 1 &&
-                widget.filterLoad != null &&
-                widget.filterLoad == wr.cat)) {
+        bool matchesFilter = (wr.isFav == 1 && widget.filterLoad == null) ||
+            (wr.isFav == 1 && widget.filterLoad == wr.cat);
+
+        if (matchesFilter) {
           _words.add(wr);
           log("${wr.cat}");
           log("${wr.file}");
@@ -408,20 +458,25 @@ class _WordScreenState extends State<WordScreen>
       }
     }
 
-    if (searchTerm != null && searchTerm.length > 0) {
+    // 🔍 Search Filter
+    if (searchTerm != null && searchTerm.isNotEmpty) {
       _words = _words
           .where((element) =>
               element.text!.toLowerCase().contains(searchTerm.toLowerCase()))
           .toList();
     }
+
+    // 🎯 Auto-scroll & UI update
     if (widget.word != null) _selectedWordOnClick = widget.word?.id;
     _isLoading = false;
 
     if (widget.word != null) {
       await controller.scrollToIndex(
-          _words.indexWhere((element) => element.text == widget.word?.id),
-          preferPosition: AutoScrollPosition.begin);
+        _words.indexWhere((element) => element.text == widget.word?.id),
+        preferPosition: AutoScrollPosition.begin,
+      );
     }
+
     if (mounted) setState(() {});
   }
 
@@ -913,278 +968,233 @@ class _WordScreenState extends State<WordScreen>
         stopTimerMainCategory();
       },
       child: BackgroundWidget(
-          appBar: AppBar(
-            leading: IconButton(
-              onPressed: () {
-                stopTimerMainCategory();
-                print("back button is callingggggg");
-                if (widget.check == null) {
-                  print("check is empty");
-                  Navigator.pop(context);
-                } else if (widget.check!) {
-                  print("checkingggg:${widget.check}");
-                  print("checkvjdiv");
-                  print(
-                      "titlecheckkk:${widget.itemWordList![widget.index!]['title']}");
-                  Navigator.pop(context);
-                  // Navigator.pop(context);
-                  // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                  //   return WordScreen(
-                  //     itemWordList: widget.itemWordList,
-                  //     controllerList: widget.controllerList,
-                  //     title: widget.itemWordList![widget.index!]['title'],
-                  //     load: widget.itemWordList![widget.index!]['load'],
-                  //   );
-                  // }));
-                } else if (widget.check == null &&
-                    widget.backButtonCheck == null) {
-                  print("djgirhivgh");
-                  Navigator.pop(context);
-                } else if (widget.check == false && widget.backButtonCheck!) {
-                  print("djighrijv");
-                  Navigator.pop(context);
-                  // Navigator.pop(context);
-                  // Navigator.pushReplacement(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => WordScreenProfluentEnglish(
-                  //               title: widget.checkTitle!,
-                  //               load: widget.checkTitle!,
-                  //               soundPractice: widget.soundPractice!,
-                  //             )));
-                } else {
-                  print("calleddddddfgnirfjgirfjgi");
-                  Navigator.pop(context);
-                }
-                /*     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                  return LabS
-                }));*/
-              },
-              icon: Icon(
-                Icons.arrow_back_ios_new_rounded,
-              ),
-            ),
-            flexibleSpace: !_isSearching
-                ? Padding(
-                    padding: EdgeInsets.only(left: getWidgetWidth(width: 50)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: displayWidth(context) / 1.4,
-                          child: Text(
-                            widget.title,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontFamily: Keys.fontFamily,
-                                fontSize: globalFontSize(18, context),
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                overflow: TextOverflow.ellipsis),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : _buildSearchField(),
-            iconTheme: IconThemeData(color: Colors.white),
-            centerTitle: false,
-            actions: _buildActions(),
-            backgroundColor: Color(0xFF324265),
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF324265),
+          iconTheme: const IconThemeData(color: Colors.white),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () {
+              stopTimerMainCategory();
+              print("back button pressed");
+
+              if (widget.check == null) {
+                Navigator.pop(context);
+              } else if (widget.check!) {
+                Navigator.pop(context);
+              } else if (widget.check == false &&
+                  widget.backButtonCheck == true) {
+                Navigator.pop(context);
+              } else {
+                Navigator.pop(context);
+              }
+            },
           ),
-          body:
-              //  _isConnected == false
-              //     ? Center(
-              //         child: Text(
-              //           "No Network Connection",
-              //           style: TextStyle(
-              //               color: AppColors.white, fontFamily: Keys.fontFamily),
-              //         ),
-              //       )
-              //     :
-              _words.length == 0 && !_isLoading
-                  ? Column(
-                      children: [
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              "Not Found",
-                              style: TextStyle(
-                                  color: AppColors.white,
-                                  fontFamily: Keys.fontFamily),
-                            ),
+          title: !_isSearching
+              ? Text(
+                  widget.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: Keys.fontFamily,
+                    fontSize: globalFontSize(18, context),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+              : _buildSearchField(),
+          centerTitle: false,
+          actions: _buildActions(),
+        ),
+        body:
+            //  _isConnected == false
+            //     ? Center(
+            //         child: Text(
+            //           "No Network Connection",
+            //           style: TextStyle(
+            //               color: AppColors.white, fontFamily: Keys.fontFamily),
+            //         ),
+            //       )
+            //     :
+            _words.length == 0 && !_isLoading
+                ? Column(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            "Not Found",
+                            style: TextStyle(
+                                color: AppColors.white,
+                                fontFamily: Keys.fontFamily),
                           ),
                         ),
-                        Container(
-                          height: isSplitScreen
-                              ? getFullWidgetHeight(height: 60)
-                              : getWidgetHeight(height: 60),
-                          width: kWidth,
-                          decoration: BoxDecoration(
-                            color: Color(0xFF34445F),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              IconButton(
-                                  icon: ImageIcon(
-                                    AssetImage(AllAssets.bottomHome),
+                      ),
+                      Container(
+                        height: isSplitScreen
+                            ? getFullWidgetHeight(height: 60)
+                            : getWidgetHeight(height: 60),
+                        width: kWidth,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF34445F),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            IconButton(
+                                icon: ImageIcon(
+                                  AssetImage(AllAssets.bottomHome),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                              0
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170),
+                                ),
+                                onPressed: () {
+                                  context.read<AuthState>().changeIndex(0);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
+                                }),
+                            IconButton(
+                                icon: ImageIcon(AssetImage(AllAssets.bottomPL),
                                     color: context
                                                 .read<AuthState>()
                                                 .currentIndex ==
-                                            0
+                                            1
                                         ? Color(0xFFAAAAAA)
-                                        : Color.fromARGB(132, 170, 170, 170),
-                                  ),
-                                  onPressed: () {
-                                    context.read<AuthState>().changeIndex(0);
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigation()));
-                                  }),
-                              IconButton(
-                                  icon: ImageIcon(
-                                      AssetImage(AllAssets.bottomPL),
-                                      color: context
-                                                  .read<AuthState>()
-                                                  .currentIndex ==
-                                              1
-                                          ? Color(0xFFAAAAAA)
-                                          : Color.fromARGB(132, 170, 170, 170)),
-                                  onPressed: () {
-                                    context.read<AuthState>().changeIndex(1);
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigation()));
-                                  }),
-                              IconButton(
-                                  icon: ImageIcon(
-                                      AssetImage(AllAssets.bottomIS),
-                                      color: context
-                                                  .read<AuthState>()
-                                                  .currentIndex ==
-                                              2
-                                          ? Color(0xFFAAAAAA)
-                                          : Color.fromARGB(132, 170, 170, 170)),
-                                  onPressed: () {
-                                    context.read<AuthState>().changeIndex(2);
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigation()));
-                                  }),
-                              IconButton(
-                                  icon: ImageIcon(
-                                      AssetImage(AllAssets.bottomPE),
-                                      color: context
-                                                  .read<AuthState>()
-                                                  .currentIndex ==
-                                              3
-                                          ? Color(0xFFAAAAAA)
-                                          : Color.fromARGB(132, 170, 170, 170)),
-                                  onPressed: () {
-                                    context.read<AuthState>().changeIndex(3);
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigation()));
-                                  }),
-                              IconButton(
-                                  icon: ImageIcon(
-                                      AssetImage(AllAssets.bottomPT),
-                                      color: context
-                                                  .read<AuthState>()
-                                                  .currentIndex ==
-                                              4
-                                          ? Color(0xFFAAAAAA)
-                                          : Color.fromARGB(132, 170, 170, 170)),
-                                  onPressed: () {
-                                    context.read<AuthState>().changeIndex(4);
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigation()));
-                                  }),
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                  : _isLoading
-                      ? !wordsFirstTime
-                          ? Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "This may take a couple of minutes \n(only during the first time).",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 15),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(
-                                    height: 7,
-                                  ),
-                                  Text(
-                                    "Please stay on this page, do \nnot go back or close the app.",
-                                    style: TextStyle(
-                                        color: Colors.red, fontSize: 15),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(height: 13),
-                                  CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
-                            )
-                          : Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                              ),
-                            )
-                      : Column(
-                          children: [
-                            Expanded(
-                              child: Stack(
-                                children: [
-                                  ListView.builder(
-                                      padding: EdgeInsets.only(
-                                          top: isSplitScreen
-                                              ? getFullWidgetHeight(height: 10)
-                                              : getWidgetHeight(height: 10)),
-                                      itemCount: _words.length,
-                                      controller: controller,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        if (!isAllPlaying && !isAllPlaying3) {
-                                          print(
-                                              "listWordLength:${_words.length}");
-                                          print("dfjusfeiujfejdsfj");
-                                          print(
-                                              "currentIndex : ${_currentIndex}");
-                                          print(
-                                              "wordLengthIndex:${_words.length - 1}");
-                                          isPlaying = List.generate(
-                                              _words.length,
-                                              (index) => false.obs);
+                                        : Color.fromARGB(132, 170, 170, 170)),
+                                onPressed: () {
+                                  context.read<AuthState>().changeIndex(1);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
+                                }),
+                            IconButton(
+                                icon: ImageIcon(AssetImage(AllAssets.bottomIS),
+                                    color: context
+                                                .read<AuthState>()
+                                                .currentIndex ==
+                                            2
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
+                                onPressed: () {
+                                  context.read<AuthState>().changeIndex(2);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
+                                }),
+                            IconButton(
+                                icon: ImageIcon(AssetImage(AllAssets.bottomPE),
+                                    color: context
+                                                .read<AuthState>()
+                                                .currentIndex ==
+                                            3
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
+                                onPressed: () {
+                                  context.read<AuthState>().changeIndex(3);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
+                                }),
+                            IconButton(
+                                icon: ImageIcon(AssetImage(AllAssets.bottomPT),
+                                    color: context
+                                                .read<AuthState>()
+                                                .currentIndex ==
+                                            4
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
+                                onPressed: () {
+                                  context.read<AuthState>().changeIndex(4);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BottomNavigation()));
+                                }),
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+                : _isLoading
+                    ? !wordsFirstTime
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "This may take a couple of minutes \n(only during the first time).",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(
+                                  height: 7,
+                                ),
+                                Text(
+                                  "Please stay on this page, do \nnot go back or close the app.",
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 15),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: 13),
+                                CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          )
+                        : Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )
+                    : Column(
+                        children: [
+                          Expanded(
+                            child: Stack(
+                              children: [
+                                ListView.builder(
+                                    padding: EdgeInsets.only(
+                                        top: isSplitScreen
+                                            ? getFullWidgetHeight(height: 10)
+                                            : getWidgetHeight(height: 10)),
+                                    itemCount: _words.length,
+                                    controller: controller,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      if (!isAllPlaying && !isAllPlaying3) {
+                                        print(
+                                            "listWordLength:${_words.length}");
+                                        print("dfjusfeiujfejdsfj");
+                                        print(
+                                            "currentIndex : ${_currentIndex}");
+                                        print(
+                                            "wordLengthIndex:${_words.length - 1}");
+                                        isPlaying = List.generate(_words.length,
+                                            (index) => false.obs);
 
-                                          /* if (_currentIndex == _words.length - 1) {
+                                        /* if (_currentIndex == _words.length - 1) {
                                             print("sucessss>>>>>>>>>>>>>>>>>>");
                                             closePlay1StopDialog = true;
                                           }*/
-                                          //_getWords(isRefresh: false);
-                                        }
+                                        //_getWords(isRefresh: false);
+                                      }
 
-                                        return AutoScrollTag(
+                                      return Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: getWidgetWidth(
+                                                width: kIsWeb ? 10 : 0)),
+                                        child: AutoScrollTag(
                                           key: ValueKey(_words[index].text),
                                           controller: controller,
                                           index: index,
@@ -1275,340 +1285,322 @@ class _WordScreenState extends State<WordScreen>
                                               ],
                                             ),
                                           ),
-                                        );
-                                      }),
-                                  openPlay3StopDialog && !closePlay3StopDialog
-                                      ? Positioned(
-                                          right: 120,
-                                          top: 5,
-                                          child: Container(
-                                            height: isSplitScreen
-                                                ? getFullWidgetHeight(
-                                                    height: 45)
-                                                : getWidgetHeight(height: 45),
-                                            width: getWidgetWidth(width: 108),
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(20)),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 8, top: 5),
-                                                  child: Image.asset(
-                                                    "assets/images/Play_thrice_icon.png",
-                                                    // height: 30,
-                                                    width: 30,
-                                                  ),
+                                        ),
+                                      );
+                                    }),
+                                openPlay3StopDialog && !closePlay3StopDialog
+                                    ? Positioned(
+                                        right: 120,
+                                        top: 5,
+                                        child: Container(
+                                          height: isSplitScreen
+                                              ? getFullWidgetHeight(height: 45)
+                                              : getWidgetHeight(height: 45),
+                                          width: getWidgetWidth(width: 108),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8, top: 5),
+                                                child: Image.asset(
+                                                  "assets/images/Play_thrice_icon.png",
+                                                  // height: 30,
+                                                  width: 30,
                                                 ),
-                                                !isAllPlaying3
-                                                    ? audioLoading
-                                                        ? Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: SizedBox(
-                                                              height: 20,
-                                                              width: 20,
-                                                              child:
-                                                                  CircularProgressIndicator(
-                                                                color: Color(
-                                                                    0XFF34425D),
-                                                                strokeWidth: 2,
-                                                              ),
+                                              ),
+                                              !isAllPlaying3
+                                                  ? audioLoading
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: SizedBox(
+                                                            height: 20,
+                                                            width: 20,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              color: Color(
+                                                                  0XFF34425D),
+                                                              strokeWidth: 2,
                                                             ),
-                                                          )
-                                                        : InkWell(
-                                                            onTap: () {
-                                                              resumeAll3();
-                                                            },
-                                                            child: Icon(Icons.play_arrow,
-                                                                color: Color(
-                                                                    0XFF34425D),
-                                                                size: 30))
-                                                    : audioLoading
-                                                        ? Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: SizedBox(
-                                                              height: 20,
-                                                              width: 20,
-                                                              child:
-                                                                  CircularProgressIndicator(
-                                                                color: Color(
-                                                                    0XFF34425D),
-                                                                strokeWidth: 2,
-                                                              ),
+                                                          ),
+                                                        )
+                                                      : InkWell(
+                                                          onTap: () {
+                                                            resumeAll3();
+                                                          },
+                                                          child: Icon(
+                                                              Icons.play_arrow,
+                                                              color: Color(
+                                                                  0XFF34425D),
+                                                              size: 30))
+                                                  : audioLoading
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: SizedBox(
+                                                            height: 20,
+                                                            width: 20,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              color: Color(
+                                                                  0XFF34425D),
+                                                              strokeWidth: 2,
                                                             ),
-                                                          )
-                                                        : InkWell(
-                                                            onTap: () {
-                                                              pauseAll3();
-                                                            },
-                                                            child: Icon(
+                                                          ),
+                                                        )
+                                                      : InkWell(
+                                                          onTap: () {
+                                                            pauseAll3();
+                                                          },
+                                                          child: Icon(
+                                                              Icons.pause,
+                                                              color: Color(
+                                                                  0XFF34425D),
+                                                              size: 30)),
+                                              IconButton(
+                                                  onPressed: () {
+                                                    _audioPlayerManager.stop();
+                                                    isAllPlaying3 = false;
+                                                    setState(() {
+                                                      openPlay3StopDialog =
+                                                          false;
+                                                    });
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.stop,
+                                                    color: Color(0XFF34425D),
+                                                    size: 26,
+                                                  )),
+                                            ],
+                                          ),
+                                        ))
+                                    : openPlay1StopDialog &&
+                                            !closePlay1StopDialog
+                                        ? Positioned(
+                                            right: 120,
+                                            top: 5,
+                                            child: Container(
+                                              height: isSplitScreen
+                                                  ? getFullWidgetHeight(
+                                                      height: 45)
+                                                  : getWidgetHeight(height: 45),
+                                              width: getWidgetWidth(width: 108),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20)),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 8, top: 5),
+                                                    child: Image.asset(
+                                                      "assets/images/Play_once_icon.png",
+                                                      // height: 15,
+                                                      width: 30,
+                                                    ),
+                                                  ),
+                                                  _isPaused
+                                                      ? audioLoading
+                                                          ? Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: SizedBox(
+                                                                height: 20,
+                                                                width: 20,
+                                                                child:
+                                                                    CircularProgressIndicator(
+                                                                  color: Color(
+                                                                      0XFF34425D),
+                                                                  strokeWidth:
+                                                                      2,
+                                                                ),
+                                                              ),
+                                                            )
+                                                          : InkWell(
+                                                              onTap: () {
+                                                                print(
+                                                                    "checkkkkkkkkk11");
+                                                                resumeAll();
+                                                              },
+                                                              child: Icon(Icons.play_arrow,
+                                                                  color: Color(
+                                                                      0XFF34425D),
+                                                                  size: 30))
+                                                      : audioLoading
+                                                          ? Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: SizedBox(
+                                                                height: 20,
+                                                                width: 20,
+                                                                child:
+                                                                    CircularProgressIndicator(
+                                                                  color: Color(
+                                                                      0XFF34425D),
+                                                                  strokeWidth:
+                                                                      2,
+                                                                ),
+                                                              ),
+                                                            )
+                                                          : InkWell(
+                                                              onTap: () {
+                                                                print(
+                                                                    "checkkk222");
+                                                                pauseAll();
+                                                              },
+                                                              child: Icon(
                                                                 Icons.pause,
                                                                 color: Color(
                                                                     0XFF34425D),
-                                                                size: 30)),
-                                                IconButton(
-                                                    onPressed: () {
-                                                      _audioPlayerManager
-                                                          .stop();
-                                                      isAllPlaying3 = false;
-                                                      setState(() {
-                                                        openPlay3StopDialog =
-                                                            false;
-                                                      });
-                                                    },
-                                                    icon: Icon(
-                                                      Icons.stop,
-                                                      color: Color(0XFF34425D),
-                                                      size: 26,
-                                                    )),
-                                              ],
-                                            ),
-                                          ))
-                                      : openPlay1StopDialog &&
-                                              !closePlay1StopDialog
-                                          ? Positioned(
-                                              right: 120,
-                                              top: 5,
-                                              child: Container(
-                                                height: isSplitScreen
-                                                    ? getFullWidgetHeight(
-                                                        height: 45)
-                                                    : getWidgetHeight(
-                                                        height: 45),
-                                                width:
-                                                    getWidgetWidth(width: 108),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 8, top: 5),
-                                                      child: Image.asset(
-                                                        "assets/images/Play_once_icon.png",
-                                                        // height: 15,
-                                                        width: 30,
-                                                      ),
-                                                    ),
-                                                    _isPaused
-                                                        ? audioLoading
-                                                            ? Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        8.0),
-                                                                child: SizedBox(
-                                                                  height: 20,
-                                                                  width: 20,
-                                                                  child:
-                                                                      CircularProgressIndicator(
-                                                                    color: Color(
-                                                                        0XFF34425D),
-                                                                    strokeWidth:
-                                                                        2,
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            : InkWell(
-                                                                onTap: () {
-                                                                  print(
-                                                                      "checkkkkkkkkk11");
-                                                                  resumeAll();
-                                                                },
-                                                                child: Icon(
-                                                                    Icons
-                                                                        .play_arrow,
-                                                                    color: Color(
-                                                                        0XFF34425D),
-                                                                    size: 30))
-                                                        : audioLoading
-                                                            ? Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        8.0),
-                                                                child: SizedBox(
-                                                                  height: 20,
-                                                                  width: 20,
-                                                                  child:
-                                                                      CircularProgressIndicator(
-                                                                    color: Color(
-                                                                        0XFF34425D),
-                                                                    strokeWidth:
-                                                                        2,
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            : InkWell(
-                                                                onTap: () {
-                                                                  print(
-                                                                      "checkkk222");
-                                                                  pauseAll();
-                                                                },
-                                                                child: Icon(
-                                                                  Icons.pause,
-                                                                  color: Color(
-                                                                      0XFF34425D),
-                                                                  size: 30,
-                                                                )),
-                                                    InkWell(
-                                                        onTap: () {
-                                                          _audioPlayerManager
-                                                              .stop();
-                                                          isAllPlaying = false;
-                                                          setState(() {
-                                                            openPlay1StopDialog =
-                                                                false;
-                                                          });
-                                                        },
-                                                        child: Icon(
-                                                          Icons.stop,
-                                                          color:
-                                                              Color(0XFF34425D),
-                                                          size: 30,
-                                                        )),
-                                                  ],
-                                                ),
-                                              ))
-                                          : SizedBox()
-                                ],
-                              ),
+                                                                size: 30,
+                                                              )),
+                                                  InkWell(
+                                                      onTap: () {
+                                                        _audioPlayerManager
+                                                            .stop();
+                                                        isAllPlaying = false;
+                                                        setState(() {
+                                                          openPlay1StopDialog =
+                                                              false;
+                                                        });
+                                                      },
+                                                      child: Icon(
+                                                        Icons.stop,
+                                                        color:
+                                                            Color(0XFF34425D),
+                                                        size: 30,
+                                                      )),
+                                                ],
+                                              ),
+                                            ))
+                                        : SizedBox()
+                              ],
                             ),
-                            Container(
-                              height: isSplitScreen
-                                  ? getFullWidgetHeight(height: 60)
-                                  : getWidgetHeight(height: 60),
-                              width: kWidth,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF34445F),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  IconButton(
-                                      icon: ImageIcon(
-                                        AssetImage(AllAssets.bottomHome),
+                          ),
+                          Container(
+                            height: isSplitScreen
+                                ? getFullWidgetHeight(height: 60)
+                                : getWidgetHeight(height: 60),
+                            width: kWidth,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF34445F),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                IconButton(
+                                    icon: ImageIcon(
+                                      AssetImage(AllAssets.bottomHome),
+                                      color: context
+                                                  .read<AuthState>()
+                                                  .currentIndex ==
+                                              0
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170),
+                                    ),
+                                    onPressed: () {
+                                      context.read<AuthState>().changeIndex(0);
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BottomNavigation()));
+                                    }),
+                                IconButton(
+                                    icon: ImageIcon(
+                                        AssetImage(AllAssets.bottomPL),
                                         color: context
                                                     .read<AuthState>()
                                                     .currentIndex ==
-                                                0
+                                                1
                                             ? Color(0xFFAAAAAA)
                                             : Color.fromARGB(
-                                                132, 170, 170, 170),
-                                      ),
-                                      onPressed: () {
-                                        context
-                                            .read<AuthState>()
-                                            .changeIndex(0);
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomNavigation()));
-                                      }),
-                                  IconButton(
-                                      icon: ImageIcon(
-                                          AssetImage(AllAssets.bottomPL),
-                                          color: context
-                                                      .read<AuthState>()
-                                                      .currentIndex ==
-                                                  1
-                                              ? Color(0xFFAAAAAA)
-                                              : Color.fromARGB(
-                                                  132, 170, 170, 170)),
-                                      onPressed: () {
-                                        context
-                                            .read<AuthState>()
-                                            .changeIndex(1);
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomNavigation()));
-                                      }),
-                                  IconButton(
-                                      icon: ImageIcon(
-                                          AssetImage(AllAssets.bottomIS),
-                                          color: context
-                                                      .read<AuthState>()
-                                                      .currentIndex ==
-                                                  2
-                                              ? Color(0xFFAAAAAA)
-                                              : Color.fromARGB(
-                                                  132, 170, 170, 170)),
-                                      onPressed: () {
-                                        context
-                                            .read<AuthState>()
-                                            .changeIndex(2);
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomNavigation()));
-                                      }),
-                                  IconButton(
-                                      icon: ImageIcon(
-                                          AssetImage(AllAssets.bottomPE),
-                                          color: context
-                                                      .read<AuthState>()
-                                                      .currentIndex ==
-                                                  3
-                                              ? Color(0xFFAAAAAA)
-                                              : Color.fromARGB(
-                                                  132, 170, 170, 170)),
-                                      onPressed: () {
-                                        context
-                                            .read<AuthState>()
-                                            .changeIndex(3);
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomNavigation()));
-                                      }),
-                                  IconButton(
-                                      icon: ImageIcon(
-                                          AssetImage(AllAssets.bottomPT),
-                                          color: context
-                                                      .read<AuthState>()
-                                                      .currentIndex ==
-                                                  4
-                                              ? Color(0xFFAAAAAA)
-                                              : Color.fromARGB(
-                                                  132, 170, 170, 170)),
-                                      onPressed: () {
-                                        context
-                                            .read<AuthState>()
-                                            .changeIndex(4);
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomNavigation()));
-                                      }),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-          floatingActionButton: _isLoading ? SizedBox() : buildBoomMenu()),
+                                                132, 170, 170, 170)),
+                                    onPressed: () {
+                                      context.read<AuthState>().changeIndex(1);
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BottomNavigation()));
+                                    }),
+                                IconButton(
+                                    icon: ImageIcon(
+                                        AssetImage(AllAssets.bottomIS),
+                                        color: context
+                                                    .read<AuthState>()
+                                                    .currentIndex ==
+                                                2
+                                            ? Color(0xFFAAAAAA)
+                                            : Color.fromARGB(
+                                                132, 170, 170, 170)),
+                                    onPressed: () {
+                                      context.read<AuthState>().changeIndex(2);
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BottomNavigation()));
+                                    }),
+                                IconButton(
+                                    icon: ImageIcon(
+                                        AssetImage(AllAssets.bottomPE),
+                                        color: context
+                                                    .read<AuthState>()
+                                                    .currentIndex ==
+                                                3
+                                            ? Color(0xFFAAAAAA)
+                                            : Color.fromARGB(
+                                                132, 170, 170, 170)),
+                                    onPressed: () {
+                                      context.read<AuthState>().changeIndex(3);
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BottomNavigation()));
+                                    }),
+                                IconButton(
+                                    icon: ImageIcon(
+                                        AssetImage(AllAssets.bottomPT),
+                                        color: context
+                                                    .read<AuthState>()
+                                                    .currentIndex ==
+                                                4
+                                            ? Color(0xFFAAAAAA)
+                                            : Color.fromARGB(
+                                                132, 170, 170, 170)),
+                                    onPressed: () {
+                                      context.read<AuthState>().changeIndex(4);
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BottomNavigation()));
+                                    }),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+        floatingActionButton: _isLoading ? SizedBox() : buildBoomMenu(),
+      ),
     );
   }
 
@@ -1656,45 +1648,9 @@ class _WordScreenState extends State<WordScreen>
                         builder: (context) => BottomNavigation()));
               },
             ),
-            bm.MenuItem(
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: getWidgetWidth(width: 12),
-                    vertical: isSplitScreen
-                        ? getFullWidgetHeight(height: 12)
-                        : getWidgetHeight(height: 12)),
-                decoration:
-                    BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                child: Icon(
-                  Icons.keyboard,
-                  color: Colors.grey,
-                  size: isSplitScreen
-                      ? getFullWidgetHeight(height: 18)
-                      : getWidgetHeight(height: 18),
-                ),
-              ),
-              title: "Try Unlisted Words",
-              titleColor: Colors.white,
-              backgroundColor: Colors.transparent,
-              onTap: () {
-                isAllPlaying = false;
-                isAllPlaying = false;
-
-                setState(() {});
-                showDialog(
-                  useRootNavigator: true,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return OwnWordDialog(
-                      isFromWord: true,
-                    );
-                    // return OwnWordResultDialog();
-                  },
-                );
-              },
-            ),
-            bm.MenuItem(
-              child: Container(
+            if (!kIsWeb)
+              bm.MenuItem(
+                child: Container(
                   padding: EdgeInsets.symmetric(
                       horizontal: getWidgetWidth(width: 12),
                       vertical: isSplitScreen
@@ -1702,67 +1658,106 @@ class _WordScreenState extends State<WordScreen>
                           : getWidgetHeight(height: 12)),
                   decoration: BoxDecoration(
                       color: Colors.white, shape: BoxShape.circle),
-                  child: Image.asset("assets/images/filter.png",
-                      color: Colors
-                          .grey) /*
+                  child: Icon(
+                    Icons.keyboard,
+                    color: Colors.grey,
+                    size: isSplitScreen
+                        ? getFullWidgetHeight(height: 18)
+                        : getWidgetHeight(height: 18),
+                  ),
+                ),
+                title: "Try Unlisted Words",
+                titleColor: Colors.white,
+                backgroundColor: Colors.transparent,
+                onTap: () {
+                  isAllPlaying = false;
+                  isAllPlaying = false;
+
+                  setState(() {});
+                  showDialog(
+                    useRootNavigator: true,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return OwnWordDialog(
+                        isFromWord: true,
+                      );
+                      // return OwnWordResultDialog();
+                    },
+                  );
+                },
+              ),
+            if (!kIsWeb)
+              bm.MenuItem(
+                child: Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: getWidgetWidth(width: 12),
+                        vertical: isSplitScreen
+                            ? getFullWidgetHeight(height: 12)
+                            : getWidgetHeight(height: 12)),
+                    decoration: BoxDecoration(
+                        color: Colors.white, shape: BoxShape.circle),
+                    child: Image.asset("assets/images/filter.png",
+                        color: Colors
+                            .grey) /*
           child: Icon(
             Icons.check_box,
             color: Colors.grey,
             size: 18,
           ),*/
-                  ),
-              title: "Filter Priority",
-              titleColor: Colors.white,
-              backgroundColor: Colors.transparent,
-              onTap: () {
-                isAllPlaying = false;
-                isAllPlaying3 = false;
+                    ),
+                title: "Filter Priority",
+                titleColor: Colors.white,
+                backgroundColor: Colors.transparent,
+                onTap: () {
+                  isAllPlaying = false;
+                  isAllPlaying3 = false;
 
-                print("indexCheckkkk:${widget.index}");
-                print("itemWordList:${widget.itemWordList}");
-                print("controllerList:${widget.controllerList}");
+                  print("indexCheckkkk:${widget.index}");
+                  print("itemWordList:${widget.itemWordList}");
+                  print("controllerList:${widget.controllerList}");
 
-                setState(() {});
-                log("dohdougdugdugdudjuedfu: ${repeatLoads}");
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => WordScreen(
-                              index: widget.index,
-                              itemWordList: widget.itemWordList,
-                              controllerList: widget.controllerList,
-                              title: "Priority List",
-                              load: "",
-                              check: true,
-                              filterLoad: repeatLoads,
-                            ))).then((val) => _getWords(isRefresh: false));
-              },
-            ),
-            bm.MenuItem(
-              child: Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                      color: Colors.white, shape: BoxShape.circle),
-                  child: Image.asset("assets/images/filter_all.png",
-                      color: Colors.grey)),
-              title: "Filter All Priority",
-              titleColor: Colors.white,
-              backgroundColor: Colors.transparent,
-              onTap: () {
-                print("aall priorityyyy calllleddddd>>>>>>>");
-                isAllPlaying = false;
-                isAllPlaying3 = false;
+                  setState(() {});
+                  log("dohdougdugdugdudjuedfu: ${repeatLoads}");
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WordScreen(
+                                index: widget.index,
+                                itemWordList: widget.itemWordList,
+                                controllerList: widget.controllerList,
+                                title: "Priority List",
+                                load: "",
+                                check: true,
+                                filterLoad: repeatLoads,
+                              ))).then((val) => _getWords(isRefresh: false));
+                },
+              ),
+            if (!kIsWeb)
+              bm.MenuItem(
+                child: Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                        color: Colors.white, shape: BoxShape.circle),
+                    child: Image.asset("assets/images/filter_all.png",
+                        color: Colors.grey)),
+                title: "Filter All Priority",
+                titleColor: Colors.white,
+                backgroundColor: Colors.transparent,
+                onTap: () {
+                  print("aall priorityyyy calllleddddd>>>>>>>");
+                  isAllPlaying = false;
+                  isAllPlaying3 = false;
 
-                setState(() {});
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => WordScreen(
-                              title: "All Priority List",
-                              load: "",
-                            ))).then((val) => _getWords(isRefresh: false));
-              },
-            ),
+                  setState(() {});
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WordScreen(
+                                title: "All Priority List",
+                                load: "",
+                              ))).then((val) => _getWords(isRefresh: false));
+                },
+              ),
           ]),
     );
   }

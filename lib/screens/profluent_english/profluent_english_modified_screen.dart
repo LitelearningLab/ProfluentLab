@@ -233,7 +233,7 @@ class _ProfluentEnglishModifiedScreenState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
     final controller = Provider.of<AuthState>(context, listen: false);
     controller.tabarIndex = 0;
     return PopScope(
@@ -298,7 +298,7 @@ class _ProfluentEnglishModifiedScreenState
                                   : isSplitScreen
                                       ? getFullWidgetHeight(height: 142)
                                       : getWidgetHeight(height: 142),
-                              width: size.width,
+                              width: displayWidth(context),
                               child: ListView(
                                 padding: EdgeInsets.zero,
                                 shrinkWrap: true,
@@ -538,7 +538,7 @@ class _ProfluentEnglishModifiedScreenState
                                 height: isSplitScreen
                                     ? getFullWidgetHeight(height: 96)
                                     : getWidgetHeight(height: 96),
-                                width: getWidgetWidth(width: 335),
+                                // width: getWidgetWidth(width: 335),
                                 decoration: BoxDecoration(
                                     color: Color(0xFFFFFFFF),
                                     borderRadius: BorderRadius.circular(10)),
@@ -553,7 +553,7 @@ class _ProfluentEnglishModifiedScreenState
                                     children: [
                                       Container(
                                         //height: size.height * 0.054,
-                                        width: size.width * 0.5,
+                                        width: displayWidth(context) * 0.5,
                                         child: Text(
                                           'Fast Track\nPronunciation For AR',
                                           style: TextStyle(

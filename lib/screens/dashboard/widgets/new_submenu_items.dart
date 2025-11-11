@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 
@@ -25,7 +26,8 @@ class NewSubMenuItem extends StatelessWidget {
       child: Container(
         width: displayWidth(context),
         padding: EdgeInsets.only(
-            left: getWidgetWidth(width: 20),
+            left:
+                kIsWeb ? getWidgetWidth(width: 10) : getWidgetWidth(width: 20),
             right: getWidgetWidth(width: 20),
             top: 7.5,
             bottom: 7.5),
@@ -37,7 +39,7 @@ class NewSubMenuItem extends StatelessWidget {
                 children: [
                   Container(
                     height: getWidgetHeight(height: 36),
-                    width: getWidgetWidth(width: 36),
+                    width: getWidgetWidth(width: kIsWeb ? 18 : 36),
                     decoration:
                         BoxDecoration(color: bgColor, shape: BoxShape.circle),
                     child: Padding(
@@ -53,7 +55,7 @@ class NewSubMenuItem extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    width: getWidgetWidth(width: 10),
+                    width: kIsWeb ? 0 : getWidgetWidth(width: 10),
                   ),
                   Expanded(
                     child: Text(

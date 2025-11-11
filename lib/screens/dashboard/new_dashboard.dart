@@ -310,13 +310,11 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                       body: SingleChildScrollView(
                         child: Padding(
                           padding: EdgeInsets.only(
-                              bottom: kIsWeb
-                                  ? 20
-                                  : isSplitScreen
-                                      ? getFullWidgetHeight(height: 15)
-                                      : getWidgetHeight(height: 15),
-                              left: kIsWeb ? 20 : getWidgetWidth(width: 15),
-                              right: kIsWeb ? 20 : getWidgetWidth(width: 15)),
+                              left: getWidgetWidth(width: 20),
+                              right: getWidgetWidth(width: 20),
+                              top: isSplitScreen
+                                  ? getFullWidgetHeight(height: 20)
+                                  : getWidgetHeight(height: 20)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -799,7 +797,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                               // SPH(20),
                               SizedBox(
                                 height: kIsWeb
-                                    ? 0
+                                    ? 26
                                     : isSplitScreen
                                         ? getFullWidgetHeight(height: 26)
                                         : getWidgetHeight(height: 26),

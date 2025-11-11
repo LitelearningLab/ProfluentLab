@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter application.">
+  <meta name="description" content="Profluent AR - Interactive Augmented Reality Learning App">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="litelearninglab">
+  <meta name="apple-mobile-web-app-title" content="Profluent AR">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="profluent_ar_icon.png"/>
 
-  <title>litelearninglab</title>
+  <title>Profluent AR</title>
   <link rel="manifest" href="manifest.json">
 
   <style>
@@ -25,13 +25,13 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
       background-color: #ffffff;
     }
 
     .spinner {
       border: 8px solid #f3f3f3;
-      border-top: 8px solid #293750; /* The desired color */
+      border-top: 8px solid #293750; /* Brand color */
       border-radius: 50%;
       width: 80px;
       height: 80px;
@@ -45,9 +45,20 @@
     }
 
     .app-name {
-      font-size: 32px;
-      font-weight: bold;
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: 1px;
       color: #293750;
+    }
+
+    /* Optional smooth fade when app loads */
+    #flutter_container {
+      animation: fadeIn 0.6s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
   </style>
 </head>

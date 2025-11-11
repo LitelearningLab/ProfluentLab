@@ -77,7 +77,7 @@ Future<void> main() async {
   await initNotifications(flutterLocalNotificationsPlugin);
   requestIOSPermissions(flutterLocalNotificationsPlugin);
   var configuredApp = new AppConfig(
-      appName: 'Profluent', flavorName: 'prod', fcmKey: '', child: MyApp());
+      appName: 'Profluent AR', flavorName: 'prod', fcmKey: '', child: MyApp());
   FirebaseFirestore.instance.settings =
       const Settings(persistenceEnabled: false);
   runApp(

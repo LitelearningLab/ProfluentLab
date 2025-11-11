@@ -58,7 +58,8 @@ class FirestoreService<T extends Jsonable> {
       print('Adding document to collection: $collectionName with id: ');
     }
     try {
-      var result = await _firestore.collection(collectionName).add(data.toMap());
+      var result =
+          await _firestore.collection(collectionName).add(data.toMap());
       print("resulttt");
       print("resultdfdfd:$result");
 
@@ -93,7 +94,8 @@ class FirestoreService<T extends Jsonable> {
       return true;
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to update document in collection: $collectionName with id: $id');
+        print(
+            'Failed to update document in collection: $collectionName with id: $id');
         print('Error: $e');
       }
 
@@ -115,7 +117,8 @@ class FirestoreService<T extends Jsonable> {
       return true;
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to update document in collection: $collectionName with id: $id');
+        print(
+            'Failed to update document in collection: $collectionName with id: $id');
         print('Error: $e');
       }
 
@@ -124,7 +127,8 @@ class FirestoreService<T extends Jsonable> {
   }
 
   Future<T?> get(String documentId) async {
-    final documentReference = _firestore.collection(collectionName).doc(documentId);
+    final documentReference =
+        _firestore.collection(collectionName).doc(documentId);
     final snapshot = await documentReference.get();
     if (!snapshot.exists) {
       return null;
@@ -139,7 +143,8 @@ class FirestoreService<T extends Jsonable> {
       DocumentSnapshot? startAfterDocument,
       bool descending = false,
       Function(DocumentSnapshot)? lastDocfromData}) async {
-    print('Getting documents from collection: $collectionName with where conditions: $conditions');
+    print(
+        'Getting documents from collection: $collectionName with where conditions: $conditions');
     Query<Map<String, dynamic>> collectionReference;
     if (orderBy != null && limit != null && startAfterDocument != null) {
       collectionReference = _firestore
@@ -148,12 +153,19 @@ class FirestoreService<T extends Jsonable> {
           .startAfterDocument(startAfterDocument)
           .limit(limit);
     } else if (orderBy != null && limit != null) {
-      collectionReference = _firestore.collection(collectionName).orderBy(orderBy, descending: descending).limit(limit);
+      collectionReference = _firestore
+          .collection(collectionName)
+          .orderBy(orderBy, descending: descending)
+          .limit(limit);
     } else if (orderBy != null && startAfterDocument != null) {
-      collectionReference =
-          _firestore.collection(collectionName).orderBy(orderBy).startAfterDocument(startAfterDocument);
+      collectionReference = _firestore
+          .collection(collectionName)
+          .orderBy(orderBy)
+          .startAfterDocument(startAfterDocument);
     } else if (orderBy != null) {
-      collectionReference = _firestore.collection(collectionName).orderBy(orderBy, descending: descending);
+      collectionReference = _firestore
+          .collection(collectionName)
+          .orderBy(orderBy, descending: descending);
     } else if (limit != null) {
       collectionReference = _firestore.collection(collectionName).limit(limit);
     } else {
@@ -202,7 +214,8 @@ class FirestoreService<T extends Jsonable> {
         case 'whereIn':
           List<String> chunk = [];
           for (int i = 0; i < value.length; i += 10) {
-            chunk = value.sublist(i, i + 10 > value.length ? value.length : i + 10);
+            chunk =
+                value.sublist(i, i + 10 > value.length ? value.length : i + 10);
             userNamesChunks.add(chunk);
             print("chunk");
             print(chunk);
@@ -234,12 +247,14 @@ class FirestoreService<T extends Jsonable> {
     }
     QuerySnapshot querySnapshot;
     if (userNamesChunks.isNotEmpty) {
-      List<QuerySnapshot> snapshots = await Future.wait(userNamesChunks.map((List<String> chunk) {
+      List<QuerySnapshot> snapshots =
+          await Future.wait(userNamesChunks.map((List<String> chunk) {
         return query.where(FieldPath.documentId, whereIn: chunk).get();
       }));
       List<T> list = <T>[];
       for (QuerySnapshot sn in snapshots) {
-        list.addAll(sn.docs.map((e) => _documentSnapshotToModel(e) as T).toList());
+        list.addAll(
+            sn.docs.map((e) => _documentSnapshotToModel(e) as T).toList());
       }
       return list;
     } else {
@@ -253,13 +268,16 @@ class FirestoreService<T extends Jsonable> {
         lastDocfromData(querySnapshot.docs.last);
       }
 
-      return querySnapshot.docs.map((e) => _documentSnapshotToModel(e) as T).toList();
+      return querySnapshot.docs
+          .map((e) => _documentSnapshotToModel(e) as T)
+          .toList();
     }
   }
 
   Future<bool> checkExists(List<List<dynamic>> conditions) async {
     if (kDebugMode) {
-      print('Getting documents from collection: $collectionName with where conditions: $conditions');
+      print(
+          'Getting documents from collection: $collectionName with where conditions: $conditions');
     }
     var collectionReference = _firestore.collection(collectionName);
 
@@ -292,7 +310,9 @@ class FirestoreService<T extends Jsonable> {
           query = query.where(field, arrayContains: value);
           break;
         case 'arrayContainsAll':
-          query = query.where(field, arrayContains: value.first).where(field, arrayContains: value[1]);
+          query = query
+              .where(field, arrayContains: value.first)
+              .where(field, arrayContains: value[1]);
           break;
         default:
           throw ArgumentError('Invalid operator: $operator');
@@ -305,9 +325,13 @@ class FirestoreService<T extends Jsonable> {
   }
 
   Stream<QuerySnapshot<Object?>> getWhereListen(List<List<dynamic>> conditions,
-      {String? orderBy, int? limit, DocumentSnapshot? startAfterDocument, bool descending = false}) {
+      {String? orderBy,
+      int? limit,
+      DocumentSnapshot? startAfterDocument,
+      bool descending = false}) {
     if (kDebugMode) {
-      print('Getting documents from collection: $collectionName with where conditions: $conditions');
+      print(
+          'Getting documents from collection: $collectionName with where conditions: $conditions');
     }
     Query<Map<String, dynamic>> collectionReference;
     if (orderBy != null && limit != null && startAfterDocument != null) {
@@ -317,14 +341,19 @@ class FirestoreService<T extends Jsonable> {
           .startAfterDocument(startAfterDocument)
           .limit(limit);
     } else if (orderBy != null && limit != null) {
-      collectionReference = _firestore.collection(collectionName).orderBy(orderBy, descending: descending).limit(limit);
+      collectionReference = _firestore
+          .collection(collectionName)
+          .orderBy(orderBy, descending: descending)
+          .limit(limit);
     } else if (orderBy != null && startAfterDocument != null) {
       collectionReference = _firestore
           .collection(collectionName)
           .orderBy(orderBy, descending: descending)
           .startAfterDocument(startAfterDocument);
     } else if (orderBy != null) {
-      collectionReference = _firestore.collection(collectionName).orderBy(orderBy, descending: descending);
+      collectionReference = _firestore
+          .collection(collectionName)
+          .orderBy(orderBy, descending: descending);
     } else if (limit != null) {
       collectionReference = _firestore.collection(collectionName).limit(limit);
     } else {
@@ -363,7 +392,9 @@ class FirestoreService<T extends Jsonable> {
           query = query.where(field, arrayContains: value);
           break;
         case 'arrayContainsAll':
-          query = query.where(field, arrayContains: value.first).where(field, arrayContains: value[1]);
+          query = query
+              .where(field, arrayContains: value.first)
+              .where(field, arrayContains: value[1]);
           break;
         default:
           throw ArgumentError('Invalid operator: $operator');
@@ -373,12 +404,19 @@ class FirestoreService<T extends Jsonable> {
     return query.snapshots();
   }
 
-  Future<List<T>> getAllDocuments({required String orderBy, bool descending = false}) async {
+  Future<List<T>> getAllDocuments(
+      {required String orderBy, bool descending = false}) async {
     if (kDebugMode) {
       print('Getting all documents from collection: $collectionName');
     }
-    final queryStream = _firestore.collection(collectionName).orderBy(orderBy, descending: descending).snapshots().map(
-          (snapshot) => snapshot.docs.map((doc) => _documentSnapshotToModel(doc) as T).toList(),
+    final queryStream = _firestore
+        .collection(collectionName)
+        .orderBy(orderBy, descending: descending)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => _documentSnapshotToModel(doc) as T)
+              .toList(),
         );
     return await queryStream.first;
   }
@@ -394,7 +432,8 @@ class FirestoreService<T extends Jsonable> {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to remove document from collection: $collectionName with id: $id');
+        print(
+            'Failed to remove document from collection: $collectionName with id: $id');
         print('Error: $e');
       }
     }
@@ -452,7 +491,8 @@ class FirestoreService<T extends Jsonable> {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Failed to remove document from collection: $collectionName with id: ');
+        print(
+            'Failed to remove document from collection: $collectionName with id: ');
         print('Error: $e');
       }
     }

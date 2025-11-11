@@ -42,7 +42,7 @@ Future<void> main() async {
   await initNotifications(flutterLocalNotificationsPlugin);
   requestIOSPermissions(flutterLocalNotificationsPlugin);
   var configuredApp = new AppConfig(
-      appName: 'Profluent English',
+      appName: 'Profluent AR',
       flavorName: 'english',
       fcmKey: '',
       child: MyApp());

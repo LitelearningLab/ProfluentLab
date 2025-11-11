@@ -183,315 +183,337 @@ class _ProcessCatScreenState extends State<InteracticeCatScreen> {
                             index: index,
                             child: Container(
                               decoration: BoxDecoration(
+                                // color: Colors.blue,
                                 image: DecorationImage(
                                   image: AssetImage(AllAssets.wordback),
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              child: DropDownWordItem(
-                                index: index,
-                                load: "widget.load",
-                                // isPlaying: false,
-                                isButtonsVisible: false,
-                                isDownloaded: false,
-                                maintitle: "widget.title",
-                                // expKey: expansionTile,
-                                onExpansionChanged: (val) {
-                                  if (val) {
-                                    _selectedWordOnClick =
-                                        widget.linkCats[index].name;
-                                    setState(() {});
-                                  }
-                                },
-                                // onClick: (val) {
-                                //   _selectedWordOnClick = val;
-                                //   setState(() {});
-                                //   // print(val);
-                                //   // expansionTile.currentState.setExpanded(
-                                //   //     _selectedWordOnClick != null &&
-                                //   //         _selectedWordOnClick == _words[index].text);
-                                // },
-                                initiallyExpanded:
-                                    _selectedWordOnClick != null &&
-                                        _selectedWordOnClick ==
-                                            widget.linkCats[index].name,
-                                isWord: false,
-                                isRefresh: (val) {
-                                  // if (val) _getWords(isRefresh: true);
-                                },
-                                wordId: 1,
-                                isFav: 0,
-                                title: widget.linkCats[index].name ?? "",
-                                url: "_words[index].file",
-                                onTapForThreePlayerStop: () {},
-                                children: [
-                                  Container(
-                                    color: Color(0xff293750),
-                                    alignment: Alignment.centerLeft,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 30, vertical: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        SPW(10),
-                                        InkWell(
-                                          onTap: () async {
-                                            if (widget.linkCats[index].link1 !=
-                                                    null &&
-                                                widget.linkCats[index].link1!
-                                                    .isNotEmpty) {
-                                              sessionName =
-                                                  widget.linkCats[index].name!;
-                                              activityName = "Simulation 1";
-                                              print(
-                                                  "LinkCheck:${widget.linkCats[index].link1}");
-                                              String? links =
-                                                  widget.linkCats[index].link1;
-                                              arCallSimulationsLinks
-                                                  .add(links!);
-                                              FirebaseFirestore firestore =
-                                                  FirebaseFirestore.instance;
-                                              String userId = await SharedPref
-                                                  .getSavedString('userId');
-                                              DocumentReference arCallDocument =
-                                                  firestore
-                                                      .collection(
-                                                          'arCallSimulationsReport')
-                                                      .doc(userId);
+                              child: Container(
+                                color: Color(0xff293750),
+                                child: DropDownWordItem(
+                                  index: index,
+                                  load: "widget.load",
+                                  // isPlaying: false,
+                                  isButtonsVisible: false,
+                                  isDownloaded: false,
+                                  maintitle: "widget.title",
+                                  // expKey: expansionTile,
+                                  onExpansionChanged: (val) {
+                                    if (val) {
+                                      _selectedWordOnClick =
+                                          widget.linkCats[index].name;
+                                      setState(() {});
+                                    }
+                                  },
+                                  // onClick: (val) {
+                                  //   _selectedWordOnClick = val;
+                                  //   setState(() {});
+                                  //   // print(val);
+                                  //   // expansionTile.currentState.setExpanded(
+                                  //   //     _selectedWordOnClick != null &&
+                                  //   //         _selectedWordOnClick == _words[index].text);
+                                  // },
+                                  initiallyExpanded:
+                                      _selectedWordOnClick != null &&
+                                          _selectedWordOnClick ==
+                                              widget.linkCats[index].name,
+                                  isWord: false,
+                                  isRefresh: (val) {
+                                    // if (val) _getWords(isRefresh: true);
+                                  },
+                                  wordId: 1,
+                                  isFav: 0,
+                                  title: widget.linkCats[index].name ?? "",
+                                  url: "_words[index].file",
+                                  onTapForThreePlayerStop: () {},
+                                  children: [
+                                    Container(
+                                      color: Color(0xff293750),
+                                      alignment: Alignment.centerLeft,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 30, vertical: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          SPW(10),
+                                          InkWell(
+                                            onTap: () async {
+                                              if (widget.linkCats[index]
+                                                          .link1 !=
+                                                      null &&
+                                                  widget.linkCats[index].link1!
+                                                      .isNotEmpty) {
+                                                sessionName = widget
+                                                    .linkCats[index].name!;
+                                                activityName = "Simulation 1";
+                                                print(
+                                                    "LinkCheck:${widget.linkCats[index].link1}");
+                                                String? links = widget
+                                                    .linkCats[index].link1;
+                                                arCallSimulationsLinks
+                                                    .add(links!);
+                                                FirebaseFirestore firestore =
+                                                    FirebaseFirestore.instance;
+                                                String userId = await SharedPref
+                                                    .getSavedString('userId');
+                                                DocumentReference
+                                                    arCallDocument = firestore
+                                                        .collection(
+                                                            'arCallSimulationsReport')
+                                                        .doc(userId);
 
-                                              await arCallDocument.update({
-                                                'isLink':
-                                                    FieldValue.arrayUnion([
-                                                  widget.linkCats[index].link1
-                                                ]),
-                                              }).then((_) {
-                                                print(
-                                                    'Link added to Firestore: ${widget.linkCats[index].link1}');
-                                              }).catchError((e) {
-                                                print(
-                                                    'Error updating Firestore: $e');
-                                              });
-                                              SharedPreferences prefs =
-                                                  await SharedPreferences
-                                                      .getInstance();
-                                              await prefs.setStringList(
-                                                  'InAppWebViewPage', [
-                                                widget.linkCats[index].link1!
-                                              ]);
-                                              await prefs.setString(
-                                                  'lastAccess',
-                                                  'InAppWebViewPage');
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          InAppWebViewPage(
-                                                            url: widget
-                                                                .linkCats[index]
-                                                                .link1!,
-                                                          )));
-                                            }
-                                          },
-                                          child: Wrap(
-                                            children: [
-                                              Text(
-                                                "#1",
-                                                style: TextStyle(
-                                                  color: AppColors.white,
+                                                await arCallDocument.update({
+                                                  'isLink':
+                                                      FieldValue.arrayUnion([
+                                                    widget.linkCats[index].link1
+                                                  ]),
+                                                }).then((_) {
+                                                  print(
+                                                      'Link added to Firestore: ${widget.linkCats[index].link1}');
+                                                }).catchError((e) {
+                                                  print(
+                                                      'Error updating Firestore: $e');
+                                                });
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                await prefs.setStringList(
+                                                    'InAppWebViewPage', [
+                                                  widget.linkCats[index].link1!
+                                                ]);
+                                                await prefs.setString(
+                                                    'lastAccess',
+                                                    'InAppWebViewPage');
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            InAppWebViewPage(
+                                                              url: widget
+                                                                  .linkCats[
+                                                                      index]
+                                                                  .link1!,
+                                                            )));
+                                              }
+                                            },
+                                            child: Wrap(
+                                              children: [
+                                                Text(
+                                                  "#1",
+                                                  style: TextStyle(
+                                                    color: AppColors.white,
+                                                  ),
                                                 ),
-                                              ),
-                                              SPW(5),
-                                              Image.asset(
-                                                AllAssets.interb,
-                                                color: (widget.linkCats[index]
-                                                                .link1 !=
-                                                            null &&
-                                                        widget.linkCats[index]
-                                                            .link1!.isNotEmpty)
-                                                    ? Colors.white
-                                                    : Colors.grey,
-                                                width: 25,
-                                                height: 25,
-                                              ),
-                                            ],
+                                                SPW(5),
+                                                Image.asset(
+                                                  AllAssets.interb,
+                                                  color: (widget.linkCats[index]
+                                                                  .link1 !=
+                                                              null &&
+                                                          widget
+                                                              .linkCats[index]
+                                                              .link1!
+                                                              .isNotEmpty)
+                                                      ? Colors.white
+                                                      : Colors.grey,
+                                                  width: 25,
+                                                  height: 25,
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        SPW(15),
-                                        InkWell(
-                                            onTap: () async {
-                                              if (widget.linkCats[index]
-                                                          .link2 !=
-                                                      null &&
-                                                  widget.linkCats[index].link2!
-                                                      .isNotEmpty) {
-                                                sessionName = widget
-                                                    .linkCats[index].name!;
-                                                activityName = "Simulation 2";
-                                                print(
-                                                    "LinkCheckkk:${widget.linkCats[index].link2}");
-                                                String? links2 = widget
-                                                    .linkCats[index].link2;
-                                                arCallSimulationsLinks
-                                                    .add(links2!);
-                                                FirebaseFirestore firestore =
-                                                    FirebaseFirestore.instance;
-                                                String userId = await SharedPref
-                                                    .getSavedString('userId');
-                                                DocumentReference softSkills =
-                                                    firestore
-                                                        .collection(
-                                                            'arCallSimulationsReport')
-                                                        .doc(userId);
+                                          SPW(15),
+                                          InkWell(
+                                              onTap: () async {
+                                                if (widget.linkCats[index]
+                                                            .link2 !=
+                                                        null &&
+                                                    widget.linkCats[index]
+                                                        .link2!.isNotEmpty) {
+                                                  sessionName = widget
+                                                      .linkCats[index].name!;
+                                                  activityName = "Simulation 2";
+                                                  print(
+                                                      "LinkCheckkk:${widget.linkCats[index].link2}");
+                                                  String? links2 = widget
+                                                      .linkCats[index].link2;
+                                                  arCallSimulationsLinks
+                                                      .add(links2!);
+                                                  FirebaseFirestore firestore =
+                                                      FirebaseFirestore
+                                                          .instance;
+                                                  String userId =
+                                                      await SharedPref
+                                                          .getSavedString(
+                                                              'userId');
+                                                  DocumentReference softSkills =
+                                                      firestore
+                                                          .collection(
+                                                              'arCallSimulationsReport')
+                                                          .doc(userId);
 
-                                                await softSkills.update({
-                                                  'isLink':
-                                                      FieldValue.arrayUnion([
-                                                    widget.linkCats[index].link2
-                                                  ]),
-                                                }).then((_) {
-                                                  print(
-                                                      'Link added to Firestore: ${widget.linkCats[index].link2}');
-                                                }).catchError((e) {
-                                                  print(
-                                                      'Error updating Firestore: $e');
-                                                });
-                                                SharedPreferences prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                await prefs.setStringList(
-                                                    'InAppWebViewPage', [
-                                                  widget.linkCats[index].link2!
-                                                ]);
-                                                await prefs.setString(
-                                                    'lastAccess',
-                                                    'InAppWebViewPage');
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            InAppWebViewPage(
-                                                              url: widget
-                                                                  .linkCats[
-                                                                      index]
-                                                                  .link2!,
-                                                            )));
-                                              }
-                                            },
-                                            child: Wrap(
-                                              children: [
-                                                Text(
-                                                  "#2",
-                                                  style: TextStyle(
-                                                    color: AppColors.white,
+                                                  await softSkills.update({
+                                                    'isLink':
+                                                        FieldValue.arrayUnion([
+                                                      widget
+                                                          .linkCats[index].link2
+                                                    ]),
+                                                  }).then((_) {
+                                                    print(
+                                                        'Link added to Firestore: ${widget.linkCats[index].link2}');
+                                                  }).catchError((e) {
+                                                    print(
+                                                        'Error updating Firestore: $e');
+                                                  });
+                                                  SharedPreferences prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  await prefs.setStringList(
+                                                      'InAppWebViewPage', [
+                                                    widget
+                                                        .linkCats[index].link2!
+                                                  ]);
+                                                  await prefs.setString(
+                                                      'lastAccess',
+                                                      'InAppWebViewPage');
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              InAppWebViewPage(
+                                                                url: widget
+                                                                    .linkCats[
+                                                                        index]
+                                                                    .link2!,
+                                                              )));
+                                                }
+                                              },
+                                              child: Wrap(
+                                                children: [
+                                                  Text(
+                                                    "#2",
+                                                    style: TextStyle(
+                                                      color: AppColors.white,
+                                                    ),
                                                   ),
-                                                ),
-                                                SPW(5),
-                                                Image.asset(
-                                                  AllAssets.interb,
-                                                  color: (widget.linkCats[index]
-                                                                  .link2 !=
-                                                              null &&
-                                                          widget
-                                                              .linkCats[index]
-                                                              .link2!
-                                                              .isNotEmpty)
-                                                      ? Colors.white
-                                                      : Colors.grey,
-                                                  width: 25,
-                                                  height: 25,
-                                                ),
-                                              ],
-                                            )),
-                                        SPW(15),
-                                        InkWell(
-                                            onTap: () async {
-                                              if (widget.linkCats[index]
-                                                          .link3 !=
-                                                      null &&
-                                                  widget.linkCats[index].link3!
-                                                      .isNotEmpty) {
-                                                sessionName = widget
-                                                    .linkCats[index].name!;
-                                                activityName = "Simulation 3";
-                                                print(
-                                                    "LinkCheckkk:${widget.linkCats[index].link3}");
-                                                String? links3 = widget
-                                                    .linkCats[index].link3;
-                                                arCallSimulationsLinks
-                                                    .add(links3!);
-                                                FirebaseFirestore firestore =
-                                                    FirebaseFirestore.instance;
-                                                String userId = await SharedPref
-                                                    .getSavedString('userId');
-                                                DocumentReference softSkills =
-                                                    firestore
-                                                        .collection(
-                                                            'arCallSimulationsReport')
-                                                        .doc(userId);
-                                                await softSkills.update({
-                                                  'isLink':
-                                                      FieldValue.arrayUnion([
-                                                    widget.linkCats[index].link3
-                                                  ]),
-                                                }).then((_) {
-                                                  print(
-                                                      'Link added to Firestore: ${widget.linkCats[index].link3}');
-                                                }).catchError((e) {
-                                                  print(
-                                                      'Error updating Firestore: $e');
-                                                });
-                                                SharedPreferences prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                await prefs.setStringList(
-                                                    'InAppWebViewPage', [
-                                                  widget.linkCats[index].link3!
-                                                ]);
-                                                await prefs.setString(
-                                                    'lastAccess',
-                                                    'InAppWebViewPage');
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            InAppWebViewPage(
-                                                              url: widget
-                                                                  .linkCats[
-                                                                      index]
-                                                                  .link3!,
-                                                            )));
-                                              }
-                                            },
-                                            child: Wrap(
-                                              children: [
-                                                Text(
-                                                  "#3",
-                                                  style: TextStyle(
-                                                    color: AppColors.white,
+                                                  SPW(5),
+                                                  Image.asset(
+                                                    AllAssets.interb,
+                                                    color: (widget
+                                                                    .linkCats[
+                                                                        index]
+                                                                    .link2 !=
+                                                                null &&
+                                                            widget
+                                                                .linkCats[index]
+                                                                .link2!
+                                                                .isNotEmpty)
+                                                        ? Colors.white
+                                                        : Colors.grey,
+                                                    width: 25,
+                                                    height: 25,
                                                   ),
-                                                ),
-                                                SPW(5),
-                                                Image.asset(
-                                                  AllAssets.interb,
-                                                  color: (widget.linkCats[index]
-                                                                  .link3 !=
-                                                              null &&
-                                                          widget
-                                                              .linkCats[index]
-                                                              .link3!
-                                                              .isNotEmpty)
-                                                      ? Colors.white
-                                                      : Colors.grey,
-                                                  width: 25,
-                                                  height: 25,
-                                                ),
-                                              ],
-                                            )),
-                                      ],
+                                                ],
+                                              )),
+                                          SPW(15),
+                                          InkWell(
+                                              onTap: () async {
+                                                if (widget.linkCats[index]
+                                                            .link3 !=
+                                                        null &&
+                                                    widget.linkCats[index]
+                                                        .link3!.isNotEmpty) {
+                                                  sessionName = widget
+                                                      .linkCats[index].name!;
+                                                  activityName = "Simulation 3";
+                                                  print(
+                                                      "LinkCheckkk:${widget.linkCats[index].link3}");
+                                                  String? links3 = widget
+                                                      .linkCats[index].link3;
+                                                  arCallSimulationsLinks
+                                                      .add(links3!);
+                                                  FirebaseFirestore firestore =
+                                                      FirebaseFirestore
+                                                          .instance;
+                                                  String userId =
+                                                      await SharedPref
+                                                          .getSavedString(
+                                                              'userId');
+                                                  DocumentReference softSkills =
+                                                      firestore
+                                                          .collection(
+                                                              'arCallSimulationsReport')
+                                                          .doc(userId);
+                                                  await softSkills.update({
+                                                    'isLink':
+                                                        FieldValue.arrayUnion([
+                                                      widget
+                                                          .linkCats[index].link3
+                                                    ]),
+                                                  }).then((_) {
+                                                    print(
+                                                        'Link added to Firestore: ${widget.linkCats[index].link3}');
+                                                  }).catchError((e) {
+                                                    print(
+                                                        'Error updating Firestore: $e');
+                                                  });
+                                                  SharedPreferences prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  await prefs.setStringList(
+                                                      'InAppWebViewPage', [
+                                                    widget
+                                                        .linkCats[index].link3!
+                                                  ]);
+                                                  await prefs.setString(
+                                                      'lastAccess',
+                                                      'InAppWebViewPage');
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              InAppWebViewPage(
+                                                                url: widget
+                                                                    .linkCats[
+                                                                        index]
+                                                                    .link3!,
+                                                              )));
+                                                }
+                                              },
+                                              child: Wrap(
+                                                children: [
+                                                  Text(
+                                                    "#3",
+                                                    style: TextStyle(
+                                                      color: AppColors.white,
+                                                    ),
+                                                  ),
+                                                  SPW(5),
+                                                  Image.asset(
+                                                    AllAssets.interb,
+                                                    color: (widget
+                                                                    .linkCats[
+                                                                        index]
+                                                                    .link3 !=
+                                                                null &&
+                                                            widget
+                                                                .linkCats[index]
+                                                                .link3!
+                                                                .isNotEmpty)
+                                                        ? Colors.white
+                                                        : Colors.grey,
+                                                    width: 25,
+                                                    height: 25,
+                                                  ),
+                                                ],
+                                              )),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           );

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:litelearninglab/common_widgets/background_widget.dart';
 import 'package:litelearninglab/common_widgets/common_app_bar.dart';
 import 'package:litelearninglab/constants/all_assets.dart';
+import 'package:litelearninglab/screens/call_flow/call_flow_cat_screen.dart';
 // import 'package:litelearninglab/screens/call_flow/call_flow_cat_screen.dart';
 import 'package:litelearninglab/screens/dashboard/widgets/new_submenu_items.dart';
 import 'package:litelearninglab/screens/grammar_check/grammar_check_screen.dart';
@@ -78,11 +79,6 @@ class _LabScreenState extends State<LabScreen> {
                         children: [
                           NewSubMenuItem(
                             onTap: () async {
-                              // if (widget.title == "Grammer Lab") {
-                              //   startTimerMainCategory("name");
-                              // }
-                              log("${widget.title}"); // startTimerMainCategory("name");
-                              sessionName = widget.itemList[index]['title'];
                               print("indexcheckk:${index}");
                               repeatLoads = widget.itemList[index]['load'];
                               print(
@@ -150,24 +146,22 @@ class _LabScreenState extends State<LabScreen> {
                                               load: widget.itemList[index]
                                                   ['load'],
                                             )
-                                          :
-                                          // widget.itemList ==
-                                          //         controller
-                                          //             .callFlowPracticeLabList
-                                          //     ? CallFlowCatScreen(
-                                          //         title: widget.itemList[index]
-                                          //             ['title'],
-                                          //         user: widget.user,
-                                          //         load: widget.itemList[index]
-                                          //             ['load'],
-                                          //       )
-                                          //     :
-                                          GrammarCheckScreen(
-                                              title: widget.itemList[index]
-                                                  ['title'],
-                                              load: widget.itemList[index]
-                                                  ['load'],
-                                            ),
+                                          : widget.itemList ==
+                                                  controller
+                                                      .callFlowPracticeLabList
+                                              ? CallFlowCatScreen(
+                                                  title: widget.itemList[index]
+                                                      ['title'],
+                                                  user: widget.user,
+                                                  load: widget.itemList[index]
+                                                      ['load'],
+                                                )
+                                              : GrammarCheckScreen(
+                                                  title: widget.itemList[index]
+                                                      ['title'],
+                                                  load: widget.itemList[index]
+                                                      ['load'],
+                                                ),
                                 ),
                               );
                             },
