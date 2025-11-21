@@ -77,8 +77,11 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
     startTimerMainCategory("name");
 
     soundPractice = widget.soundPractice!;
+    print("length of the soundpractice ${soundPractice.length}");
+    if (!kIsWeb) {
+      getSoundPracticeWords();
+    }
 
-    getSoundPracticeWords();
     _initializeVideoPlayerFuture = _initVideoPlayer(url: widget.links.v1!);
     print(
         'intializeVideoPlayerFuture:${_initializeVideoPlayerFuture}'); //video link
@@ -156,6 +159,7 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
       soundPractice =
           wordsList.where((element) => element.cat == widget.load).toList();
     }
+    print("printing the length of the sound practice ${soundPractice.length}");
 
     setState(() {});
   }
@@ -236,7 +240,9 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
         }
 
         print("📦 Fetching sound practice words...");
-        await getSoundPracticeWords();
+        if (!kIsWeb) {
+          await getSoundPracticeWords();
+        }
         print("✅ Sound practice words fetched: ${soundPractice.length}");
 
         Navigator.push(
@@ -736,8 +742,10 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                   // await _controller.dispose();
 
                                                   repeatLoads = widget.load;
-
-                                                  await getSoundPracticeWords();
+/////////// //
+                                                  if (!kIsWeb) {
+                                                    await getSoundPracticeWords();
+                                                  }
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -756,8 +764,10 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                 } else {
                                                   if (index == 5) {
                                                     repeatLoads = widget.load;
-
-                                                    await getSoundPracticeWords();
+//
+                                                    if (!kIsWeb) {
+                                                      await getSoundPracticeWords();
+                                                    }
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
@@ -1141,8 +1151,9 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                     // await _controller.dispose();
 
                                     repeatLoads = widget.load;
-
-                                    await getSoundPracticeWords();
+                                    if (!kIsWeb) {
+                                      await getSoundPracticeWords();
+                                    }
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -1158,8 +1169,9 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                   } else {
                                     if (index == 5) {
                                       repeatLoads = widget.load;
-
-                                      await getSoundPracticeWords();
+                                      if (!kIsWeb) {
+                                        await getSoundPracticeWords();
+                                      }
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(

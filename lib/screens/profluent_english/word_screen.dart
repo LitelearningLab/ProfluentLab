@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -116,13 +117,21 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
     setState(() {
       isloading = true;
     });
+    FirebaseHelperRTD firebaseHelperRTD = FirebaseHelperRTD();
+
     DatabaseProvider dbb = DatabaseProvider.get;
     WordsDatabaseRepository dbRef = WordsDatabaseRepository(dbb);
-    List<Word> wordsList = await dbRef.getWords();
-    print('words list length :${wordsList.length}');
-    soundPractice =
-        wordsList.where((element) => element.cat == widget.load).toList();
-    print("soundkfidj:${soundPractice.length}");
+    List<Word> wordsList = [];
+    if (kIsWeb) {
+      wordsList = await firebaseHelperRTD.getWords(widget.load);
+      soundPractice = wordsList;
+    } else {
+      wordsList = await dbRef.getWords();
+      soundPractice =
+          wordsList.where((element) => element.cat == widget.load).toList();
+    }
+
+    setState(() {});
     isloading = false;
     setState(() {});
   }
@@ -157,7 +166,11 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
     });
     print("sounds practice : ${widget.soundPractice}");
     print("sound practice length : ${widget.soundPractice.length}");
-    await getSoundPracticeWords();
+    if (!kIsWeb) {
+      await getSoundPracticeWords();
+    } else {
+      soundPractice = widget.soundPractice;
+    }
     // words.clear();
     words = soundPractice;
     print("words practice : ${words}");
@@ -522,68 +535,74 @@ class _WordScreenProfluentEnglishState extends State<WordScreenProfluentEnglish>
                                 key: ValueKey(words[index].text),
                                 controller: controller,
                                 index: index,
-                                child: DropDownWordItemProluentEnglish(
-                                  onFavoriteToggle: updateFavorite,
-                                  localPath: words[index].localPath,
-                                  load: widget.load,
-                                  length: words.length,
-                                  index: index,
-                                  // isPlaying: words[index].isPlaying1,
-                                  isDownloaded:
-                                      words[index].localPath != null &&
-                                          words[index].localPath!.isNotEmpty,
-                                  maintitle: 'words',
-                                  onExpansionChanged: (val) {
-                                    _toggleExpansion(index);
-                                    print("check1111111111111111111111111>");
-                                    setState(() {
-                                      print("dgigi:${_selectedWord}");
-                                      print("dngr:${words[index].text}");
-                                      print("didjgig:${index}");
-                                      // _selectedWord = '';
-                                      _expandedIndex = index;
-                                    });
-                                    if (val) {
-                                      _selectedWordOnClick = words[index].text;
-                                      setState(() {});
-                                      if (words.length - 2 <= index) {
-                                        WidgetsBinding.instance
-                                            .addPostFrameCallback((_) {
-                                          _scrollToItem(index);
-                                        });
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: getWidgetWidth(
+                                          width: !kIsWeb ? 0 : 5)),
+                                  child: DropDownWordItemProluentEnglish(
+                                    onFavoriteToggle: updateFavorite,
+                                    localPath: words[index].localPath,
+                                    load: widget.load,
+                                    length: words.length,
+                                    index: index,
+                                    // isPlaying: words[index].isPlaying1,
+                                    isDownloaded:
+                                        words[index].localPath != null &&
+                                            words[index].localPath!.isNotEmpty,
+                                    maintitle: 'words',
+                                    onExpansionChanged: (val) {
+                                      _toggleExpansion(index);
+                                      print("check1111111111111111111111111>");
+                                      setState(() {
+                                        print("dgigi:${_selectedWord}");
+                                        print("dngr:${words[index].text}");
+                                        print("didjgig:${index}");
+                                        // _selectedWord = '';
+                                        _expandedIndex = index;
+                                      });
+                                      if (val) {
+                                        _selectedWordOnClick =
+                                            words[index].text;
+                                        setState(() {});
+                                        if (words.length - 2 <= index) {
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            _scrollToItem(index);
+                                          });
+                                        }
                                       }
-                                    }
-                                  },
-                                  initiallyExpanded: _expandedIndex == index,
-                                  // _selectedWordOnClick != null && _selectedWordOnClick == words[index].text,
-                                  isWord: true,
-                                  isRefresh: (val) {
-                                    // if (val) _getWords(isRefresh: true);
-                                  },
-                                  // words: words,
-                                  wordId: words[index].id!,
-                                  isFav: words[index].isFav!,
-                                  title: words[index].text!,
-                                  url: words[index].file!,
-                                  // onTapForThreePlayerStop:
-                                  //     updateThreePlayerFlag,
-                                  children: [
-                                    WordMenu(
-                                      pronun: words[index].pronun!,
-                                      selectedWord: _selectedWord,
-                                      isCorrect:
-                                          _selectedWord == words[index].text &&
-                                              _isCorrect,
-                                      text: words[index].text!,
-                                      syllables: words[index].syllables!,
-                                      url: words[index].file!,
-                                      onTapHeadphone: () async {},
-                                      onTapMic: () async {
-                                        _showDialog(
-                                            words[index].text!, false, context);
-                                      },
-                                    )
-                                  ],
+                                    },
+                                    initiallyExpanded: _expandedIndex == index,
+                                    // _selectedWordOnClick != null && _selectedWordOnClick == words[index].text,
+                                    isWord: true,
+                                    isRefresh: (val) {
+                                      // if (val) _getWords(isRefresh: true);
+                                    },
+                                    // words: words,
+                                    wordId: words[index].id ?? 0,
+                                    isFav: words[index].isFav ?? 0,
+                                    title: words[index].text ?? "",
+                                    url: words[index].file ?? "",
+                                    // onTapForThreePlayerStop:
+                                    //     updateThreePlayerFlag,
+                                    children: [
+                                      WordMenu(
+                                        pronun: words[index].pronun!,
+                                        selectedWord: _selectedWord,
+                                        isCorrect: _selectedWord ==
+                                                words[index].text &&
+                                            _isCorrect,
+                                        text: words[index].text!,
+                                        syllables: words[index].syllables!,
+                                        url: words[index].file!,
+                                        onTapHeadphone: () async {},
+                                        onTapMic: () async {
+                                          _showDialog(words[index].text!, false,
+                                              context);
+                                        },
+                                      )
+                                    ],
+                                  ),
                                 ),
                               );
                             }),

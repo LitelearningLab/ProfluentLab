@@ -24,6 +24,7 @@ import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
 import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
 import 'package:litelearninglab/utils/fcm.dart';
+import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
@@ -132,6 +133,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     //  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Color(0xFF293750)));
+    kHeight = MediaQuery.of(context).size.height;
+    kWidth = MediaQuery.of(context).size.width;
+    kText = MediaQuery.of(context).textScaler;
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
@@ -260,7 +264,7 @@ class AuthWrapper extends StatelessWidget {
                 url: 'assets/mp4_video/video_20241022_115109_check.mp4',
               );
             case Status.walkThrough:
-              return WalkThroughView();
+              return !kIsWeb ? WalkThroughView() : NewLoginScreen();
             case Status.unauthenticated:
               return NewLoginScreen();
             case Status.userNotExist:

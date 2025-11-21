@@ -62,6 +62,8 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
   double kWidth = 0.0;
   late TextScaler kText;
   late AuthState authStateController;
+  late PageController _pageController;
+  Timer? _timer;
   List<Map<String, dynamic>> swipperList = [
     {
       "tileColor": Color(0xFFEAE5FF),
@@ -98,7 +100,18 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
     mianCategoryTitile = "Process Learning";
     // Add the observer for lifecycle events
     WidgetsBinding.instance.addObserver(this);
+    _pageController = PageController(viewportFraction: 0.55);
 
+    _timer = Timer.periodic(Duration(seconds: 3), (_) {
+      if (_pageController.hasClients) {
+        int next = _pageController.page!.round() + 1;
+        _pageController.animateToPage(
+          next,
+          duration: Duration(milliseconds: 700),
+          curve: Curves.easeOut,
+        );
+      }
+    });
     log("here start to listening the process learning spend time");
     controller = AutoScrollController(
         viewportBoundaryGetter: () =>
@@ -113,6 +126,8 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
   void dispose() {
     // Remove the observer when the widget is disposed
     WidgetsBinding.instance.removeObserver(this);
+    _timer?.cancel();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -321,79 +336,292 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                         width: displayWidth(context),
                         child: Column(
                           children: [
-                            Container(
-                              height: isSplitScreen
-                                  ? getFullWidgetHeight(height: 330)
-                                  : getWidgetHeight(height: 330),
-                              width: kIsWeb
-                                  ? displayWidth(context) *
-                                      0.7 // instead of full width (50%), keep it slightly smaller
-                                  : displayWidth(
-                                      context), // mobile-friendly, leaves margin on sides
-                              alignment: Alignment.center,
-                              child: Swiper(
-                                curve: Curves.linear,
-                                itemCount: _processLeaning.length - 1,
-                                layout: SwiperLayout.STACK,
-                                loop: true,
-                                itemWidth: kIsWeb
-                                    ? displayWidth(context) * 0.25
-                                    : displayWidth(context) *
-                                        0.72, // 👈 reduce card width dynamically
-                                itemHeight: isSplitScreen
-                                    ? getFullWidgetHeight(height: 287)
-                                    : getWidgetHeight(height: 287),
-                                scrollDirection: Axis.horizontal,
-                                axisDirection: AxisDirection.right,
-                                pagination: SwiperPagination(
-                                  margin: EdgeInsets.only(
-                                    top: isSplitScreen
-                                        ? getFullWidgetHeight(height: 5)
-                                        : getWidgetHeight(height: 5),
-                                  ),
-                                  builder: RectRoundedSwiperPaginationBuilder(
-                                    color: Color(0xFF9D97FF),
-                                    activeColor: Color(0xFF6C63FE),
-                                    size: Size(15, 12),
-                                    activeSize: Size(30, 12),
-                                  ),
-                                ),
-                                itemBuilder: (context, index) {
-                                  int adjustedIndex =
-                                      (index < 1) ? index : index + 1;
+                            kIsWeb
+                                ? Padding(
+                                    padding: EdgeInsets.only(
+                                      top: getWidgetHeight(height: 20),
+                                    ),
+                                    child: Container(
+                                      height: getWidgetHeight(height: 370),
+                                      width: displayWidth(context),
+                                      alignment: Alignment.center,
+                                      child: PageView.builder(
+                                        controller: _pageController,
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: 1000000, // infinite looping
+                                        itemBuilder: (context, index) {
+                                          int realIndex = index %
+                                              (_processLeaning.length - 1);
+                                          int adjustedIndex = (realIndex < 1)
+                                              ? realIndex
+                                              : realIndex + 1;
 
-                                  return Transform.translate(
-                                    offset: const Offset(-22, 0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        print("adgvifjb;$adjustedIndex");
-                                        if (_processLeaning[adjustedIndex]
-                                                    .underconstruction ==
-                                                true &&
-                                            _processLeaning[adjustedIndex]
-                                                    .underconstruction !=
-                                                null) {
-                                          print("dsnvikfjiv");
-                                          Toast.show("Work in progress",
-                                              duration: Toast.lengthShort,
-                                              gravity: Toast.bottom,
-                                              backgroundColor: AppColors.white,
-                                              textStyle: TextStyle(
-                                                  color: AppColors.black),
-                                              backgroundRadius: 10);
-                                        } else if (adjustedIndex == 0) {
-                                          print("sucesss");
-                                          print(
-                                              "d did : ${_processLeaning.length}");
-                                          print(
-                                              "dpdid d  : ${_processLeaning}");
-                                          print(
-                                              "adjusted index:${adjustedIndex}");
-                                          print("indexdfff:$index");
+                                          return AnimatedBuilder(
+                                            animation: _pageController,
+                                            builder: (context, child) {
+                                              double value = 1.0;
 
-                                          print(
-                                              'ifirejvg:${_processLeaning[adjustedIndex].subcategories![0].name}');
-                                          /*SharedPreferences prefs = await SharedPreferences.getInstance();
+                                              if (_pageController
+                                                  .position.haveDimensions) {
+                                                value = (_pageController.page! -
+                                                        index)
+                                                    .abs();
+                                                value = (1 - (value * 0.25))
+                                                    .clamp(0.8, 1.0);
+                                              }
+
+                                              return Transform.scale(
+                                                scale:
+                                                    value, // wheel effect scaling
+                                                child: child,
+                                              );
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 12),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  if (_processLeaning[
+                                                              adjustedIndex]
+                                                          .underconstruction ==
+                                                      true) {
+                                                    Toast.show(
+                                                      "Work in progress",
+                                                      duration:
+                                                          Toast.lengthShort,
+                                                      gravity: Toast.bottom,
+                                                      backgroundColor:
+                                                          AppColors.white,
+                                                      textStyle: TextStyle(
+                                                          color:
+                                                              AppColors.black),
+                                                      backgroundRadius: 10,
+                                                    );
+                                                    return;
+                                                  }
+
+                                                  if (adjustedIndex == 0) {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ProcessCatScreen(
+                                                          linkCats: _processLeaning[
+                                                                      adjustedIndex]
+                                                                  .subcategories!
+                                                                  .first
+                                                                  .linkCats ??
+                                                              [],
+                                                          title: _processLeaning[
+                                                                      adjustedIndex]
+                                                                  .subcategories!
+                                                                  .first
+                                                                  .name ??
+                                                              "",
+                                                        ),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return LearningScreen(
+                                                            icon: adjustedIndex ==
+                                                                    2
+                                                                ? AllAssets
+                                                                    .autoInsurance
+                                                                : adjustedIndex ==
+                                                                        3
+                                                                    ? AllAssets
+                                                                        .workersCompensation
+                                                                    : adjustedIndex ==
+                                                                            4
+                                                                        ? AllAssets
+                                                                            .federalInsurance
+                                                                        : AllAssets
+                                                                            .blueCross,
+                                                            title: _processLeaning[
+                                                                        adjustedIndex]
+                                                                    .subcategories!
+                                                                    .first
+                                                                    .name ??
+                                                                "",
+                                                            linkCats: _processLeaning[
+                                                                        adjustedIndex]
+                                                                    .subcategories!
+                                                                    .first
+                                                                    .linkCats ??
+                                                                [],
+                                                          );
+                                                        },
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                                child: Container(
+                                                  width: kIsWeb
+                                                      ? displayWidth(context) *
+                                                          0.25
+                                                      : displayWidth(context) *
+                                                          0.72,
+                                                  decoration: BoxDecoration(
+                                                    color: swipperList[
+                                                            adjustedIndex]
+                                                        ['tileColor'],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            7),
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: getWidgetHeight(
+                                                        height: 16),
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        swipperList[
+                                                                adjustedIndex]
+                                                            ['heading'],
+                                                        style: TextStyle(
+                                                          fontFamily: 'Roboto',
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize:
+                                                              kText.scale(12),
+                                                          color: adjustedIndex ==
+                                                                      0 ||
+                                                                  adjustedIndex ==
+                                                                      4
+                                                              ? Color(
+                                                                  0xFF6A60FB)
+                                                              : adjustedIndex ==
+                                                                      5
+                                                                  ? Color(
+                                                                      0xFF26BFFF)
+                                                                  : Color(
+                                                                      0xFFFF1A1A),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 180,
+                                                        width: double.infinity,
+                                                        child: Image.asset(
+                                                          swipperList[
+                                                                  adjustedIndex]
+                                                              ['tileImage'],
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        _processLeaning[
+                                                                adjustedIndex]
+                                                            .category!,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          fontFamily: 'Roboto',
+                                                          color:
+                                                              Color(0xFF535353),
+                                                          fontSize: 16.5,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    height: isSplitScreen
+                                        ? getFullWidgetHeight(height: 330)
+                                        : getWidgetHeight(height: 330),
+                                    width: kIsWeb
+                                        ? displayWidth(context) *
+                                            0.7 // instead of full width (50%), keep it slightly smaller
+                                        : displayWidth(
+                                            context), // mobile-friendly, leaves margin on sides
+                                    alignment: Alignment.center,
+                                    child: Swiper(
+                                      curve: Curves.linear,
+                                      itemCount: _processLeaning.length - 1,
+                                      layout: SwiperLayout.STACK,
+                                      loop: true,
+                                      itemWidth: kIsWeb
+                                          ? displayWidth(context) * 0.25
+                                          : displayWidth(context) *
+                                              0.72, // 👈 reduce card width dynamically
+                                      itemHeight: isSplitScreen
+                                          ? getFullWidgetHeight(height: 287)
+                                          : getWidgetHeight(height: 287),
+                                      scrollDirection: Axis.horizontal,
+                                      axisDirection: AxisDirection.right,
+                                      pagination: SwiperPagination(
+                                        margin: EdgeInsets.only(
+                                          top: isSplitScreen
+                                              ? getFullWidgetHeight(height: 5)
+                                              : getWidgetHeight(height: 5),
+                                        ),
+                                        builder:
+                                            RectRoundedSwiperPaginationBuilder(
+                                          color: Color(0xFF9D97FF),
+                                          activeColor: Color(0xFF6C63FE),
+                                          size: Size(15, 12),
+                                          activeSize: Size(30, 12),
+                                        ),
+                                      ),
+                                      itemBuilder: (context, index) {
+                                        int adjustedIndex =
+                                            (index < 1) ? index : index + 1;
+
+                                        return Transform.translate(
+                                          offset: const Offset(-22, 0),
+                                          child: InkWell(
+                                            onTap: () {
+                                              print("adgvifjb;$adjustedIndex");
+                                              if (_processLeaning[adjustedIndex]
+                                                          .underconstruction ==
+                                                      true &&
+                                                  _processLeaning[adjustedIndex]
+                                                          .underconstruction !=
+                                                      null) {
+                                                print("dsnvikfjiv");
+                                                Toast.show("Work in progress",
+                                                    duration: Toast.lengthShort,
+                                                    gravity: Toast.bottom,
+                                                    backgroundColor:
+                                                        AppColors.white,
+                                                    textStyle: TextStyle(
+                                                        color: AppColors.black),
+                                                    backgroundRadius: 10);
+                                              } else if (adjustedIndex == 0) {
+                                                print("sucesss");
+                                                print(
+                                                    "d did : ${_processLeaning.length}");
+                                                print(
+                                                    "dpdid d  : ${_processLeaning}");
+                                                print(
+                                                    "adjusted index:${adjustedIndex}");
+                                                print("indexdfff:$index");
+
+                                                print(
+                                                    'ifirejvg:${_processLeaning[adjustedIndex].subcategories![0].name}');
+                                                /*SharedPreferences prefs = await SharedPreferences.getInstance();
                                                       await prefs.setString('lastAccess', 'ProcessCatScreen');
                                                       await prefs.setString(
                                                           'ProcessCatScreen',
@@ -408,122 +636,134 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                                               .first
                                                               .linkCats);
                                                       box.put('ProcessCatScreen', prHive);*/
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProcessCatScreen(
-                                                      linkCats: _processLeaning[
-                                                                  adjustedIndex]
-                                                              .subcategories!
-                                                              .first
-                                                              .linkCats ??
-                                                          [],
-                                                      title: _processLeaning[
-                                                                  adjustedIndex]
-                                                              .subcategories!
-                                                              .first
-                                                              .name ??
-                                                          "",
-                                                    )),
-                                          );
-                                        } else {
-                                          print("sucesss111");
-                                          log("${adjustedIndex}");
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return LearningScreen(
-                                              icon: adjustedIndex == 2
-                                                  ? AllAssets.autoInsurance
-                                                  : adjustedIndex == 3
-                                                      ? AllAssets
-                                                          .workersCompensation
-                                                      : adjustedIndex == 4
-                                                          ? AllAssets
-                                                              .federalInsurance
-                                                          : AllAssets.blueCross,
-                                              title:
-                                                  _processLeaning[adjustedIndex]
-                                                          .subcategories!
-                                                          .first
-                                                          .name ??
-                                                      "",
-                                              linkCats:
-                                                  _processLeaning[adjustedIndex]
-                                                          .subcategories!
-                                                          .first
-                                                          .linkCats ??
-                                                      [],
-                                            );
-                                          }));
-                                        }
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ProcessCatScreen(
+                                                            linkCats: _processLeaning[
+                                                                        adjustedIndex]
+                                                                    .subcategories!
+                                                                    .first
+                                                                    .linkCats ??
+                                                                [],
+                                                            title: _processLeaning[
+                                                                        adjustedIndex]
+                                                                    .subcategories!
+                                                                    .first
+                                                                    .name ??
+                                                                "",
+                                                          )),
+                                                );
+                                              } else {
+                                                print("sucesss111");
+                                                log("${adjustedIndex}");
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return LearningScreen(
+                                                    icon: adjustedIndex == 2
+                                                        ? AllAssets
+                                                            .autoInsurance
+                                                        : adjustedIndex == 3
+                                                            ? AllAssets
+                                                                .workersCompensation
+                                                            : adjustedIndex == 4
+                                                                ? AllAssets
+                                                                    .federalInsurance
+                                                                : AllAssets
+                                                                    .blueCross,
+                                                    title: _processLeaning[
+                                                                adjustedIndex]
+                                                            .subcategories!
+                                                            .first
+                                                            .name ??
+                                                        "",
+                                                    linkCats: _processLeaning[
+                                                                adjustedIndex]
+                                                            .subcategories!
+                                                            .first
+                                                            .linkCats ??
+                                                        [],
+                                                  );
+                                                }));
+                                              }
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 20,
+                                                vertical: isSplitScreen
+                                                    ? getFullWidgetHeight(
+                                                        height: 16)
+                                                    : getWidgetHeight(
+                                                        height: 16),
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    swipperList[adjustedIndex]
+                                                        ['tileColor'],
+                                                borderRadius:
+                                                    BorderRadius.circular(7),
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    swipperList[adjustedIndex]
+                                                        ['heading'],
+                                                    style: TextStyle(
+                                                      fontFamily: 'Roboto',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: kText.scale(12),
+                                                      color: adjustedIndex ==
+                                                                  0 ||
+                                                              adjustedIndex == 4
+                                                          ? const Color(
+                                                              0xFF6A60FB)
+                                                          : adjustedIndex == 5
+                                                              ? const Color(
+                                                                  0xFF26BFFF)
+                                                              : const Color(
+                                                                  0xFFFF1A1A),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 180,
+                                                    width: double.infinity,
+                                                    child: Image.asset(
+                                                      swipperList[adjustedIndex]
+                                                          ['tileImage'],
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    _processLeaning[
+                                                            adjustedIndex]
+                                                        .category!,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                      fontFamily: 'Roboto',
+                                                      color: Color(0xFF535353),
+                                                      fontSize: 16.5,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
                                       },
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 20,
-                                          vertical: isSplitScreen
-                                              ? getFullWidgetHeight(height: 16)
-                                              : getWidgetHeight(height: 16),
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: swipperList[adjustedIndex]
-                                              ['tileColor'],
-                                          borderRadius:
-                                              BorderRadius.circular(7),
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              swipperList[adjustedIndex]
-                                                  ['heading'],
-                                              style: TextStyle(
-                                                fontFamily: 'Roboto',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: kText.scale(12),
-                                                color: adjustedIndex == 0 ||
-                                                        adjustedIndex == 4
-                                                    ? const Color(0xFF6A60FB)
-                                                    : adjustedIndex == 5
-                                                        ? const Color(
-                                                            0xFF26BFFF)
-                                                        : const Color(
-                                                            0xFFFF1A1A),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 180,
-                                              width: double.infinity,
-                                              child: Image.asset(
-                                                swipperList[adjustedIndex]
-                                                    ['tileImage'],
-                                                fit: BoxFit.contain,
-                                              ),
-                                            ),
-                                            Text(
-                                              _processLeaning[adjustedIndex]
-                                                  .category!,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                fontFamily: 'Roboto',
-                                                color: Color(0xFF535353),
-                                                fontSize: 16.5,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
                                     ),
-                                  );
-                                },
-                              ),
-                            ),
+                                  ),
                             SizedBox(
                               height: 20,
                             ),

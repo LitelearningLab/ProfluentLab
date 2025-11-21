@@ -509,7 +509,7 @@ class _ProfluentEnglishModifiedScreenState
                                         ),
                                       );
                                       /*  Navigator.push(
-        context, MaterialPageRoute(builder: (context) => GrammerCheckScreen()));*/
+                                context, MaterialPageRoute(builder: (context) => GrammerCheckScreen()));*/
                                     },
                                     cardColor: Color(0xFFDC6379),
                                   ),
@@ -868,6 +868,8 @@ class _ProfluentEnglishModifiedScreenState
                                                             );
                                                           }).toList() ??
                                                           [];
+                                                  print(
+                                                      "navigating sound practice length will be this ${soundPractice.length}");
                                                   List<Word> words =
                                                       await soundsWordsdb
                                                           .getWordsForSounds(
@@ -900,7 +902,8 @@ class _ProfluentEnglishModifiedScreenState
                                                             .subcategories![
                                                                 index]
                                                             .links!,
-                                                        soundPractice: words,
+                                                        soundPractice:
+                                                            soundPractice,
                                                       ),
                                                     ),
                                                   );
@@ -1139,6 +1142,7 @@ class _ProfluentEnglishModifiedScreenState
                                                                           );
                                                                         }).toList() ??
                                                                         [];
+
                                                                 List<Word> words = await soundsWordsdb.getWordsForSounds(
                                                                     vowels[index]
                                                                         .subcategories![
@@ -1153,6 +1157,8 @@ class _ProfluentEnglishModifiedScreenState
                                                                     "sound practice : $soundPractice");
                                                                 print(
                                                                     "sound practice length: ${soundPractice.length}");
+                                                                print(
+                                                                    "printing th sound lab length before ${soundPractice.length}");
                                                                 sessionName = vowels[
                                                                         index]
                                                                     .subcategories![

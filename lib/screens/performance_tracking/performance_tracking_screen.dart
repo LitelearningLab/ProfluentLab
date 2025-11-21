@@ -374,136 +374,143 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
                           child: IconButton(
                             icon: Icon(
                               Icons.arrow_back_ios,
-                              color: activePage == 0
-                                  ? Colors.grey
-                                  : Colors.white, // grey if first page
+                              color:
+                                  activePage == 0 ? Colors.grey : Colors.white,
                             ),
                             onPressed: activePage == 0
-                                ? null // disable button
+                                ? null
                                 : () {
+                                    activePage = 0;
                                     _pageController.previousPage(
                                       duration:
                                           const Duration(milliseconds: 300),
                                       curve: Curves.ease,
                                     );
+                                    setState(() {});
                                   },
                           ),
                         ),
-                        Container(
-                          height: displayHeight(context) / 2,
-                          width: displayWidth(context) / 1.062,
-                          decoration: BoxDecoration(
-                              color: Color(0XFF35405E),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: PageView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 2,
-                            controller: _pageController,
-                            onPageChanged: (page) {
-                              activePage = page;
-                              print("activePage:$activePage");
-                            },
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(15),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Center(
+                        Expanded(
+                          child: Container(
+                            height: displayHeight(context) / 2,
+                            decoration: BoxDecoration(
+                              color: const Color(0XFF35405E),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: PageView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 2,
+                              controller: _pageController,
+                              onPageChanged: (page) {
+                                activePage = page;
+                                setState(() {});
+                                print("activePage:$activePage");
+                              },
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(15),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Center(
                                         child: index == 0
-                                            ? Text(
+                                            ? const Text(
                                                 "Pronunciation Lab Progress",
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               )
                                             : index == 1
-                                                ? Text(
+                                                ? const Text(
                                                     'Sentence Practice',
                                                     style: TextStyle(
                                                         color: Colors.white),
                                                   )
-                                                : Text("Learning Time Spent",
+                                                : const Text(
+                                                    "Learning Time Spent",
                                                     style: TextStyle(
-                                                        color: Colors.white))),
-                                    if (isLoading)
-                                      Expanded(
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
+                                                        color: Colors.white),
+                                                  ),
+                                      ),
+                                      if (isLoading)
+                                        const Expanded(
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                                color: Colors.white),
                                           ),
-                                        ),
-                                      )
-                                    else
-                                      index == 0
-                                          ? index0()
-                                          : index == 1
-                                              ? index1()
-                                              : index1Else(),
-                                    SizedBox(
-                                      height: isSplitScreen
-                                          ? getFullWidgetHeight(height: 15)
-                                          : getWidgetHeight(height: 15),
-                                    ),
-                                    index == 2 ? index2(size) : index2Else(),
-                                    SizedBox(
-                                      height: isSplitScreen
-                                          ? getFullWidgetHeight(height: 15)
-                                          : getWidgetHeight(height: 15),
-                                    ),
-                                    index == 0
-                                        ? Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              _buildTimePeriodButton(
-                                                  "5 days", 0),
-                                              SizedBox(width: 8),
-                                              _buildTimePeriodButton(
-                                                  "4 weeks", 0),
-                                              SizedBox(width: 8),
-                                              _buildTimePeriodButton(
-                                                  "3 months", 0),
-                                            ],
-                                          )
-                                        : Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              _buildTimePeriodButton(
-                                                  "5 days", 1),
-                                              SizedBox(width: 8),
-                                              _buildTimePeriodButton(
-                                                  "4 weeks", 1),
-                                              SizedBox(width: 8),
-                                              _buildTimePeriodButton(
-                                                  "3 months", 1),
-                                            ],
-                                          ),
-                                    SizedBox(
+                                        )
+                                      else
+                                        index == 0
+                                            ? index0()
+                                            : index == 1
+                                                ? index1()
+                                                : index1Else(),
+                                      SizedBox(
                                         height: isSplitScreen
                                             ? getFullWidgetHeight(height: 15)
-                                            : getWidgetHeight(height: 15)),
-                                    Center(
-                                      child: SmoothPageIndicator(
-                                        controller: _pageController,
-                                        count: 2,
-                                        effect: ScrollingDotsEffect(
-                                          activeDotScale: 1.5,
-                                          activeDotColor:
-                                              const Color(0xff0C8CE9),
-                                          dotColor: const Color(0xffD1F4FF),
-                                          dotHeight: 6,
-                                          dotWidth: 20,
-                                          radius: 3,
-                                          spacing: 12,
+                                            : getWidgetHeight(height: 15),
+                                      ),
+                                      index == 2 ? index2(size) : index2Else(),
+                                      SizedBox(
+                                        height: isSplitScreen
+                                            ? getFullWidgetHeight(height: 15)
+                                            : getWidgetHeight(height: 15),
+                                      ),
+                                      index == 0
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                _buildTimePeriodButton(
+                                                    "5 days", 0),
+                                                const SizedBox(width: 8),
+                                                _buildTimePeriodButton(
+                                                    "4 weeks", 0),
+                                                const SizedBox(width: 8),
+                                                _buildTimePeriodButton(
+                                                    "3 months", 0),
+                                              ],
+                                            )
+                                          : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                _buildTimePeriodButton(
+                                                    "5 days", 1),
+                                                const SizedBox(width: 8),
+                                                _buildTimePeriodButton(
+                                                    "4 weeks", 1),
+                                                const SizedBox(width: 8),
+                                                _buildTimePeriodButton(
+                                                    "3 months", 1),
+                                              ],
+                                            ),
+                                      SizedBox(
+                                        height: isSplitScreen
+                                            ? getFullWidgetHeight(height: 15)
+                                            : getWidgetHeight(height: 15),
+                                      ),
+                                      Center(
+                                        child: SmoothPageIndicator(
+                                          controller: _pageController,
+                                          count: 2,
+                                          effect: const ScrollingDotsEffect(
+                                            activeDotScale: 1.5,
+                                            activeDotColor: Color(0xff0C8CE9),
+                                            dotColor: Color(0xffD1F4FF),
+                                            dotHeight: 6,
+                                            dotWidth: 20,
+                                            radius: 3,
+                                            spacing: 12,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                         Padding(
@@ -511,18 +518,19 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
                           child: IconButton(
                             icon: Icon(
                               Icons.arrow_forward_ios,
-                              color: activePage == 1
-                                  ? Colors.grey
-                                  : Colors.white, // grey if last page
+                              color:
+                                  activePage == 1 ? Colors.grey : Colors.white,
                             ),
                             onPressed: activePage == 1
-                                ? null // disable button
+                                ? null
                                 : () {
+                                    activePage = 1;
                                     _pageController.nextPage(
                                       duration:
                                           const Duration(milliseconds: 300),
                                       curve: Curves.ease,
                                     );
+                                    setState(() {});
                                   },
                           ),
                         ),

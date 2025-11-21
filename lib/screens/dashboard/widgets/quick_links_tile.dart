@@ -32,7 +32,7 @@ class QuickLinksTile extends StatelessWidget {
                   ? getWidgetWidth(width: 10)
                   : getWidgetWidth(width: 42),
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: EdgeInsets.all(kIsWeb ? 8 : 12.0),
                 child: Image.asset(
                   imageUrl,
                   // scale: 3,

@@ -87,7 +87,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: getWidgetWidth(width: 10)),
                   child: Container(
                       height: isSplitScreen
                           ? getFullWidgetHeight(height: 50)
@@ -112,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: getWidgetWidth(width: 20),
                               ),
                             ),
-                            SizedBox(width: getWidgetWidth(width: 15)),
+                            SizedBox(width: getWidgetWidth(width: 10)),
                             Text(
                               " +91 ${userDatas.appUser?.mobile ?? ""}",
                               style: TextStyle(
@@ -159,7 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: getWidgetWidth(width: 15),
                               ),
                             ),
-                            SizedBox(width: getWidgetWidth(width: 15)),
+                            SizedBox(width: getWidgetWidth(width: 10)),
                             Text(
                               userDatas.appUser?.email ?? "",
                               style: TextStyle(
@@ -206,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: getWidgetWidth(width: 15),
                               ),
                             ),
-                            SizedBox(width: getWidgetWidth(width: 15)),
+                            SizedBox(width: getWidgetWidth(width: 10)),
                             Text(
                               toBeginningOfSentenceCase(
                                       userDatas.appUser?.company ??
@@ -257,7 +258,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: getWidgetWidth(width: 15),
                               ),
                             ),
-                            SizedBox(width: getWidgetWidth(width: 15)),
+                            SizedBox(width: getWidgetWidth(width: 10)),
                             Text(
                               "${toBeginningOfSentenceCase(city) ?? ''}, ${toBeginningOfSentenceCase(country) ?? ''}",
                               style: TextStyle(
@@ -307,9 +308,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: getWidgetWidth(width: 15),
                               ),
                             ),
-                            SizedBox(width: 15),
+                            SizedBox(width: getWidgetWidth(width: 10)),
                             Text(
-                              "Active from ${DateFormat('dd-MM-yyyy').format(DateTime.parse(joinDate))} to ${DateFormat('dd-MM-yyyy').format(DateTime.parse(endDate))} ",
+                              "Active from ${DateFormat('dd-MM-yyyy').format(DateTime.parse(joinDate))} to ${DateFormat('dd-MM-yyyy').format(DateTime.parse(endDate))}",
                               style: TextStyle(
                                   fontFamily: Keys.fontFamily,
                                   color: Colors.white,
@@ -331,7 +332,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         : getWidgetHeight(height: 16)),
                 Container(
                   margin: EdgeInsets.symmetric(
-                      horizontal: getWidgetWidth(width: 5),
+                      horizontal: getWidgetWidth(width: 10),
                       vertical: isSplitScreen
                           ? getFullWidgetHeight(height: 5)
                           : getWidgetHeight(height: 5)),
@@ -357,7 +358,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: getWidgetWidth(width: 10),
+                      vertical: getWidgetHeight(height: 10)),
                   child: Card(
                     elevation: 0,
                     margin: EdgeInsets.symmetric(horizontal: 5),

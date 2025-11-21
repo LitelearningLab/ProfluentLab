@@ -65,10 +65,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    kHeight = MediaQuery.of(context).size.height;
-    kWidth = MediaQuery.of(context).size.width;
-    kText = MediaQuery.of(context).textScaler;
-
     if (kIsWeb) {
       // Web Index Style UI
       return Scaffold(

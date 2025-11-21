@@ -170,10 +170,6 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
   }
 
   void exitPopup(BuildContext context) {
-    kHeight = MediaQuery.of(context).size.height;
-    kWidth = MediaQuery.of(context).size.width;
-    kText = MediaQuery.of(context).textScaler;
-
     showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -804,9 +800,11 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                               ),
                               Container(
                                 // height: displayHeight(context) / 2.59,
-                                height: isSplitScreen
-                                    ? getFullWidgetHeight(height: 313.39)
-                                    : getWidgetHeight(height: 313.39),
+                                height: kIsWeb
+                                    ? getWidgetHeight(height: 400)
+                                    : isSplitScreen
+                                        ? getFullWidgetHeight(height: 313.39)
+                                        : getWidgetHeight(height: 313.39),
                                 child: ListView(
                                   padding: EdgeInsets.zero,
                                   scrollDirection: Axis.horizontal,

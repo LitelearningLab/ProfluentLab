@@ -148,32 +148,32 @@ class _InAppWebViewPageState extends State<InAppWebViewPage>
                 ],
               ),
             ),
-            // if (!kIsWeb)
-            Positioned(
-              bottom: getWidgetHeight(height: 20),
-              left: getWidgetWidth(width: 10),
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2), // light shadow
-                      spreadRadius: 1,
-                      blurRadius: 4,
-                      offset: Offset(0, 2), // subtle downward shadow
-                    ),
-                  ],
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    stopTimerMainCategory();
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.arrow_back),
+            if (!kIsWeb)
+              Positioned(
+                bottom: getWidgetHeight(height: 20),
+                left: getWidgetWidth(width: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // light shadow
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: Offset(0, 2), // subtle downward shadow
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      stopTimerMainCategory();
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.arrow_back),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

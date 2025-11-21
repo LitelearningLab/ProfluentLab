@@ -39,7 +39,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    final isDashboardScreen = Provider.of<AuthState>(context, listen: false).currentIndex == 0;
+    final isDashboardScreen =
+        Provider.of<AuthState>(context, listen: false).currentIndex == 0;
     print("isDashboardScreen:${isDashboardScreen}");
     final getKeys = KeysToBeInherited.of(context);
     final size = MediaQuery.of(context).size;
@@ -57,11 +58,21 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 iconSize: 24,
                 type: BottomNavigationBarType.fixed,
                 items: [
-                  BottomNavigationBarItem(icon: ImageIcon(AssetImage(AllAssets.bottomHome)), label: 'Home'),
-                  BottomNavigationBarItem(icon: ImageIcon(AssetImage(AllAssets.bottomPL)), label: ''),
-                  BottomNavigationBarItem(icon: ImageIcon(AssetImage(AllAssets.bottomIS)), label: ''),
-                  BottomNavigationBarItem(icon: ImageIcon(AssetImage(AllAssets.bottomPE)), label: ''),
-                  BottomNavigationBarItem(icon: ImageIcon(AssetImage(AllAssets.bottomPT)), label: ''),
+                  BottomNavigationBarItem(
+                      icon: ImageIcon(AssetImage(AllAssets.bottomHome)),
+                      label: 'Home'),
+                  BottomNavigationBarItem(
+                      icon: ImageIcon(AssetImage(AllAssets.bottomPL)),
+                      label: ''),
+                  BottomNavigationBarItem(
+                      icon: ImageIcon(AssetImage(AllAssets.bottomIS)),
+                      label: ''),
+                  BottomNavigationBarItem(
+                      icon: ImageIcon(AssetImage(AllAssets.bottomPE)),
+                      label: ''),
+                  BottomNavigationBarItem(
+                      icon: ImageIcon(AssetImage(AllAssets.bottomPT)),
+                      label: ''),
                 ],
                 backgroundColor: Color(0xFF34445F),
                 currentIndex: controller.currentIndex,

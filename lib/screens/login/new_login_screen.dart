@@ -396,7 +396,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
       await SharedPref.saveString('newCity', userData['city'] ?? '');
       await SharedPref.saveString('newCountry', userData['country'] ?? '');
       await SharedPref.saveString('joinDate', userData['joindate'] ?? '');
-      await SharedPref.saveString('endDate', userData['endDate'] ?? '');
+      await SharedPref.saveString('endDate', companyData['endDate'] ?? '');
       await SharedPref.saveBool('isLogedInBefore', true);
       await SharedPref.saveString('companyName', "Peter England");
 

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -466,7 +467,8 @@ class _DropDownWordItemProluentEnglishState
                         !isDownloaded &&
                         !isCheckBoxDownloading &&
                         !_isDownloading &&
-                        isButtonsVisible)
+                        isButtonsVisible &&
+                        !kIsWeb)
                       InkWell(
                           onTap: () async {
                             if (_isConnected) {
@@ -568,7 +570,8 @@ class _DropDownWordItemProluentEnglishState
                       ),
                     if (isDownloaded != null &&
                         isDownloaded &&
-                        isButtonsVisible)
+                        isButtonsVisible &&
+                        !kIsWeb)
                       InkWell(
                         child: SizedBox(
                           // width: displayWidth(context) / 18.75,
@@ -581,7 +584,7 @@ class _DropDownWordItemProluentEnglishState
                           ),
                         ),
                       ),
-                    if (!_isDownloading && isButtonsVisible)
+                    if (!_isDownloading && isButtonsVisible && !kIsWeb)
                       IconButton(
                           icon: SizedBox(
                             // width: displayWidth(context) / 18.75,
