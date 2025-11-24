@@ -290,1220 +290,1202 @@ class _ProfluentEnglishModifiedScreenState
                             top: isSplitScreen
                                 ? getFullWidgetHeight(height: 20)
                                 : getWidgetHeight(height: 20)),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: kIsWeb
-                                  ? 250
-                                  : isSplitScreen
-                                      ? getFullWidgetHeight(height: 142)
-                                      : getWidgetHeight(height: 142),
-                              width: displayWidth(context),
-                              child: ListView(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  PETopCategoriesCard(
-                                    height: isSplitScreen
-                                        ? getFullWidgetHeight(height: 88.28)
-                                        : getWidgetHeight(height: 88.28),
-                                    width: kIsWeb
-                                        ? 100
-                                        : getWidgetWidth(width: 96.11),
-                                    title: 'Pronunciation Lab',
-                                    imageUrl: AllAssets.pePl,
-                                    onTap: () async {
-                                      SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
-                                      await prefs.setString(
-                                          'lastAccess', 'LabScreen');
-                                      final jsonCompatibleList = controller
-                                          .pronunciationLabList
-                                          .map((map) {
-                                        return map.map((key, value) {
-                                          if (value is Color) {
-                                            return MapEntry(
-                                                key,
-                                                value.value
-                                                    .toString()); // Convert Color to integer value string
-                                          } else {
-                                            return MapEntry(key, value);
-                                          }
-                                        });
-                                      }).toList();
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Container(
+                                height: kIsWeb
+                                    ? 250
+                                    : isSplitScreen
+                                        ? getFullWidgetHeight(height: 142)
+                                        : getWidgetHeight(height: 142),
+                                width: displayWidth(context),
+                                child: ListView(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  children: [
+                                    PETopCategoriesCard(
+                                      height: isSplitScreen
+                                          ? getFullWidgetHeight(height: 88.28)
+                                          : getWidgetHeight(height: 88.28),
+                                      width: kIsWeb
+                                          ? 100
+                                          : getWidgetWidth(width: 96.11),
+                                      title: 'Pronunciation Lab',
+                                      imageUrl: AllAssets.pePl,
+                                      onTap: () async {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        await prefs.setString(
+                                            'lastAccess', 'LabScreen');
+                                        final jsonCompatibleList = controller
+                                            .pronunciationLabList
+                                            .map((map) {
+                                          return map.map((key, value) {
+                                            if (value is Color) {
+                                              return MapEntry(
+                                                  key,
+                                                  value.value
+                                                      .toString()); // Convert Color to integer value string
+                                            } else {
+                                              return MapEntry(key, value);
+                                            }
+                                          });
+                                        }).toList();
 
-                                      String jsonString =
-                                          jsonEncode(jsonCompatibleList);
-                                      await prefs.setStringList('LabScreen', [
-                                        'Pronunciation Lab' ?? "",
-                                        jsonString,
-                                        'true'
-                                      ]);
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => LabScreen(
-                                            user: user,
-                                            title: 'Pronunciation Lab',
-                                            itemList:
-                                                controller.pronunciationLabList,
-                                            pLIconKey: true,
+                                        String jsonString =
+                                            jsonEncode(jsonCompatibleList);
+                                        await prefs.setStringList('LabScreen', [
+                                          'Pronunciation Lab' ?? "",
+                                          jsonString,
+                                          'true'
+                                        ]);
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => LabScreen(
+                                              user: user,
+                                              title: 'Pronunciation Lab',
+                                              itemList: controller
+                                                  .pronunciationLabList,
+                                              pLIconKey: true,
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                    cardColor: Color(0xFF398480),
-                                  ),
-                                  // SPW(10),
-                                  SizedBox(
-                                    width:
-                                        kIsWeb ? 20 : getWidgetWidth(width: 14),
-                                  ),
-                                  PETopCategoriesCard(
-                                    height: isSplitScreen
-                                        ? getFullWidgetHeight(height: 88.47)
-                                        : getWidgetHeight(height: 88.47),
-                                    width: getWidgetWidth(width: 103.76),
-                                    title: 'Sentence Lab',
-                                    imageUrl: AllAssets.peScl,
-                                    onTap: () async {
-                                      SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
-                                      await prefs.setString(
-                                          'lastAccess', 'LabScreen');
-                                      final jsonCompatibleList = controller
-                                          .sentenceConstructionLabList
-                                          .map((map) {
-                                        return map.map((key, value) {
-                                          if (value is Color) {
-                                            return MapEntry(
-                                                key,
-                                                value.value
-                                                    .toString()); // Convert Color to integer value string
-                                          } else {
-                                            return MapEntry(key, value);
-                                          }
-                                        });
-                                      }).toList();
+                                        );
+                                      },
+                                      cardColor: Color(0xFF398480),
+                                    ),
+                                    // SPW(10),
+                                    SizedBox(
+                                      width: kIsWeb
+                                          ? 20
+                                          : getWidgetWidth(width: 14),
+                                    ),
+                                    PETopCategoriesCard(
+                                      height: isSplitScreen
+                                          ? getFullWidgetHeight(height: 88.47)
+                                          : getWidgetHeight(height: 88.47),
+                                      width: getWidgetWidth(width: 103.76),
+                                      title: 'Sentence Lab',
+                                      imageUrl: AllAssets.peScl,
+                                      onTap: () async {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        await prefs.setString(
+                                            'lastAccess', 'LabScreen');
+                                        final jsonCompatibleList = controller
+                                            .sentenceConstructionLabList
+                                            .map((map) {
+                                          return map.map((key, value) {
+                                            if (value is Color) {
+                                              return MapEntry(
+                                                  key,
+                                                  value.value
+                                                      .toString()); // Convert Color to integer value string
+                                            } else {
+                                              return MapEntry(key, value);
+                                            }
+                                          });
+                                        }).toList();
 
-                                      String jsonString =
-                                          jsonEncode(jsonCompatibleList);
-                                      await prefs.setStringList('LabScreen', [
-                                        'Sentence Lab' ?? "",
-                                        jsonString,
-                                        'true'
-                                      ]);
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => LabScreen(
-                                            user: user,
-                                            title: 'Sentence Lab',
-                                            itemList: controller
-                                                .sentenceConstructionLabList,
-                                            pLIconKey: true,
+                                        String jsonString =
+                                            jsonEncode(jsonCompatibleList);
+                                        await prefs.setStringList('LabScreen', [
+                                          'Sentence Lab' ?? "",
+                                          jsonString,
+                                          'true'
+                                        ]);
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => LabScreen(
+                                              user: user,
+                                              title: 'Sentence Lab',
+                                              itemList: controller
+                                                  .sentenceConstructionLabList,
+                                              pLIconKey: true,
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                    cardColor: Color(0xFF445EA9),
-                                  ),
-                                  // SPW(10),
-                                  SizedBox(
-                                    width:
-                                        kIsWeb ? 20 : getWidgetWidth(width: 14),
-                                  ),
-                                  PETopCategoriesCard(
-                                    height: isSplitScreen
-                                        ? getFullWidgetHeight(height: 88.65)
-                                        : getWidgetHeight(height: 88.65),
-                                    width: getWidgetWidth(width: 106.03),
-                                    title: 'Call Flow Lab',
-                                    imageUrl: AllAssets.peCfpl,
-                                    onTap: () async {
-                                      SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
-                                      await prefs.setString(
-                                          'lastAccess', 'LabScreen');
-                                      final jsonCompatibleList = controller
-                                          .callFlowPracticeLabList
-                                          .map((map) {
-                                        return map.map((key, value) {
-                                          if (value is Color) {
-                                            return MapEntry(
-                                                key,
-                                                value.value
-                                                    .toString()); // Convert Color to integer value string
-                                          } else {
-                                            return MapEntry(key, value);
-                                          }
-                                        });
-                                      }).toList();
+                                        );
+                                      },
+                                      cardColor: Color(0xFF445EA9),
+                                    ),
+                                    // SPW(10),
+                                    SizedBox(
+                                      width: kIsWeb
+                                          ? 20
+                                          : getWidgetWidth(width: 14),
+                                    ),
+                                    PETopCategoriesCard(
+                                      height: isSplitScreen
+                                          ? getFullWidgetHeight(height: 88.65)
+                                          : getWidgetHeight(height: 88.65),
+                                      width: getWidgetWidth(width: 106.03),
+                                      title: 'Call Flow Lab',
+                                      imageUrl: AllAssets.peCfpl,
+                                      onTap: () async {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        await prefs.setString(
+                                            'lastAccess', 'LabScreen');
+                                        final jsonCompatibleList = controller
+                                            .callFlowPracticeLabList
+                                            .map((map) {
+                                          return map.map((key, value) {
+                                            if (value is Color) {
+                                              return MapEntry(
+                                                  key,
+                                                  value.value
+                                                      .toString()); // Convert Color to integer value string
+                                            } else {
+                                              return MapEntry(key, value);
+                                            }
+                                          });
+                                        }).toList();
 
-                                      String jsonString =
-                                          jsonEncode(jsonCompatibleList);
-                                      await prefs.setStringList('LabScreen', [
-                                        'Call Flow Lab' ?? "",
-                                        jsonString,
-                                        'true'
-                                      ]);
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => LabScreen(
-                                            user: user,
-                                            title: 'Call Flow Lab',
-                                            itemList: controller
-                                                .callFlowPracticeLabList,
-                                            pLIconKey: true,
+                                        String jsonString =
+                                            jsonEncode(jsonCompatibleList);
+                                        await prefs.setStringList('LabScreen', [
+                                          'Call Flow Lab' ?? "",
+                                          jsonString,
+                                          'true'
+                                        ]);
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => LabScreen(
+                                              user: user,
+                                              title: 'Call Flow Lab',
+                                              itemList: controller
+                                                  .callFlowPracticeLabList,
+                                              pLIconKey: true,
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                    cardColor: Color(0xFF636CFF),
-                                  ),
-                                  // SPW(10),
-                                  SizedBox(
-                                    width:
-                                        kIsWeb ? 20 : getWidgetWidth(width: 14),
-                                  ),
-                                  PETopCategoriesCard(
-                                    height: isSplitScreen
-                                        ? getFullWidgetHeight(height: 88)
-                                        : getWidgetHeight(height: 88),
-                                    width: getWidgetWidth(width: 130.04),
-                                    title: 'Grammer Lab',
-                                    imageUrl: AllAssets.peGl,
-                                    onTap: () async {
-                                      SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
-                                      final jsonCompatibleList = controller
-                                          .grammarCheckLabList
-                                          .map((map) {
-                                        return map.map((key, value) {
-                                          if (value is Color) {
-                                            return MapEntry(
-                                                key,
-                                                value.value
-                                                    .toString()); // Convert Color to integer value string
-                                          } else {
-                                            return MapEntry(key, value);
-                                          }
-                                        });
-                                      }).toList();
+                                        );
+                                      },
+                                      cardColor: Color(0xFF636CFF),
+                                    ),
+                                    // SPW(10),
+                                    SizedBox(
+                                      width: kIsWeb
+                                          ? 20
+                                          : getWidgetWidth(width: 14),
+                                    ),
+                                    PETopCategoriesCard(
+                                      height: isSplitScreen
+                                          ? getFullWidgetHeight(height: 88)
+                                          : getWidgetHeight(height: 88),
+                                      width: getWidgetWidth(width: 130.04),
+                                      title: 'Grammer Lab',
+                                      imageUrl: AllAssets.peGl,
+                                      onTap: () async {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        final jsonCompatibleList = controller
+                                            .grammarCheckLabList
+                                            .map((map) {
+                                          return map.map((key, value) {
+                                            if (value is Color) {
+                                              return MapEntry(
+                                                  key,
+                                                  value.value
+                                                      .toString()); // Convert Color to integer value string
+                                            } else {
+                                              return MapEntry(key, value);
+                                            }
+                                          });
+                                        }).toList();
 
-                                      String jsonString =
-                                          jsonEncode(jsonCompatibleList);
-                                      await prefs.setStringList('LabScreen', [
-                                        'Grammer Lab' ?? "",
-                                        jsonString,
-                                        'true'
-                                      ]);
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => LabScreen(
-                                            user: user,
-                                            title: 'Grammer Lab',
-                                            itemList:
-                                                controller.grammarCheckLabList,
-                                            pLIconKey: true,
+                                        String jsonString =
+                                            jsonEncode(jsonCompatibleList);
+                                        await prefs.setStringList('LabScreen', [
+                                          'Grammer Lab' ?? "",
+                                          jsonString,
+                                          'true'
+                                        ]);
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => LabScreen(
+                                              user: user,
+                                              title: 'Grammer Lab',
+                                              itemList: controller
+                                                  .grammarCheckLabList,
+                                              pLIconKey: true,
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                      /*  Navigator.push(
-                                context, MaterialPageRoute(builder: (context) => GrammerCheckScreen()));*/
-                                    },
-                                    cardColor: Color(0xFFDC6379),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: isSplitScreen
-                                  ? getFullWidgetHeight(height: 20)
-                                  : getWidgetHeight(height: 20),
-                            ),
-                            InkWell(
-                              onTap: () async {
-                                subCategoryTitile =
-                                    "Fast Track\nPronunciation For AR";
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          fastTrackPronunciationScreen(
-                                            title: arFAs,
-                                          )),
-                                );
-                              },
-                              child: Container(
-                                height: isSplitScreen
-                                    ? getFullWidgetHeight(height: 96)
-                                    : getWidgetHeight(height: 96),
-                                // width: getWidgetWidth(width: 335),
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFFFFFFF),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    left: getWidgetWidth(width: 10),
-                                    right: getWidgetWidth(width: 5),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        //height: size.height * 0.054,
-                                        width: displayWidth(context) * 0.5,
-                                        child: Text(
-                                          'Fast Track\nPronunciation For AR',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: kText.scale(17),
-                                            fontFamily: "Roboto",
-                                            letterSpacing: 0,
-                                          ),
-                                          maxLines: 2,
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: SizedBox(
-                                          height: isSplitScreen
-                                              ? getFullWidgetHeight(height: 86)
-                                              : getWidgetHeight(height: 86),
-                                          width: getWidgetWidth(width: 131.19),
-                                          child:
-                                              Image.asset(AllAssets.peFtpfar),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                        );
+                                        /*  Navigator.push(
+                                  context, MaterialPageRoute(builder: (context) => GrammerCheckScreen()));*/
+                                      },
+                                      cardColor: Color(0xFFDC6379),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                            SizedBox(
+                              SizedBox(
                                 height: isSplitScreen
-                                    ? getFullWidgetHeight(height: 24)
-                                    : getWidgetHeight(height: 24)),
-                            InkWell(
-                              onTap: () async {
-                                print("djd d di di d");
-                                DocumentSnapshot documentSnapshot =
-                                    await FirebaseFirestore.instance
-                                        .collection('SoundsKnowMore')
-                                        .doc(
-                                            'bkE3wd4gItN0U94otgrY') // specify the document ID
-                                        .get();
-                                String url = documentSnapshot.get('link');
-                                print("sounds know more url : $url");
-                                SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
-                                await prefs
-                                    .setStringList('InAppWebViewPage', [url]);
-                                await prefs.setString(
-                                    'lastAccess', 'InAppWebViewPage');
-                                Navigator.push(
+                                    ? getFullWidgetHeight(height: 20)
+                                    : getWidgetHeight(height: 20),
+                              ),
+                              InkWell(
+                                onTap: () async {
+                                  subCategoryTitile =
+                                      "Fast Track\nPronunciation For AR";
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => InAppWebViewPage(
-                                              url: url,
-                                            )));
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Sounds',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Roboto',
-                                      letterSpacing: 0,
-                                      fontSize: 18,
+                                        builder: (context) =>
+                                            fastTrackPronunciationScreen(
+                                              title: arFAs,
+                                            )),
+                                  );
+                                },
+                                child: Container(
+                                  height: isSplitScreen
+                                      ? getFullWidgetHeight(height: 96)
+                                      : getWidgetHeight(height: 96),
+                                  // width: getWidgetWidth(width: 335),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFFFFFFF),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      left: getWidgetWidth(width: 10),
+                                      right: getWidgetWidth(width: 5),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: getWidgetWidth(width: 7),
-                                  ),
-                                  Column(
-                                    children: [
-                                      Text(
-                                        '( Know more... )',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'Roboto',
-                                          letterSpacing: 0,
-                                          fontSize: 13,
-                                          wordSpacing: 2,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          //height: size.height * 0.054,
+                                          width: displayWidth(context) * 0.5,
+                                          child: Text(
+                                            'Fast Track\nPronunciation For AR',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: kText.scale(17),
+                                              fontFamily: "Roboto",
+                                              letterSpacing: 0,
+                                            ),
+                                            maxLines: 2,
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(top: 2),
-                                        height: isSplitScreen
-                                            ? getFullWidgetHeight(height: 2)
-                                            : getWidgetHeight(height: 2),
-                                        color: Colors.white,
-                                        width: getWidgetWidth(width: 80),
-                                      )
-                                    ],
+                                        Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: SizedBox(
+                                            height: isSplitScreen
+                                                ? getFullWidgetHeight(
+                                                    height: 86)
+                                                : getWidgetHeight(height: 86),
+                                            width:
+                                                getWidgetWidth(width: 131.19),
+                                            child:
+                                                Image.asset(AllAssets.peFtpfar),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                                height: isSplitScreen
-                                    ? getFullWidgetHeight(height: 14)
-                                    : getWidgetHeight(height: 14)),
-                            TabBar(
-                              padding: EdgeInsets.zero,
-                              splashFactory: InkSplash.splashFactory,
-                              splashBorderRadius: BorderRadius.circular(30),
-                              enableFeedback: false,
-                              indicatorPadding: EdgeInsets.symmetric(
-                                  vertical: kIsWeb
-                                      ? 2
-                                      : isSplitScreen
-                                          ? getFullWidgetHeight(height: 9)
-                                          : getWidgetHeight(height: 9)),
-                              onTap: (int) async {
-                                print('/////////// $int');
-                                _onTabChanged(int);
-                                setState(() {
-                                  _selectedTabIndex = int;
-                                  expansionTileIndex1 = -1;
-                                  expansionTileIndex2 = -1;
-                                });
-                              },
-                              labelPadding: EdgeInsets.only(
-                                  right: getWidgetWidth(width: 12)),
-                              dividerColor: Colors.transparent,
-                              tabAlignment: TabAlignment.start,
-                              labelColor: Colors.white,
-                              isScrollable: true,
-                              physics: AlwaysScrollableScrollPhysics(),
-                              unselectedLabelColor: Color(0xFF99A0AE),
-                              indicatorColor: Color(0xFF6C63FE),
-                              indicatorSize: TabBarIndicatorSize.tab,
-                              indicator: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Color(0xFF6C63FE)),
-                              unselectedLabelStyle:
-                                  TextStyle(fontSize: kText.textScaleFactor),
-                              tabs: [
-                                Tab(
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                              getWidgetWidth(width: 20)),
-                                      child: Text(
-                                        'Important Sounds',
-                                        style: TextStyle(
-                                            color: _selectedTabIndex == 0
-                                                ? Colors.white
-                                                : Color(0xFF99A0AE),
-                                            fontSize: kText.scale(12),
-                                            fontFamily: 'Roboto',
-                                            fontWeight: FontWeight.w500),
+                              SizedBox(
+                                  height: isSplitScreen
+                                      ? getFullWidgetHeight(height: 24)
+                                      : getWidgetHeight(height: 24)),
+                              InkWell(
+                                onTap: () async {
+                                  print("djd d di di d");
+                                  DocumentSnapshot documentSnapshot =
+                                      await FirebaseFirestore.instance
+                                          .collection('SoundsKnowMore')
+                                          .doc(
+                                              'bkE3wd4gItN0U94otgrY') // specify the document ID
+                                          .get();
+                                  String url = documentSnapshot.get('link');
+                                  print("sounds know more url : $url");
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  await prefs
+                                      .setStringList('InAppWebViewPage', [url]);
+                                  await prefs.setString(
+                                      'lastAccess', 'InAppWebViewPage');
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              InAppWebViewPage(
+                                                url: url,
+                                              )));
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Sounds',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Roboto',
+                                        letterSpacing: 0,
+                                        fontSize: 18,
                                       ),
                                     ),
-                                  ),
-                                ),
-                                Tab(
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                              getWidgetWidth(width: 20)),
-                                      child: Text(
-                                        'Vowels',
-                                        style: TextStyle(
-                                            color: _selectedTabIndex == 1
-                                                ? Colors.white
-                                                : Color(0xFF99A0AE),
-                                            fontSize: kText.scale(12),
-                                            fontFamily: 'Roboto',
-                                            fontWeight: FontWeight.w500),
-                                      ),
+                                    SizedBox(
+                                      width: getWidgetWidth(width: 7),
                                     ),
-                                  ),
-                                ),
-                                Tab(
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                              getWidgetWidth(width: 20)),
-                                      child: Text(
-                                        'Consonants',
-                                        style: TextStyle(
-                                            color: _selectedTabIndex == 2
-                                                ? Colors.white
-                                                : Color(0xFF99A0AE),
-                                            fontSize: kText.scale(12),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          '( Know more... )',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
                                             fontFamily: 'Roboto',
-                                            fontWeight: FontWeight.w500),
-                                      ),
+                                            letterSpacing: 0,
+                                            fontSize: 13,
+                                            wordSpacing: 2,
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(top: 2),
+                                          height: isSplitScreen
+                                              ? getFullWidgetHeight(height: 2)
+                                              : getWidgetHeight(height: 2),
+                                          color: Colors.white,
+                                          width: getWidgetWidth(width: 80),
+                                        )
+                                      ],
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            // ColorfulTabBar(
-                            //   verticalTabPadding: 5,
-                            //   alignment: TabAxisAlignment.end,
-                            //   labelColor: Colors.white,
-                            //   unselectedLabelColor: Color(0XFF99A0AE),
-                            //   selectedHeight: 32,
-                            //   unselectedHeight: 32,
-                            //   tabShape: RoundedRectangleBorder(
-                            //       borderRadius: BorderRadius.circular(200)),
-                            //   indicatorHeight: 0,
-                            //   tabs: [
-                            //     TabItem(
-                            //         title: Text(
-                            //           "10 Important Sounds",
-                            //           style: TextStyle(
-                            //               fontSize: 12,
-                            //               fontWeight: FontWeight.w500),
-                            //         ),
-                            //         color: Color(0XFF6C63FE),
-                            //         unselectedColor: Color(0XFF34425D)),
-                            //     TabItem(
-                            //         title: Text(
-                            //           "Vowels",
-                            //           style: TextStyle(
-                            //               fontSize: 12,
-                            //               fontWeight: FontWeight.w500),
-                            //         ),
-                            //         color: Color(0XFF6C63FE),
-                            //         unselectedColor: Color(0XFF34425D)),
-                            //     TabItem(
-                            //         title: Text(
-                            //           "Consonants",
-                            //           style: TextStyle(
-                            //               fontSize: 12,
-                            //               fontWeight: FontWeight.w500),
-                            //         ),
-                            //         color: Color(0XFF6C63FE),
-                            //         unselectedColor: Color(0XFF34425D)),
-                            //   ],
-                            //   //  controller: _tabController,
-                            // ),
-                            SizedBox(
-                              height: isSplitScreen
-                                  ? getFullWidgetHeight(height: 18)
-                                  : getWidgetHeight(height: 18),
-                            ),
-                            Expanded(
-                              // height: MediaQuery.of(context).size.height * 0.3,
-                              child: TabBarView(
-                                //physics: NeverScrollableScrollPhysics(),
-                                children: [
-                                  Scrollbar(
-                                    controller: _scrollController1,
-                                    thickness: 2,
-                                    thumbVisibility: true,
-                                    child: ListView.builder(
-                                      // physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
+                              ),
+                              SizedBox(
+                                  height: isSplitScreen
+                                      ? getFullWidgetHeight(height: 14)
+                                      : getWidgetHeight(height: 14)),
+                              Container(
+                                // color: Colors.yellow,
+                                width: displayWidth(context),
+                                height: kIsWeb
+                                    ? displayHeight(context)
+                                    : displayHeight(context) / 2,
+                                child: Column(
+                                  children: [
+                                    TabBar(
                                       padding: EdgeInsets.zero,
-                                      itemBuilder: (context, index) {
-                                        return Column(
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: isSplitScreen
-                                                      ? getFullWidgetHeight(
-                                                          height: 3)
-                                                      : getWidgetHeight(
-                                                          height: 3),
-                                                  bottom: isSplitScreen
-                                                      ? getFullWidgetHeight(
-                                                          height: 3)
-                                                      : getWidgetHeight(
-                                                          height: 3),
-                                                  right:
-                                                      getWidgetWidth(width: 5)),
-                                              child: InkWell(
-                                                splashColor: Colors.transparent,
-                                                onTap: () async {
-                                                  subCategoryTitile =
-                                                      "Important Sounds";
-                                                  sessionName = importantSounds
-                                                      .subcategories![index]
-                                                      .name!;
-                                                  print(
-                                                      "title check:${importantSounds.subcategories![index].name}");
-                                                  print(
-                                                      "subcateogries text :${importantSounds.subcategories![index].soundsPractice!.first.syllabels}");
-                                                  List<SoundPracticeModel>?
-                                                      soundsPractice =
-                                                      importantSounds
-                                                          .subcategories![index]
-                                                          .soundsPractice;
-
-                                                  List<Word> soundPractice =
-                                                      soundsPractice
-                                                              ?.map((sound) {
-                                                            print(
-                                                                "sps is is : ${sound.file}");
-                                                            print(
-                                                                "sps is is : ${sound.pronun}");
-                                                            print(
-                                                                "sps is is : ${sound.syllabels}");
-                                                            print(
-                                                                "sps is is : ${sound.text}");
-                                                            return Word(
-                                                              file: sound.file,
-                                                              pronun:
-                                                                  sound.pronun,
-                                                              syllables: sound
-                                                                  .syllabels, // Make sure to use the correct spelling
-                                                              text: sound.text,
-                                                            );
-                                                          }).toList() ??
-                                                          [];
-                                                  print(
-                                                      "navigating sound practice length will be this ${soundPractice.length}");
-                                                  List<Word> words =
-                                                      await soundsWordsdb
-                                                          .getWordsForSounds(
+                                      splashFactory: InkSplash.splashFactory,
+                                      splashBorderRadius:
+                                          BorderRadius.circular(30),
+                                      enableFeedback: false,
+                                      indicatorPadding: EdgeInsets.symmetric(
+                                          vertical: kIsWeb
+                                              ? 2
+                                              : isSplitScreen
+                                                  ? getFullWidgetHeight(
+                                                      height: 9)
+                                                  : getWidgetHeight(height: 9)),
+                                      onTap: (int) async {
+                                        print('/////////// $int');
+                                        _onTabChanged(int);
+                                        setState(() {
+                                          _selectedTabIndex = int;
+                                          expansionTileIndex1 = -1;
+                                          expansionTileIndex2 = -1;
+                                        });
+                                      },
+                                      labelPadding: EdgeInsets.only(
+                                          right: getWidgetWidth(width: 12)),
+                                      dividerColor: Colors.transparent,
+                                      tabAlignment: TabAlignment.start,
+                                      labelColor: Colors.white,
+                                      isScrollable: true,
+                                      physics: AlwaysScrollableScrollPhysics(),
+                                      unselectedLabelColor: Color(0xFF99A0AE),
+                                      indicatorColor: Color(0xFF6C63FE),
+                                      indicatorSize: TabBarIndicatorSize.tab,
+                                      indicator: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          color: Color(0xFF6C63FE)),
+                                      unselectedLabelStyle: TextStyle(
+                                          fontSize: kText.textScaleFactor),
+                                      tabs: [
+                                        Tab(
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: getWidgetWidth(
+                                                      width: 20)),
+                                              child: Text(
+                                                'Important Sounds',
+                                                style: TextStyle(
+                                                    color:
+                                                        _selectedTabIndex == 0
+                                                            ? Colors.white
+                                                            : Color(0xFF99A0AE),
+                                                    fontSize: kText.scale(12),
+                                                    fontFamily: 'Roboto',
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Tab(
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: getWidgetWidth(
+                                                      width: 20)),
+                                              child: Text(
+                                                'Vowels',
+                                                style: TextStyle(
+                                                    color:
+                                                        _selectedTabIndex == 1
+                                                            ? Colors.white
+                                                            : Color(0xFF99A0AE),
+                                                    fontSize: kText.scale(12),
+                                                    fontFamily: 'Roboto',
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Tab(
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: getWidgetWidth(
+                                                      width: 20)),
+                                              child: Text(
+                                                'Consonants',
+                                                style: TextStyle(
+                                                    color:
+                                                        _selectedTabIndex == 2
+                                                            ? Colors.white
+                                                            : Color(0xFF99A0AE),
+                                                    fontSize: kText.scale(12),
+                                                    fontFamily: 'Roboto',
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: isSplitScreen
+                                          ? getFullWidgetHeight(height: 18)
+                                          : getWidgetHeight(height: 18),
+                                    ),
+                                    Expanded(
+                                      // height: MediaQuery.of(context).size.height * 0.3,
+                                      child: TabBarView(
+                                        //physics: NeverScrollableScrollPhysics(),
+                                        children: [
+                                          Scrollbar(
+                                            controller: _scrollController1,
+                                            thickness: 2,
+                                            thumbVisibility: true,
+                                            child: ListView.builder(
+                                              // physics: NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              padding: EdgeInsets.zero,
+                                              itemBuilder: (context, index) {
+                                                return Column(
+                                                  children: [
+                                                    Padding(
+                                                      padding: EdgeInsets.only(
+                                                          top: isSplitScreen
+                                                              ? getFullWidgetHeight(
+                                                                  height: 3)
+                                                              : getWidgetHeight(
+                                                                  height: 3),
+                                                          bottom: isSplitScreen
+                                                              ? getFullWidgetHeight(
+                                                                  height: 3)
+                                                              : getWidgetHeight(
+                                                                  height: 3),
+                                                          right: getWidgetWidth(
+                                                              width: 5)),
+                                                      child: InkWell(
+                                                        splashColor:
+                                                            Colors.transparent,
+                                                        onTap: () async {
+                                                          subCategoryTitile =
+                                                              "Important Sounds";
+                                                          sessionName =
                                                               importantSounds
                                                                   .subcategories![
                                                                       index]
-                                                                  .name!,
-                                                              soundPractice);
-                                                  print(
-                                                      "sound practice : $words");
-                                                  print(
-                                                      "sound practice length: ${words.length}");
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ProfluentSubScreen(
-                                                        ulr: importantSounds
-                                                            .subcategories![
-                                                                index]
-                                                            .ulr,
-                                                        title:
-                                                            _categories[index]
-                                                                .category!,
-                                                        load: importantSounds
-                                                            .subcategories![
-                                                                index]
-                                                            .name!,
-                                                        links: importantSounds
-                                                            .subcategories![
-                                                                index]
-                                                            .links!,
-                                                        soundPractice:
-                                                            soundPractice,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                child: Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal:
-                                                          getWidgetWidth(
-                                                              width: 12)),
-                                                  child: Row(
-                                                    children: [
-                                                      Text(
-                                                        '${importantSounds.subcategories![index].name}',
-                                                        style: TextStyle(
-                                                          letterSpacing: 0,
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontFamily: Keys
-                                                              .lucidaFontFamily,
-                                                          fontSize:
-                                                              kText.scale(15),
+                                                                  .name!;
+                                                          print(
+                                                              "title check:${importantSounds.subcategories![index].name}");
+                                                          print(
+                                                              "subcateogries text :${importantSounds.subcategories![index].soundsPractice!.first.syllabels}");
+                                                          List<SoundPracticeModel>?
+                                                              soundsPractice =
+                                                              importantSounds
+                                                                  .subcategories![
+                                                                      index]
+                                                                  .soundsPractice;
+
+                                                          List<Word>
+                                                              soundPractice =
+                                                              soundsPractice?.map(
+                                                                      (sound) {
+                                                                    print(
+                                                                        "sps is is : ${sound.file}");
+                                                                    print(
+                                                                        "sps is is : ${sound.pronun}");
+                                                                    print(
+                                                                        "sps is is : ${sound.syllabels}");
+                                                                    print(
+                                                                        "sps is is : ${sound.text}");
+                                                                    return Word(
+                                                                      file: sound
+                                                                          .file,
+                                                                      pronun: sound
+                                                                          .pronun,
+                                                                      syllables:
+                                                                          sound
+                                                                              .syllabels, // Make sure to use the correct spelling
+                                                                      text: sound
+                                                                          .text,
+                                                                    );
+                                                                  }).toList() ??
+                                                                  [];
+                                                          print(
+                                                              "navigating sound practice length will be this ${soundPractice.length}");
+                                                          List<Word> words = await soundsWordsdb
+                                                              .getWordsForSounds(
+                                                                  importantSounds
+                                                                      .subcategories![
+                                                                          index]
+                                                                      .name!,
+                                                                  soundPractice);
+                                                          print(
+                                                              "sound practice : $words");
+                                                          print(
+                                                              "sound practice length: ${words.length}");
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ProfluentSubScreen(
+                                                                ulr: importantSounds
+                                                                    .subcategories![
+                                                                        index]
+                                                                    .ulr,
+                                                                title: _categories[
+                                                                        index]
+                                                                    .category!,
+                                                                load: importantSounds
+                                                                    .subcategories![
+                                                                        index]
+                                                                    .name!,
+                                                                links: importantSounds
+                                                                    .subcategories![
+                                                                        index]
+                                                                    .links!,
+                                                                soundPractice:
+                                                                    soundPractice,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  horizontal:
+                                                                      getWidgetWidth(
+                                                                          width:
+                                                                              12)),
+                                                          child: Row(
+                                                            children: [
+                                                              Text(
+                                                                '${importantSounds.subcategories![index].name}',
+                                                                style:
+                                                                    TextStyle(
+                                                                  letterSpacing:
+                                                                      0,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontFamily: Keys
+                                                                      .lucidaFontFamily,
+                                                                  fontSize: kText
+                                                                      .scale(
+                                                                          15),
+                                                                ),
+                                                              ),
+                                                              Spacer(),
+                                                              Icon(
+                                                                Icons
+                                                                    .chevron_right_rounded,
+                                                                size: 30,
+                                                                color: Color(
+                                                                  0xFF34445F,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
-                                                      Spacer(),
-                                                      Icon(
-                                                        Icons
-                                                            .chevron_right_rounded,
-                                                        size: 30,
-                                                        color: Color(
-                                                          0xFF34445F,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  right: getWidgetWidth(
-                                                      width: 10)),
-                                              child: Divider(
-                                                color: Color(0xFF34425D),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                      itemCount:
-                                          importantSounds.subcategories!.length,
-                                    ),
-                                  ),
-                                  Scrollbar(
-                                    controller: _scrollController2,
-                                    thickness: 2,
-                                    thumbVisibility: true,
-                                    child: ListView.builder(
-                                      // physics: NeverScrollableScrollPhysics(),
-                                      key: Key(
-                                          'builder1 ${expansionTileIndex1.toString()}'),
-                                      controller: _scrollController2,
-                                      padding: EdgeInsets.zero,
-                                      shrinkWrap: true,
-                                      itemCount: vowels.length,
-                                      itemBuilder: (context, index) {
-                                        //  controller.expandedIndex = -1;
-                                        return Card(
-                                          margin: EdgeInsets.only(
-                                              bottom: isSplitScreen
-                                                  ? getFullWidgetHeight(
-                                                      height: 14)
-                                                  : getWidgetHeight(height: 14),
-                                              right: getWidgetWidth(width: 5)),
-                                          elevation: 0,
-                                          color: Color(0xFF34425D),
-                                          child: Theme(
-                                            data: ThemeData(
-                                              splashColor: Colors.transparent,
-                                              dividerColor: Colors.transparent,
-                                            ),
-                                            child: Consumer<AuthState>(builder:
-                                                (context, expansionController,
-                                                    _) {
-                                              return ExpansionTile(
-                                                // key: Key(index.toString()),
-                                                //maintainState: expanded[index],
-                                                initiallyExpanded:
-                                                    expansionTileIndex1 ==
-                                                        index,
-                                                onExpansionChanged: (expand) {
-                                                  // expanded.clear();
-                                                  //   expanded = List.generate(3, (index) => false);
-                                                  //  expanded[index] = true;
-                                                  setState(() {
-                                                    print("djfijj");
-                                                    expansionTileIndex1 = index;
-                                                  });
-                                                  if (vowels.length - 2 <=
-                                                      index) {
-                                                    print(
-                                                        "function calleddddd");
-                                                    WidgetsBinding.instance
-                                                        .addPostFrameCallback(
-                                                            (_) {
-                                                      _scrollToItemForVowels(
-                                                          index);
-                                                    });
-                                                  }
-                                                  setState(() {
-                                                    for (int i = 0;
-                                                        i < expanded.length;
-                                                        i++) {
-                                                      if (index == i) {
-                                                        expanded[i] = expand;
-                                                      } else {
-                                                        expanded[i] = false;
-                                                      }
-                                                    }
-                                                  });
-                                                  subCategoryTitile =
-                                                      vowels[index].category!;
-                                                  log("expanded:${expanded}");
-                                                  // _handleExpansion(index, expanded);
-                                                  // setState(() {
-                                                  //   print("checkkkk");
-                                                  //   expansionController.changeExpansion(expanded, index);
-                                                  // });
-                                                  //  expansionController. expandedIndex = expanded == true ? index : -1;
-                                                },
-                                                leading: CircleAvatar(
-                                                  backgroundColor:
-                                                      colorList[index],
-                                                  child: Image.asset(
-                                                    AllAssets.quickLinkPL,
-                                                    scale: kIsWeb
-                                                        ? 3
-                                                        : displayWidth(
-                                                                context) /
-                                                            101.5,
-                                                  ),
-                                                ),
-                                                title: Text(
-                                                  "${vowels[index].category == 'Diphthong' ? '''Diphthong's''' : vowels[index].category}",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: kText.scale(14),
-                                                      fontFamily: 'Roboto',
-                                                      letterSpacing: 0,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                iconColor: Colors.white,
-                                                collapsedIconColor:
-                                                    Color(0xFF64748B),
-                                                children: [
-                                                  ListView.separated(
-                                                    separatorBuilder:
-                                                        (context, index) =>
-                                                            Divider(
-                                                      indent: 10,
-                                                      endIndent: 10,
-                                                      color: Color(0xFF617397),
                                                     ),
-                                                    shrinkWrap: true,
-                                                    physics:
-                                                        NeverScrollableScrollPhysics(),
-                                                    itemCount: vowels[index]
-                                                        .subcategories!
-                                                        .length,
-                                                    itemBuilder:
-                                                        (context, subIndex) {
-                                                      return Column(
+                                                    Padding(
+                                                      padding: EdgeInsets.only(
+                                                          right: getWidgetWidth(
+                                                              width: 10)),
+                                                      child: Divider(
+                                                        color:
+                                                            Color(0xFF34425D),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                              itemCount: importantSounds
+                                                  .subcategories!.length,
+                                            ),
+                                          ),
+                                          Scrollbar(
+                                            controller: _scrollController2,
+                                            thickness: 2,
+                                            thumbVisibility: true,
+                                            child: ListView.builder(
+                                              // physics: NeverScrollableScrollPhysics(),
+                                              key: Key(
+                                                  'builder1 ${expansionTileIndex1.toString()}'),
+                                              controller: _scrollController2,
+                                              padding: EdgeInsets.zero,
+                                              shrinkWrap: true,
+                                              itemCount: vowels.length,
+                                              itemBuilder: (context, index) {
+                                                //  controller.expandedIndex = -1;
+                                                return Card(
+                                                  margin: EdgeInsets.only(
+                                                      bottom: isSplitScreen
+                                                          ? getFullWidgetHeight(
+                                                              height: 14)
+                                                          : getWidgetHeight(
+                                                              height: 14),
+                                                      right: getWidgetWidth(
+                                                          width: 5)),
+                                                  elevation: 0,
+                                                  color: Color(0xFF34425D),
+                                                  child: Theme(
+                                                    data: ThemeData(
+                                                      splashColor:
+                                                          Colors.transparent,
+                                                      dividerColor:
+                                                          Colors.transparent,
+                                                    ),
+                                                    child: Consumer<AuthState>(
+                                                        builder: (context,
+                                                            expansionController,
+                                                            _) {
+                                                      return ExpansionTile(
+                                                        // key: Key(index.toString()),
+                                                        //maintainState: expanded[index],
+                                                        initiallyExpanded:
+                                                            expansionTileIndex1 ==
+                                                                index,
+                                                        onExpansionChanged:
+                                                            (expand) {
+                                                          // expanded.clear();
+                                                          //   expanded = List.generate(3, (index) => false);
+                                                          //  expanded[index] = true;
+                                                          setState(() {
+                                                            print("djfijj");
+                                                            expansionTileIndex1 =
+                                                                index;
+                                                          });
+                                                          if (vowels.length -
+                                                                  2 <=
+                                                              index) {
+                                                            print(
+                                                                "function calleddddd");
+                                                            WidgetsBinding
+                                                                .instance
+                                                                .addPostFrameCallback(
+                                                                    (_) {
+                                                              _scrollToItemForVowels(
+                                                                  index);
+                                                            });
+                                                          }
+                                                          setState(() {
+                                                            for (int i = 0;
+                                                                i <
+                                                                    expanded
+                                                                        .length;
+                                                                i++) {
+                                                              if (index == i) {
+                                                                expanded[i] =
+                                                                    expand;
+                                                              } else {
+                                                                expanded[i] =
+                                                                    false;
+                                                              }
+                                                            }
+                                                          });
+                                                          subCategoryTitile =
+                                                              vowels[index]
+                                                                  .category!;
+                                                          log("expanded:${expanded}");
+                                                          // _handleExpansion(index, expanded);
+                                                          // setState(() {
+                                                          //   print("checkkkk");
+                                                          //   expansionController.changeExpansion(expanded, index);
+                                                          // });
+                                                          //  expansionController. expandedIndex = expanded == true ? index : -1;
+                                                        },
+                                                        leading: CircleAvatar(
+                                                          backgroundColor:
+                                                              colorList[index],
+                                                          child: Image.asset(
+                                                            AllAssets
+                                                                .quickLinkPL,
+                                                            scale: kIsWeb
+                                                                ? 3
+                                                                : displayWidth(
+                                                                        context) /
+                                                                    101.5,
+                                                          ),
+                                                        ),
+                                                        title: Text(
+                                                          "${vowels[index].category == 'Diphthong' ? '''Diphthong's''' : vowels[index].category}",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: kText
+                                                                  .scale(14),
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              letterSpacing: 0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        ),
+                                                        iconColor: Colors.white,
+                                                        collapsedIconColor:
+                                                            Color(0xFF64748B),
                                                         children: [
-                                                          Padding(
-                                                            padding: EdgeInsets.symmetric(
-                                                                vertical: isSplitScreen
-                                                                    ? getFullWidgetHeight(
-                                                                        height:
-                                                                            3)
-                                                                    : getWidgetHeight(
-                                                                        height:
-                                                                            3)),
-                                                            child: InkWell(
-                                                              splashColor: Colors
-                                                                  .transparent,
-                                                              highlightColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              hoverColor: Colors
-                                                                  .transparent,
-                                                              onTap: (() async {
-                                                                /*if (vowels[index].subcategories![subIndex].link != null) {
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (context) => InAppWebViewPage(
-                                                                                  url: vowels[index]
-                                                                                      .subcategories![subIndex]
-                                                                                      .link!,
-                                                                                )));
-                                                                  }*/
-                                                                print(
-                                                                    "title check:${importantSounds.subcategories![index].name}");
-                                                                print(
-                                                                    "subcateogries text :${importantSounds1[index].subcategories![subIndex].soundsPractice!.first.text}");
-                                                                List<SoundPracticeModel>?
-                                                                    soundsPractice =
-                                                                    importantSounds1[
+                                                          ListView.separated(
+                                                            separatorBuilder:
+                                                                (context,
+                                                                        index) =>
+                                                                    Divider(
+                                                              indent: 10,
+                                                              endIndent: 10,
+                                                              color: Color(
+                                                                  0xFF617397),
+                                                            ),
+                                                            shrinkWrap: true,
+                                                            physics:
+                                                                NeverScrollableScrollPhysics(),
+                                                            itemCount: vowels[
+                                                                    index]
+                                                                .subcategories!
+                                                                .length,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    subIndex) {
+                                                              return Column(
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        vertical: isSplitScreen
+                                                                            ? getFullWidgetHeight(height: 3)
+                                                                            : getWidgetHeight(height: 3)),
+                                                                    child:
+                                                                        InkWell(
+                                                                      splashColor:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      highlightColor:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      hoverColor:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      onTap:
+                                                                          (() async {
+                                                                        /*if (vowels[index].subcategories![subIndex].link != null) {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => InAppWebViewPage(
+                                                                                    url: vowels[index]
+                                                                                        .subcategories![subIndex]
+                                                                                        .link!,
+                                                                                  )));
+                                                                    }*/
+                                                                        print(
+                                                                            "title check:${importantSounds.subcategories![index].name}");
+                                                                        print(
+                                                                            "subcateogries text :${importantSounds1[index].subcategories![subIndex].soundsPractice!.first.text}");
+                                                                        List<SoundPracticeModel>?
+                                                                            soundsPractice =
+                                                                            importantSounds1[index].subcategories![subIndex].soundsPractice;
+
+                                                                        List<Word>
+                                                                            soundPractice =
+                                                                            soundsPractice?.map((sound) {
+                                                                                  print("sps is is : ${sound.file}");
+                                                                                  print("sps is is : ${sound.pronun}");
+                                                                                  print("sps is is : ${sound.syllabels}");
+                                                                                  print("sps is is : ${sound.text}");
+                                                                                  return Word(
+                                                                                    file: sound.file,
+                                                                                    pronun: sound.pronun,
+                                                                                    syllables: sound.syllabels, // Make sure to use the correct spelling
+                                                                                    text: sound.text,
+                                                                                  );
+                                                                                }).toList() ??
+                                                                                [];
+
+                                                                        List<Word>
+                                                                            words =
+                                                                            await soundsWordsdb.getWordsForSounds(vowels[index].subcategories![subIndex].name!,
+                                                                                soundPractice);
+                                                                        print(
+                                                                            "sjdijf:${words}");
+                                                                        print(
+                                                                            "djigjidjg:${vowels[index].subcategories![subIndex].name!}");
+                                                                        print(
+                                                                            "sound practice : $soundPractice");
+                                                                        print(
+                                                                            "sound practice length: ${soundPractice.length}");
+                                                                        print(
+                                                                            "printing th sound lab length before ${soundPractice.length}");
+                                                                        sessionName = vowels[index]
+                                                                            .subcategories![subIndex]
+                                                                            .name!;
+                                                                        Navigator
+                                                                            .push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                ProfluentSubScreen(
+                                                                              ulr: vowels[index].subcategories![subIndex].ulr,
+                                                                              title: vowels[index].subcategories![subIndex].name!,
+                                                                              load: vowels[index].subcategories![subIndex].name!,
+                                                                              links: importantSounds1[index].subcategories![subIndex].links!,
+                                                                              soundPractice: soundPractice,
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      }),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsets.symmetric(
+                                                                            horizontal: kIsWeb
+                                                                                ? 20
+                                                                                : getWidgetWidth(width: 20),
+                                                                            vertical: isSplitScreen ? getFullWidgetHeight(height: 5) : getWidgetHeight(height: 5)),
+                                                                        child:
+                                                                            Container(
+                                                                          padding:
+                                                                              EdgeInsets.symmetric(horizontal: kIsWeb ? 0 : getWidgetWidth(width: 12)),
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Text(
+                                                                                vowels[index].subcategories![subIndex].name!,
+                                                                                style: TextStyle(
+                                                                                  letterSpacing: 0,
+                                                                                  color: Colors.white,
+                                                                                  fontWeight: FontWeight.w500,
+                                                                                  fontFamily: Keys.lucidaFontFamily,
+                                                                                  fontSize: kText.scale(14),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  if (vowels[index]
+                                                                              .subcategories!
+                                                                              .length -
+                                                                          1 ==
+                                                                      subIndex)
+                                                                    Padding(
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .only(
+                                                                        bottom: isSplitScreen
+                                                                            ? getFullWidgetHeight(height: 20)
+                                                                            : getWidgetHeight(height: 20),
+                                                                      ),
+                                                                      child:
+                                                                          Divider(
+                                                                        color: Color(
+                                                                            0xFF617397),
+                                                                        endIndent:
+                                                                            20,
+                                                                        indent:
+                                                                            20,
+                                                                      ),
+                                                                    ),
+                                                                ],
+                                                              );
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    }),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          Scrollbar(
+                                            controller: _scrollController3,
+                                            thickness: 2,
+                                            thumbVisibility: true,
+                                            child: ListView.builder(
+                                              controller: _scrollController3,
+                                              padding: EdgeInsets.zero,
+                                              shrinkWrap: true,
+                                              key: Key(
+                                                  'builder2 ${expansionTileIndex2.toString()}'),
+                                              // physics: NeverScrollableScrollPhysics(),
+                                              itemCount: consonants.length,
+                                              itemBuilder: (context, index) {
+                                                return Card(
+                                                  margin: EdgeInsets.only(
+                                                      bottom: isSplitScreen
+                                                          ? getFullWidgetHeight(
+                                                              height: 14)
+                                                          : getWidgetHeight(
+                                                              height: 14),
+                                                      right: getWidgetWidth(
+                                                          width: 5)),
+                                                  elevation: 0,
+                                                  color: Color(0xFF34425D),
+                                                  child: Theme(
+                                                    data: ThemeData(
+                                                      splashColor:
+                                                          Colors.transparent,
+                                                      dividerColor:
+                                                          Colors.transparent,
+                                                    ),
+                                                    child: Consumer<AuthState>(
+                                                        builder: (context,
+                                                            expansionController,
+                                                            _) {
+                                                      return ExpansionTile(
+                                                        initiallyExpanded:
+                                                            expansionTileIndex2 ==
+                                                                index,
+                                                        onExpansionChanged:
+                                                            (expanded) {
+                                                          log("checking");
+                                                          subCategoryTitile =
+                                                              consonants[index]
+                                                                  .category!
+                                                                  .replaceFirst(
+                                                                      'Consonants Sounds: ',
+                                                                      '');
+                                                          setState(() {
+                                                            expansionTileIndex2 =
+                                                                index;
+                                                          });
+                                                          if (consonants
+                                                                      .length -
+                                                                  2 <=
+                                                              index) {
+                                                            log("function calleddddd");
+                                                            WidgetsBinding
+                                                                .instance
+                                                                .addPostFrameCallback(
+                                                                    (_) {
+                                                              _scrollToItem(
+                                                                  index);
+                                                            });
+                                                          }
+                                                        },
+                                                        leading: CircleAvatar(
+                                                          backgroundColor:
+                                                              colorList[index],
+                                                          child: Image.asset(
+                                                            AllAssets
+                                                                .quickLinkPL,
+                                                            scale: kIsWeb
+                                                                ? 3
+                                                                : displayWidth(
+                                                                        context) /
+                                                                    101.5,
+                                                          ),
+                                                        ),
+                                                        title: Text(
+                                                          "${consonants[index].category!.replaceFirst('Consonants Sounds: ', '')}",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: kText
+                                                                  .scale(14),
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        ),
+                                                        iconColor: Colors.white,
+                                                        collapsedIconColor:
+                                                            Color(0xFF64748B),
+                                                        children: [
+                                                          ListView.separated(
+                                                            separatorBuilder:
+                                                                (context,
+                                                                        index) =>
+                                                                    Divider(
+                                                              indent: 10,
+                                                              endIndent: 10,
+                                                              color: Color(
+                                                                  0xFF617397),
+                                                            ),
+                                                            shrinkWrap: true,
+                                                            physics:
+                                                                NeverScrollableScrollPhysics(),
+                                                            itemCount: consonants[
+                                                                    index]
+                                                                .subcategories!
+                                                                .length,
+                                                            padding:
+                                                                EdgeInsets.zero,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    subIndex) {
+                                                              return ListTile(
+                                                                title: InkWell(
+                                                                  splashColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  onTap:
+                                                                      (() async {
+                                                                    /*if (consonants[index].subcategories![subIndex].link != null) {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) => InAppWebViewPage(
+                                                                                url: consonants[index]
+                                                                                    .subcategories![subIndex]
+                                                                                    .link!,
+                                                                              )));
+                                                                }*/
+                                                                    print(
+                                                                        "subcateogries text :${importantSounds2[index].subcategories![subIndex].soundsPractice!.first.text}");
+                                                                    List<SoundPracticeModel>?
+                                                                        soundsPractice =
+                                                                        importantSounds2[index]
+                                                                            .subcategories![subIndex]
+                                                                            .soundsPractice;
+
+                                                                    List<Word>
+                                                                        soundPractice =
+                                                                        soundsPractice?.map((sound) {
+                                                                              print("sps is is : ${sound.file}");
+                                                                              print("sps is is : ${sound.pronun}");
+                                                                              print("sps is is : ${sound.syllabels}");
+                                                                              print("sps is is : ${sound.text}");
+                                                                              return Word(
+                                                                                file: sound.file,
+                                                                                pronun: sound.pronun,
+                                                                                syllables: sound.syllabels, // Make sure to use the correct spelling
+                                                                                text: sound.text,
+                                                                              );
+                                                                            }).toList() ??
+                                                                            [];
+                                                                    List<Word> words = await soundsWordsdb.getWordsForSounds(
+                                                                        consonants[index]
+                                                                            .subcategories![subIndex]
+                                                                            .name!,
+                                                                        soundPractice);
+                                                                    print(
+                                                                        "sound practice : $soundPractice");
+                                                                    print(
+                                                                        "sound practice length: ${soundPractice.length}");
+                                                                    sessionName = consonants[
                                                                             index]
                                                                         .subcategories![
                                                                             subIndex]
-                                                                        .soundsPractice;
-
-                                                                List<Word>
-                                                                    soundPractice =
-                                                                    soundsPractice
-                                                                            ?.map((sound) {
-                                                                          print(
-                                                                              "sps is is : ${sound.file}");
-                                                                          print(
-                                                                              "sps is is : ${sound.pronun}");
-                                                                          print(
-                                                                              "sps is is : ${sound.syllabels}");
-                                                                          print(
-                                                                              "sps is is : ${sound.text}");
-                                                                          return Word(
-                                                                            file:
-                                                                                sound.file,
-                                                                            pronun:
-                                                                                sound.pronun,
-                                                                            syllables:
-                                                                                sound.syllabels, // Make sure to use the correct spelling
-                                                                            text:
-                                                                                sound.text,
-                                                                          );
-                                                                        }).toList() ??
-                                                                        [];
-
-                                                                List<Word> words = await soundsWordsdb.getWordsForSounds(
-                                                                    vowels[index]
-                                                                        .subcategories![
-                                                                            subIndex]
-                                                                        .name!,
-                                                                    soundPractice);
-                                                                print(
-                                                                    "sjdijf:${words}");
-                                                                print(
-                                                                    "djigjidjg:${vowels[index].subcategories![subIndex].name!}");
-                                                                print(
-                                                                    "sound practice : $soundPractice");
-                                                                print(
-                                                                    "sound practice length: ${soundPractice.length}");
-                                                                print(
-                                                                    "printing th sound lab length before ${soundPractice.length}");
-                                                                sessionName = vowels[
-                                                                        index]
-                                                                    .subcategories![
-                                                                        subIndex]
-                                                                    .name!;
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            ProfluentSubScreen(
-                                                                      ulr: vowels[
-                                                                              index]
-                                                                          .subcategories![
-                                                                              subIndex]
-                                                                          .ulr,
-                                                                      title: vowels[
-                                                                              index]
-                                                                          .subcategories![
-                                                                              subIndex]
-                                                                          .name!,
-                                                                      load: vowels[
-                                                                              index]
-                                                                          .subcategories![
-                                                                              subIndex]
-                                                                          .name!,
-                                                                      links: importantSounds1[
-                                                                              index]
-                                                                          .subcategories![
-                                                                              subIndex]
-                                                                          .links!,
-                                                                      soundPractice:
-                                                                          soundPractice,
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              }),
-                                                              child: Padding(
-                                                                padding: EdgeInsets.symmetric(
-                                                                    horizontal: kIsWeb
-                                                                        ? 20
-                                                                        : getWidgetWidth(
-                                                                            width:
-                                                                                20),
-                                                                    vertical: isSplitScreen
-                                                                        ? getFullWidgetHeight(
-                                                                            height:
-                                                                                5)
-                                                                        : getWidgetHeight(
-                                                                            height:
-                                                                                5)),
-                                                                child:
-                                                                    Container(
-                                                                  padding: EdgeInsets.symmetric(
-                                                                      horizontal:
-                                                                          kIsWeb
-                                                                              ? 0
-                                                                              : getWidgetWidth(width: 12)),
-                                                                  child: Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        vowels[index]
-                                                                            .subcategories![subIndex]
-                                                                            .name!,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          letterSpacing:
-                                                                              0,
-                                                                          color:
-                                                                              Colors.white,
-                                                                          fontWeight:
-                                                                              FontWeight.w500,
-                                                                          fontFamily:
-                                                                              Keys.lucidaFontFamily,
-                                                                          fontSize:
-                                                                              kText.scale(14),
+                                                                        .name!;
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                ProfluentSubScreen(
+                                                                          ulr: consonants[index]
+                                                                              .subcategories![subIndex]
+                                                                              .ulr!,
+                                                                          title: consonants[index]
+                                                                              .subcategories![subIndex]
+                                                                              .name!,
+                                                                          load: consonants[index]
+                                                                              .subcategories![subIndex]
+                                                                              .name!,
+                                                                          links: importantSounds2[index]
+                                                                              .subcategories![subIndex]
+                                                                              .links!,
+                                                                          soundPractice:
+                                                                              soundPractice,
                                                                         ),
                                                                       ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          if (vowels[index]
-                                                                      .subcategories!
-                                                                      .length -
-                                                                  1 ==
-                                                              subIndex)
-                                                            Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .only(
-                                                                bottom: isSplitScreen
-                                                                    ? getFullWidgetHeight(
-                                                                        height:
-                                                                            20)
-                                                                    : getWidgetHeight(
-                                                                        height:
-                                                                            20),
-                                                              ),
-                                                              child: Divider(
-                                                                color: Color(
-                                                                    0xFF617397),
-                                                                endIndent: 20,
-                                                                indent: 20,
-                                                              ),
-                                                            ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            }),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  Scrollbar(
-                                    controller: _scrollController3,
-                                    thickness: 2,
-                                    thumbVisibility: true,
-                                    child: ListView.builder(
-                                      controller: _scrollController3,
-                                      padding: EdgeInsets.zero,
-                                      shrinkWrap: true,
-                                      key: Key(
-                                          'builder2 ${expansionTileIndex2.toString()}'),
-                                      // physics: NeverScrollableScrollPhysics(),
-                                      itemCount: consonants.length,
-                                      itemBuilder: (context, index) {
-                                        return Card(
-                                          margin: EdgeInsets.only(
-                                              bottom: isSplitScreen
-                                                  ? getFullWidgetHeight(
-                                                      height: 14)
-                                                  : getWidgetHeight(height: 14),
-                                              right: getWidgetWidth(width: 5)),
-                                          elevation: 0,
-                                          color: Color(0xFF34425D),
-                                          child: Theme(
-                                            data: ThemeData(
-                                              splashColor: Colors.transparent,
-                                              dividerColor: Colors.transparent,
-                                            ),
-                                            child: Consumer<AuthState>(builder:
-                                                (context, expansionController,
-                                                    _) {
-                                              return ExpansionTile(
-                                                initiallyExpanded:
-                                                    expansionTileIndex2 ==
-                                                        index,
-                                                onExpansionChanged: (expanded) {
-                                                  log("checking");
-                                                  subCategoryTitile = consonants[
-                                                          index]
-                                                      .category!
-                                                      .replaceFirst(
-                                                          'Consonants Sounds: ',
-                                                          '');
-                                                  setState(() {
-                                                    expansionTileIndex2 = index;
-                                                  });
-                                                  if (consonants.length - 2 <=
-                                                      index) {
-                                                    log("function calleddddd");
-                                                    WidgetsBinding.instance
-                                                        .addPostFrameCallback(
-                                                            (_) {
-                                                      _scrollToItem(index);
-                                                    });
-                                                  }
-                                                },
-                                                leading: CircleAvatar(
-                                                  backgroundColor:
-                                                      colorList[index],
-                                                  child: Image.asset(
-                                                    AllAssets.quickLinkPL,
-                                                    scale: kIsWeb
-                                                        ? 3
-                                                        : displayWidth(
-                                                                context) /
-                                                            101.5,
-                                                  ),
-                                                ),
-                                                title: Text(
-                                                  "${consonants[index].category!.replaceFirst('Consonants Sounds: ', '')}",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: kText.scale(14),
-                                                      fontFamily: 'Roboto',
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                iconColor: Colors.white,
-                                                collapsedIconColor:
-                                                    Color(0xFF64748B),
-                                                children: [
-                                                  ListView.separated(
-                                                    separatorBuilder:
-                                                        (context, index) =>
-                                                            Divider(
-                                                      indent: 10,
-                                                      endIndent: 10,
-                                                      color: Color(0xFF617397),
-                                                    ),
-                                                    shrinkWrap: true,
-                                                    physics:
-                                                        NeverScrollableScrollPhysics(),
-                                                    itemCount: consonants[index]
-                                                        .subcategories!
-                                                        .length,
-                                                    padding: EdgeInsets.zero,
-                                                    itemBuilder:
-                                                        (context, subIndex) {
-                                                      return ListTile(
-                                                        title: InkWell(
-                                                          splashColor: Colors
-                                                              .transparent,
-                                                          onTap: (() async {
-                                                            /*if (consonants[index].subcategories![subIndex].link != null) {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) => InAppWebViewPage(
-                                                                              url: consonants[index]
-                                                                                  .subcategories![subIndex]
-                                                                                  .link!,
-                                                                            )));
-                                                              }*/
-                                                            print(
-                                                                "subcateogries text :${importantSounds2[index].subcategories![subIndex].soundsPractice!.first.text}");
-                                                            List<SoundPracticeModel>?
-                                                                soundsPractice =
-                                                                importantSounds2[
-                                                                        index]
-                                                                    .subcategories![
-                                                                        subIndex]
-                                                                    .soundsPractice;
-
-                                                            List<Word>
-                                                                soundPractice =
-                                                                soundsPractice?.map(
-                                                                        (sound) {
-                                                                      print(
-                                                                          "sps is is : ${sound.file}");
-                                                                      print(
-                                                                          "sps is is : ${sound.pronun}");
-                                                                      print(
-                                                                          "sps is is : ${sound.syllabels}");
-                                                                      print(
-                                                                          "sps is is : ${sound.text}");
-                                                                      return Word(
-                                                                        file: sound
-                                                                            .file,
-                                                                        pronun:
-                                                                            sound.pronun,
-                                                                        syllables:
-                                                                            sound.syllabels, // Make sure to use the correct spelling
-                                                                        text: sound
-                                                                            .text,
-                                                                      );
-                                                                    }).toList() ??
-                                                                    [];
-                                                            List<Word> words = await soundsWordsdb
-                                                                .getWordsForSounds(
+                                                                    );
+                                                                  }),
+                                                                  child: Text(
                                                                     consonants[
                                                                             index]
                                                                         .subcategories![
                                                                             subIndex]
                                                                         .name!,
-                                                                    soundPractice);
-                                                            print(
-                                                                "sound practice : $soundPractice");
-                                                            print(
-                                                                "sound practice length: ${soundPractice.length}");
-                                                            sessionName = consonants[
-                                                                    index]
-                                                                .subcategories![
-                                                                    subIndex]
-                                                                .name!;
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        ProfluentSubScreen(
-                                                                  ulr: consonants[
-                                                                          index]
-                                                                      .subcategories![
-                                                                          subIndex]
-                                                                      .ulr!,
-                                                                  title: consonants[
-                                                                          index]
-                                                                      .subcategories![
-                                                                          subIndex]
-                                                                      .name!,
-                                                                  load: consonants[
-                                                                          index]
-                                                                      .subcategories![
-                                                                          subIndex]
-                                                                      .name!,
-                                                                  links: importantSounds2[
-                                                                          index]
-                                                                      .subcategories![
-                                                                          subIndex]
-                                                                      .links!,
-                                                                  soundPractice:
-                                                                      soundPractice,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontFamily:
+                                                                          Keys.lucidaFontFamily,
+                                                                      fontSize:
+                                                                          kText.scale(
+                                                                              14),
+                                                                    ),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            );
-                                                          }),
-                                                          child: Text(
-                                                            consonants[index]
-                                                                .subcategories![
-                                                                    subIndex]
-                                                                .name!,
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontFamily: Keys
-                                                                  .lucidaFontFamily,
-                                                              fontSize: kText
-                                                                  .scale(14),
-                                                            ),
+                                                              );
+                                                            },
                                                           ),
-                                                        ),
+                                                        ],
                                                       );
-                                                    },
+                                                    }),
                                                   ),
-                                                ],
-                                              );
-                                            }),
+                                                );
+                                              },
+                                            ),
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       );
                     }),

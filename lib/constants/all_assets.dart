@@ -148,4 +148,6 @@ class AllAssets {
 
   static const String speakani = 'assets/images/speakani.gif';
   static const String speakBubble = 'assets/images/speakBubbble.gif';
+  static const String playOne = 'assets/images/play_1new.png';
+  static const String playThree = 'assets/images/play_3new.png';
 }

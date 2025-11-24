@@ -64,6 +64,7 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
   late AuthState authStateController;
   late PageController _pageController;
   Timer? _timer;
+  final List<int> customOrder = [0, 4, 2, 1, 3];
   List<Map<String, dynamic>> swipperList = [
     {
       "tileColor": Color(0xFFEAE5FF),
@@ -335,137 +336,121 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                       child: SizedBox(
                         width: displayWidth(context),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             kIsWeb
-                                ? Padding(
-                                    padding: EdgeInsets.only(
-                                      top: getWidgetHeight(height: 20),
-                                    ),
-                                    child: Container(
-                                      height: getWidgetHeight(height: 370),
-                                      width: displayWidth(context),
-                                      alignment: Alignment.center,
-                                      child: PageView.builder(
-                                        controller: _pageController,
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: 1000000, // infinite looping
-                                        itemBuilder: (context, index) {
-                                          int realIndex = index %
-                                              (_processLeaning.length - 1);
-                                          int adjustedIndex = (realIndex < 1)
-                                              ? realIndex
-                                              : realIndex + 1;
+                                ? Align(
+                                    alignment: Alignment.center,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          top: getWidgetHeight(height: 20),
+                                          left: getWidgetWidth(width: 18),
+                                          right: getWidgetWidth(width: 18)),
+                                      child: SizedBox(
+                                        // width: displayWidth(context),
+                                        height: getWidgetHeight(height: 370),
+                                        child: ListView.builder(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: _processLeaning.length - 1,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12),
+                                          itemBuilder: (context, index) {
+                                            int adjustIndex =
+                                                customOrder[index];
+                                            int realIndex = adjustIndex %
+                                                (_processLeaning.length - 1);
+                                            int adjustedIndex = (realIndex < 1)
+                                                ? realIndex
+                                                : realIndex + 1;
 
-                                          return AnimatedBuilder(
-                                            animation: _pageController,
-                                            builder: (context, child) {
-                                              double value = 1.0;
+                                            return InkWell(
+                                              onTap: () {
+                                                if (_processLeaning[
+                                                            adjustedIndex]
+                                                        .underconstruction ==
+                                                    true) {
+                                                  Toast.show(
+                                                    "Work in progress",
+                                                    duration: Toast.lengthShort,
+                                                    gravity: Toast.bottom,
+                                                    backgroundColor:
+                                                        AppColors.white,
+                                                    textStyle: TextStyle(
+                                                        color: AppColors.black),
+                                                    backgroundRadius: 10,
+                                                  );
+                                                  return;
+                                                }
 
-                                              if (_pageController
-                                                  .position.haveDimensions) {
-                                                value = (_pageController.page! -
-                                                        index)
-                                                    .abs();
-                                                value = (1 - (value * 0.25))
-                                                    .clamp(0.8, 1.0);
-                                              }
-
-                                              return Transform.scale(
-                                                scale:
-                                                    value, // wheel effect scaling
-                                                child: child,
-                                              );
-                                            },
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 12),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  if (_processLeaning[
-                                                              adjustedIndex]
-                                                          .underconstruction ==
-                                                      true) {
-                                                    Toast.show(
-                                                      "Work in progress",
-                                                      duration:
-                                                          Toast.lengthShort,
-                                                      gravity: Toast.bottom,
-                                                      backgroundColor:
-                                                          AppColors.white,
-                                                      textStyle: TextStyle(
-                                                          color:
-                                                              AppColors.black),
-                                                      backgroundRadius: 10,
-                                                    );
-                                                    return;
-                                                  }
-
-                                                  if (adjustedIndex == 0) {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ProcessCatScreen(
-                                                          linkCats: _processLeaning[
-                                                                      adjustedIndex]
-                                                                  .subcategories!
-                                                                  .first
-                                                                  .linkCats ??
-                                                              [],
+                                                if (adjustedIndex == 0) {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ProcessCatScreen(
+                                                        linkCats: _processLeaning[
+                                                                    adjustedIndex]
+                                                                .subcategories!
+                                                                .first
+                                                                .linkCats ??
+                                                            [],
+                                                        title: _processLeaning[
+                                                                    adjustedIndex]
+                                                                .subcategories!
+                                                                .first
+                                                                .name ??
+                                                            "",
+                                                      ),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) {
+                                                        return LearningScreen(
+                                                          icon: adjustedIndex ==
+                                                                  2
+                                                              ? AllAssets
+                                                                  .autoInsurance
+                                                              : adjustedIndex ==
+                                                                      3
+                                                                  ? AllAssets
+                                                                      .workersCompensation
+                                                                  : adjustedIndex ==
+                                                                          4
+                                                                      ? AllAssets
+                                                                          .federalInsurance
+                                                                      : AllAssets
+                                                                          .blueCross,
                                                           title: _processLeaning[
                                                                       adjustedIndex]
                                                                   .subcategories!
                                                                   .first
                                                                   .name ??
                                                               "",
-                                                        ),
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) {
-                                                          return LearningScreen(
-                                                            icon: adjustedIndex ==
-                                                                    2
-                                                                ? AllAssets
-                                                                    .autoInsurance
-                                                                : adjustedIndex ==
-                                                                        3
-                                                                    ? AllAssets
-                                                                        .workersCompensation
-                                                                    : adjustedIndex ==
-                                                                            4
-                                                                        ? AllAssets
-                                                                            .federalInsurance
-                                                                        : AllAssets
-                                                                            .blueCross,
-                                                            title: _processLeaning[
-                                                                        adjustedIndex]
-                                                                    .subcategories!
-                                                                    .first
-                                                                    .name ??
-                                                                "",
-                                                            linkCats: _processLeaning[
-                                                                        adjustedIndex]
-                                                                    .subcategories!
-                                                                    .first
-                                                                    .linkCats ??
-                                                                [],
-                                                          );
-                                                        },
-                                                      ),
-                                                    );
-                                                  }
-                                                },
+                                                          linkCats: _processLeaning[
+                                                                      adjustedIndex]
+                                                                  .subcategories!
+                                                                  .first
+                                                                  .linkCats ??
+                                                              [],
+                                                        );
+                                                      },
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 12),
                                                 child: Container(
-                                                  width: kIsWeb
-                                                      ? displayWidth(context) *
-                                                          0.25
-                                                      : displayWidth(context) *
-                                                          0.72,
+                                                  width:
+                                                      displayWidth(context) / 6,
                                                   decoration: BoxDecoration(
                                                     color: swipperList[
                                                             adjustedIndex]
@@ -541,9 +526,9 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          );
-                                        },
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
                                   )

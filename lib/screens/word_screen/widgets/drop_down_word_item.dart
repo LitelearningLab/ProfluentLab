@@ -474,11 +474,15 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).copyWith(dividerColor: Colors.white);
+    final theme = Theme.of(context).copyWith(
+      dividerColor: Colors.white,
+      scaffoldBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      canvasColor: Theme.of(context).canvasColor,
+    );
     final downloadController = Provider.of<AuthState>(context, listen: false);
     final size = MediaQuery.of(context).size;
-    return Theme(
-      data: theme,
+    return Container(
+      color: Color(0xff293750),
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: getWidgetWidth(width: kIsWeb ? 10 : 0),
