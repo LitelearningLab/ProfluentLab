@@ -104,7 +104,6 @@ class followUpscreenState extends State<FollowUpScreen> {
 
     networkSubscription =
         Connectivity().onConnectivityChanged.listen((connectionResult) {
-      print('^^^^^^^^^^^^^^CHECKING CONNECTION');
       checkConnection(connectionResult);
     });
   }
@@ -132,47 +131,31 @@ class followUpscreenState extends State<FollowUpScreen> {
   }
 
   startPractice({required actionType}) async {
-    print("Start practice Tappeddd");
     String userId = await SharedPref.getSavedString('userId');
-    print("userIddd:$userId");
+
     String action = actionType;
-    print("action:${action}");
     String url = baseUrl + startPracticeApi;
-    print("url : $url");
+
     try {
-      print("responseeeeeeee");
       var response = await http.post(Uri.parse(url), body: {
         "userid": userId,
         "practicetype": "Call Flow Practise Report",
         "action": action
       });
-
-      print("response start practice : ${response.body}");
-    } catch (e) {
-      print("error login : $e");
-    }
+    } catch (e) {}
   }
 
   final Connectivity connectivity = Connectivity();
 
   Future<void> initConnectivity() async {
-    print('^^^^^^^^^^^ INIT CONNECTIVITY ^^^^^^^^^^^^^');
     final downloadController = Provider.of<AuthState>(context, listen: false);
     List<ConnectivityResult> result;
     try {
       result = await connectivity.checkConnectivity();
       if (result.contains(ConnectivityResult.none)) {
         downloadController.setIsConnected(isConnected: false);
-        // setState(() {
-        //   isConnected = false;
-        //   // isConnected = false;
-        // });
       } else {
         downloadController.setIsConnected(isConnected: true);
-        // setState(() {
-        //   isConnected = true;
-        //   // isConnected = true;
-        // });
       }
     } catch (e) {
       print('Connection Init Error : $e');
@@ -203,8 +186,7 @@ class followUpscreenState extends State<FollowUpScreen> {
   Future<void> _play(String url, String sentence, int index, context,
       {String? localPath}) async {
     final audioController = Provider.of<AuthState>(context, listen: false);
-    print(
-        '///////////////////////// ENTERED TO PLAY /////////////////////////');
+
     try {
       String? eLocalPath;
       setState(() {
@@ -212,9 +194,7 @@ class followUpscreenState extends State<FollowUpScreen> {
         _currentPlayingIndex = index;
         _isAudioPlayed = true;
       });
-      print(
-          "local path>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-      print("Local Path  : : : ${localPath.toString()}");
+
       await _audioPlayerManager.stop();
       await _audioPlayerManager.play(
         url,
@@ -224,8 +204,6 @@ class followUpscreenState extends State<FollowUpScreen> {
           eLocalPath = val;
         },
       );
-      print(
-          "playing>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
       setState(() {
         _isAudioLoading = false;
@@ -251,10 +229,7 @@ class followUpscreenState extends State<FollowUpScreen> {
           await File(eLocalPath!).delete();
         } catch (e) {}
       }
-    } catch (e) {
-      print(
-          '///////////////////////// PLAYING FAILED $e /////////////////////////');
-    }
+    } catch (e) {}
   }
 
   void _getFollowUps() async {
@@ -273,13 +248,8 @@ class followUpscreenState extends State<FollowUpScreen> {
       // print(element.toJson());
     });
 
-    print("Main : : : ${widget.main}");
-    print("Load : : : ${widget.load}");
-
     // for (Sentence sent in followUps) {
     for (Sentence sent in downloadController.followUps) {
-      print(
-          "<><><>><><><><><><<>><><><><><>< Local PAth : : : ${sent.localPath}");
       if (sent.localPath == null ||
           sent.localPath == 'g!ZS84%8t=QFR' ||
           sent.localPath == 'ERROR') {
@@ -336,8 +306,6 @@ class followUpscreenState extends State<FollowUpScreen> {
         resultBuffer.write(parts[i]);
         if (i == 1 && number % 100 != 0) {
           resultBuffer.write(' and');
-          print("and added>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-          print(resultBuffer.toString());
         }
         if (i < parts.length - 1) {
           resultBuffer.write(' ');
@@ -504,7 +472,6 @@ class followUpscreenState extends State<FollowUpScreen> {
   }
 
   void _showDialog(String word, bool notCatch, BuildContext context) async {
-    print("showdialogue succesfully>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     Get.dialog(Container(
       // color: Color(0xCC000000),
       child: Dialog(
@@ -523,11 +490,8 @@ class followUpscreenState extends State<FollowUpScreen> {
         ),
       ),
     )).then((value) {
-      print("listening succesfully>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-      print(value.toString());
       if (value != null) {
         if (value.isCorrect == "true" || value.isCorrect == "false") {
-          print("getting value succesfully>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
           showDialog(
             context: context,
             builder: (BuildContext buildContext) {
@@ -555,100 +519,11 @@ class followUpscreenState extends State<FollowUpScreen> {
     });
   }
 
-// Future<void> downloadAll(
-
-// ) async {
-//   print('############### ISCONNECTED : $isConnected : : : isAllDownloaded : $isAllDownloaded');
-
-//   if (isConnected && !isAllDownloaded) {
-//     print('<><><>  Download : : : IF CASE');
-//     final downloadController = Provider.of<AuthState>(context, listen: false);
-//     setState(() {
-//       isDownloading = true;
-//     });
-
-//     for (Sentence sentence in followUps) {
-//       SentDatabaseProvider dbb = SentDatabaseProvider.get;
-//       SentencesDatabaseRepository dbRef = SentencesDatabaseRepository(dbb);
-
-//       Directory appDocDir = await getApplicationDocumentsDirectory();
-//       String appDocPath = appDocDir.path;
-
-//       // Define the task
-//       final task = DownloadTask(
-//         url: sentence.file!,
-//         filename: '${sentence.id}.mp3',
-//         directory: widget.load,
-//         baseDirectory: BaseDirectory.applicationDocuments
-//       );
-
-//       // Perform the background download
-//       final result = await FileDownloader().download(task,
-//           onProgress: (progress) => print('Progress: ${progress * 100}%'),
-//           onStatus: (status) => print('Status: $status'));
-
-//       switch (result.status) {
-//         case TaskStatus.complete:
-//           print('Download Complete!');
-
-//           // Move the file to shared storage (e.g., Downloads folder)
-//           final newFilePath = await FileDownloader().moveToSharedStorage(task, SharedStorage.downloads);
-
-//           if (newFilePath == null) {
-//             print('Failed to move file to shared storage');
-//           } else {
-//             print('File moved to: $newFilePath');
-
-//             // Encrypt and store the new file path in the database
-//             String eLocalPath = EncryptData.encryptFile(newFilePath, context);
-
-//             try {
-//               await File(newFilePath).delete(); // Optionally delete the unencrypted file
-//             } catch (e) {
-//               print("Error deleting file: $e");
-//             }
-
-//             await dbRef.setDownloadPath(sentence.id!, eLocalPath);
-//           }
-
-//           break;
-
-//         case TaskStatus.canceled:
-//           print('Download was canceled');
-//           break;
-
-//         case TaskStatus.paused:
-//           print('Download was paused');
-//           break;
-
-//         default:
-//           print('Download not successful');
-//           break;
-//       }
-//     }
-
-//     setState(() {
-//       isDownloading = false;
-//       isAllDownloaded =true ;
-//       // isAllDownloaded = downloadController.isDownloaded!;
-//     });
-//   } else {
-//     print('<><><>  Download : : : ELSE CASE');
-//     Toast.show("No network connection",
-//         duration: Toast.lengthShort,
-//         gravity: Toast.bottom,
-//         backgroundColor: AppColors.white,
-//         textStyle: TextStyle(color: AppColors.black),
-//         backgroundRadius: 10);
-//   }
-// }
-
   @override
   Widget build(BuildContext context) {
     log("${widget.main}");
     final downloadController = Provider.of<AuthState>(context, listen: false);
 
-    print('IS ALL DOWNLOADED : ${downloadController.isAllDownloaded}');
     return Consumer<AuthState>(builder: (context, AuthStateProvider, child) {
       return PopScope(
         onPopInvoked: ((didPop) {
@@ -855,8 +730,6 @@ class followUpscreenState extends State<FollowUpScreen> {
                                                     // if (!_isPlaying)
                                                     InkWell(
                                                       onTap: () async {
-                                                        print(
-                                                            "playyyyyyyyyyyyyyyyyyyyyyyyy");
                                                         startPractice(
                                                             actionType:
                                                                 'listening');
@@ -893,53 +766,15 @@ class followUpscreenState extends State<FollowUpScreen> {
                                                                   .followUps[
                                                                       index]
                                                                   .file;
-                                                          print(
-                                                              "sentenceScenerioFileUrl:${downloadController.followUps[index].file}");
+
                                                           fileUrl?.add(
                                                               sentenceFileUrl!);
 
-                                                          /* FirebaseFirestore firestore = FirebaseFirestore.instance;
-                                                          String userId = await SharedPref.getSavedString('userId');
-                                                          DocumentReference wordFileUrlDocument =
-                                                              firestore.collection('proFluentEnglishReport').doc(userId);
-                                                        
-                                                          await wordFileUrlDocument.update({
-                                                            'SentencesTapped': FieldValue.arrayUnion(
-                                                                [downloadController.followUps[index].file]),
-                                                          }).then((_) {
-                                                            print(
-                                                                'Link added to Firestore: ${downloadController.followUps[index].file}');
-                                                          }).catchError((e) {
-                                                            print('Error updating Firestore: $e');
-                                                          });*/
-                                                          print(
-                                                              "fileUrl:${downloadController.followUps[index].file}");
-                                                          print(
-                                                              "sdhhvgfrhngkihri");
-                                                          log(downloadController
-                                                                  .followUps[
-                                                                      index]
-                                                                  .localPath ??
-                                                              "no local path exist");
-                                                          log("${downloadController.followUps[index].file.toString()}");
-                                                          log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                                                          log("${downloadController.followUps[index].text.toString()}");
                                                           downloadController
                                                               .followUps
                                                               .forEach(
-                                                                  (element) {
-                                                            log("${element.text}");
-                                                          });
+                                                                  (element) {});
                                                         }
-
-                                                        // _play(followUps[index].file!, convertNumbersToText(convertSpecialChars(followUps[index].text ?? "")), index,
-                                                        //     localPath: followUps[index].localPath);
-                                                        // log("${followUps[index].file.toString()}");
-                                                        // log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                                                        // log("${followUps[index].text.toString()}");
-                                                        // followUps.forEach((element) {
-                                                        //   log("${element.text}");
-                                                        // });
                                                       },
                                                       child: _isAudioPlayed ==
                                                                   false &&
@@ -961,31 +796,25 @@ class followUpscreenState extends State<FollowUpScreen> {
                                                                   _currentPlayingIndex ==
                                                                       index
                                                               ? SizedBox(
-                                                                  height: isSplitScreen
-                                                                      ? getFullWidgetHeight(
-                                                                          height:
-                                                                              30)
-                                                                      : getWidgetHeight(
-                                                                          height:
-                                                                              30),
-                                                                  width:
-                                                                      getWidgetWidth(
+                                                                  width: kIsWeb
+                                                                      ? getWidgetWidth(
+                                                                          width:
+                                                                              4)
+                                                                      : getWidgetWidth(
                                                                           width:
                                                                               30),
+                                                                  height:
+                                                                      getWidgetHeight(
+                                                                          height:
+                                                                              30),
                                                                   child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .all(
-                                                                            5.0),
-                                                                    child:
-                                                                        CircularProgressIndicator(
-                                                                      color: Color(
-                                                                          0xff6C63FE),
-                                                                      strokeWidth:
-                                                                          2.5,
-                                                                    ),
-                                                                  ))
+                                                                      CircularProgressIndicator(
+                                                                    color: Color(
+                                                                        0xff6C63FE),
+                                                                    strokeWidth:
+                                                                        2.5,
+                                                                  ),
+                                                                )
                                                               : Icon(
                                                                   _isPlaying &&
                                                                           _currentPlayingIndex ==
@@ -1025,8 +854,6 @@ class followUpscreenState extends State<FollowUpScreen> {
                                                             width: 17)),
                                                     InkWell(
                                                       onTap: () async {
-                                                        print(
-                                                            "miccccccccccccccccccccccccccccccc");
                                                         startPractice(
                                                             actionType:
                                                                 'practice');
@@ -1050,8 +877,7 @@ class followUpscreenState extends State<FollowUpScreen> {
                                                                 .followUps[
                                                                     index]
                                                                 .file;
-                                                        print(
-                                                            "sentenceScenerioFileUrl:${downloadController.followUps[index].file}");
+
                                                         fileUrl?.add(
                                                             sentenceFileUrl!);
 
@@ -1072,25 +898,17 @@ class followUpscreenState extends State<FollowUpScreen> {
 
                                                         await wordFileUrlDocument
                                                             .update({
-                                                          'SentencesTapped':
-                                                              FieldValue
-                                                                  .arrayUnion([
-                                                            downloadController
-                                                                .followUps[
-                                                                    index]
-                                                                .file
-                                                          ]),
-                                                        }).then((_) {
-                                                          print(
-                                                              'Link added to Firestore: ${downloadController.followUps[index].file}');
-                                                        }).catchError((e) {
-                                                          print(
-                                                              'Error updating Firestore: $e');
-                                                        });
-                                                        print(
-                                                            "fileUrl:${downloadController.followUps[index].file}");
-                                                        print(
-                                                            "sdhhvgfrhngkihri");
+                                                              'SentencesTapped':
+                                                                  FieldValue
+                                                                      .arrayUnion([
+                                                                downloadController
+                                                                    .followUps[
+                                                                        index]
+                                                                    .file
+                                                              ]),
+                                                            })
+                                                            .then((_) {})
+                                                            .catchError((e) {});
                                                       },
                                                       child: Icon(
                                                         Icons.mic,

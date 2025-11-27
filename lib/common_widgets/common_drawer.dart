@@ -9,11 +9,9 @@ import 'package:provider/provider.dart';
 
 import '../constants/keys.dart';
 import '../screens/profile/profile_screen.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../screens/webview/webview_screen.dart';
-import '../utils/bottom_navigation.dart';
 
 class CommonDrawer extends StatefulWidget {
   CommonDrawer({Key? key}) : super(key: key);
@@ -40,7 +38,7 @@ class _CommonDrawerState extends State<CommonDrawer> {
   getMenuLinks() async {
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
         .collection('menuLinks')
-        .doc('GKgZsIkbxXP5QIYbmchd') // specify the document ID
+        .doc('GKgZsIkbxXP5QIYbmchd')
         .get();
 
     aboutLiteLearningLink = documentSnapshot.get('aboutLiteLearningLab');
@@ -111,8 +109,6 @@ class _CommonDrawerState extends State<CommonDrawer> {
                       (Route<dynamic> route) =>
                           false, // Remove all previous routes
                     );
-
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
                   },
                   style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
                       backgroundColor:

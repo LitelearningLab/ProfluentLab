@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:litelearninglab/common_widgets/spacings.dart';
@@ -61,7 +62,7 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
     },
     {
       'tileColor': Color(0xFFDC6379),
-      'title': 'Auto\nInsurance',
+      'title': kIsWeb ? 'Auto Insurance' : 'Auto\nInsurance',
       'image': AllAssets.arAutoInsure,
       'ellipse': AllAssets.arpinkEllipse
     },

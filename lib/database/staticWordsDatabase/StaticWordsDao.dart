@@ -1,6 +1,5 @@
 import 'package:litelearninglab/database/staticWordsDatabase/StaticWordsDataModel.dart';
 import 'package:litelearninglab/database/staticWordsDatabase/StaticWordsDatebaseProvider.dart';
-import 'package:sqflite/sqflite.dart';
 
 class StaticTextDao {
   final StaticDatabaseProvider _staticDatabaseProvider;

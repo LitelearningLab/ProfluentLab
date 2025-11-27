@@ -107,7 +107,7 @@ class _WordMenuState extends State<WordMenu> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "IPA",
+                    "PRONUNCIATION",
                     style: TextStyle(
                         color: Color(0xFF939393),
                         fontSize: 12,
@@ -115,46 +115,20 @@ class _WordMenuState extends State<WordMenu> {
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0),
                   ),
-                  // SPH(5),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  /* RichText(
-                    textAlign: TextAlign.justify,
-                    text: TextSpan(children: <TextSpan>[
-                      TextSpan(
-                        text: widget.syllables.split("(")[0],
-                        style: const TextStyle(color: Colors.green, fontSize: 35),
-                      ),
-                      TextSpan(
-                        text: widget.syllables.split("(")[1].split(")")[0],
-                        style: const TextStyle(color: Colors.red, fontSize: 35),
-                      ),
-                      TextSpan(
-                        text: widget.syllables.split("(")[1].split(")")[1],
-                        style: const TextStyle(color: Colors.green, fontSize: 35),
-                      ),
-                    ]),
-                  ),*/
-                  RichText(
-                    textAlign: TextAlign.justify,
-                    text: TextSpan(
-                      children: _buildTextSpans(widget.syllables),
+                  SPH(5),
+                  FittedBox(
+                    child: Text(
+                      widget.pronun ?? "",
+                      style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: 20,
+                          fontFamily: Keys.fontFamily),
                     ),
-                  ),
-                  /*    Text(
-                    widget.syllables,
-                    style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: Keys.lucidaFontFamily),
-                  )*/
+                  )
                 ],
               ),
             ),
           ),
-          // SPH(10),
           SizedBox(
             height: 10,
           ),
@@ -163,7 +137,6 @@ class _WordMenuState extends State<WordMenu> {
             padding: const EdgeInsets.only(left: 10),
             child: ListTile(
               trailing: Container(
-                // height: displayHeight(context)/20.3,
                 width: 120,
                 child: widget.syllables.isEmpty
                     ? null
@@ -235,7 +208,7 @@ class _WordMenuState extends State<WordMenu> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "PRONUNCIATION",
+                    "IPA",
                     style: TextStyle(
                         color: Color(0xFF939393),
                         fontSize: 12,
@@ -243,16 +216,15 @@ class _WordMenuState extends State<WordMenu> {
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0),
                   ),
-                  SPH(5),
-                  FittedBox(
-                    child: Text(
-                      widget.pronun ?? "",
-                      style: TextStyle(
-                          color: AppColors.white,
-                          fontSize: 20,
-                          fontFamily: Keys.fontFamily),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  RichText(
+                    textAlign: TextAlign.justify,
+                    text: TextSpan(
+                      children: _buildTextSpans(widget.syllables),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

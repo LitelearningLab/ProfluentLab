@@ -1,7 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'StaticWordsDao.dart';
 import 'StaticWordsDataModel.dart';
 
 class StaticDatabaseProvider {

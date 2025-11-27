@@ -84,27 +84,21 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
 
   Future<void> _checkFirstTimeUser() async {
     _isLoading = true;
-    print("check first time user function calleddsffef");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? isFirstTime = prefs.getBool('isFirstTimeUserDashboard') ?? true;
-    print("isFirtTimefee:$isFirstTime");
     if (!isFirstTime) {
-      print("sdjgdvdevij");
       setState(() {
         isFirstTimeUserDashboard = false;
-        print("isFirstTimeUserDashboard:${isFirstTimeUserDashboard}");
       });
     }
     _isLoading = false;
   }
 
   Future<void> _setFirstTimeUser() async {
-    print("set First Time User Functicfvdvvon called");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isFirstTimeUserDashboard', false);
     setState(() {
       isFirstTimeUserDashboard = false;
-      print("isFirstTimeUserDashboard updated: $isFirstTimeUserDashboard");
     });
   }
 
@@ -113,9 +107,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
     super.initState();
     user = Provider.of<AuthState>(context, listen: false);
 
-    print("blackkk screenn");
     getAppUser();
-    print("grey screenn");
     //_checkFirstTimeUser();
     /* WidgetsBinding.instance!.addPostFrameCallback((_) {
       Future.delayed(const Duration(seconds: 3), () {
@@ -142,7 +134,6 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
   }
 
   refresh() {
-    print("dkd di jdi diddhduh");
     user = Provider.of<AuthState>(context, listen: false);
     _getWords();
   }
@@ -242,7 +233,6 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
   }
 
   _getWords() async {
-    print("getWords Calleddd");
     _isLoading = true;
     setState(() {});
     _categories = [];
@@ -465,18 +455,12 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                                         var hiveBox =
                                                             await Hive.openBox(
                                                                 'lastAccess');
-                                                        print(
-                                                            "last access content : $lastAccessContent");
                                                         if (lastAccessContent ==
                                                             'FollowUpScreen') {
                                                           List followupString =
                                                               await prefs.getStringList(
                                                                       'FollowUpScreen') ??
                                                                   [];
-                                                          print(
-                                                              "follow up String : $followupString");
-                                                          print(
-                                                              "last search content FollowUpScreen");
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
@@ -589,8 +573,6 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                                               await prefs.getStringList(
                                                                       'CallFlowCatScreen') ??
                                                                   [];
-                                                          print(
-                                                              "process cat screen : $CallFlowCatScreenString");
                                                           // Navigator.push(
                                                           //     context,
                                                           //     MaterialPageRoute(
@@ -611,8 +593,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                                               await prefs.getStringList(
                                                                       'InAppWebViewPage') ??
                                                                   [];
-                                                          print(
-                                                              "InAppWebViewPage screen : $inAppWebViewPageString");
+
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
@@ -825,8 +806,6 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                                 builder: (context) =>
                                                     BottomNavigation()));
                                         //Navigator.push(context, MaterialPageRoute(builder: (context) => NewProcessLearningScreen(iconKey: true)));
-                                        print(
-                                            "_isProcessLearningFromDScreen:${_isProcessLearningFromDScreen}");
                                       },
                                       backgroundImage: AllAssets.process,
                                       menuImage: AllAssets.processLearning,
@@ -889,7 +868,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                     FirstRowMenu(
                                       onTap: () async {
                                         mianCategoryTitile = "Soft Skills";
-                                        print("dhndijhdbd dg");
+
                                         SharedPreferences prefs =
                                             await SharedPreferences
                                                 .getInstance();
@@ -940,7 +919,6 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                   InkWell(
                                     splashColor: Colors.transparent,
                                     onTap: () async {
-                                      print("PF CLICKED");
                                       mianCategoryTitile = "Pronunciation Lab";
                                       SharedPreferences prefs =
                                           await SharedPreferences.getInstance();
@@ -992,11 +970,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                     splashColor: Colors.transparent,
                                     onTap: () async {
                                       mianCategoryTitile = "Denial Management";
-                                      print("DM CLICKED");
-                                      print(_processLeaning[1]
-                                              .subcategories![2]
-                                              .linkCats ??
-                                          []);
+
                                       SharedPreferences prefs =
                                           await SharedPreferences.getInstance();
                                       await prefs.setString(

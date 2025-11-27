@@ -295,7 +295,7 @@ class _ProfluentEnglishModifiedScreenState
                             children: [
                               Container(
                                 height: kIsWeb
-                                    ? 250
+                                    ? 210
                                     : isSplitScreen
                                         ? getFullWidgetHeight(height: 142)
                                         : getWidgetHeight(height: 142),
@@ -306,11 +306,14 @@ class _ProfluentEnglishModifiedScreenState
                                   scrollDirection: Axis.horizontal,
                                   children: [
                                     PETopCategoriesCard(
-                                      height: isSplitScreen
-                                          ? getFullWidgetHeight(height: 88.28)
-                                          : getWidgetHeight(height: 88.28),
+                                      height: kIsWeb
+                                          ? getWidgetHeight(height: 140)
+                                          : isSplitScreen
+                                              ? getFullWidgetHeight(
+                                                  height: 88.28)
+                                              : getWidgetHeight(height: 88.28),
                                       width: kIsWeb
-                                          ? 100
+                                          ? getWidgetWidth(width: 30)
                                           : getWidgetWidth(width: 96.11),
                                       title: 'Pronunciation Lab',
                                       imageUrl: AllAssets.pePl,
@@ -363,10 +366,15 @@ class _ProfluentEnglishModifiedScreenState
                                           : getWidgetWidth(width: 14),
                                     ),
                                     PETopCategoriesCard(
-                                      height: isSplitScreen
-                                          ? getFullWidgetHeight(height: 88.47)
-                                          : getWidgetHeight(height: 88.47),
-                                      width: getWidgetWidth(width: 103.76),
+                                      height: kIsWeb
+                                          ? getWidgetHeight(height: 140)
+                                          : isSplitScreen
+                                              ? getFullWidgetHeight(
+                                                  height: 88.47)
+                                              : getWidgetHeight(height: 88.47),
+                                      width: kIsWeb
+                                          ? getWidgetWidth(width: 30)
+                                          : getWidgetWidth(width: 103.76),
                                       title: 'Sentence Lab',
                                       imageUrl: AllAssets.peScl,
                                       onTap: () async {
@@ -418,10 +426,15 @@ class _ProfluentEnglishModifiedScreenState
                                           : getWidgetWidth(width: 14),
                                     ),
                                     PETopCategoriesCard(
-                                      height: isSplitScreen
-                                          ? getFullWidgetHeight(height: 88.65)
-                                          : getWidgetHeight(height: 88.65),
-                                      width: getWidgetWidth(width: 106.03),
+                                      height: kIsWeb
+                                          ? getWidgetHeight(height: 140)
+                                          : isSplitScreen
+                                              ? getFullWidgetHeight(
+                                                  height: 88.65)
+                                              : getWidgetHeight(height: 88.65),
+                                      width: kIsWeb
+                                          ? getWidgetWidth(width: 30)
+                                          : getWidgetWidth(width: 106.03),
                                       title: 'Call Flow Lab',
                                       imageUrl: AllAssets.peCfpl,
                                       onTap: () async {
@@ -473,10 +486,14 @@ class _ProfluentEnglishModifiedScreenState
                                           : getWidgetWidth(width: 14),
                                     ),
                                     PETopCategoriesCard(
-                                      height: isSplitScreen
-                                          ? getFullWidgetHeight(height: 88)
-                                          : getWidgetHeight(height: 88),
-                                      width: getWidgetWidth(width: 130.04),
+                                      height: kIsWeb
+                                          ? getWidgetHeight(height: 140)
+                                          : isSplitScreen
+                                              ? getFullWidgetHeight(height: 88)
+                                              : getWidgetHeight(height: 88),
+                                      width: kIsWeb
+                                          ? getWidgetWidth(width: 30)
+                                          : getWidgetWidth(width: 130.04),
                                       title: 'Grammer Lab',
                                       imageUrl: AllAssets.peGl,
                                       onTap: () async {
@@ -563,7 +580,9 @@ class _ProfluentEnglishModifiedScreenState
                                           //height: size.height * 0.054,
                                           width: displayWidth(context) * 0.5,
                                           child: Text(
-                                            'Fast Track\nPronunciation For AR',
+                                            kIsWeb
+                                                ? 'Fast Track Pronunciation For AR'
+                                                : 'Fast Track\nPronunciation For AR',
                                             style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: kText.scale(17),

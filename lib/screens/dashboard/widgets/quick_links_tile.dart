@@ -27,7 +27,9 @@ class QuickLinksTile extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
-              height: getWidgetHeight(height: 42),
+              height: kIsWeb
+                  ? getWidgetHeight(height: 50)
+                  : getWidgetHeight(height: 42),
               width: kIsWeb
                   ? getWidgetWidth(width: 10)
                   : getWidgetWidth(width: 42),

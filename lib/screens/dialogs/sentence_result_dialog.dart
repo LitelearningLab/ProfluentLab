@@ -35,14 +35,11 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
 
   @override
   void initState() {
-    print("report statee calleddddd");
     super.initState();
     endPractice(practiceType: widget.practiceType);
     if (widget.score >= 90) {
-      print("scoreeeeeee:${widget.score}");
       resultText = "WELL DONE!";
     } else {
-      print(widget.score);
       resultText = "Need More Practice!";
     }
   }
@@ -98,24 +95,30 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 10), vertical: getWidgetHeight(height: 5)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: getWidgetWidth(width: 10),
+                      vertical: getWidgetHeight(height: 5)),
                   decoration: new BoxDecoration(
                     color: Color(0xff333a40),
                     // color: Color(0xff333a40),
                     borderRadius: new BorderRadius.only(
-                        topLeft: const Radius.circular(10.0), topRight: const Radius.circular(10.0)),
+                        topLeft: const Radius.circular(10.0),
+                        topRight: const Radius.circular(10.0)),
                   ),
                   child: Align(
                     child: Text("Pronunciation Analysis Report",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: kText.scale(16), fontFamily: Keys.fontFamily, color: Colors.white)),
+                        style: TextStyle(
+                            fontSize: kText.scale(16),
+                            fontFamily: Keys.fontFamily,
+                            color: Colors.white)),
                     alignment: Alignment.center,
                   ),
                 ),
                 SizedBox(height: getWidgetWidth(width: 15)),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 15)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: getWidgetWidth(width: 15)),
                   child: Column(
                     children: [
                       Row(
@@ -125,14 +128,18 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
                             width: getWidgetWidth(width: 85),
                             // width: displayWidth(context) * 0.28,
                             padding: EdgeInsets.symmetric(
-                                horizontal: getWidgetWidth(width: 5), vertical: getWidgetHeight(height: 4)),
+                                horizontal: getWidgetWidth(width: 5),
+                                vertical: getWidgetHeight(height: 4)),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.circular(10) // use instead of BorderRadius.all(Radius.circular(20))
+                                borderRadius: BorderRadius.circular(
+                                    10) // use instead of BorderRadius.all(Radius.circular(20))
                                 ),
-                            child: Text("SCORE:" + widget.score.toStringAsFixed(0) + "%",
+                            child: Text(
+                                "SCORE:" +
+                                    widget.score.toStringAsFixed(0) +
+                                    "%",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: kText.scale(10),
@@ -149,8 +156,8 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
                             ),
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.circular(10) // use instead of BorderRadius.all(Radius.circular(20))
+                                borderRadius: BorderRadius.circular(
+                                    10) // use instead of BorderRadius.all(Radius.circular(20))
                                 ),
                             child: Text(resultText,
                                 textAlign: TextAlign.center,
@@ -163,7 +170,8 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
                         ],
                       ),
                       SizedBox(
-                        height: getWidgetHeight(height: getWidgetWidth(width: 15)),
+                        height:
+                            getWidgetHeight(height: getWidgetWidth(width: 15)),
                       ),
                       Container(
                           height: 120,
@@ -181,13 +189,15 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
                                 border: Border.all(
                                   color: Colors.green[500]!,
                                 ),
-                                borderRadius:
-                                    BorderRadius.circular(10) // use instead of BorderRadius.all(Radius.circular(20))
+                                borderRadius: BorderRadius.circular(
+                                    10) // use instead of BorderRadius.all(Radius.circular(20))
                                 ),
                             child: Text("CORRECT",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: kText.scale(10), fontFamily: Keys.fontFamily, color: Colors.green[500])),
+                                    fontSize: kText.scale(10),
+                                    fontFamily: Keys.fontFamily,
+                                    color: Colors.green[500])),
                           ),
                           Container(
                             height: getWidgetHeight(height: 25),
@@ -195,13 +205,15 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.circular(10) // use instead of BorderRadius.all(Radius.circular(20))
+                                borderRadius: BorderRadius.circular(
+                                    10) // use instead of BorderRadius.all(Radius.circular(20))
                                 ),
                             child: Text("WRONG/MISSED",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: kText.scale(10), fontFamily: Keys.fontFamily, color: Colors.red)),
+                                    fontSize: kText.scale(10),
+                                    fontFamily: Keys.fontFamily,
+                                    color: Colors.red)),
                           ),
                         ],
                       ),
@@ -210,8 +222,10 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
                       ),
                       Text(
                         "Note: This result only indicates intelligibility and does not confirm the accuracy of pronunciation.",
-                        style:
-                            TextStyle(color: AppColors.white, fontSize: kText.scale(10), fontFamily: Keys.fontFamily),
+                        style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: kText.scale(10),
+                            fontFamily: Keys.fontFamily),
                       )
                     ],
                   ),
@@ -235,24 +249,30 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 10), vertical: getWidgetHeight(height: 5)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: getWidgetWidth(width: 10),
+                      vertical: getWidgetHeight(height: 5)),
                   decoration: new BoxDecoration(
                     color: Color(0xFF34425D),
                     // color: Color(0xff333a40),
                     borderRadius: new BorderRadius.only(
-                        topLeft: const Radius.circular(10.0), topRight: const Radius.circular(10.0)),
+                        topLeft: const Radius.circular(10.0),
+                        topRight: const Radius.circular(10.0)),
                   ),
                   child: Align(
                     child: Text("Pronunciation Analysis Report",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: kText.scale(20), fontFamily: Keys.fontFamily, color: Colors.white)),
+                        style: TextStyle(
+                            fontSize: kText.scale(20),
+                            fontFamily: Keys.fontFamily,
+                            color: Colors.white)),
                     alignment: Alignment.center,
                   ),
                 ),
                 SizedBox(height: 20),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: getWidgetWidth(width: 15)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: getWidgetWidth(width: 15)),
                   child: Column(
                     children: [
                       Row(
@@ -262,14 +282,18 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
                             width: getWidgetWidth(width: 85),
                             // width: displayWidth(context) * 0.28,
                             padding: EdgeInsets.symmetric(
-                                horizontal: getWidgetWidth(width: 5), vertical: getWidgetHeight(height: 7)),
+                                horizontal: getWidgetWidth(width: 5),
+                                vertical: getWidgetHeight(height: 7)),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.circular(10) // use instead of BorderRadius.all(Radius.circular(20))
+                                borderRadius: BorderRadius.circular(
+                                    10) // use instead of BorderRadius.all(Radius.circular(20))
                                 ),
-                            child: Text("SCORE:" + widget.score.toStringAsFixed(0) + "%",
+                            child: Text(
+                                "SCORE:" +
+                                    widget.score.toStringAsFixed(0) +
+                                    "%",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: kText.scale(12),
@@ -286,8 +310,8 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
                             ),
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.circular(10) // use instead of BorderRadius.all(Radius.circular(20))
+                                borderRadius: BorderRadius.circular(
+                                    10) // use instead of BorderRadius.all(Radius.circular(20))
                                 ),
                             child: Text(resultText,
                                 textAlign: TextAlign.center,
@@ -320,13 +344,15 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
                                 border: Border.all(
                                   color: Colors.green[500]!,
                                 ),
-                                borderRadius:
-                                    BorderRadius.circular(10) // use instead of BorderRadius.all(Radius.circular(20))
+                                borderRadius: BorderRadius.circular(
+                                    10) // use instead of BorderRadius.all(Radius.circular(20))
                                 ),
                             child: Text("CORRECT",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: kText.scale(12), fontFamily: Keys.fontFamily, color: Colors.green[500])),
+                                    fontSize: kText.scale(12),
+                                    fontFamily: Keys.fontFamily,
+                                    color: Colors.green[500])),
                           ),
                           Container(
                             height: getWidgetHeight(height: 30),
@@ -334,13 +360,15 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.circular(10) // use instead of BorderRadius.all(Radius.circular(20))
+                                borderRadius: BorderRadius.circular(
+                                    10) // use instead of BorderRadius.all(Radius.circular(20))
                                 ),
                             child: Text("WRONG/MISSED",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: kText.scale(12), fontFamily: Keys.fontFamily, color: Colors.red)),
+                                    fontSize: kText.scale(12),
+                                    fontFamily: Keys.fontFamily,
+                                    color: Colors.red)),
                           ),
                         ],
                       ),
@@ -349,8 +377,10 @@ class _SentenceResultDialogState extends State<SentenceResultDialog> {
                       ),
                       Text(
                         "Note: This result only indicates intelligibility and does not confirm the accuracy of pronunciation.",
-                        style:
-                            TextStyle(color: AppColors.white, fontSize: kText.scale(10), fontFamily: Keys.fontFamily),
+                        style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: kText.scale(10),
+                            fontFamily: Keys.fontFamily),
                       )
                     ],
                   ),

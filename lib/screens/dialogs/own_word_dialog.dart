@@ -113,23 +113,18 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
 
     flutterTts.setStartHandler(() {
       setState(() {
-        print("Playing>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         ttsState = TtsState.playing;
-        print("playing native>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        print(ttsState.toString());
       });
     });
 
     flutterTts.setCompletionHandler(() {
       setState(() {
-        print("Complete");
         ttsState = TtsState.stopped;
       });
     });
 
     flutterTts.setCancelHandler(() {
       setState(() {
-        print("Cancel");
         ttsState = TtsState.stopped;
       });
     });
@@ -137,14 +132,12 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
     if (kIsWeb || Platform.isIOS) {
       flutterTts.setPauseHandler(() {
         setState(() {
-          print("Paused");
           ttsState = TtsState.paused;
         });
       });
 
       flutterTts.setContinueHandler(() {
         setState(() {
-          print("Continued");
           ttsState = TtsState.continued;
         });
       });
@@ -152,7 +145,6 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
 
     flutterTts.setErrorHandler((msg) {
       setState(() {
-        print("error: $msg");
         ttsState = TtsState.stopped;
       });
     });
@@ -161,9 +153,7 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
   Future _getEngines() async {
     var engines = await flutterTts.getEngines;
     if (engines != null) {
-      for (dynamic engine in engines) {
-        print(engine);
-      }
+      for (dynamic engine in engines) {}
     }
   }
 
@@ -470,8 +460,6 @@ class _OwnWordDialogState extends State<OwnWordDialog> {
         resultBuffer.write(parts[i]);
         if (i == 1 && number % 100 != 0) {
           resultBuffer.write(' and');
-          print("and added>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-          print(resultBuffer.toString());
         }
         if (i < parts.length - 1) {
           resultBuffer.write(' ');

@@ -4,9 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:litelearninglab/constants/app_colors.dart';
 import 'package:litelearninglab/hiveDb/hiveDb.dart';
 import 'package:litelearninglab/hiveDb/new_interactive_simulator_hive_model.dart';
 import 'package:litelearninglab/hiveDb/new_interactive_simulator_hivedb.dart';
@@ -17,7 +15,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'config/app_config.dart';
-import 'database/databaseProvider.dart';
 import 'database/staticWordsDatabase/StaticWordsDatebaseProvider.dart';
 import 'main.dart';
 

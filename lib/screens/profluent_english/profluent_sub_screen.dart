@@ -32,14 +32,14 @@ import '../../utils/sizes_helpers.dart';
 import '../dialogs/speech_analytics_dialog.dart';
 
 class ProfluentSubScreen extends StatefulWidget {
-  ProfluentSubScreen(
-      {Key? key,
-      required this.links,
-      required this.load,
-      required this.title,
-      this.ulr,
-      this.soundPractice})
-      : super(key: key);
+  ProfluentSubScreen({
+    Key? key,
+    required this.links,
+    required this.load,
+    required this.title,
+    this.ulr,
+    this.soundPractice,
+  }) : super(key: key);
   final ProfluentSubLink links;
   final String load;
   final String title;
@@ -84,7 +84,8 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
 
     _initializeVideoPlayerFuture = _initVideoPlayer(url: widget.links.v1!);
     print(
-        'intializeVideoPlayerFuture:${_initializeVideoPlayerFuture}'); //video link
+      'intializeVideoPlayerFuture:${_initializeVideoPlayerFuture}',
+    ); //video link
   }
 
   refreshScreen(int no) {
@@ -156,8 +157,9 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
       soundPractice = wordsList;
     } else {
       wordsList = await dbRef.getWords();
-      soundPractice =
-          wordsList.where((element) => element.cat == widget.load).toList();
+      soundPractice = wordsList
+          .where((element) => element.cat == widget.load)
+          .toList();
     }
     print("printing the length of the sound practice ${soundPractice.length}");
 
@@ -166,10 +168,14 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
 
   String formatDuration(Duration duration) {
     var remaining = duration - _controller.value.position;
-    String minutes =
-        remaining.inMinutes.remainder(60).toString().padLeft(2, '0');
-    String seconds =
-        remaining.inSeconds.remainder(60).toString().padLeft(2, '0');
+    String minutes = remaining.inMinutes
+        .remainder(60)
+        .toString()
+        .padLeft(2, '0');
+    String seconds = remaining.inSeconds
+        .remainder(60)
+        .toString()
+        .padLeft(2, '0');
     return '$minutes:$seconds';
   }
 
@@ -224,12 +230,12 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
         url = index == 0
             ? widget.links.v1!
             : index == 1
-                ? widget.links.v2!
-                : index == 2
-                    ? widget.links.v3!
-                    : index == 3
-                        ? widget.links.v4!
-                        : widget.links.v5!;
+            ? widget.links.v2!
+            : index == 2
+            ? widget.links.v3!
+            : index == 3
+            ? widget.links.v4!
+            : widget.links.v5!;
         print("🔗 Selected URL: $url");
       } else if (index == 5) {
         print("📘 Index = 5 — navigating to WordScreenProfluentEnglish");
@@ -345,8 +351,9 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
     Get.dialog(
       Container(
         child: Dialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25.0),
+          ),
           child: SpeechAnalyticsDialog(
             true,
             isShowDidNotCatch: notCatch,
@@ -382,22 +389,25 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
     Get.dialog(
       Container(
         child: Dialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25.0),
+          ),
           child: ListTile(
             title: Text(
               "Pronunciation Analysis Result",
               style: TextStyle(
-                  color: Color(0xFF6C63FF),
-                  fontSize: kText.scale(13),
-                  fontFamily: Keys.fontFamily),
+                color: Color(0xFF6C63FF),
+                fontSize: kText.scale(13),
+                fontFamily: Keys.fontFamily,
+              ),
             ),
             subtitle: Text(
               "Note: This result only indicates intelligibility and does not confirm the accuracy of pronunciation.",
               style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 10,
-                  fontFamily: Keys.fontFamily),
+                color: AppColors.white,
+                fontSize: 10,
+                fontFamily: Keys.fontFamily,
+              ),
             ),
             trailing: Icon(
               _isCorrect ? Icons.check_circle : Icons.cancel,
@@ -432,7 +442,8 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                  child: CircularProgressIndicator(color: Colors.white));
+                child: CircularProgressIndicator(color: Colors.white),
+              );
             } else if (snapshot.connectionState == ConnectionState.done) {
               return displayWidth(context) > 1000
                   ? Center(
@@ -447,108 +458,127 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                               Container(
                                 padding: EdgeInsets.all(20),
                                 margin: EdgeInsets.symmetric(
-                                    horizontal: 80, vertical: 40),
+                                  horizontal: 80,
+                                  vertical: 40,
+                                ),
                                 decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.3),
-                                        offset: const Offset(0, 4),
-                                        blurRadius: 10,
-                                      ),
-                                    ],
-                                    color: Color(0xFF3B465A),
-                                    borderRadius: BorderRadius.circular(10)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.3),
+                                      offset: const Offset(0, 4),
+                                      blurRadius: 10,
+                                    ),
+                                  ],
+                                  color: Color(0xFF3B465A),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                                 child: Row(
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.only(
-                                          left: 40,
-                                          right: 10,
-                                          top: 20,
-                                          bottom: 20),
+                                        left: 40,
+                                        right: 10,
+                                        top: 20,
+                                        bottom: 20,
+                                      ),
                                       child: SizedBox(
                                         // color: Colors.yellow,
                                         width: kWidth / 3,
                                         height: kWidth / 3.5,
                                         child: _isPlaying == false
                                             ? _hasInitError
-                                                ? Center(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Icon(Icons.error,
+                                                  ? Center(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.error,
                                                             color: Colors.white,
-                                                            size: 48),
-                                                        SizedBox(height: 16),
-                                                        Text(
+                                                            size: 48,
+                                                          ),
+                                                          SizedBox(height: 16),
+                                                          Text(
                                                             "Video failed to load",
                                                             style: TextStyle(
-                                                                color: Colors
-                                                                    .white)),
-                                                        ElevatedButton(
-                                                          onPressed: () async {
-                                                            try {
-                                                              // Forcefully dispose current controllers before retrying
-                                                              await _controller
-                                                                  .pause();
-                                                              await _controller
-                                                                  .dispose();
-                                                              // _chewieController.dispose();
-                                                            } catch (e) {
-                                                              log("Error disposing controllers before retry: $e");
-                                                            }
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                          ElevatedButton(
+                                                            onPressed: () async {
+                                                              try {
+                                                                await _controller
+                                                                    .pause();
+                                                                await _controller
+                                                                    .dispose();
+                                                              } catch (e) {
+                                                                log(
+                                                                  "Error disposing controllers before retry: $e",
+                                                                );
+                                                              }
 
-                                                            _initializeVideoPlayerFuture =
-                                                                _initVideoPlayer(
+                                                              _initializeVideoPlayerFuture =
+                                                                  _initVideoPlayer(
                                                                     url: widget
                                                                         .links
-                                                                        .v1!);
-                                                            setState(() {});
-                                                          },
-                                                          child: Text("Retry"),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : Center(
-                                                    child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      CircularProgressIndicator(
-                                                          color: Colors.white),
-                                                      SizedBox(
-                                                        height: isSplitScreen
-                                                            ? getFullWidgetHeight(
-                                                                height: 10)
-                                                            : getWidgetHeight(
-                                                                height: 10),
+                                                                        .v1!,
+                                                                  );
+                                                              setState(() {});
+                                                            },
+                                                            child: Text(
+                                                              "Retry",
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                      Text(
-                                                        'Loading...',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white),
+                                                    )
+                                                  : Center(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          CircularProgressIndicator(
+                                                            color: Colors.white,
+                                                          ),
+                                                          SizedBox(
+                                                            height:
+                                                                isSplitScreen
+                                                                ? getFullWidgetHeight(
+                                                                    height: 10,
+                                                                  )
+                                                                : getWidgetHeight(
+                                                                    height: 10,
+                                                                  ),
+                                                          ),
+                                                          Text(
+                                                            'Loading...',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ))
+                                                    )
                                             : Stack(
                                                 children: [
                                                   GestureDetector(
-                                                      onTap: () {
-                                                        toggleControllerVisibility();
-                                                      },
-                                                      child: VideoPlayer(
-                                                          _controller)),
+                                                    onTap: () {
+                                                      toggleControllerVisibility();
+                                                    },
+                                                    child: VideoPlayer(
+                                                      _controller,
+                                                    ),
+                                                  ),
                                                   if (_isControllerVisible)
                                                     Positioned(
                                                       bottom: 0,
                                                       left: 0,
                                                       right: 0,
-                                                      child: GestureDetector(
+                                                      child: InkWell(
                                                         onTap: () {
                                                           togglePlayPauseControllerVisibility();
                                                         },
@@ -556,10 +586,9 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                           color: Colors.black
                                                               .withOpacity(0.4),
                                                           padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  vertical:
-                                                                      8.0),
+                                                              const EdgeInsets.symmetric(
+                                                                vertical: 8.0,
+                                                              ),
                                                           child: Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
@@ -569,113 +598,127 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                                     .center,
                                                             children: [
                                                               ValueListenableBuilder(
-                                                                  valueListenable:
-                                                                      _controller,
-                                                                  builder: (context,
+                                                                valueListenable:
+                                                                    _controller,
+                                                                builder:
+                                                                    (
+                                                                      context,
                                                                       VideoPlayerValue
-                                                                          value,
-                                                                      child) {
-                                                                    return IconButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        if (_controller
-                                                                            .value
-                                                                            .isPlaying) {
-                                                                          _controller
-                                                                              .pause();
-                                                                        } else {
-                                                                          _controller
-                                                                              .play();
-                                                                        }
-                                                                      },
-                                                                      icon:
-                                                                          Icon(
-                                                                        _controller.value.isPlaying
-                                                                            ? Icons.pause
-                                                                            : Icons.play_arrow,
-                                                                        color: Colors
-                                                                            .white,
-                                                                        size:
-                                                                            30,
-                                                                      ),
-                                                                    );
-                                                                  }),
+                                                                      value,
+                                                                      child,
+                                                                    ) {
+                                                                      return IconButton(
+                                                                        onPressed: () {
+                                                                          if (_controller
+                                                                              .value
+                                                                              .isPlaying) {
+                                                                            _controller.pause();
+                                                                          } else {
+                                                                            _controller.play();
+                                                                          }
+                                                                        },
+                                                                        icon: Icon(
+                                                                          _controller.value.isPlaying
+                                                                              ? Icons.pause
+                                                                              : Icons.play_arrow,
+                                                                          color:
+                                                                              Colors.white,
+                                                                          size:
+                                                                              30,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                              ),
                                                               ValueListenableBuilder(
                                                                 valueListenable:
                                                                     _controller,
-                                                                builder: (context,
-                                                                    VideoPlayerValue
-                                                                        value,
-                                                                    child) {
-                                                                  return Text(
-                                                                    _formatDuration(
-                                                                        value
-                                                                            .position),
-                                                                    style: const TextStyle(
-                                                                        color: Colors
-                                                                            .white),
-                                                                  );
-                                                                },
+                                                                builder:
+                                                                    (
+                                                                      context,
+                                                                      VideoPlayerValue
+                                                                      value,
+                                                                      child,
+                                                                    ) {
+                                                                      return Text(
+                                                                        _formatDuration(
+                                                                          value
+                                                                              .position,
+                                                                        ),
+                                                                        style: const TextStyle(
+                                                                          color:
+                                                                              Colors.white,
+                                                                        ),
+                                                                      );
+                                                                    },
                                                               ),
                                                               Text(
                                                                 " / ",
                                                                 style: TextStyle(
-                                                                    color: Colors
-                                                                        .white),
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
                                                               ),
                                                               ValueListenableBuilder(
                                                                 valueListenable:
                                                                     _controller,
-                                                                builder: (context,
-                                                                    VideoPlayerValue
-                                                                        value,
-                                                                    child) {
-                                                                  return Text(
-                                                                    _formatDuration(
-                                                                        value
-                                                                            .duration),
-                                                                    style: const TextStyle(
-                                                                        color: Colors
-                                                                            .white),
-                                                                  );
-                                                                },
+                                                                builder:
+                                                                    (
+                                                                      context,
+                                                                      VideoPlayerValue
+                                                                      value,
+                                                                      child,
+                                                                    ) {
+                                                                      return Text(
+                                                                        _formatDuration(
+                                                                          value
+                                                                              .duration,
+                                                                        ),
+                                                                        style: const TextStyle(
+                                                                          color:
+                                                                              Colors.white,
+                                                                        ),
+                                                                      );
+                                                                    },
                                                               ),
                                                               ValueListenableBuilder(
                                                                 valueListenable:
                                                                     _controller,
-                                                                builder: (context,
-                                                                    VideoPlayerValue
-                                                                        value,
-                                                                    child) {
-                                                                  return Expanded(
-                                                                    child:
-                                                                        Slider(
-                                                                      value: value
-                                                                          .position
-                                                                          .inMilliseconds
-                                                                          .toDouble(),
-                                                                      min: 0,
-                                                                      max: value
-                                                                          .duration
-                                                                          .inMilliseconds
-                                                                          .toDouble(),
-                                                                      onChanged:
-                                                                          (newValue) {
-                                                                        _controller
-                                                                            .seekTo(
-                                                                          Duration(
-                                                                              milliseconds: newValue.toInt()),
-                                                                        );
-                                                                      },
-                                                                      activeColor:
-                                                                          Colors
-                                                                              .white,
-                                                                      inactiveColor:
-                                                                          Colors
-                                                                              .grey,
-                                                                    ),
-                                                                  );
-                                                                },
+                                                                builder:
+                                                                    (
+                                                                      context,
+                                                                      VideoPlayerValue
+                                                                      value,
+                                                                      child,
+                                                                    ) {
+                                                                      return Expanded(
+                                                                        child: Slider(
+                                                                          value: value
+                                                                              .position
+                                                                              .inMilliseconds
+                                                                              .toDouble(),
+                                                                          min:
+                                                                              0,
+                                                                          max: value
+                                                                              .duration
+                                                                              .inMilliseconds
+                                                                              .toDouble(),
+                                                                          onChanged:
+                                                                              (
+                                                                                newValue,
+                                                                              ) {
+                                                                                _controller.seekTo(
+                                                                                  Duration(
+                                                                                    milliseconds: newValue.toInt(),
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                          activeColor:
+                                                                              Colors.white,
+                                                                          inactiveColor:
+                                                                              Colors.grey,
+                                                                        ),
+                                                                      );
+                                                                    },
                                                               ),
                                                               // **Current Time**
                                                             ],
@@ -689,7 +732,10 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(
-                                          left: 0, right: 20, top: 20),
+                                        left: 0,
+                                        right: 20,
+                                        top: 20,
+                                      ),
                                       child: SizedBox(
                                         height: kWidth / 3.6,
                                         width: kWidth / 3.3,
@@ -699,88 +745,102 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                           shrinkWrap: true,
                                           gridDelegate:
                                               SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 1,
-                                            mainAxisSpacing: 15,
-                                            crossAxisSpacing: 15,
-                                            childAspectRatio: 8.2,
-                                          ),
+                                                crossAxisCount: 1,
+                                                mainAxisSpacing: 15,
+                                                crossAxisSpacing: 15,
+                                                childAspectRatio: 8.2,
+                                              ),
                                           itemCount: 6,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
+                                          itemBuilder: (BuildContext context, int index) {
                                             return GestureDetector(
-                                              onTapDown: (TapDownDetails
-                                                  onTapDetails) async {
-                                                log("entering and priniting the index ${index}");
+                                              onTapDown: (TapDownDetails onTapDetails) async {
+                                                log(
+                                                  "entering and priniting the index ${index}",
+                                                );
                                                 // if (checkUrl != index) {
                                                 // checkUrl = index;
                                                 if (((widget.links.v1 == null ||
-                                                            widget.links.v1!
+                                                            widget
+                                                                .links
+                                                                .v1!
                                                                 .isEmpty) &&
                                                         index == 0) ||
                                                     ((widget.links.v2 == null ||
-                                                            widget.links.v2!
+                                                            widget
+                                                                .links
+                                                                .v2!
                                                                 .isEmpty) &&
                                                         index == 1) ||
                                                     ((widget.links.v3 == null ||
-                                                            widget.links.v3!
+                                                            widget
+                                                                .links
+                                                                .v3!
                                                                 .isEmpty) &&
                                                         index == 2) ||
                                                     ((widget.links.v4 == null ||
-                                                            widget.links.v4!
+                                                            widget
+                                                                .links
+                                                                .v4!
                                                                 .isEmpty) &&
                                                         index == 3) ||
                                                     ((widget.links.v5 == null ||
-                                                            widget.links.v5!
+                                                            widget
+                                                                .links
+                                                                .v5!
                                                                 .isEmpty) &&
                                                         index == 4) ||
                                                     ((widget.links.words ==
                                                                 null ||
-                                                            widget.links.words!
+                                                            widget
+                                                                .links
+                                                                .words!
                                                                 .isEmpty) &&
                                                         index == 5)) {
                                                   await _controller.pause();
                                                   // await _controller.dispose();
 
                                                   repeatLoads = widget.load;
-/////////// //
+                                                  /////////// //
                                                   if (!kIsWeb) {
                                                     await getSoundPracticeWords();
                                                   }
                                                   Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              WordScreenProfluentEnglish(
-                                                                title:
-                                                                    widget.load,
-                                                                load: widget
-                                                                    .load, //'Words',
-                                                                soundPractice:
-                                                                    soundPractice!,
-                                                              ))).then((_) {
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          WordScreenProfluentEnglish(
+                                                            title: widget.load,
+                                                            load: widget
+                                                                .load, //'Words',
+                                                            soundPractice:
+                                                                soundPractice!,
+                                                          ),
+                                                    ),
+                                                  ).then((_) {
                                                     // print("sjfidhjvgirj");
                                                     // refreshScreen(1);
                                                   });
                                                 } else {
                                                   if (index == 5) {
                                                     repeatLoads = widget.load;
-//
+                                                    //
                                                     if (!kIsWeb) {
                                                       await getSoundPracticeWords();
                                                     }
                                                     Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                WordScreenProfluentEnglish(
-                                                                  title: widget
-                                                                      .load,
-                                                                  load: widget
-                                                                      .load, //'Words',
-                                                                  soundPractice:
-                                                                      soundPractice!,
-                                                                ))).then(
-                                                        (value) {
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            WordScreenProfluentEnglish(
+                                                              title:
+                                                                  widget.load,
+                                                              load: widget
+                                                                  .load, //'Words',
+                                                              soundPractice:
+                                                                  soundPractice!,
+                                                            ),
+                                                      ),
+                                                    ).then((value) {
                                                       // print("valueee:$value");
                                                       // if (value == "from") {
                                                       refreshScreen(2);
@@ -806,55 +866,64 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                 ),
                                                 child: Container(
                                                   padding: EdgeInsets.symmetric(
-                                                      vertical: 5),
+                                                    vertical: 5,
+                                                  ),
                                                   child: Row(
                                                     children: [
                                                       if (index != 5)
                                                         Image.asset(
-                                                            "assets/images/pl${index + 1}.png",
-                                                            width: displayWidth(
-                                                                    context) *
-                                                                0.05),
+                                                          "assets/images/pl${index + 1}.png",
+                                                          width:
+                                                              displayWidth(
+                                                                context,
+                                                              ) *
+                                                              0.05,
+                                                        ),
                                                       if (index == 5)
                                                         SizedBox(
-                                                            width:
-                                                                getWidgetWidth(
-                                                                    width: 5)),
+                                                          width: getWidgetWidth(
+                                                            width: 5,
+                                                          ),
+                                                        ),
                                                       if (index == 5)
                                                         Icon(
                                                           Icons.mic,
                                                           color: Colors.white,
                                                           size: getWidgetHeight(
-                                                              height: 33),
+                                                            height: 33,
+                                                          ),
                                                         ),
                                                       if (index == 5)
                                                         SizedBox(
                                                           width: getWidgetWidth(
-                                                              width: 7),
+                                                            width: 7,
+                                                          ),
                                                         ),
                                                       SizedBox(
-                                                          width: getWidgetWidth(
-                                                              width: 8)),
+                                                        width: getWidgetWidth(
+                                                          width: 8,
+                                                        ),
+                                                      ),
                                                       Text(
                                                         index == 0
                                                             ? "Front View"
                                                             : index == 1
-                                                                ? "Side View"
-                                                                : index == 2
-                                                                    ? "Front Closer"
-                                                                    : index == 3
-                                                                        ? "Side Closer"
-                                                                        : index ==
-                                                                                4
-                                                                            ? "Animation"
-                                                                            : "Practice",
+                                                            ? "Side View"
+                                                            : index == 2
+                                                            ? "Front Closer"
+                                                            : index == 3
+                                                            ? "Side Closer"
+                                                            : index == 4
+                                                            ? "Animation"
+                                                            : "Practice",
                                                         style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize:
-                                                                kText.scale(20),
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
+                                                          color: Colors.white,
+                                                          fontSize: kText.scale(
+                                                            20,
+                                                          ),
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -871,37 +940,39 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                               Container(
                                 alignment: Alignment.center,
                                 margin: EdgeInsets.symmetric(
-                                    horizontal: getWidgetWidth(width: 5)),
+                                  horizontal: getWidgetWidth(width: 5),
+                                ),
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: getWidgetWidth(width: 10),
-                                    vertical: getWidgetHeight(height: 20)),
+                                  horizontal: getWidgetWidth(width: 10),
+                                  vertical: getWidgetHeight(height: 20),
+                                ),
                                 child: Column(
                                   children: [
                                     Text(
                                       "Usual Letter Representations",
                                       style: TextStyle(
-                                          color: AppColors.pinkishGrey,
-                                          fontFamily: Keys.fontFamily,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: kText.scale(15)),
+                                        color: AppColors.pinkishGrey,
+                                        fontFamily: Keys.fontFamily,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: kText.scale(15),
+                                      ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
                                         widget.ulr ?? "Empty",
                                         style: TextStyle(
-                                            color: Colors.white,
-                                            fontFamily: Keys.fontFamily,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: kText.scale(15)),
+                                          color: Colors.white,
+                                          fontFamily: Keys.fontFamily,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: kText.scale(15),
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              SizedBox(
-                                height: 60,
-                              )
+                              SizedBox(height: 60),
                             ],
                           ),
                         ),
@@ -910,25 +981,31 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                   : ListView(
                       children: [
                         SizedBox(
-                            width: kWidth,
-                            height: kIsWeb
-                                ? displayHeight(context) * 0.5
-                                : _controller.value.isInitialized
-                                    ? kWidth / _controller.value.aspectRatio
-                                    : displayWidth(context),
-                            child: _isPlaying == false
-                                ? _hasInitError
+                          width: kWidth,
+                          height: kIsWeb
+                              ? displayHeight(context) * 0.5
+                              : _controller.value.isInitialized
+                              ? kWidth / _controller.value.aspectRatio
+                              : displayWidth(context),
+                          child: _isPlaying == false
+                              ? _hasInitError
                                     ? Center(
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Icon(Icons.error,
-                                                color: Colors.white, size: 48),
+                                            Icon(
+                                              Icons.error,
+                                              color: Colors.white,
+                                              size: 48,
+                                            ),
                                             SizedBox(height: 16),
-                                            Text("Video failed to load",
-                                                style: TextStyle(
-                                                    color: Colors.white)),
+                                            Text(
+                                              "Video failed to load",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                             ElevatedButton(
                                               onPressed: () async {
                                                 try {
@@ -937,12 +1014,15 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                   await _controller.dispose();
                                                   // _chewieController.dispose();
                                                 } catch (e) {
-                                                  log("Error disposing controllers before retry: $e");
+                                                  log(
+                                                    "Error disposing controllers before retry: $e",
+                                                  );
                                                 }
 
                                                 _initializeVideoPlayerFuture =
                                                     _initVideoPlayer(
-                                                        url: widget.links.v1!);
+                                                      url: widget.links.v1!,
+                                                    );
                                                 setState(() {});
                                               },
                                               child: Text("Retry"),
@@ -952,59 +1032,66 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                       )
                                     : Center(
                                         child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          CircularProgressIndicator(
-                                              color: Colors.white),
-                                          SizedBox(
-                                            height: isSplitScreen
-                                                ? getFullWidgetHeight(
-                                                    height: 10)
-                                                : getWidgetHeight(height: 10),
-                                          ),
-                                          Text(
-                                            'Loading...',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ],
-                                      ))
-                                : Stack(
-                                    children: [
-                                      GestureDetector(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            CircularProgressIndicator(
+                                              color: Colors.white,
+                                            ),
+                                            SizedBox(
+                                              height: isSplitScreen
+                                                  ? getFullWidgetHeight(
+                                                      height: 10,
+                                                    )
+                                                  : getWidgetHeight(height: 10),
+                                            ),
+                                            Text(
+                                              'Loading...',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                              : Stack(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        toggleControllerVisibility();
+                                      },
+                                      child: VideoPlayer(_controller),
+                                    ),
+                                    if (_isControllerVisible)
+                                      Positioned(
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                        child: GestureDetector(
                                           onTap: () {
-                                            toggleControllerVisibility();
+                                            togglePlayPauseControllerVisibility();
                                           },
-                                          child: VideoPlayer(_controller)),
-                                      if (_isControllerVisible)
-                                        Positioned(
-                                          bottom: 0,
-                                          left: 0,
-                                          right: 0,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              togglePlayPauseControllerVisibility();
-                                            },
-                                            child: Container(
-                                              color:
-                                                  Colors.black.withOpacity(0.4),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 8.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  ValueListenableBuilder(
-                                                      valueListenable:
-                                                          _controller,
-                                                      builder: (context,
-                                                          VideoPlayerValue
-                                                              value,
-                                                          child) {
+                                          child: Container(
+                                            color: Colors.black.withOpacity(
+                                              0.4,
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                ValueListenableBuilder(
+                                                  valueListenable: _controller,
+                                                  builder:
+                                                      (
+                                                        context,
+                                                        VideoPlayerValue value,
+                                                        child,
+                                                      ) {
                                                         return IconButton(
                                                           onPressed: () {
                                                             if (_controller
@@ -1018,115 +1105,137 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                             }
                                                           },
                                                           icon: Icon(
-                                                            _controller.value
+                                                            _controller
+                                                                    .value
                                                                     .isPlaying
                                                                 ? Icons.pause
                                                                 : Icons
-                                                                    .play_arrow,
+                                                                      .play_arrow,
                                                             color: Colors.white,
                                                             size: 30,
                                                           ),
                                                         );
-                                                      }),
-                                                  ValueListenableBuilder(
-                                                    valueListenable:
-                                                        _controller,
-                                                    builder: (context,
+                                                      },
+                                                ),
+                                                ValueListenableBuilder(
+                                                  valueListenable: _controller,
+                                                  builder:
+                                                      (
+                                                        context,
                                                         VideoPlayerValue value,
-                                                        child) {
-                                                      return Text(
-                                                        _formatDuration(
-                                                            value.position),
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                      );
-                                                    },
+                                                        child,
+                                                      ) {
+                                                        return Text(
+                                                          _formatDuration(
+                                                            value.position,
+                                                          ),
+                                                          style:
+                                                              const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                        );
+                                                      },
+                                                ),
+                                                Text(
+                                                  " / ",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
                                                   ),
-                                                  Text(
-                                                    " / ",
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  ValueListenableBuilder(
-                                                    valueListenable:
-                                                        _controller,
-                                                    builder: (context,
+                                                ),
+                                                ValueListenableBuilder(
+                                                  valueListenable: _controller,
+                                                  builder:
+                                                      (
+                                                        context,
                                                         VideoPlayerValue value,
-                                                        child) {
-                                                      return Text(
-                                                        _formatDuration(
-                                                            value.duration),
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                      );
-                                                    },
-                                                  ),
-                                                  ValueListenableBuilder(
-                                                    valueListenable:
-                                                        _controller,
-                                                    builder: (context,
+                                                        child,
+                                                      ) {
+                                                        return Text(
+                                                          _formatDuration(
+                                                            value.duration,
+                                                          ),
+                                                          style:
+                                                              const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                        );
+                                                      },
+                                                ),
+                                                ValueListenableBuilder(
+                                                  valueListenable: _controller,
+                                                  builder:
+                                                      (
+                                                        context,
                                                         VideoPlayerValue value,
-                                                        child) {
-                                                      return Expanded(
-                                                        child: Slider(
-                                                          value: value.position
-                                                              .inMilliseconds
-                                                              .toDouble(),
-                                                          min: 0,
-                                                          max: value.duration
-                                                              .inMilliseconds
-                                                              .toDouble(),
-                                                          onChanged:
-                                                              (newValue) {
-                                                            _controller.seekTo(
-                                                              Duration(
+                                                        child,
+                                                      ) {
+                                                        return Expanded(
+                                                          child: Slider(
+                                                            value: value
+                                                                .position
+                                                                .inMilliseconds
+                                                                .toDouble(),
+                                                            min: 0,
+                                                            max: value
+                                                                .duration
+                                                                .inMilliseconds
+                                                                .toDouble(),
+                                                            onChanged: (newValue) {
+                                                              _controller.seekTo(
+                                                                Duration(
                                                                   milliseconds:
                                                                       newValue
-                                                                          .toInt()),
-                                                            );
-                                                          },
-                                                          activeColor:
-                                                              Colors.white,
-                                                          inactiveColor:
-                                                              Colors.grey,
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                  // **Current Time**
-                                                ],
-                                              ),
+                                                                          .toInt(),
+                                                                ),
+                                                              );
+                                                            },
+                                                            activeColor:
+                                                                Colors.white,
+                                                            inactiveColor:
+                                                                Colors.grey,
+                                                          ),
+                                                        );
+                                                      },
+                                                ),
+                                                // **Current Time**
+                                              ],
                                             ),
                                           ),
                                         ),
-                                    ],
-                                  )),
+                                      ),
+                                  ],
+                                ),
+                        ),
                         Padding(
                           padding: EdgeInsets.only(
-                              left: getWidgetWidth(width: 20),
-                              right: getWidgetWidth(width: 20),
-                              top: isSplitScreen
-                                  ? getFullWidgetHeight(height: 20)
-                                  : getWidgetHeight(height: 20)),
+                            left: getWidgetWidth(width: 20),
+                            right: getWidgetWidth(width: 20),
+                            top: isSplitScreen
+                                ? getFullWidgetHeight(height: 20)
+                                : getWidgetHeight(height: 20),
+                          ),
                           child: GridView.builder(
                             shrinkWrap: true,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount:
-                                  2, // Number of columns in the grid
-                              mainAxisSpacing: 18, // Spacing between rows
-                              crossAxisSpacing: 19, // Spacing between columns
-                              childAspectRatio:
-                                  3, // Width to height ratio of each grid item
-                            ),
+                                  crossAxisCount:
+                                      2, // Number of columns in the grid
+                                  mainAxisSpacing: 18, // Spacing between rows
+                                  crossAxisSpacing:
+                                      19, // Spacing between columns
+                                  childAspectRatio:
+                                      3, // Width to height ratio of each grid item
+                                ),
                             itemCount: 6, // Total number of items in the grid
                             itemBuilder: (BuildContext context, int index) {
                               return InkWell(
                                 splashColor: Colors.transparent,
                                 onTap: () async {
-                                  log("entering and priniting the index ${index}");
+                                  log(
+                                    "entering and priniting the index ${index}",
+                                  );
                                   // if (checkUrl != index) {
                                   // checkUrl = index;
                                   if (((widget.links.v1 == null ||
@@ -1155,14 +1264,16 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                       await getSoundPracticeWords();
                                     }
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                WordScreenProfluentEnglish(
-                                                  title: widget.load,
-                                                  load: widget.load, //'Words',
-                                                  soundPractice: soundPractice!,
-                                                ))).then((_) {
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            WordScreenProfluentEnglish(
+                                              title: widget.load,
+                                              load: widget.load, //'Words',
+                                              soundPractice: soundPractice!,
+                                            ),
+                                      ),
+                                    ).then((_) {
                                       // print("sjfidhjvgirj");
                                       // refreshScreen(1);
                                     });
@@ -1173,16 +1284,16 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                         await getSoundPracticeWords();
                                       }
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  WordScreenProfluentEnglish(
-                                                    title: widget.load,
-                                                    load:
-                                                        widget.load, //'Words',
-                                                    soundPractice:
-                                                        soundPractice!,
-                                                  ))).then((value) {
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              WordScreenProfluentEnglish(
+                                                title: widget.load,
+                                                load: widget.load, //'Words',
+                                                soundPractice: soundPractice!,
+                                              ),
+                                        ),
+                                      ).then((value) {
                                         // print("valueee:$value");
                                         // if (value == "from") {
                                         refreshScreen(2);
@@ -1200,10 +1311,11 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: getWidgetWidth(width: 10),
-                                      vertical: isSplitScreen
-                                          ? getFullWidgetHeight(height: 5)
-                                          : getWidgetHeight(height: 5)),
+                                    horizontal: getWidgetWidth(width: 10),
+                                    vertical: isSplitScreen
+                                        ? getFullWidgetHeight(height: 5)
+                                        : getWidgetHeight(height: 5),
+                                  ),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: Color(0xff34425D),
@@ -1217,7 +1329,8 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                         ),
                                       if (index == 5)
                                         SizedBox(
-                                            width: getWidgetWidth(width: 5)),
+                                          width: getWidgetWidth(width: 5),
+                                        ),
                                       if (index == 5)
                                         Icon(
                                           Icons.mic,
@@ -1231,44 +1344,64 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                           width: getWidgetWidth(width: 0),
                                         ),
                                       SizedBox(
-                                          width: getWidgetWidth(width: 10)),
+                                        width: getWidgetWidth(width: 10),
+                                      ),
                                       Text(
                                         index == 0
                                             ? "Front View"
                                             : index == 1
-                                                ? "Side View"
-                                                : index == 2
-                                                    ? "Front Closer"
-                                                    : index == 3
-                                                        ? "Side Closer"
-                                                        : index == 4
-                                                            ? "Animation"
-                                                            : "Practice",
+                                            ? "Side View"
+                                            : index == 2
+                                            ? "Front Closer"
+                                            : index == 3
+                                            ? "Side Closer"
+                                            : index == 4
+                                            ? "Animation"
+                                            : "Practice",
                                         style: TextStyle(
-                                            color: (((widget.links.v1 == null ||
-                                                            widget.links.v1!
-                                                                .isEmpty) &&
-                                                        index == 0) ||
-                                                    ((widget.links.v2 == null ||
-                                                            widget.links.v2!
-                                                                .isEmpty) &&
-                                                        index == 1) ||
-                                                    ((widget.links.v3 == null ||
-                                                            widget.links.v3!
-                                                                .isEmpty) &&
-                                                        index == 2) ||
-                                                    ((widget.links.v4 == null ||
-                                                            widget.links.v4!
-                                                                .isEmpty) &&
-                                                        index == 3) ||
-                                                    ((widget.links.v5 == null ||
-                                                            widget.links.v5!.isEmpty) &&
-                                                        index == 4) ||
-                                                    ((widget.links.words == null || widget.links.words!.isEmpty) && index == 5))
-                                                ? Colors.white
-                                                : Colors.white,
-                                            fontSize: kText.scale(15),
-                                            fontWeight: FontWeight.w500),
+                                          color:
+                                              (((widget.links.v1 == null ||
+                                                          widget
+                                                              .links
+                                                              .v1!
+                                                              .isEmpty) &&
+                                                      index == 0) ||
+                                                  ((widget.links.v2 == null ||
+                                                          widget
+                                                              .links
+                                                              .v2!
+                                                              .isEmpty) &&
+                                                      index == 1) ||
+                                                  ((widget.links.v3 == null ||
+                                                          widget
+                                                              .links
+                                                              .v3!
+                                                              .isEmpty) &&
+                                                      index == 2) ||
+                                                  ((widget.links.v4 == null ||
+                                                          widget
+                                                              .links
+                                                              .v4!
+                                                              .isEmpty) &&
+                                                      index == 3) ||
+                                                  ((widget.links.v5 == null ||
+                                                          widget
+                                                              .links
+                                                              .v5!
+                                                              .isEmpty) &&
+                                                      index == 4) ||
+                                                  ((widget.links.words ==
+                                                              null ||
+                                                          widget
+                                                              .links
+                                                              .words!
+                                                              .isEmpty) &&
+                                                      index == 5))
+                                              ? Colors.white
+                                              : Colors.white,
+                                          fontSize: kText.scale(15),
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -1280,29 +1413,33 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                         Container(
                           alignment: Alignment.center,
                           margin: EdgeInsets.symmetric(
-                              horizontal: getWidgetWidth(width: 5)),
+                            horizontal: getWidgetWidth(width: 5),
+                          ),
                           padding: EdgeInsets.symmetric(
-                              horizontal: getWidgetWidth(width: 10),
-                              vertical: isSplitScreen
-                                  ? getFullWidgetHeight(height: 10)
-                                  : getWidgetHeight(height: 10)),
+                            horizontal: getWidgetWidth(width: 10),
+                            vertical: isSplitScreen
+                                ? getFullWidgetHeight(height: 10)
+                                : getWidgetHeight(height: 10),
+                          ),
                           child: Column(
                             children: [
                               Text(
                                 "Usual Letter Representations",
                                 style: TextStyle(
-                                    color: AppColors.pinkishGrey,
-                                    fontFamily: Keys.fontFamily,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: kText.scale(15)),
+                                  color: AppColors.pinkishGrey,
+                                  fontFamily: Keys.fontFamily,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: kText.scale(15),
+                                ),
                               ),
                               Text(
                                 widget.ulr ?? "Empty",
                                 style: TextStyle(
-                                    color: AppColors.white,
-                                    fontFamily: Keys.fontFamily,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: kText.scale(15)),
+                                  color: AppColors.white,
+                                  fontFamily: Keys.fontFamily,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: kText.scale(15),
+                                ),
                               ),
                             ],
                           ),
@@ -1313,106 +1450,114 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                               ? getFullWidgetHeight(height: 60)
                               : getWidgetHeight(height: 60),
                           width: kWidth,
-                          decoration: BoxDecoration(
-                            color: Color(0xFF34445F),
-                          ),
+                          decoration: BoxDecoration(color: Color(0xFF34445F)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               IconButton(
-                                  icon: ImageIcon(
-                                    AssetImage(AllAssets.bottomHome),
-                                    color: context
-                                                .read<AuthState>()
-                                                .currentIndex ==
-                                            0
-                                        ? Color(0xFFAAAAAA)
-                                        : Color.fromARGB(132, 170, 170, 170),
-                                  ),
-                                  onPressed: () {
-                                    context.read<AuthState>().changeIndex(0);
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigation()));
-                                  }),
+                                icon: ImageIcon(
+                                  AssetImage(AllAssets.bottomHome),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                          0
+                                      ? Color(0xFFAAAAAA)
+                                      : Color.fromARGB(132, 170, 170, 170),
+                                ),
+                                onPressed: () {
+                                  context.read<AuthState>().changeIndex(0);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BottomNavigation(),
+                                    ),
+                                  );
+                                },
+                              ),
                               IconButton(
-                                  icon: ImageIcon(
-                                      AssetImage(AllAssets.bottomPL),
-                                      color: context
-                                                  .read<AuthState>()
-                                                  .currentIndex ==
-                                              1
-                                          ? Color(0xFFAAAAAA)
-                                          : Color.fromARGB(132, 170, 170, 170)),
-                                  onPressed: () {
-                                    context.read<AuthState>().changeIndex(1);
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigation()));
-                                  }),
+                                icon: ImageIcon(
+                                  AssetImage(AllAssets.bottomPL),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                          1
+                                      ? Color(0xFFAAAAAA)
+                                      : Color.fromARGB(132, 170, 170, 170),
+                                ),
+                                onPressed: () {
+                                  context.read<AuthState>().changeIndex(1);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BottomNavigation(),
+                                    ),
+                                  );
+                                },
+                              ),
                               IconButton(
-                                  icon: ImageIcon(
-                                      AssetImage(AllAssets.bottomIS),
-                                      color: context
-                                                  .read<AuthState>()
-                                                  .currentIndex ==
-                                              2
-                                          ? Color(0xFFAAAAAA)
-                                          : Color.fromARGB(132, 170, 170, 170)),
-                                  onPressed: () {
-                                    context.read<AuthState>().changeIndex(2);
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigation()));
-                                  }),
+                                icon: ImageIcon(
+                                  AssetImage(AllAssets.bottomIS),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                          2
+                                      ? Color(0xFFAAAAAA)
+                                      : Color.fromARGB(132, 170, 170, 170),
+                                ),
+                                onPressed: () {
+                                  context.read<AuthState>().changeIndex(2);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BottomNavigation(),
+                                    ),
+                                  );
+                                },
+                              ),
                               IconButton(
-                                  icon: ImageIcon(
-                                      AssetImage(AllAssets.bottomPE),
-                                      color: context
-                                                  .read<AuthState>()
-                                                  .currentIndex ==
-                                              3
-                                          ? Color(0xFFAAAAAA)
-                                          : Color.fromARGB(132, 170, 170, 170)),
-                                  onPressed: () {
-                                    context.read<AuthState>().changeIndex(3);
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigation()));
-                                  }),
+                                icon: ImageIcon(
+                                  AssetImage(AllAssets.bottomPE),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                          3
+                                      ? Color(0xFFAAAAAA)
+                                      : Color.fromARGB(132, 170, 170, 170),
+                                ),
+                                onPressed: () {
+                                  context.read<AuthState>().changeIndex(3);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BottomNavigation(),
+                                    ),
+                                  );
+                                },
+                              ),
                               IconButton(
-                                  icon: ImageIcon(
-                                      AssetImage(AllAssets.bottomPT),
-                                      color: context
-                                                  .read<AuthState>()
-                                                  .currentIndex ==
-                                              4
-                                          ? Color(0xFFAAAAAA)
-                                          : Color.fromARGB(132, 170, 170, 170)),
-                                  onPressed: () {
-                                    context.read<AuthState>().changeIndex(4);
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigation()));
-                                  }),
+                                icon: ImageIcon(
+                                  AssetImage(AllAssets.bottomPT),
+                                  color:
+                                      context.read<AuthState>().currentIndex ==
+                                          4
+                                      ? Color(0xFFAAAAAA)
+                                      : Color.fromARGB(132, 170, 170, 170),
+                                ),
+                                onPressed: () {
+                                  context.read<AuthState>().changeIndex(4);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BottomNavigation(),
+                                    ),
+                                  );
+                                },
+                              ),
                             ],
                           ),
-                        )
+                        ),
                       ],
                     );
             } else {
               return Center(
-                  child: CircularProgressIndicator(color: Colors.white));
+                child: CircularProgressIndicator(color: Colors.white),
+              );
             }
           },
         ),

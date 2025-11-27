@@ -36,6 +36,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../common_widgets/background_widget.dart';
 import '../../states/auth_state.dart';
@@ -107,20 +108,22 @@ class _WordScreenState extends State<WordScreen>
   bool open = false;
   bool audioLoading = false;
   final Map<String, GlobalKey> _itemKeys = {};
-  List<GlobalKey> itemKeys = [];
+  List<GlobalKey<AppExpansionTileState>> wordTileKeys = [];
+
+  // List<GlobalKey> itemKeys = [];
 
   late AutoScrollController controller;
 
   final _audioPlayerManager = AudioPlayerManager();
   bool isMenu = false;
   String selectedMenuOption = "";
-  final ScrollController scrollController = ScrollController();
+  final AutoScrollController scrollController = AutoScrollController();
   Future<void> scrollToIndex(int index) async {
     if (!controller.hasClients) return;
 
     // Get item context
-    final context = itemKeys[index].currentContext;
-    if (context == null) return;
+    // final context = itemKeys[index].currentContext;
+    // if (context == null) return;
 
     final itemBox = context.findRenderObject() as RenderBox;
     final itemPosition = itemBox.localToGlobal(Offset.zero, ancestor: null).dy;
@@ -155,49 +158,38 @@ class _WordScreenState extends State<WordScreen>
   }
 
   Future<void> resetState() async {
-    // Smoothly scroll back to the top
-    if (scrollController.hasClients) {
-      await scrollController.animateTo(
-        0.0,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeOut,
-      );
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
 
-    setState(() {});
+      if (controller.hasClients) {
+        await controller.animateTo(
+          controller.position.minScrollExtent,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeOut,
+        );
+      }
+
+      if (mounted) setState(() {});
+    });
   }
 
   pronunciationLabReport({required actionType, required word}) async {
-    print("pronunciation lab report tappeddd");
     String userId = await SharedPref.getSavedString('userId');
-    print("userIddd:$userId");
-    print("wordddddd:$word");
     String action = actionType;
-    print("action:${action}");
     String url = baseUrl + pronunciationLabReportApi;
-    print("url : $url");
     try {
-      print("responseeeeeeee");
       var response = await http.post(Uri.parse(url),
           body: {"userid": userId, "type": action, "word": word});
-
-      print(
-          "response for pronunciation lab report for correct words : ${response.body}");
     } catch (e) {
       print("error login : $e");
     }
   }
 
   endPractice({required practiceType, required successCount}) async {
-    print("practice Type: $practiceType");
-    print("end practice Tappeddd");
     String userId = await SharedPref.getSavedString('userId');
-    print("userIddd:$userId");
+
     String url = baseUrl + endPracticeApi;
-    print("url : $url");
-    print("successCount:$successCount");
-    /* print("scoreeeeetypeee:${widget.score.runtimeType}");
-    print("scoreeee:${widget.score}");*/
+
     try {
       var response = await http.post(Uri.parse(url), body: {
         "userid": userId,
@@ -257,7 +249,6 @@ class _WordScreenState extends State<WordScreen>
   }
 
   Future toggleWordFavorite(String? eLocalPath1, Word word) async {
-    print("togglewordfavorite function calleddd");
     DatabaseProvider dbb = DatabaseProvider.get;
     WordsDatabaseRepository dbRef = WordsDatabaseRepository(dbb);
     await dbRef.setFav(word.id!, 1, eLocalPath1!);
@@ -267,34 +258,24 @@ class _WordScreenState extends State<WordScreen>
   }
 
   Future<void> addInitialFav() async {
-    print("save First Five items in the list");
     try {
       Directory appDocDir = await getApplicationDocumentsDirectory();
       String appDocPath = appDocDir.path;
       String? localPath1;
       String? eLocalPath1;
       for (var i = 0; i < _words.length; i++) {
-        print("sjfjdijfiejifjeiji");
-        print("wordspriority:${_words[i].isPriority}");
-        print("wordstext: ${_words[i].text}");
-        print("wordfile: ${_words[i].file}");
         if (_words[i].isPriority == "true") {
-          print("dsjfirjfiejf");
-          print("isPriorityStatus:${_words[i].isPriority}");
           AuthState userDatas = Provider.of<AuthState>(context, listen: false);
 
           localPath1 = await Utils.downloadFile(userDatas, _words[i].file!,
               '${_words[i].text}.mp3', '$appDocPath/${widget.load}');
           eLocalPath1 = EncryptData.encryptFile(localPath1, userDatas);
-          print("localllpathh11:$localPath1");
-          print('eLocalPathhh111 :${eLocalPath1}');
-          print('localpathhhh<<<:${_words[0].localPath}');
+
           _words[i].localPath = eLocalPath1;
 
           try {
             await File(localPath1).delete();
           } catch (e) {}
-          print("sdidjgidjgijfg");
           await toggleWordFavorite(eLocalPath1, _words[i]);
         }
       }
@@ -318,10 +299,9 @@ class _WordScreenState extends State<WordScreen>
     bool isFirstTime = await _isFirstTimeUser(userId);
     bool wordsFirstTime1 =
         prefs.getBool(widget.title.removeAllWhitespace) ?? true;
-    print("world ${wordsFirstTime1}");
+
     setState(() {});
     if (wordsFirstTime1 == true) {
-      print("smgojf");
       wordsFirstTime = !wordsFirstTime1;
       setState(() {});
       await addInitialFav();
@@ -330,9 +310,7 @@ class _WordScreenState extends State<WordScreen>
           await prefs.getBool(widget.title.removeAllWhitespace) ?? false;
       setState(() {});
     } else {
-      print("wdfdjgi:${wordsFirstTime}");
       wordsFirstTime = false;
-      print("wordsfirstTime:${wordsFirstTime}");
       setState(() {});
     }
     _isLoading = false;
@@ -340,9 +318,6 @@ class _WordScreenState extends State<WordScreen>
   }
 
   void _getWords({String? searchTerm, required bool isRefresh}) async {
-    print("getwordsscalleddddddd>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    print("searchTerm: $searchTerm");
-
     _isLoading = true;
     startTimerMainCategory("name");
     sessionName = widget.title;
@@ -354,11 +329,7 @@ class _WordScreenState extends State<WordScreen>
 
     // MAIN FETCH LOGIC
     if (widget.load.isNotEmpty) {
-      print("Loading data for category: ${widget.load}");
-
       if (kIsWeb) {
-        // 🟢 WEB MODE — Directly from Firebase (no DB insert)
-        print("Running in WEB environment — fetching directly from Firebase");
         final FirebaseDatabase _database = FirebaseDatabase.instance;
 
         await _database
@@ -386,33 +357,30 @@ class _WordScreenState extends State<WordScreen>
           }
 
           _words = tempWords;
-          print("✅ Words fetched from Firebase (web): ${_words.length}");
         });
       } else {
-        // 🔵 MOBILE MODE — Local DB + Firebase caching
-        print("Running in MOBILE environment — using local DB/Firebase cache");
         _words = await db.getWords(widget.load);
       }
 
       // Common for both
       isPlaying = List.generate(_words.length, (index) => false.obs);
-      itemKeys = List.generate(_words.length, (_) => GlobalKey());
+      wordTileKeys = List.generate(
+        _words.length,
+        (index) => GlobalKey<AppExpansionTileState>(),
+      );
 
-      if (_words.isNotEmpty) {
-        print('First local word path: ${_words.first.localPath}');
-      }
+      // itemKeys = List.generate(_words.length, (_) => GlobalKey());
 
       await _checkAndPerformInitialFav();
     } else {
       // 🔶 Local Favorites (or offline fallback)
-      print("Showing data from local database (favorites, offline, etc.)");
 
       DatabaseProvider dbb = DatabaseProvider.get;
       WordsDatabaseRepository dbRef = WordsDatabaseRepository(dbb);
       List<Word> words = await dbRef.getWords();
 
       isPlaying = List.generate(words.length, (index) => false.obs);
-      itemKeys = List.generate(_words.length, (_) => GlobalKey());
+      // itemKeys = List.generate(_words.length, (_) => GlobalKey());
 
       for (Word wr in words) {
         bool matchesFilter = (wr.isFav == 1 && widget.filterLoad == null) ||
@@ -506,39 +474,23 @@ class _WordScreenState extends State<WordScreen>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Flexible(
-            //   child: Text(
-            //     widget.title,
-            //     maxLines: 1,
-            //     style: TextStyle(
-            //       fontFamily: Keys.fontFamily,
-            //       fontSize: globalFontSize(18, context),
-            //       color: Colors.white,
-            //       fontWeight: FontWeight.w600,
-            //     ),
-            //   ),
-            // ),
-            // Spacer(),
-            // kIsWeb
-            //     ? Spacer()
-            //     : SizedBox(
-            //         width: 5,
-            //       ),
             SizedBox(
               width: getWidgetWidth(width: 25),
               child: IconButton(
                 padding: EdgeInsets.zero,
-                onPressed: () {
-                  isAllPlaying = false;
-                  setState(() {
-                    closePlay1StopDialog = true;
-                    openPlay3StopDialog = true;
-                    closePlay3StopDialog = false;
-                    _isPaused3 = false;
-                    _currentIndex3 = 0;
-                  });
-                  _playAll3Times();
-                },
+                onPressed: isAllPlaying || isAllPlaying3
+                    ? () {}
+                    : () {
+                        isAllPlaying = false;
+                        setState(() {
+                          closePlay1StopDialog = true;
+                          openPlay3StopDialog = true;
+                          closePlay3StopDialog = false;
+                          _isPaused3 = false;
+                          _currentIndex3 = 0;
+                        });
+                        _playAll3Times();
+                      },
                 icon: Image.asset(
                   AllAssets.playThree,
                   height: 35,
@@ -553,19 +505,20 @@ class _WordScreenState extends State<WordScreen>
               width: getWidgetWidth(width: 25),
               child: IconButton(
                 padding: EdgeInsets.zero,
-                onPressed: () {
-                  isAllPlaying3 = false;
-                  setState(() {
-                    closePlay3StopDialog = true;
-                    openPlay1StopDialog = true;
-                    closePlay1StopDialog = false;
-                    _isPaused = false;
-                    _currentIndex = 0;
-                    switchingKey = true;
-                    print("swithchingKey:${switchingKey}");
-                  });
-                  _playAll();
-                },
+                onPressed: isAllPlaying3 || isAllPlaying
+                    ? () {}
+                    : () {
+                        isAllPlaying3 = false;
+                        setState(() {
+                          closePlay3StopDialog = true;
+                          openPlay1StopDialog = true;
+                          closePlay1StopDialog = false;
+                          _isPaused = false;
+                          _currentIndex = 0;
+                          switchingKey = true;
+                        });
+                        _playAll();
+                      },
                 icon: Image.asset(
                   AllAssets.playOne,
                   height: 35,
@@ -588,17 +541,16 @@ class _WordScreenState extends State<WordScreen>
               // setState(() {
               closePlay3StopDialog = true;
               openPlay1StopDialog = true;
-              closePlay1StopDialog = false;
+              closePlay1StopDialog = true;
               _isPaused = false;
               _currentIndex = 0;
               switchingKey = true;
-              print("swithchingKey:${switchingKey}");
               // });
               isAllPlaying = false;
               // setState(() {
               closePlay1StopDialog = true;
               openPlay3StopDialog = true;
-              closePlay3StopDialog = false;
+              closePlay3StopDialog = true;
               _isPaused3 = false;
               _currentIndex3 = 0;
               // });
@@ -694,25 +646,6 @@ class _WordScreenState extends State<WordScreen>
                     ),
                   ),
                 ),
-              // if (!kIsWeb)
-              //   PopupMenuItem<String>(
-              //     value: 'all_priority',
-              //     child: Text(
-              //       'All Filter Priority',
-              //       style: TextStyle(
-              //         fontWeight:
-              //             // controller.selectedMenuOption == 'priority'
-              //             //     ? FontWeight.w600
-              //             //     :
-              //             FontWeight.normal,
-              //         color:
-              //             //  controller.selectedMenuOption == 'priority'
-              //             //     ? Colors.black
-              //             // :
-              //             Colors.grey[800],
-              //       ),
-              //     ),
-              //   ),
               if (!kIsWeb)
                 PopupMenuItem<String>(
                   value: 'unlisted',
@@ -746,19 +679,6 @@ class _WordScreenState extends State<WordScreen>
             ],
           ),
         ),
-        // Spacer(),
-        // IconButton(
-        //   icon: Icon(Icons.search_rounded, color: Colors.white),
-        //   onPressed: () {
-        //     if (_searchQueryController.text.isEmpty) {
-        //       Navigator.pop(context);
-        //       return;
-        //     }
-        //     _getWords(
-        //         searchTerm: _searchQueryController.text, isRefresh: false);
-        //   },
-        // ),
-        // SPW(displayWidth(context) / 37.5)
       ];
     }
 
@@ -774,7 +694,6 @@ class _WordScreenState extends State<WordScreen>
                   //color: Colors.white,
                 ),
                 onPressed: () {
-                  print("dfnefjeijfoej");
                   //_audioPlayerManager.stop();
                   isAllPlaying = false;
                   setState(() {
@@ -796,12 +715,7 @@ class _WordScreenState extends State<WordScreen>
                   width: 25,
                   //color: Colors.white,
                 ),
-                onPressed: () {
-                  print(" 3 icon calleddd");
-                  // _audioPlayerManager.stop();
-                  //isAllPlaying3 = false;
-                  // setState(() {});
-                },
+                onPressed: () {},
               ),
       if (widget.title.trim() == "Priority List" && !isAllPlaying ||
           widget.title.trim() == "All Priority List" && !isAllPlaying)
@@ -814,7 +728,6 @@ class _WordScreenState extends State<WordScreen>
                   //color: Colors.white,
                 ),
                 onPressed: () {
-                  print("play 1 icon pressed");
                   isAllPlaying3 = false;
                   setState(() {
                     closePlay3StopDialog = true;
@@ -839,16 +752,9 @@ class _WordScreenState extends State<WordScreen>
                   //color: Colors.white,
                 ),
                 onPressed: () {
-                  log("pause button clicked>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                  /*     _audioPlayerManager.stop();
-            isAllPlaying = false;*/
                   setState(() {});
                 },
               ),
-      // IconButton(
-      //   icon: Icon(Icons.menu, color: Colors.white),
-      //   onPressed: _startSearch,
-      // ),
       SPW(displayWidth(context) / 37.5)
     ];
   }
@@ -877,19 +783,18 @@ class _WordScreenState extends State<WordScreen>
     });
   }
 
-  void _scrollToItem(int index) {
-    final double itemHeight = 200.0; // Adjust based on your item height
-    final position = index * itemHeight;
-    final viewportHeight = controller.position.viewportDimension;
-    final offset = controller.offset;
+  Future<void> _scrollToItem(int index) async {
+    if (!scrollController.hasClients) return;
 
-    if (position < offset || position + itemHeight > offset + viewportHeight) {
-      controller.animateTo(
-        position,
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.easeInOut,
-      );
-    }
+    final keyContext = wordTileKeys[index].currentContext;
+    if (keyContext == null) return;
+
+    await Scrollable.ensureVisible(
+      keyContext,
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeInOut,
+      alignment: 0.5, // keep above center
+    );
   }
 
   void _showDialog(String word, bool notCatch, BuildContext context) async {
@@ -911,15 +816,12 @@ class _WordScreenState extends State<WordScreen>
     ).then((value) {
       if (value != null && value.isCorrect == "true" ||
           value.isCorrect == "false") {
-        print("checkkkkkkkkkkkkkk");
         _selectedWord = word;
         _isCorrect = value.isCorrect == "true" ? true : false;
-        print("correct or wrong:${_isCorrect}");
+
         //value.isCorrect ? pronunciationLabReport(actionType: "correct", word: widget.word) : "";
-        print("isCorrecttt:${_isCorrect}");
+
         setState(() {
-          print('wordddddddd: ${word}');
-          print("valueIsCorrect: ${_isCorrect}");
           _isCorrect
               ? pronunciationLabReport(actionType: "correct", word: word)
               : "";
@@ -932,10 +834,8 @@ class _WordScreenState extends State<WordScreen>
                   successCount: "wrong");
         });
       } else if (value != null && value.isCorrect == "notCatch") {
-        print("checkk222");
         _showDialog(word, true, context);
       } else if (value != null && value.isCorrect == "openDialog") {
-        print("checkk11");
         _showDialog(word, false, context);
       }
     }).onError((error, stackTrace) {
@@ -945,28 +845,40 @@ class _WordScreenState extends State<WordScreen>
 
   void _playAll() async {
     if (isAllPlaying3) {
-      print("sdjhdjuvgdrg");
       return;
     }
+    await WakelockPlus.enable();
     _isPaused = false;
     isAllPlaying = true;
     audioLoading = false;
     String? eLocalPath;
     AuthState userDatas = Provider.of<AuthState>(context, listen: false);
-    setState(() {});
+    // setState(() {});
     isPlaying = List.generate(_words.length, (index) => false.obs);
-    setState(() {});
+    wordTileKeys = List.generate(
+      _words.length,
+      (index) => GlobalKey<AppExpansionTileState>(),
+    );
+
+    // itemKeys = List.generate(_words.length, (_) => GlobalKey());
+    // setState(() {});
 
     for (int i = _currentIndex; i < _words.length; i++) {
-      print("Current Index: $i");
-      _selectedWordOnClick = _words[i].text;
-      print("selected word on click ${_selectedWordOnClick == _words[i].text}");
-      setState(() {});
+      await Future.delayed(Duration(seconds: 1));
       if (_isPaused) {
         _currentIndex = i;
-        print("Paused at index: $_currentIndex");
         break; // Exit the loop if paused
       }
+      if (!isAllPlaying) {
+        break;
+      }
+      _selectedWordOnClick = _words[i].text;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        wordTileKeys[i].currentState?.expand();
+        _scrollToItem(i);
+      });
+      // }
+      // setState(() {});
 
       if (isAllPlaying &&
           _words[i].file != null &&
@@ -975,19 +887,18 @@ class _WordScreenState extends State<WordScreen>
         isPlaying[i].value = true;
         setState(() {});
         if (kIsWeb) {
-          // 🌐 WEB MODE — Stream directly, no local file access
-          print("WEB MODE: Streaming audio directly from URL");
           await audioPlayerManager.play(
             _words[i].file!,
             context: context,
             decodedPath: null, // skip decoded path on web
           );
-        } else
+        } else {
           await _audioPlayerManager.play(_words[i].file!,
               context: context,
               localPath: _words[i].localPath, decodedPath: (val) {
             eLocalPath = val;
           });
+        }
 
         await Future.delayed(Duration(seconds: 3));
         _words[i].isPlaying = false;
@@ -1017,27 +928,25 @@ class _WordScreenState extends State<WordScreen>
           date: DateFormat('dd-MMM-yyyy').format(DateTime.now()),
         );
       }
-      scrollToIndex(i);
+      // scrollToIndex(i);
 
       // setState(() {});
     }
     if (!_isPaused) {
       _currentIndex = _words.length - 1;
-      print("_currentIndexxxxxxxxxxxxx:${_currentIndex}");
       // _currentIndex = 0;
       isAllPlaying = false;
       if (_currentIndex == _words.length - 1) {
-        print("sucessss>>>>>>>>>>>>>>>>>>");
         closePlay1StopDialog = true;
-        print("opendialogplay1status:${openPlay1StopDialog}");
       }
-      setState(() {});
     }
+    await resetState();
+    await WakelockPlus.disable();
+    setState(() {});
   }
 
   void pauseAll() {
     if (isAllPlaying) {
-      print("Pause called");
       _audioPlayerManager.pause();
       setState(() {
         _isPaused = true;
@@ -1048,7 +957,6 @@ class _WordScreenState extends State<WordScreen>
 
   void resumeAll() async {
     if (_isPaused) {
-      print("Resume function called");
       audioLoading = true;
       setState(() {});
       await Future.delayed(Duration(seconds: 2));
@@ -1060,16 +968,20 @@ class _WordScreenState extends State<WordScreen>
   }
 
   void _playAll3Times() async {
-    log("▶ PLAY ALL (3 times) started");
-
     _isPaused3 = false;
     audioLoading = false;
     isAllPlaying3 = true;
+    await WakelockPlus.enable();
 
     AuthState user = Provider.of<AuthState>(context, listen: false);
 
     // Reset UI flags
     isPlaying = List.generate(_words.length, (_) => false.obs);
+    wordTileKeys = List.generate(
+      _words.length,
+      (index) => GlobalKey<AppExpansionTileState>(),
+    );
+
     setState(() {});
 
     String? decodedPath;
@@ -1077,7 +989,11 @@ class _WordScreenState extends State<WordScreen>
     // Loop through words from current index
     for (int i = _currentIndex3; i < _words.length; i++) {
       if (!isAllPlaying3) break;
-
+      _selectedWordOnClick = _words[i].text;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        wordTileKeys[i].currentState?.expand();
+        _scrollToItem(i);
+      });
       // Skip if no file
       if (_words[i].file == null || _words[i].file!.isEmpty) continue;
 
@@ -1097,14 +1013,21 @@ class _WordScreenState extends State<WordScreen>
         _words[i].isPlaying = true;
         isPlaying[i].value = true;
         setState(() {});
-
+        if (kIsWeb) {
+          await audioPlayerManager.play3(
+            _words[i].file!,
+            context: context,
+            decodedPath: null,
+          );
+        } else {
+          await _audioPlayerManager.play3(
+            _words[i].file!,
+            context: context,
+            localPath: _words[i].localPath,
+            decodedPath: (val) => decodedPath = val,
+          );
+        }
         // Play audio
-        await _audioPlayerManager.play3(
-          _words[i].file!,
-          context: context,
-          localPath: _words[i].localPath,
-          decodedPath: (val) => decodedPath = val,
-        );
 
         // Small delay after each play
         await Future.delayed(const Duration(seconds: 2));
@@ -1127,10 +1050,9 @@ class _WordScreenState extends State<WordScreen>
       }
       scrollToIndex(i);
       _currentPlayCount3 = 0;
-      setState(() {}); // reset for next word
+      setState(() {});
     }
 
-    // Completed all words
     if (!_isPaused3) {
       _currentIndex3 = _words.length - 1;
       _currentPlayCount3 = 0;
@@ -1140,9 +1062,10 @@ class _WordScreenState extends State<WordScreen>
         closePlay3StopDialog = true;
         log("✔ Completed all three-round plays");
       }
-
-      setState(() {});
     }
+    await resetState();
+    await WakelockPlus.disable();
+    setState(() {});
   }
 
   Future<void> _savePracticeReport(AuthState user) async {
@@ -1169,8 +1092,6 @@ class _WordScreenState extends State<WordScreen>
 
   void pauseAll3() {
     if (isAllPlaying3) {
-      print("Pause called");
-
       _audioPlayerManager.pause();
       _isPaused3 = true;
       isAllPlaying3 = false;
@@ -1184,7 +1105,6 @@ class _WordScreenState extends State<WordScreen>
       setState(() {});
       await Future.delayed(Duration(seconds: 2));
 
-      print("Resume function called");
       _audioPlayerManager.resume();
 
       _playAll3Times();
@@ -1192,7 +1112,6 @@ class _WordScreenState extends State<WordScreen>
   }
 
   updateThreePlayerFlag() {
-    log("working the threeplayer switch>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     isAllPlaying3 = false;
     setState(() {});
   }
@@ -1209,22 +1128,22 @@ class _WordScreenState extends State<WordScreen>
           backgroundColor: const Color(0xFF324265),
           iconTheme: const IconThemeData(color: Colors.white),
           leading: IconButton(
-            icon: Icon(_isSearching ? Icons.close : Icons.arrow_back),
+            icon: Icon(
+                _isSearching ? Icons.close : Icons.arrow_back_ios_new_rounded),
             onPressed: () {
               isAllPlaying3 = false;
               // setState(() {
-              closePlay3StopDialog = true;
-              openPlay1StopDialog = true;
+              closePlay3StopDialog = false;
+              openPlay1StopDialog = false;
               closePlay1StopDialog = false;
               _isPaused = false;
               _currentIndex = 0;
               switchingKey = true;
-              print("swithchingKey:${switchingKey}");
               // });
               isAllPlaying = false;
               // setState(() {
-              closePlay1StopDialog = true;
-              openPlay3StopDialog = true;
+              closePlay1StopDialog = false;
+              openPlay3StopDialog = false;
               closePlay3StopDialog = false;
               _isPaused3 = false;
               _currentIndex3 = 0;
@@ -1234,7 +1153,6 @@ class _WordScreenState extends State<WordScreen>
                 setState(() {});
               } else {
                 stopTimerMainCategory();
-                print("back button pressed");
 
                 if (widget.check == null) {
                   Navigator.pop(context);
@@ -1265,297 +1183,349 @@ class _WordScreenState extends State<WordScreen>
           centerTitle: false,
           actions: _buildActions(),
         ),
-        body:
-            //  _isConnected == false
-            //     ? Center(
-            //         child: Text(
-            //           "No Network Connection",
-            //           style: TextStyle(
-            //               color: AppColors.white, fontFamily: Keys.fontFamily),
-            //         ),
-            //       )
-            //     :
-            _words.length == 0 && !_isLoading
-                ? Column(
-                    children: [
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            "Not Found",
-                            style: TextStyle(
-                                color: AppColors.white,
-                                fontFamily: Keys.fontFamily),
-                          ),
-                        ),
+        body: _words.length == 0 && !_isLoading
+            ? Column(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "Not Found",
+                        style: TextStyle(
+                            color: AppColors.white,
+                            fontFamily: Keys.fontFamily),
                       ),
-                      Container(
-                        height: isSplitScreen
-                            ? getFullWidgetHeight(height: 60)
-                            : getWidgetHeight(height: 60),
-                        width: kWidth,
-                        decoration: BoxDecoration(
-                          color: Color(0xFF34445F),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    ),
+                  ),
+                  Container(
+                    height: isSplitScreen
+                        ? getFullWidgetHeight(height: 60)
+                        : getWidgetHeight(height: 60),
+                    width: kWidth,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF34445F),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                            icon: ImageIcon(
+                              AssetImage(AllAssets.bottomHome),
+                              color: context.read<AuthState>().currentIndex == 0
+                                  ? Color(0xFFAAAAAA)
+                                  : Color.fromARGB(132, 170, 170, 170),
+                            ),
+                            onPressed: () {
+                              context.read<AuthState>().changeIndex(0);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavigation()));
+                            }),
+                        IconButton(
+                            icon: ImageIcon(AssetImage(AllAssets.bottomPL),
+                                color:
+                                    context.read<AuthState>().currentIndex == 1
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
+                            onPressed: () {
+                              context.read<AuthState>().changeIndex(1);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavigation()));
+                            }),
+                        IconButton(
+                            icon: ImageIcon(AssetImage(AllAssets.bottomIS),
+                                color:
+                                    context.read<AuthState>().currentIndex == 2
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
+                            onPressed: () {
+                              context.read<AuthState>().changeIndex(2);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavigation()));
+                            }),
+                        IconButton(
+                            icon: ImageIcon(AssetImage(AllAssets.bottomPE),
+                                color:
+                                    context.read<AuthState>().currentIndex == 3
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
+                            onPressed: () {
+                              context.read<AuthState>().changeIndex(3);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavigation()));
+                            }),
+                        IconButton(
+                            icon: ImageIcon(AssetImage(AllAssets.bottomPT),
+                                color:
+                                    context.read<AuthState>().currentIndex == 4
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170)),
+                            onPressed: () {
+                              context.read<AuthState>().changeIndex(4);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BottomNavigation()));
+                            }),
+                      ],
+                    ),
+                  )
+                ],
+              )
+            : _isLoading
+                ? !wordsFirstTime && !kIsWeb
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            IconButton(
-                                icon: ImageIcon(
-                                  AssetImage(AllAssets.bottomHome),
-                                  color:
-                                      context.read<AuthState>().currentIndex ==
-                                              0
-                                          ? Color(0xFFAAAAAA)
-                                          : Color.fromARGB(132, 170, 170, 170),
-                                ),
-                                onPressed: () {
-                                  context.read<AuthState>().changeIndex(0);
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              BottomNavigation()));
-                                }),
-                            IconButton(
-                                icon: ImageIcon(AssetImage(AllAssets.bottomPL),
-                                    color: context
-                                                .read<AuthState>()
-                                                .currentIndex ==
-                                            1
-                                        ? Color(0xFFAAAAAA)
-                                        : Color.fromARGB(132, 170, 170, 170)),
-                                onPressed: () {
-                                  context.read<AuthState>().changeIndex(1);
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              BottomNavigation()));
-                                }),
-                            IconButton(
-                                icon: ImageIcon(AssetImage(AllAssets.bottomIS),
-                                    color: context
-                                                .read<AuthState>()
-                                                .currentIndex ==
-                                            2
-                                        ? Color(0xFFAAAAAA)
-                                        : Color.fromARGB(132, 170, 170, 170)),
-                                onPressed: () {
-                                  context.read<AuthState>().changeIndex(2);
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              BottomNavigation()));
-                                }),
-                            IconButton(
-                                icon: ImageIcon(AssetImage(AllAssets.bottomPE),
-                                    color: context
-                                                .read<AuthState>()
-                                                .currentIndex ==
-                                            3
-                                        ? Color(0xFFAAAAAA)
-                                        : Color.fromARGB(132, 170, 170, 170)),
-                                onPressed: () {
-                                  context.read<AuthState>().changeIndex(3);
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              BottomNavigation()));
-                                }),
-                            IconButton(
-                                icon: ImageIcon(AssetImage(AllAssets.bottomPT),
-                                    color: context
-                                                .read<AuthState>()
-                                                .currentIndex ==
-                                            4
-                                        ? Color(0xFFAAAAAA)
-                                        : Color.fromARGB(132, 170, 170, 170)),
-                                onPressed: () {
-                                  context.read<AuthState>().changeIndex(4);
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              BottomNavigation()));
-                                }),
+                            Text(
+                              "This may take a couple of minutes \n(only during the first time).",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 7,
+                            ),
+                            Text(
+                              "Please stay on this page, do \nnot go back or close the app.",
+                              style: TextStyle(color: Colors.red, fontSize: 15),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 13),
+                            CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
                           ],
                         ),
                       )
-                    ],
-                  )
-                : _isLoading
-                    ? !wordsFirstTime && !kIsWeb
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "This may take a couple of minutes \n(only during the first time).",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 15),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(
-                                  height: 7,
-                                ),
-                                Text(
-                                  "Please stay on this page, do \nnot go back or close the app.",
-                                  style: TextStyle(
-                                      color: Colors.red, fontSize: 15),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: 13),
-                                CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                          )
-                        : Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                            ),
-                          )
-                    : Column(
-                        children: [
-                          Expanded(
-                            child: Stack(
-                              children: [
-                                ListView.builder(
-                                    padding: EdgeInsets.only(
-                                        top: isSplitScreen
-                                            ? getFullWidgetHeight(height: 10)
-                                            : getWidgetHeight(height: 10)),
-                                    itemCount: _words.length,
-                                    controller: scrollController,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      if (!isAllPlaying && !isAllPlaying3) {
-                                        print(
-                                            "listWordLength:${_words.length}");
-                                        print("dfjusfeiujfejdsfj");
-                                        print(
-                                            "currentIndex : ${_currentIndex}");
-                                        print(
-                                            "wordLengthIndex:${_words.length - 1}");
-                                        isPlaying = List.generate(_words.length,
-                                            (index) => false.obs);
+                    : Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      )
+                : Column(
+                    children: [
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            ListView.builder(
+                                padding: EdgeInsets.only(
+                                    top: isSplitScreen
+                                        ? getFullWidgetHeight(height: 10)
+                                        : getWidgetHeight(height: 10)),
+                                itemCount: _words.length,
+                                controller: scrollController,
+                                itemBuilder: (BuildContext context, int index) {
+                                  if (!isAllPlaying && !isAllPlaying3) {
+                                    isPlaying = List.generate(
+                                        _words.length, (index) => false.obs);
+                                  }
 
-                                        /* if (_currentIndex == _words.length - 1) {
-                                            print("sucessss>>>>>>>>>>>>>>>>>>");
-                                            closePlay1StopDialog = true;
-                                          }*/
-                                        //_getWords(isRefresh: false);
-                                      }
-
-                                      return AutoScrollTag(
-                                        key: itemKeys[index],
-                                        controller: controller,
-                                        index: index,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: index == _words.length - 1
-                                                  ? isSplitScreen
-                                                      ? getFullWidgetHeight(
-                                                          height: 60)
-                                                      : getWidgetHeight(
-                                                          height: 60)
-                                                  : 0),
-                                          child: Container(
-                                            key: itemKeys[index],
-                                            child: DropDownWordItem(
-                                              localPath:
-                                                  _words[index].localPath,
-                                              load: widget.load,
-                                              length: _words.length,
-                                              index: index,
-                                              // isPlaying: _words[index].isPlaying,
-                                              isDownloaded:
-                                                  (_words[index].localPath !=
-                                                          null &&
-                                                      _words[index]
-                                                          .localPath!
-                                                          .isNotEmpty),
-                                              maintitle: widget.title,
-                                              onExpansionChanged: (val) {
-                                                print(
-                                                    "check1111111111111111111111111444>");
-                                                print(
-                                                    "djfdjfihdifhidfid:${_words[index].localPath}");
-                                                setState(() {
-                                                  _selectedWord = '';
+                                  return AutoScrollTag(
+                                    key: ValueKey(index),
+                                    controller: controller,
+                                    index: index,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom: index == _words.length - 1
+                                              ? isSplitScreen
+                                                  ? getFullWidgetHeight(
+                                                      height: 60)
+                                                  : getWidgetHeight(height: 60)
+                                              : 0),
+                                      child: Container(
+                                        // key: itemKeys[index],
+                                        child: DropDownWordItem(
+                                          key: wordTileKeys[index],
+                                          localPath: _words[index].localPath,
+                                          load: widget.load,
+                                          length: _words.length,
+                                          index: index,
+                                          // isPlaying: _words[index].isPlaying,
+                                          isDownloaded:
+                                              (_words[index].localPath !=
+                                                      null &&
+                                                  _words[index]
+                                                      .localPath!
+                                                      .isNotEmpty),
+                                          maintitle: widget.title,
+                                          onExpansionChanged: (val) {
+                                            setState(() {
+                                              _selectedWord = '';
+                                            });
+                                            if (val) {
+                                              _selectedWordOnClick =
+                                                  _words[index].text;
+                                              setState(() {});
+                                              if (_words.length - 2 <= index) {
+                                                WidgetsBinding.instance
+                                                    .addPostFrameCallback((_) {
+                                                  // _scrollToItem(index);
                                                 });
-                                                if (val) {
-                                                  _selectedWordOnClick =
-                                                      _words[index].text;
-                                                  print(
-                                                      "sajidjg:${_words[index].text}");
-                                                  setState(() {});
-                                                  if (_words.length - 2 <=
-                                                      index) {
-                                                    WidgetsBinding.instance
-                                                        .addPostFrameCallback(
-                                                            (_) {
-                                                      // _scrollToItem(index);
-                                                    });
-                                                  }
-                                                }
-                                              },
-                                              initiallyExpanded:
-                                                  _selectedWordOnClick !=
-                                                          null &&
-                                                      _selectedWordOnClick ==
-                                                          _words[index].text,
-                                              isWord: true,
-                                              isRefresh: (val) {
-                                                if (val)
-                                                  _getWords(isRefresh: true);
-                                              },
-                                              // words: _words,
-                                              wordId: _words[index].id!,
-                                              isFav: _words[index].isFav!,
-                                              title: _words[index].text!,
+                                              }
+                                            }
+                                          },
+                                          initiallyExpanded:
+                                              _selectedWordOnClick != null &&
+                                                  _selectedWordOnClick ==
+                                                      _words[index].text,
+                                          isWord: true,
+                                          isRefresh: (val) {
+                                            if (val) _getWords(isRefresh: true);
+                                          },
+                                          // words: _words,
+                                          wordId: _words[index].id!,
+                                          isFav: _words[index].isFav!,
+                                          title: _words[index].text!,
+                                          url: _words[index].file,
+                                          onTapForThreePlayerStop:
+                                              updateThreePlayerFlag,
+                                          children: [
+                                            WordMenu(
+                                              pronun: _words[index].pronun!,
+                                              selectedWord: _selectedWord,
+                                              isCorrect: _selectedWord ==
+                                                      _words[index].text &&
+                                                  _isCorrect,
+                                              text: _words[index].text!,
+                                              syllables:
+                                                  _words[index].syllables!,
+                                              onTapHeadphone: () async {},
                                               url: _words[index].file,
-                                              onTapForThreePlayerStop:
-                                                  updateThreePlayerFlag,
-                                              children: [
-                                                WordMenu(
-                                                  pronun: _words[index].pronun!,
-                                                  selectedWord: _selectedWord,
-                                                  isCorrect: _selectedWord ==
-                                                          _words[index].text &&
-                                                      _isCorrect,
-                                                  text: _words[index].text!,
-                                                  syllables:
-                                                      _words[index].syllables!,
-                                                  onTapHeadphone: () async {},
-                                                  url: _words[index].file,
-                                                  onTapMic: () async {
-                                                    _showDialog(
-                                                        _words[index].text!,
-                                                        false,
-                                                        context);
-                                                  },
-                                                )
-                                              ],
+                                              onTapMic: () async {
+                                                _showDialog(_words[index].text!,
+                                                    false, context);
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                            openPlay3StopDialog && !closePlay3StopDialog
+                                ? Positioned(
+                                    right: kIsWeb
+                                        ? displayWidth(context) / 3
+                                        : 105,
+                                    top: 5,
+                                    child: Container(
+                                      height: isSplitScreen
+                                          ? getFullWidgetHeight(height: 45)
+                                          : getWidgetHeight(height: 45),
+                                      width: !kIsWeb
+                                          ? getWidgetWidth(width: 150)
+                                          : getWidgetWidth(width: 108),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8, top: 5),
+                                            child: Image.asset(
+                                              "assets/images/Play_thrice_icon.png",
+                                              // height: 30,
+                                              width: 30,
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    }),
-                                openPlay3StopDialog && !closePlay3StopDialog
+                                          !isAllPlaying3
+                                              ? audioLoading
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: SizedBox(
+                                                        height: 20,
+                                                        width: 20,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color:
+                                                              Color(0XFF34425D),
+                                                          strokeWidth: 2,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : InkWell(
+                                                      onTap: () {
+                                                        resumeAll3();
+                                                      },
+                                                      child: Icon(
+                                                          Icons.play_arrow,
+                                                          color:
+                                                              Color(0XFF34425D),
+                                                          size: 30))
+                                              : audioLoading
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: SizedBox(
+                                                        height: 20,
+                                                        width: 20,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color:
+                                                              Color(0XFF34425D),
+                                                          strokeWidth: 2,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : InkWell(
+                                                      onTap: () {
+                                                        pauseAll3();
+                                                      },
+                                                      child: Icon(Icons.pause,
+                                                          color:
+                                                              Color(0XFF34425D),
+                                                          size: 30)),
+                                          IconButton(
+                                              onPressed: () async {
+                                                _audioPlayerManager.stop();
+                                                isAllPlaying3 = false;
+                                                setState(() {
+                                                  openPlay3StopDialog = false;
+                                                });
+                                                resetState();
+                                                await WakelockPlus.disable();
+                                              },
+                                              icon: Icon(
+                                                Icons.stop,
+                                                color: Color(0XFF34425D),
+                                                size: 26,
+                                              )),
+                                        ],
+                                      ),
+                                    ))
+                                : openPlay1StopDialog && !closePlay1StopDialog
                                     ? Positioned(
                                         right: kIsWeb
                                             ? displayWidth(context) / 3
-                                            : 120,
+                                            : 105,
                                         top: 5,
                                         child: Container(
                                           height: isSplitScreen
                                               ? getFullWidgetHeight(height: 45)
                                               : getWidgetHeight(height: 45),
-                                          width: getWidgetWidth(width: 108),
+                                          width: !kIsWeb
+                                              ? getWidgetWidth(width: 150)
+                                              : getWidgetWidth(width: 108),
                                           decoration: BoxDecoration(
                                               color: Colors.white,
                                               borderRadius:
@@ -1568,12 +1538,12 @@ class _WordScreenState extends State<WordScreen>
                                                 padding: const EdgeInsets.only(
                                                     left: 8, top: 5),
                                                 child: Image.asset(
-                                                  "assets/images/Play_thrice_icon.png",
-                                                  // height: 30,
+                                                  "assets/images/Play_once_icon.png",
+                                                  // height: 15,
                                                   width: 30,
                                                 ),
                                               ),
-                                              !isAllPlaying3
+                                              _isPaused
                                                   ? audioLoading
                                                       ? Padding(
                                                           padding:
@@ -1592,7 +1562,7 @@ class _WordScreenState extends State<WordScreen>
                                                         )
                                                       : InkWell(
                                                           onTap: () {
-                                                            resumeAll3();
+                                                            resumeAll();
                                                           },
                                                           child: Icon(
                                                               Icons.play_arrow,
@@ -1617,262 +1587,140 @@ class _WordScreenState extends State<WordScreen>
                                                         )
                                                       : InkWell(
                                                           onTap: () {
-                                                            pauseAll3();
+                                                            pauseAll();
                                                           },
                                                           child: Icon(
-                                                              Icons.pause,
-                                                              color: Color(
-                                                                  0XFF34425D),
-                                                              size: 30)),
-                                              IconButton(
-                                                  onPressed: () {
+                                                            Icons.pause,
+                                                            color: Color(
+                                                                0XFF34425D),
+                                                            size: 30,
+                                                          )),
+                                              InkWell(
+                                                  onTap: () async {
                                                     _audioPlayerManager.stop();
-                                                    isAllPlaying3 = false;
+                                                    isAllPlaying = false;
                                                     setState(() {
-                                                      openPlay3StopDialog =
+                                                      openPlay1StopDialog =
                                                           false;
+                                                      resetState();
                                                     });
+                                                    await WakelockPlus.enable();
                                                   },
-                                                  icon: Icon(
+                                                  child: Icon(
                                                     Icons.stop,
                                                     color: Color(0XFF34425D),
-                                                    size: 26,
+                                                    size: 30,
                                                   )),
                                             ],
                                           ),
                                         ))
-                                    : openPlay1StopDialog &&
-                                            !closePlay1StopDialog
-                                        ? Positioned(
-                                            right: kIsWeb
-                                                ? displayWidth(context) / 3
-                                                : 120,
-                                            top: 5,
-                                            child: Container(
-                                              height: isSplitScreen
-                                                  ? getFullWidgetHeight(
-                                                      height: 45)
-                                                  : getWidgetHeight(height: 45),
-                                              width: getWidgetWidth(width: 108),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20)),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 8, top: 5),
-                                                    child: Image.asset(
-                                                      "assets/images/Play_once_icon.png",
-                                                      // height: 15,
-                                                      width: 30,
-                                                    ),
-                                                  ),
-                                                  _isPaused
-                                                      ? audioLoading
-                                                          ? Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: SizedBox(
-                                                                height: 20,
-                                                                width: 20,
-                                                                child:
-                                                                    CircularProgressIndicator(
-                                                                  color: Color(
-                                                                      0XFF34425D),
-                                                                  strokeWidth:
-                                                                      2,
-                                                                ),
-                                                              ),
-                                                            )
-                                                          : InkWell(
-                                                              onTap: () {
-                                                                print(
-                                                                    "checkkkkkkkkk11");
-                                                                resumeAll();
-                                                              },
-                                                              child: Icon(Icons.play_arrow,
-                                                                  color: Color(
-                                                                      0XFF34425D),
-                                                                  size: 30))
-                                                      : audioLoading
-                                                          ? Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: SizedBox(
-                                                                height: 20,
-                                                                width: 20,
-                                                                child:
-                                                                    CircularProgressIndicator(
-                                                                  color: Color(
-                                                                      0XFF34425D),
-                                                                  strokeWidth:
-                                                                      2,
-                                                                ),
-                                                              ),
-                                                            )
-                                                          : InkWell(
-                                                              onTap: () {
-                                                                print(
-                                                                    "checkkk222");
-                                                                pauseAll();
-                                                              },
-                                                              child: Icon(
-                                                                Icons.pause,
-                                                                color: Color(
-                                                                    0XFF34425D),
-                                                                size: 30,
-                                                              )),
-                                                  InkWell(
-                                                      onTap: () {
-                                                        _audioPlayerManager
-                                                            .stop();
-                                                        isAllPlaying = false;
-                                                        setState(() {
-                                                          openPlay1StopDialog =
-                                                              false;
-                                                        });
-                                                      },
-                                                      child: Icon(
-                                                        Icons.stop,
-                                                        color:
-                                                            Color(0XFF34425D),
-                                                        size: 30,
-                                                      )),
-                                                ],
-                                              ),
-                                            ))
-                                        : SizedBox()
-                              ],
-                            ),
-                          ),
-                          if (!_isSearching)
-                            Container(
-                              height: isSplitScreen
-                                  ? getFullWidgetHeight(height: 60)
-                                  : getWidgetHeight(height: 60),
-                              width: kWidth,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF34445F),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  IconButton(
-                                      icon: ImageIcon(
-                                        AssetImage(AllAssets.bottomHome),
-                                        color: context
-                                                    .read<AuthState>()
-                                                    .currentIndex ==
-                                                0
-                                            ? Color(0xFFAAAAAA)
-                                            : Color.fromARGB(
-                                                132, 170, 170, 170),
-                                      ),
-                                      onPressed: () {
-                                        context
-                                            .read<AuthState>()
-                                            .changeIndex(0);
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomNavigation()));
-                                      }),
-                                  IconButton(
-                                      icon: ImageIcon(
-                                          AssetImage(AllAssets.bottomPL),
-                                          color: context
-                                                      .read<AuthState>()
-                                                      .currentIndex ==
-                                                  1
-                                              ? Color(0xFFAAAAAA)
-                                              : Color.fromARGB(
-                                                  132, 170, 170, 170)),
-                                      onPressed: () {
-                                        context
-                                            .read<AuthState>()
-                                            .changeIndex(1);
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomNavigation()));
-                                      }),
-                                  IconButton(
-                                      icon: ImageIcon(
-                                          AssetImage(AllAssets.bottomIS),
-                                          color: context
-                                                      .read<AuthState>()
-                                                      .currentIndex ==
-                                                  2
-                                              ? Color(0xFFAAAAAA)
-                                              : Color.fromARGB(
-                                                  132, 170, 170, 170)),
-                                      onPressed: () {
-                                        context
-                                            .read<AuthState>()
-                                            .changeIndex(2);
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomNavigation()));
-                                      }),
-                                  IconButton(
-                                      icon: ImageIcon(
-                                          AssetImage(AllAssets.bottomPE),
-                                          color: context
-                                                      .read<AuthState>()
-                                                      .currentIndex ==
-                                                  3
-                                              ? Color(0xFFAAAAAA)
-                                              : Color.fromARGB(
-                                                  132, 170, 170, 170)),
-                                      onPressed: () {
-                                        context
-                                            .read<AuthState>()
-                                            .changeIndex(3);
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomNavigation()));
-                                      }),
-                                  IconButton(
-                                      icon: ImageIcon(
-                                          AssetImage(AllAssets.bottomPT),
-                                          color: context
-                                                      .read<AuthState>()
-                                                      .currentIndex ==
-                                                  4
-                                              ? Color(0xFFAAAAAA)
-                                              : Color.fromARGB(
-                                                  132, 170, 170, 170)),
-                                      onPressed: () {
-                                        context
-                                            .read<AuthState>()
-                                            .changeIndex(4);
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomNavigation()));
-                                      }),
-                                ],
-                              ),
-                            )
-                        ],
+                                    : SizedBox()
+                          ],
+                        ),
                       ),
+                      if (!_isSearching)
+                        Container(
+                          height: isSplitScreen
+                              ? getFullWidgetHeight(height: 60)
+                              : getWidgetHeight(height: 60),
+                          width: kWidth,
+                          decoration: BoxDecoration(
+                            color: Color(0xFF34445F),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              IconButton(
+                                  icon: ImageIcon(
+                                    AssetImage(AllAssets.bottomHome),
+                                    color: context
+                                                .read<AuthState>()
+                                                .currentIndex ==
+                                            0
+                                        ? Color(0xFFAAAAAA)
+                                        : Color.fromARGB(132, 170, 170, 170),
+                                  ),
+                                  onPressed: () {
+                                    context.read<AuthState>().changeIndex(0);
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                BottomNavigation()));
+                                  }),
+                              IconButton(
+                                  icon: ImageIcon(
+                                      AssetImage(AllAssets.bottomPL),
+                                      color: context
+                                                  .read<AuthState>()
+                                                  .currentIndex ==
+                                              1
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170)),
+                                  onPressed: () {
+                                    context.read<AuthState>().changeIndex(1);
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                BottomNavigation()));
+                                  }),
+                              IconButton(
+                                  icon: ImageIcon(
+                                      AssetImage(AllAssets.bottomIS),
+                                      color: context
+                                                  .read<AuthState>()
+                                                  .currentIndex ==
+                                              2
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170)),
+                                  onPressed: () {
+                                    context.read<AuthState>().changeIndex(2);
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                BottomNavigation()));
+                                  }),
+                              IconButton(
+                                  icon: ImageIcon(
+                                      AssetImage(AllAssets.bottomPE),
+                                      color: context
+                                                  .read<AuthState>()
+                                                  .currentIndex ==
+                                              3
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170)),
+                                  onPressed: () {
+                                    context.read<AuthState>().changeIndex(3);
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                BottomNavigation()));
+                                  }),
+                              IconButton(
+                                  icon: ImageIcon(
+                                      AssetImage(AllAssets.bottomPT),
+                                      color: context
+                                                  .read<AuthState>()
+                                                  .currentIndex ==
+                                              4
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170)),
+                                  onPressed: () {
+                                    context.read<AuthState>().changeIndex(4);
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                BottomNavigation()));
+                                  }),
+                            ],
+                          ),
+                        )
+                    ],
+                  ),
         // floatingActionButton:
         //     _isLoading || _isSearching ? SizedBox() : buildBoomMenu(),
       ),
@@ -1972,24 +1820,13 @@ class _WordScreenState extends State<WordScreen>
                     decoration: BoxDecoration(
                         color: Colors.white, shape: BoxShape.circle),
                     child: Image.asset("assets/images/filter.png",
-                        color: Colors
-                            .grey) /*
-          child: Icon(
-            Icons.check_box,
-            color: Colors.grey,
-            size: 18,
-          ),*/
-                    ),
+                        color: Colors.grey)),
                 title: "Filter Priority",
                 titleColor: Colors.white,
                 backgroundColor: Colors.transparent,
                 onTap: () {
                   isAllPlaying = false;
                   isAllPlaying3 = false;
-
-                  print("indexCheckkkk:${widget.index}");
-                  print("itemWordList:${widget.itemWordList}");
-                  print("controllerList:${widget.controllerList}");
 
                   setState(() {});
                   log("dohdougdugdugdudjuedfu: ${repeatLoads}");
@@ -2019,7 +1856,6 @@ class _WordScreenState extends State<WordScreen>
                 titleColor: Colors.white,
                 backgroundColor: Colors.transparent,
                 onTap: () {
-                  print("aall priorityyyy calllleddddd>>>>>>>");
                   isAllPlaying = false;
                   isAllPlaying3 = false;
 

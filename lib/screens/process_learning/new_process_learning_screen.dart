@@ -140,35 +140,24 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
     // This method will be called after the first layout is complete
-    print("First layout is complete. Performing initial setup...");
     // You can add any initialization logic here that needs to run after the first layout
   }
 
   Future<void> createDocumentWithSpecificIdPL() async {
     String userId = await SharedPref.getSavedString('userId');
-    print("userIdfdhfihi:$userId");
 
     for (int i = 0; i < _processLeaning.length; i++) {
       if (_processLeaning[i].subcategories != null) {
-        print("title name : ${_processLeaning[i].category}");
-        print("categories name: ${_processLeaning[i].subcategories}");
         for (int j = 0; j < _processLeaning[i].subcategories!.length; j++) {
-          print(
-              "processLearning Subcategoreis length:${_processLeaning[i].subcategories!.length}");
           if (_processLeaning[i].subcategories![j].link != null) {
             if (_processLeaning[i].subcategories![j].link!.isNotEmpty) {
-              print(
-                  "linkCheckkkk:${_processLeaning[i].subcategories![j].link!.isNotEmpty}");
-              print("linkkkkkkk:${_processLeaning[i].subcategories![j].link}");
               activeLinkCountPL += 1;
             }
           }
           if (_processLeaning[i].subcategories![j].linkCats != null) {
-            print("sdmkmgmrgmv");
             for (int z = 0;
                 z < _processLeaning[i].subcategories![j].linkCats!.length;
                 z++) {
-              print("samkdmv");
               if (_processLeaning[i]
                       .subcategories![j]
                       .linkCats![z]
@@ -179,11 +168,7 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                     .linkCats![z]
                     .simulation!
                     .isNotEmpty) {
-                  print(
-                      "simulationLink:${_processLeaning[i].subcategories![j].linkCats![z].simulation!}");
-                  print("dfdjj");
                   activeSimulationCountPL += 1;
-                  print("activeSimulationCountPL:${activeSimulationCountPL}");
                 }
               }
               if (_processLeaning[i].subcategories![j].linkCats![z].video !=
@@ -193,10 +178,7 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                     .linkCats![z]
                     .video!
                     .isNotEmpty) {
-                  print(
-                      "videoLinkkkk:${_processLeaning[i].subcategories![j].linkCats![z].video!}");
                   activeVideoCountPL += 1;
-                  print("activeVideoCountPl:$activeVideoCountPL");
                 }
               }
               if (_processLeaning[i].subcategories![j].linkCats![z].faq !=
@@ -206,10 +188,7 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                     .linkCats![z]
                     .faq!
                     .isNotEmpty) {
-                  print(
-                      "faqLink:${_processLeaning[i].subcategories![j].linkCats![z].faq!}");
                   activeFAQCountPL += 1;
-                  print("activeFAQCountPl:$activeFAQCountPL");
                 }
               }
               if (_processLeaning[i].subcategories![j].linkCats![z].knowledge !=
@@ -219,10 +198,7 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                     .linkCats![z]
                     .knowledge!
                     .isNotEmpty) {
-                  print(
-                      "knowledgeLink:${_processLeaning[i].subcategories![j].linkCats![z].knowledge!}");
                   activeKnowledgePL += 1;
-                  print("activeKnowledgePL:$activeKnowledgePL");
                 }
               }
             }

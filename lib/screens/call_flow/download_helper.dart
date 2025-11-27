@@ -10,11 +10,9 @@ import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/encrypt_data.dart';
 import 'package:litelearninglab/utils/utils.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 
 import '../../main.dart';
-import 'follow_up_screen.dart';
 
 Future<void> downloadAll(AuthState downloadController, String load) async {
   loadsFrom.add(load);
@@ -33,11 +31,12 @@ Future<void> downloadAll(AuthState downloadController, String load) async {
       Directory appDocDir = await getApplicationDocumentsDirectory();
       String appDocPath = appDocDir.path;
       // final downloadController = Provider.of<AuthState>(context,listen: false);
-      String localPath = await Utils.downloadFile(
-          downloadController, sentence.file!, '${sentence.id}.mp3', '$appDocPath/${load}',
+      String localPath = await Utils.downloadFile(downloadController,
+          sentence.file!, '${sentence.id}.mp3', '$appDocPath/${load}',
           isDownloadError: downloadController.isDownloadError);
 
-      String eLocalPath = EncryptData.encryptFile(localPath, downloadController);
+      String eLocalPath =
+          EncryptData.encryptFile(localPath, downloadController);
 
       try {
         await File(localPath).delete();
@@ -48,12 +47,15 @@ Future<void> downloadAll(AuthState downloadController, String load) async {
     SentencesDatabaseRepository dbRef = SentencesDatabaseRepository(dbb);
     for (var i = 0; i < downloadController.followUps.length; i++) {
       Sentence sentence = downloadController.followUps[i];
-      String? savedPath = await dbRef.getDownloadPath(sentence.id!); // Retrieve saved path
+      String? savedPath =
+          await dbRef.getDownloadPath(sentence.id!); // Retrieve saved path
       sentence.localPath = savedPath; // Assign localPath
-      print("Assigned local path for sentence ${sentence.id}: ${sentence.localPath}");
+      print(
+          "Assigned local path for sentence ${sentence.id}: ${sentence.localPath}");
     }
     // downloadController.setIsDownloading(isdownloading: false);
-    downloadController.setIsAllDownloaded(isallDownloaded: downloadController.isDownloaded!);
+    downloadController.setIsAllDownloaded(
+        isallDownloaded: downloadController.isDownloaded!);
 
     // setState(() {
     //   isDownloading = false;

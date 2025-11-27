@@ -73,9 +73,11 @@ class _CommonAppBarState extends State<CommonAppBar> {
                         padding: kWidth > 500
                             ? EdgeInsets.all(10)
                             : EdgeInsets.all(displayWidth(context) / 37.5),
-                        height: isSplitScreen
-                            ? getFullWidgetHeight(height: 40)
-                            : getWidgetHeight(height: 40),
+                        height: kIsWeb
+                            ? getWidgetHeight(height: 50)
+                            : isSplitScreen
+                                ? getFullWidgetHeight(height: 40)
+                                : getWidgetHeight(height: 40),
                         width: kIsWeb ? 40 : getWidgetWidth(width: 40),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,

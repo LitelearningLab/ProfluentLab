@@ -49,7 +49,7 @@ class _PETopCategoriesCardState extends State<PETopCategoriesCard> {
           top: 12,
         ),
         height: getWidgetHeight(height: 147),
-        width: kIsWeb ? size.width * 0.2 : size.width * 0.45,
+        width: kIsWeb ? size.width * 0.17 : size.width * 0.45,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: widget.cardColor,
@@ -62,7 +62,7 @@ class _PETopCategoriesCardState extends State<PETopCategoriesCard> {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
-                  fontSize: 16,
+                  fontSize: kIsWeb ? 18 : 16,
                   fontFamily: 'Roboto',
                   letterSpacing: 0,
                 )
@@ -71,12 +71,14 @@ class _PETopCategoriesCardState extends State<PETopCategoriesCard> {
             Align(
               alignment: Alignment.bottomRight,
               child: Container(
+                  // color: Colors.amberAccent,
                   height: widget.height,
                   width: widget.width,
                   // decoration: BoxDecoration(
                   //   image: DecorationImage(image: AssetImage(imageUrl),fit: BoxFit.fitHeight)
                   // ),
                   child: Image.asset(
+                    fit: BoxFit.fill,
                     widget.imageUrl,
                   )),
             )

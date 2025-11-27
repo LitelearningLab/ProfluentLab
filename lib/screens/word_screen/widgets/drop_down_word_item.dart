@@ -488,7 +488,7 @@ class _DropDownWordItemState extends State<DropDownWordItem> {
           horizontal: getWidgetWidth(width: kIsWeb ? 10 : 0),
         ),
         child: AppExpansionTile(
-          key: expansionTile,
+          key: widget.key,
           onExpansionChanged: widget.onExpansionChanged,
           // titleText: widget.title,
           // onClick: widget.onClick,
@@ -990,7 +990,7 @@ class AppExpansionTileState extends State<AppExpansionTile>
         widget.onExpansionChanged!(_isExpanded);
       }
     }
-    print("Expansion Happening");
+    print("Expansion Happening app expansion tile state");
   }
 
   Widget _buildChildren(BuildContext? context, Widget? child) {

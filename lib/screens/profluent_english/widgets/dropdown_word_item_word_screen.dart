@@ -842,7 +842,7 @@ class AppExpansionTileProfluentWordScreenState
         widget.onExpansionChanged!(_isExpanded);
       }
     }
-    print("Expansion Happening");
+    print("Expansion Happening app expansion title profluent english");
   }
 
   Widget _buildChildren(BuildContext? context, Widget? child) {

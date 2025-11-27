@@ -27,6 +27,7 @@ import 'package:litelearninglab/utils/encrypt_data.dart';
 import 'package:litelearninglab/utils/firebase_helper.dart';
 import 'package:litelearninglab/utils/firebase_helper_RTD.dart';
 import 'package:litelearninglab/utils/shared_pref.dart';
+import 'package:litelearninglab/utils/sizes_helpers.dart';
 import 'package:litelearninglab/utils/utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -456,11 +457,13 @@ class _SentenceScreenState extends State<SentenceScreen>
         stopTimerMainCategory();
       }),
       child: BackgroundWidget(
-          appBar: CommonAppBar(
-            title: widget.title,
-            onPressBool: true,
-            onPressedEvent: () {
-              print("backkk buttonn tappeedddddddd");
+        appBar: AppBar(
+          actionsPadding: EdgeInsets.zero,
+          backgroundColor: const Color(0xFF324265),
+          iconTheme: const IconThemeData(color: Colors.white),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () {
               if (widget.check == null) {
                 Navigator.pop(context);
               } else if (widget.check!) {
@@ -481,191 +484,324 @@ class _SentenceScreenState extends State<SentenceScreen>
                             )));
               }
             },
-            // height: displayHeight(context) / 12.6875,
           ),
-          body: _sentences.length == 0 && !_isLoading
-              ? Center(
-                  child: Text(
-                    "List is empty",
-                    style: TextStyle(
-                        color: AppColors.white, fontFamily: Keys.fontFamily),
-                  ),
-                )
-              : Stack(
-                  children: [
-                    ListView.builder(
-                        padding: EdgeInsets.only(top: 10),
-                        itemCount: _sentences.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          print("AUDIO URL: ${_sentences[index].file}");
-                          return DropDownWordItem(
-                            index: index,
-                            isDownloaded: _sentences[index].localPath != null &&
-                                _sentences[index].localPath!.isNotEmpty,
-                            localPath: _sentences[index].localPath,
-                            load: widget.load,
-                            maintitle: widget.title,
-                            url: _sentences[index].file,
-                            onExpansionChanged: (val) {
-                              if (val) {
-                                _selectedSentence = _sentences[index];
-                                setState(() {});
-                              }
-                            },
-                            initiallyExpanded: _selectedSentence != null &&
-                                _selectedSentence == _sentences[index],
-                            isFav: _sentences[index].isFav!,
-                            wordId: _sentences[index].id!,
-                            isWord: false,
-                            isRefresh: (val) {
-                              if (val) _getSentences(isRefresh: true);
-                            },
-                            title: _sentences[index].text!,
-                            onTapForThreePlayerStop: () {},
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 30, right: 30),
-                                child: Container(
-                                  height: 59,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10)),
-                                    color: Colors.white,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
+          title: Text(
+            widget.title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: Keys.fontFamily,
+              fontSize: globalFontSize(kIsWeb ? 18 : 16, context),
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          actions: [
+            SizedBox(
+              width: getWidgetWidth(width: 30),
+              child: PopupMenuButton<String>(
+                padding: EdgeInsets.zero,
+                color: Colors.white,
+                onSelected: (value) async {
+                  if (value == 'priority') {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    await prefs.setStringList('SentenceScreen',
+                        ["Priority List", "", sentenceRepeatLoad]);
+                    await prefs.setString('lastAccess', 'SentenceScreen');
+                    Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SentenceScreen(
+                                      user: sentenceRepeatUser,
+                                      title: "Priority List",
+                                      load: "",
+                                      main: sentenceRepeatLoad,
+                                      filterLoad: sentenceRepeatLoad,
+                                    )))
+                        .then((val) => _getSentences(isRefresh: false));
+                  } else if (value == 'all_priority') {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    await prefs.setStringList('SentenceScreen',
+                        ["All Priority List", "", widget.load]);
+                    await prefs.setString('lastAccess', 'SentenceScreen');
+                    Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SentenceScreen(
+                                      user: widget.user,
+                                      title: "All Priority List",
+                                      load: "",
+                                      main: widget.load,
+                                    )))
+                        .then((val) => _getSentences(isRefresh: false));
+                  } else if (value == 'clear') {
+                    if (widget.title == "Priority List" ||
+                        widget.title == "All Priority List") {
+                      Navigator.pop(context);
+                    }
+                  }
+                  setState(() {});
+                },
+                itemBuilder: (BuildContext context) => [
+                  if (!kIsWeb)
+                    PopupMenuItem<String>(
+                      value: 'priority',
+                      child: Text(
+                        'Filter Priority',
+                        style: TextStyle(
+                          fontWeight: widget.title == "Priority List"
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                          color: widget.title == "Priority List"
+                              ? Colors.black
+                              : Colors.grey[800],
+                        ),
+                      ),
+                    ),
+                  if (!kIsWeb)
+                    PopupMenuItem<String>(
+                      value: 'all_priority',
+                      child: Text(
+                        'Filter All Priority',
+                        style: TextStyle(
+                          fontWeight: widget.title == "Filter All Priority"
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                          color: widget.title == "Filter All Priority"
+                              ? Colors.black
+                              : Colors.grey[800],
+                        ),
+                      ),
+                    ),
+                  if (!kIsWeb)
+                    PopupMenuItem<String>(
+                      value: 'clear',
+                      child: Text(
+                        'Clear Filter',
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey[800],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+
+        //  CommonAppBar(
+        //   title: widget.title,
+        //   onPressBool: true,
+        //   onPressedEvent: () {
+        //     print("backkk buttonn tappeedddddddd");
+        //     if (widget.check == null) {
+        //       Navigator.pop(context);
+        //     } else if (widget.check!) {
+        //       Navigator.pushReplacement(
+        //           context,
+        //           MaterialPageRoute(
+        //               builder: (context) => SentenceScreen(
+        //                     index: widget.index,
+        //                     itemWordList: widget.itemWordList,
+        //                     user: widget.user,
+        //                     title:
+        //                         widget.itemWordList![widget.index!].title ?? "",
+        //                     load:
+        //                         widget.itemWordList![widget.index!].title ?? "",
+        //                     main: widget.load,
+        //                     // check: true,
+        //                   )));
+        //     }
+        //   },
+
+        //   // height: displayHeight(context) / 12.6875,
+        // ),
+        body: _sentences.length == 0 && !_isLoading
+            ? Center(
+                child: Text(
+                  "List is empty",
+                  style: TextStyle(
+                      color: AppColors.white, fontFamily: Keys.fontFamily),
+                ),
+              )
+            : Stack(
+                children: [
+                  ListView.builder(
+                      padding: EdgeInsets.only(top: 10),
+                      itemCount: _sentences.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        print("AUDIO URL: ${_sentences[index].file}");
+                        return DropDownWordItem(
+                          index: index,
+                          isDownloaded: _sentences[index].localPath != null &&
+                              _sentences[index].localPath!.isNotEmpty,
+                          localPath: _sentences[index].localPath,
+                          load: widget.load,
+                          maintitle: widget.title,
+                          url: _sentences[index].file,
+                          onExpansionChanged: (val) {
+                            if (val) {
+                              _selectedSentence = _sentences[index];
+                              setState(() {});
+                            }
+                          },
+                          initiallyExpanded: _selectedSentence != null &&
+                              _selectedSentence == _sentences[index],
+                          isFav: _sentences[index].isFav!,
+                          wordId: _sentences[index].id!,
+                          isWord: false,
+                          isRefresh: (val) {
+                            if (val) _getSentences(isRefresh: true);
+                          },
+                          title: _sentences[index].text!,
+                          onTapForThreePlayerStop: () {},
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 30, right: 30),
+                              child: Container(
+                                height: 59,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)),
+                                  color: Colors.white,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: kIsWeb
+                                      ? MainAxisAlignment.start
+                                      : MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () async {
+                                        print('INDEX : : : $index');
+                                        if (_isPlaying &&
+                                            _currentPlayingIndex == index) {
+                                          _audioPlayerManager.stop();
+                                        } else {
+                                          startPractice(
+                                              actionType: 'listening');
+                                          _play(_sentences[index].text!, index,
+                                              url: _sentences[index].file!);
+                                        }
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          SPW(35),
+                                          Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              if (isLoading &&
+                                                  _currentPlayingIndex == index)
+                                                SizedBox(
+                                                  height: 18,
+                                                  width: 18,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                          strokeWidth: 2),
+                                                )
+                                              else
+                                                Icon(
+                                                  _isPlaying &&
+                                                          _currentPlayingIndex ==
+                                                              index
+                                                      ? Icons
+                                                          .pause_circle_outline
+                                                      : Icons
+                                                          .play_circle_outline,
+                                                  color: AppColors.black,
+                                                ),
+                                            ],
+                                          ),
+                                          SPW(5),
+                                          Text(
+                                            "Native Speaker",
+                                            style: TextStyle(fontSize: 13),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    // if (_isPlaying)
+                                    //   InkWell(
+                                    //       onTap: () {
+                                    //         _audioPlayerManager.stop();
+                                    //       },
+                                    //       child: Icon(
+                                    // Icons.pause_circle_outline,
+                                    // color: AppColors.black,
+                                    //       )),
+                                    if (!kIsWeb)
                                       InkWell(
                                         onTap: () async {
-                                          print('INDEX : : : $index');
-                                          if (_isPlaying &&
-                                              _currentPlayingIndex == index) {
-                                            _audioPlayerManager.stop();
-                                          } else {
-                                            startPractice(
-                                                actionType: 'listening');
-                                            _play(
-                                                _sentences[index].text!, index,
-                                                url: _sentences[index].file!);
-                                          }
+                                          startPractice(actionType: 'practice');
+                                          _showDialog(_sentences[index].text!,
+                                              false, context);
+                                          String? sentenceFileUrl =
+                                              _sentences[index].file;
+                                          print(
+                                              "sentenceFileUrl:${_sentences[index].file}");
+                                          fileUrl?.add(sentenceFileUrl!);
+                                          FirebaseFirestore firestore =
+                                              FirebaseFirestore.instance;
+                                          String userId =
+                                              await SharedPref.getSavedString(
+                                                  'userId');
+                                          DocumentReference
+                                              wordFileUrlDocument = firestore
+                                                  .collection(
+                                                      'proFluentEnglishReport')
+                                                  .doc(userId);
+
+                                          await wordFileUrlDocument.update({
+                                            'SentencesTapped':
+                                                FieldValue.arrayUnion(
+                                                    [_sentences[index].file]),
+                                          }).then((_) {
+                                            print(
+                                                'Link added to Firestore: ${_sentences[index].file}');
+                                          }).catchError((e) {
+                                            print(
+                                                'Error updating Firestore: $e');
+                                          });
+                                          print(
+                                              "fileUrl:${_sentences[index].file}");
+                                          print("sdhhvgfrhngkihri");
                                         },
                                         child: Row(
                                           children: [
-                                            SPW(35),
-                                            Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                if (isLoading &&
-                                                    _currentPlayingIndex ==
-                                                        index)
-                                                  SizedBox(
-                                                    height: 18,
-                                                    width: 18,
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                            strokeWidth: 2),
-                                                  )
-                                                else
-                                                  Icon(
-                                                    _isPlaying &&
-                                                            _currentPlayingIndex ==
-                                                                index
-                                                        ? Icons
-                                                            .pause_circle_outline
-                                                        : Icons
-                                                            .play_circle_outline,
-                                                    color: AppColors.black,
-                                                  ),
-                                              ],
+                                            Icon(
+                                              Icons.mic,
                                             ),
                                             SPW(5),
                                             Text(
-                                              "Native Speaker",
+                                              "Practice",
                                               style: TextStyle(fontSize: 13),
                                             ),
+                                            SPW(35),
                                           ],
                                         ),
                                       ),
-
-                                      // if (_isPlaying)
-                                      //   InkWell(
-                                      //       onTap: () {
-                                      //         _audioPlayerManager.stop();
-                                      //       },
-                                      //       child: Icon(
-                                      // Icons.pause_circle_outline,
-                                      // color: AppColors.black,
-                                      //       )),
-                                      if (!kIsWeb)
-                                        InkWell(
-                                          onTap: () async {
-                                            startPractice(
-                                                actionType: 'practice');
-                                            _showDialog(_sentences[index].text!,
-                                                false, context);
-                                            String? sentenceFileUrl =
-                                                _sentences[index].file;
-                                            print(
-                                                "sentenceFileUrl:${_sentences[index].file}");
-                                            fileUrl?.add(sentenceFileUrl!);
-                                            FirebaseFirestore firestore =
-                                                FirebaseFirestore.instance;
-                                            String userId =
-                                                await SharedPref.getSavedString(
-                                                    'userId');
-                                            DocumentReference
-                                                wordFileUrlDocument = firestore
-                                                    .collection(
-                                                        'proFluentEnglishReport')
-                                                    .doc(userId);
-
-                                            await wordFileUrlDocument.update({
-                                              'SentencesTapped':
-                                                  FieldValue.arrayUnion(
-                                                      [_sentences[index].file]),
-                                            }).then((_) {
-                                              print(
-                                                  'Link added to Firestore: ${_sentences[index].file}');
-                                            }).catchError((e) {
-                                              print(
-                                                  'Error updating Firestore: $e');
-                                            });
-                                            print(
-                                                "fileUrl:${_sentences[index].file}");
-                                            print("sdhhvgfrhngkihri");
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.mic,
-                                              ),
-                                              SPW(5),
-                                              Text(
-                                                "Practice",
-                                                style: TextStyle(fontSize: 13),
-                                              ),
-                                              SPW(35),
-                                            ],
-                                          ),
-                                        ),
-                                    ],
-                                  ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          );
-                        }),
-                    if (_isLoading)
-                      Center(
-                          child: CircularProgressIndicator(color: Colors.white))
-                  ],
-                ),
-          floatingActionButton: buildBoomMenu()),
+                            ),
+                          ],
+                        );
+                      }),
+                  if (_isLoading)
+                    Center(
+                        child: CircularProgressIndicator(color: Colors.white))
+                ],
+              ),
+        // floatingActionButton: buildBoomMenu(),
+      ),
     );
   }
 

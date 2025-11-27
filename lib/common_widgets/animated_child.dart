@@ -13,7 +13,19 @@ class AnimatedChild extends AnimatedWidget {
   final Color titleColor;
   final Color? subTitleColor;
 
-  AnimatedChild({Key? key, required Animation<double> animation, required this.index, required this.backgroundColor, this.elevation = 6.0, required this.child, required this.title, this.visible = false, required this.onTap, required this.toggleChildren, required this.titleColor, this.subTitleColor})
+  AnimatedChild(
+      {Key? key,
+      required Animation<double> animation,
+      required this.index,
+      required this.backgroundColor,
+      this.elevation = 6.0,
+      required this.child,
+      required this.title,
+      this.visible = false,
+      required this.onTap,
+      required this.toggleChildren,
+      required this.titleColor,
+      this.subTitleColor})
       : super(key: key, listenable: animation);
 
   void _performAction() {
@@ -26,27 +38,32 @@ class AnimatedChild extends AnimatedWidget {
 
     final Widget buttonChild = animation.value > 50.0
         ? Container(
-          width: animation.value,
-          height: animation.value,
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: child,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: Text(
-                    title,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: (titleColor == null) ? Colors.black : titleColor, fontSize: 16.0),
-                  ),
+            width: animation.value,
+            height: animation.value,
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: child,
                 ),
-              )
-            ],
-          ),
-        )
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                    child: Text(
+                      title,
+                      overflow: TextOverflow.ellipsis,
+                      // ignore: unnecessary_null_comparison
+                      style: TextStyle(
+                          color:
+                              // ignore: unnecessary_null_comparison
+                              (titleColor == null) ? Colors.black : titleColor,
+                          fontSize: 16.0),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
         : Container(
             width: 0.0,
             height: 0.0,

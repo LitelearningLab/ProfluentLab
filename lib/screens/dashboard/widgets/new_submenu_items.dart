@@ -38,7 +38,7 @@ class NewSubMenuItem extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    height: getWidgetHeight(height: 36),
+                    height: getWidgetHeight(height: kIsWeb ? 50 : 36),
                     width: getWidgetWidth(width: kIsWeb ? 18 : 36),
                     decoration:
                         BoxDecoration(color: bgColor, shape: BoxShape.circle),

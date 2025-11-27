@@ -783,7 +783,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                               width: getWidgetWidth(
                                   width: kWidth > 500 ? 200 : 375),
                               height: getWidgetHeight(
-                                  height: kWidth > 500 ? 40 : 50),
+                                  height: kWidth > 500 ? 55 : 50),
                               child: CustomButton(
                                 buttonText: _isLogin
                                     ? "Verify Login"

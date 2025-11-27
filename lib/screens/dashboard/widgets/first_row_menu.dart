@@ -72,10 +72,6 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
 
   Future<void> createDocumentWithSpecificId() async {
     String userId = await SharedPref.getSavedString('userId');
-    if (kDebugMode) {
-      print("creat document with specific ID >>>>>>");
-      print(userId);
-    }
 
     for (int i = 0; i < _categories.length; i++) {
       if (_categories[i].link!.isNotEmpty) {
@@ -167,72 +163,21 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
     }
   }
 
-  /* Future<void> createDocumentWithSpecificIdPE() async {
-    print("ssssssss sssss");
-    String userId = await SharedPref.getSavedString('userId');
-    print("dudvdsvdv:$userId");
-    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-        .collection('proFluentEnglishReport')
-        .doc(userId) // specify the document ID
-        .get();
-    List wordsTapped = documentSnapshot.get('WordsTapped');
-    List sentenceTapped = documentSnapshot.get('SentencesTapped');
-    print("words tapped : ${wordsTapped.length}");
-    print("sentence tapped: ${sentenceTapped.length}");
-    wordsProgressPE = wordsTapped.length;
-    sentenceProgressPE = sentenceTapped.length;
-    print("wordProgressPE:${wordsProgressPE}");
-
-    */ /* FirebaseFirestore firestore = FirebaseFirestore.instance;
-  DocumentReference proFluentEnglish = firestore.collection('proFluentEnglishReport').doc(userId);
-
-  DocumentSnapshot snapshot = await proFluentEnglish.get();
-  List wordsTappeds = snapshot.get('WordsTapped');*/ /*
-    */ /*print("words tapped length : ${wordsTappeds.length}");
-  print("wordsTappedddLenthhhhh:${wordsTapped.length}");
-  if (snapshot.exists && snapshot.data() != null) {
-    print("snapshotAlreadyExistssss");
-    setState(() {
-      wordsTapped = List<String>.from(snapshot['WordsTapped']);
-      wordsProgress = wordsTapped.length;
-      print("wordsTappedLength:${wordsProgress}");
-    });
-  }
-  await proFluentEnglish.set({
-    'WordsTapped': wordsTapped,
-    'SentencesTapped': "",
-    'userId': userId,
-  }).then((_) {
-    print(userId);
-  }).catchError((e) {
-    print('Error adding/updating documenttttt: $e');
-  });*/ /*
-  }*/
-
   Future<void> createDocumentWithSpecificIdPL() async {
     String userId = await SharedPref.getSavedString('userId');
-    print("userIdfdhfihi:$userId");
 
     for (int i = 0; i < _processLeaning.length; i++) {
       if (_processLeaning[i].subcategories != null) {
-        print("categories name: ${_processLeaning[i].subcategories}");
         for (int j = 0; j < _processLeaning[i].subcategories!.length; j++) {
-          print(
-              "processLearning Subcategoreis length:${_processLeaning[i].subcategories!.length}");
           if (_processLeaning[i].subcategories![j].link != null) {
             if (_processLeaning[i].subcategories![j].link!.isNotEmpty) {
-              print(
-                  "linkCheckkkk:${_processLeaning[i].subcategories![j].link!.isNotEmpty}");
-              print("linkkkkkkk:${_processLeaning[i].subcategories![j].link}");
               activeLinkCountPL += 1;
             }
           }
           if (_processLeaning[i].subcategories![j].linkCats != null) {
-            print("sdmkmgmrgmv");
             for (int z = 0;
                 z < _processLeaning[i].subcategories![j].linkCats!.length;
                 z++) {
-              print("samkdmv");
               if (_processLeaning[i]
                       .subcategories![j]
                       .linkCats![z]
@@ -243,11 +188,7 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                     .linkCats![z]
                     .simulation!
                     .isNotEmpty) {
-                  print(
-                      "simulationLink:${_processLeaning[i].subcategories![j].linkCats![z].simulation!}");
-                  print("dfdjj");
                   activeSimulationCountPL += 1;
-                  print("activeSimulationCountPL:${activeSimulationCountPL}");
                 }
               }
               if (_processLeaning[i].subcategories![j].linkCats![z].video !=
@@ -257,10 +198,7 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                     .linkCats![z]
                     .video!
                     .isNotEmpty) {
-                  print(
-                      "videoLinkkk:${_processLeaning[i].subcategories![j].linkCats![z].video!}");
                   activeVideoCountPL += 1;
-                  print("activeVideoCountPl:$activeVideoCountPL");
                 }
               }
               if (_processLeaning[i].subcategories![j].linkCats![z].faq !=
@@ -270,10 +208,7 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                     .linkCats![z]
                     .faq!
                     .isNotEmpty) {
-                  print(
-                      "faqLink:${_processLeaning[i].subcategories![j].linkCats![z].faq!}");
                   activeFAQCountPL += 1;
-                  print("activeFAQCountPl:$activeFAQCountPL");
                 }
               }
               if (_processLeaning[i].subcategories![j].linkCats![z].knowledge !=
@@ -283,10 +218,7 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                     .linkCats![z]
                     .knowledge!
                     .isNotEmpty) {
-                  print(
-                      "knowledgeLink:${_processLeaning[i].subcategories![j].linkCats![z].knowledge!}");
                   activeKnowledgePL += 1;
-                  print("activeKnowledgePL:$activeKnowledgePL");
                 }
               }
             }
@@ -297,13 +229,6 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
             activeVideoCountPL +
             activeFAQCountPL +
             activeKnowledgePL;
-        print("activeLinkCountPL:${activeLinkCountPL}");
-        print('activeSimulationCountPl:$activeSimulationCountPL');
-        print('activeVideoCountPL:$activeVideoCountPL');
-        print('activeFAQCountPL:$activeFAQCountPL');
-        print('activeKnowledgePL:$activeKnowledgePL');
-        print('activeSimulationCountPl:$activeSimulationCountPL');
-        print("totalActiveLinkCountpl:$totalActiveLinkCountPL");
       }
     }
 
@@ -314,105 +239,82 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
     DocumentSnapshot snapshot = await processLearningReport.get();
 
     if (snapshot.exists && snapshot.data() != null) {
-      print("snapshotAlreadyExists");
       setState(() {
         processLearningLinks = List<String>.from(snapshot['isLink']);
         processLearningProgressBar =
             processLearningLinks.length / totalActiveLinkCountPL;
-        print("processLearningProgressBar:$processLearningProgressBar");
-        print("processLearningLinkLenth:${processLearningLinks.length}");
-        print("totalActiveLinkCountPL:${totalActiveLinkCountPL}");
       });
     }
     String company = await SharedPref.getSavedString("companyId");
     String batch = await SharedPref.getSavedString("batch");
-    await processLearningReport.set({
-      'activeLink': totalActiveLinkCountPL,
-      'isLink': processLearningLinks,
-      'userId': userId,
-      'batch': batch,
-      "companyId": company
-    }).then((_) {
-      print(userId);
-    }).catchError((e) {
-      print('Error adding/updating document: $e');
-    });
+    await processLearningReport
+        .set({
+          'activeLink': totalActiveLinkCountPL,
+          'isLink': processLearningLinks,
+          'userId': userId,
+          'batch': batch,
+          "companyId": company
+        })
+        .then((_) {})
+        .catchError((e) {
+          print('Error adding/updating document: $e');
+        });
   }
 
   Future<void> updateFunction() async {
-    print("updateFunctionCalledddddddddd");
     String userId = await SharedPref.getSavedString('userId');
-    print("userIdfdhfihi:$userId");
+
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     DocumentReference arCallSimulations =
         firestore.collection('arCallSimulationsReport').doc(userId);
-    print("arcallsimulation:$arCallSimulations");
+
     DocumentSnapshot snapshot = await arCallSimulations.get();
-    print("Document Exists: ${snapshot.exists}");
+
     if (snapshot.exists && snapshot.data() != null) {
-      print("snapshotAlreadyExistsarcallll");
       List<String> tempArCallSimulationsLinks =
           List<String>.from(snapshot['isLink']);
 
       setState(() {
-        print("dsfeiofeif");
         arCallSimulationsLinks = tempArCallSimulationsLinks;
-        print("arCallSimulationsLinks: $arCallSimulationsLinks");
         arCallSimulationsProgressBar =
             arCallSimulationsLinks.length / TotalActiveLinkCount;
-        print("arCallSimulationsProgressBar: $arCallSimulationsProgressBar");
-        print("TotalActiveLinkCount:$TotalActiveLinkCount");
-        print("activeLinkCount: ${activeLinkCount}");
       });
     } else {
       print("snapshot does not exist");
     }
 
-    await arCallSimulations.set({
-      'activeLink': TotalActiveLinkCount,
-      'isLink': arCallSimulationsLinks,
-      'userId': userId,
-    }).then((_) {
-      print(userId);
-    }).catchError((e) {
-      print('Error adding/updating document: $e');
-    });
+    await arCallSimulations
+        .set({
+          'activeLink': TotalActiveLinkCount,
+          'isLink': arCallSimulationsLinks,
+          'userId': userId,
+        })
+        .then((_) {})
+        .catchError((e) {
+          print('Error adding/updating document: $e');
+        });
   }
 
   Future<void> createDocumentWithSpecificIdARCallSimulations() async {
-    print("sdjfijeijfiejfi");
     String userId = await SharedPref.getSavedString('userId');
-    print("userIdfdhfihi:$userId");
-    print("categories:${_categoriesAr}");
+
     for (int i = 0; i < _categoriesAr.length; i++) {
-      print(":sjfdjkif");
       if (_categoriesAr[i].subcategories != null) {
-        print("categories name: ${_categoriesAr[i].category}");
-        print("categories after:${_categories}");
         for (int j = 0; j < _categoriesAr[i].subcategories!.length; j++) {
           if (_categoriesAr[i].subcategories![j].link1!.isNotEmpty) {
-            print("Link1 is active:");
-            print(_categoriesAr[i].subcategories![j].link1!);
             activeLink1Count += 1;
-            print("activeLink1Count: $activeLink1Count");
           }
           if (_categoriesAr[i].subcategories![j].link2!.isNotEmpty) {
-            print("Link2 is active:");
             activeLink2Count += 1;
-            print("activeLink2Count: $activeLink2Count");
           }
           if (_categoriesAr[i].subcategories![j].link3!.isNotEmpty) {
-            print("Link3 is active:");
             activeLink3Count += 1;
-            print("activeLink3Count: $activeLink3Count");
           }
         }
         TotalActiveLinkCount =
             activeLink1Count + activeLink2Count + activeLink3Count;
-        print("totalActivelinkCount: ${TotalActiveLinkCount}");
       }
     }
-    print("forloop completed");
     await updateFunction();
   }
 

@@ -42,16 +42,6 @@ class WordsDao implements Dao<Word> {
     word.text = query[_columnText];
     word.isPriority = query[isPriority];
 
-/*    print("Pronunciation Labbbb>>>>>>>>>>>>>>>>>>>>>>>>.");
-    print("word id : ${word.id}");
-    print("word cat : ${word.cat}");
-    print("word key : ${word.key}");
-    print("word file : ${word.file}");
-    print("word isfav : ${word.isFav}");
-    print("word localpath : ${word.localPath}");
-    print("word pronun : ${word.pronun}");
-    print("word syllables : ${word.syllables}");
-    print("word text : ${word.text}");*/
     return word;
   }
 
