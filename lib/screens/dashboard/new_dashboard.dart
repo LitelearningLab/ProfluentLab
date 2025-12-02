@@ -300,7 +300,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                               right: getWidgetWidth(width: 20),
                               top: isSplitScreen
                                   ? getFullWidgetHeight(height: 20)
-                                  : getWidgetHeight(height: 20)),
+                                  : getWidgetHeight(height: 5)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

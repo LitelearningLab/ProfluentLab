@@ -324,7 +324,7 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                           left: getWidgetWidth(width: 18),
                                           right: getWidgetWidth(width: 18)),
                                       child: SizedBox(
-                                        // width: displayWidth(context),
+                                        width: displayWidth(context),
                                         height: getWidgetHeight(height: 370),
                                         child: ListView.builder(
                                           physics:
@@ -425,8 +425,8 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                                     const EdgeInsets.symmetric(
                                                         horizontal: 12),
                                                 child: Container(
-                                                  width:
-                                                      displayWidth(context) / 6,
+                                                  width: displayWidth(context) /
+                                                      6.5,
                                                   decoration: BoxDecoration(
                                                     color: swipperList[
                                                             adjustedIndex]

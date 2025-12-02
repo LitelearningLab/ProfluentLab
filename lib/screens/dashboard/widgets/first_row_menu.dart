@@ -325,7 +325,7 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
       onTap: widget.onTap,
       child: Container(
         width: kIsWeb ? getWidgetWidth(width: 70) : getWidgetWidth(width: 228),
-        height: getWidgetHeight(height: kIsWeb ? 360 : 313.39),
+        height: getWidgetHeight(height: kIsWeb ? 340 : 313.39),
         decoration: BoxDecoration(
           color: const Color(0xff34425D),
           borderRadius: BorderRadius.circular(10),

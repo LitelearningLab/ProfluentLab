@@ -157,9 +157,8 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
       soundPractice = wordsList;
     } else {
       wordsList = await dbRef.getWords();
-      soundPractice = wordsList
-          .where((element) => element.cat == widget.load)
-          .toList();
+      soundPractice =
+          wordsList.where((element) => element.cat == widget.load).toList();
     }
     print("printing the length of the sound practice ${soundPractice.length}");
 
@@ -168,14 +167,10 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
 
   String formatDuration(Duration duration) {
     var remaining = duration - _controller.value.position;
-    String minutes = remaining.inMinutes
-        .remainder(60)
-        .toString()
-        .padLeft(2, '0');
-    String seconds = remaining.inSeconds
-        .remainder(60)
-        .toString()
-        .padLeft(2, '0');
+    String minutes =
+        remaining.inMinutes.remainder(60).toString().padLeft(2, '0');
+    String seconds =
+        remaining.inSeconds.remainder(60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
   }
 
@@ -230,12 +225,12 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
         url = index == 0
             ? widget.links.v1!
             : index == 1
-            ? widget.links.v2!
-            : index == 2
-            ? widget.links.v3!
-            : index == 3
-            ? widget.links.v4!
-            : widget.links.v5!;
+                ? widget.links.v2!
+                : index == 2
+                    ? widget.links.v3!
+                    : index == 3
+                        ? widget.links.v4!
+                        : widget.links.v5!;
         print("🔗 Selected URL: $url");
       } else if (index == 5) {
         print("📘 Index = 5 — navigating to WordScreenProfluentEnglish");
@@ -487,128 +482,198 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                         height: kWidth / 3.5,
                                         child: _isPlaying == false
                                             ? _hasInitError
-                                                  ? Center(
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Icon(
-                                                            Icons.error,
+                                                ? Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.error,
+                                                          color: Colors.white,
+                                                          size: 48,
+                                                        ),
+                                                        SizedBox(height: 16),
+                                                        Text(
+                                                          "Video failed to load",
+                                                          style: TextStyle(
                                                             color: Colors.white,
-                                                            size: 48,
                                                           ),
-                                                          SizedBox(height: 16),
-                                                          Text(
-                                                            "Video failed to load",
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ),
-                                                          ElevatedButton(
-                                                            onPressed: () async {
-                                                              try {
-                                                                await _controller
-                                                                    .pause();
-                                                                await _controller
-                                                                    .dispose();
-                                                              } catch (e) {
-                                                                log(
-                                                                  "Error disposing controllers before retry: $e",
-                                                                );
-                                                              }
+                                                        ),
+                                                        ElevatedButton(
+                                                          onPressed: () async {
+                                                            try {
+                                                              await _controller
+                                                                  .pause();
+                                                              await _controller
+                                                                  .dispose();
+                                                            } catch (e) {
+                                                              log(
+                                                                "Error disposing controllers before retry: $e",
+                                                              );
+                                                            }
 
-                                                              _initializeVideoPlayerFuture =
-                                                                  _initVideoPlayer(
-                                                                    url: widget
-                                                                        .links
-                                                                        .v1!,
-                                                                  );
-                                                              setState(() {});
-                                                            },
-                                                            child: Text(
-                                                              "Retry",
-                                                            ),
+                                                            _initializeVideoPlayerFuture =
+                                                                _initVideoPlayer(
+                                                              url: widget
+                                                                  .links.v1!,
+                                                            );
+                                                            setState(() {});
+                                                          },
+                                                          child: Text(
+                                                            "Retry",
                                                           ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  : Center(
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          CircularProgressIndicator(
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                : Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        CircularProgressIndicator(
+                                                          color: Colors.white,
+                                                        ),
+                                                        SizedBox(
+                                                          height: isSplitScreen
+                                                              ? getFullWidgetHeight(
+                                                                  height: 10,
+                                                                )
+                                                              : getWidgetHeight(
+                                                                  height: 10,
+                                                                ),
+                                                        ),
+                                                        Text(
+                                                          'Loading...',
+                                                          style: TextStyle(
                                                             color: Colors.white,
                                                           ),
-                                                          SizedBox(
-                                                            height:
-                                                                isSplitScreen
-                                                                ? getFullWidgetHeight(
-                                                                    height: 10,
-                                                                  )
-                                                                : getWidgetHeight(
-                                                                    height: 10,
-                                                                  ),
-                                                          ),
-                                                          Text(
-                                                            'Loading...',
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                            : MouseRegion(
+                                                onEnter: (_) {
+                                                  _hideControllerTimer
+                                                      ?.cancel();
+                                                  setState(() {
+                                                    _isControllerVisible = true;
+                                                  });
+                                                },
+                                                onExit: (_) {
+                                                  setState(() {
+                                                    _isControllerVisible =
+                                                        false;
+                                                  });
+                                                },
+                                                child: Stack(
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap:
+                                                          toggleControllerVisibility,
+                                                      child: VideoPlayer(
+                                                          _controller),
+                                                    ),
+
+                                                    // Modern Controls Overlay (Fade in/out)
+                                                    AnimatedOpacity(
+                                                      opacity:
+                                                          _isControllerVisible
+                                                              ? 1.0
+                                                              : 0.0,
+                                                      duration: const Duration(
+                                                          milliseconds: 300),
+                                                      child: Stack(
+                                                        children: [
+                                                          // The large central Play/Pause Icon has been REMOVED from here.
+
+                                                          // --- 1. Top Back Button (Remains unchanged) ---
+                                                          Positioned(
+                                                            top: 20,
+                                                            left: 20,
+                                                            child: Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color: Colors
+                                                                    .white
+                                                                    .withOpacity(
+                                                                        0.3),
+                                                              ),
+                                                              child: IconButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                icon: const Icon(
+                                                                    Icons
+                                                                        .arrow_back,
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                    )
-                                            : Stack(
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      toggleControllerVisibility();
-                                                    },
-                                                    child: VideoPlayer(
-                                                      _controller,
-                                                    ),
-                                                  ),
-                                                  if (_isControllerVisible)
-                                                    Positioned(
-                                                      bottom: 0,
-                                                      left: 0,
-                                                      right: 0,
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          togglePlayPauseControllerVisibility();
-                                                        },
-                                                        child: Container(
-                                                          color: Colors.black
-                                                              .withOpacity(0.4),
-                                                          padding:
-                                                              const EdgeInsets.symmetric(
-                                                                vertical: 8.0,
+
+                                                          // --- 2. Bottom Control Bar (Timeline, Duration, and Play/Pause Button) ---
+                                                          Positioned(
+                                                            bottom: 0,
+                                                            left: 0,
+                                                            right: 0,
+                                                            child: Container(
+                                                              // Gradient for a smoother, modern look
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  begin: Alignment
+                                                                      .bottomCenter,
+                                                                  end: Alignment
+                                                                      .topCenter,
+                                                                  colors: [
+                                                                    Colors.black
+                                                                        .withOpacity(
+                                                                            0.7),
+                                                                    Colors
+                                                                        .transparent,
+                                                                  ],
+                                                                ),
                                                               ),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              ValueListenableBuilder(
-                                                                valueListenable:
-                                                                    _controller,
-                                                                builder:
-                                                                    (
-                                                                      context,
-                                                                      VideoPlayerValue
-                                                                      value,
-                                                                      child,
-                                                                    ) {
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .fromLTRB(
+                                                                      16,
+                                                                      32,
+                                                                      16,
+                                                                      8),
+                                                              child: Row(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  // --- A. Play/Pause Button (NEW POSITION) ---
+                                                                  ValueListenableBuilder<
+                                                                      VideoPlayerValue>(
+                                                                    valueListenable:
+                                                                        _controller,
+                                                                    builder: (context,
+                                                                        value,
+                                                                        child) {
                                                                       return IconButton(
-                                                                        onPressed: () {
+                                                                        icon:
+                                                                            Icon(
+                                                                          value.isPlaying
+                                                                              ? Icons.pause_circle_filled_rounded
+                                                                              : Icons.play_circle_fill_rounded,
+                                                                          color:
+                                                                              Colors.white,
+                                                                          size:
+                                                                              36, // Adjust size for bottom row
+                                                                        ),
+                                                                        onPressed:
+                                                                            () {
                                                                           if (_controller
                                                                               .value
                                                                               .isPlaying) {
@@ -616,117 +681,119 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                                           } else {
                                                                             _controller.play();
                                                                           }
+                                                                          // Reset hide timer
+                                                                          // Assuming togglePlayPauseControllerVisibility is available
+                                                                          // togglePlayPauseControllerVisibility();
+                                                                          _showController(); // Assuming this function is available to reset the hide timer
                                                                         },
-                                                                        icon: Icon(
-                                                                          _controller.value.isPlaying
-                                                                              ? Icons.pause
-                                                                              : Icons.play_arrow,
-                                                                          color:
-                                                                              Colors.white,
-                                                                          size:
-                                                                              30,
-                                                                        ),
                                                                       );
                                                                     },
-                                                              ),
-                                                              ValueListenableBuilder(
-                                                                valueListenable:
-                                                                    _controller,
-                                                                builder:
-                                                                    (
-                                                                      context,
-                                                                      VideoPlayerValue
-                                                                      value,
-                                                                      child,
-                                                                    ) {
+                                                                  ),
+
+                                                                  const SizedBox(
+                                                                      width: 8),
+
+                                                                  // --- B. Current Position Time ---
+                                                                  ValueListenableBuilder<
+                                                                      VideoPlayerValue>(
+                                                                    valueListenable:
+                                                                        _controller,
+                                                                    builder: (context,
+                                                                        value,
+                                                                        child) {
                                                                       return Text(
                                                                         _formatDuration(
-                                                                          value
-                                                                              .position,
-                                                                        ),
+                                                                            value.position),
                                                                         style: const TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                        ),
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontSize: 14),
                                                                       );
                                                                     },
-                                                              ),
-                                                              Text(
-                                                                " / ",
-                                                                style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                              ),
-                                                              ValueListenableBuilder(
-                                                                valueListenable:
-                                                                    _controller,
-                                                                builder:
-                                                                    (
-                                                                      context,
-                                                                      VideoPlayerValue
-                                                                      value,
-                                                                      child,
-                                                                    ) {
+                                                                  ),
+
+                                                                  const SizedBox(
+                                                                      width: 8),
+
+                                                                  // --- C. Timeline Slider ---
+                                                                  Expanded(
+                                                                    child: ValueListenableBuilder<
+                                                                        VideoPlayerValue>(
+                                                                      valueListenable:
+                                                                          _controller,
+                                                                      builder: (context,
+                                                                          value,
+                                                                          child) {
+                                                                        return SliderTheme(
+                                                                          data:
+                                                                              SliderTheme.of(context).copyWith(
+                                                                            thumbShape:
+                                                                                RoundSliderThumbShape(enabledThumbRadius: 6.0),
+                                                                            overlayShape:
+                                                                                RoundSliderOverlayShape(overlayRadius: 12.0),
+                                                                            trackHeight:
+                                                                                3.0,
+                                                                            activeTrackColor:
+                                                                                Colors.white,
+                                                                            inactiveTrackColor:
+                                                                                Colors.white54,
+                                                                            thumbColor:
+                                                                                Colors.blue, // Highlight color
+                                                                            overlayColor:
+                                                                                Colors.blue.withOpacity(0.3),
+                                                                          ),
+                                                                          child:
+                                                                              Slider(
+                                                                            value:
+                                                                                value.position.inMilliseconds.toDouble().clamp(0.0, value.duration.inMilliseconds.toDouble()),
+                                                                            min:
+                                                                                0,
+                                                                            max:
+                                                                                value.duration.inMilliseconds.toDouble(),
+                                                                            onChanged:
+                                                                                (newValue) {
+                                                                              _controller.seekTo(
+                                                                                Duration(milliseconds: newValue.toInt()),
+                                                                              );
+                                                                              // Keep controls visible while seeking
+                                                                              _showController(); // Assuming this function is available
+                                                                            },
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  ),
+
+                                                                  const SizedBox(
+                                                                      width: 8),
+
+                                                                  // --- D. Total Duration Time ---
+                                                                  ValueListenableBuilder<
+                                                                      VideoPlayerValue>(
+                                                                    valueListenable:
+                                                                        _controller,
+                                                                    builder: (context,
+                                                                        value,
+                                                                        child) {
                                                                       return Text(
                                                                         _formatDuration(
-                                                                          value
-                                                                              .duration,
-                                                                        ),
+                                                                            value.duration),
                                                                         style: const TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                        ),
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontSize: 14),
                                                                       );
                                                                     },
+                                                                  ),
+                                                                ],
                                                               ),
-                                                              ValueListenableBuilder(
-                                                                valueListenable:
-                                                                    _controller,
-                                                                builder:
-                                                                    (
-                                                                      context,
-                                                                      VideoPlayerValue
-                                                                      value,
-                                                                      child,
-                                                                    ) {
-                                                                      return Expanded(
-                                                                        child: Slider(
-                                                                          value: value
-                                                                              .position
-                                                                              .inMilliseconds
-                                                                              .toDouble(),
-                                                                          min:
-                                                                              0,
-                                                                          max: value
-                                                                              .duration
-                                                                              .inMilliseconds
-                                                                              .toDouble(),
-                                                                          onChanged:
-                                                                              (
-                                                                                newValue,
-                                                                              ) {
-                                                                                _controller.seekTo(
-                                                                                  Duration(
-                                                                                    milliseconds: newValue.toInt(),
-                                                                                  ),
-                                                                                );
-                                                                              },
-                                                                          activeColor:
-                                                                              Colors.white,
-                                                                          inactiveColor:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                              ),
-                                                              // **Current Time**
-                                                            ],
+                                                            ),
                                                           ),
-                                                        ),
+                                                        ],
                                                       ),
                                                     ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                       ),
                                     ),
@@ -745,55 +812,45 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                           shrinkWrap: true,
                                           gridDelegate:
                                               SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 1,
-                                                mainAxisSpacing: 15,
-                                                crossAxisSpacing: 15,
-                                                childAspectRatio: 8.2,
-                                              ),
+                                            crossAxisCount: 1,
+                                            mainAxisSpacing: 15,
+                                            crossAxisSpacing: 15,
+                                            childAspectRatio: 8.2,
+                                          ),
                                           itemCount: 6,
-                                          itemBuilder: (BuildContext context, int index) {
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
                                             return GestureDetector(
-                                              onTapDown: (TapDownDetails onTapDetails) async {
+                                              onTapDown: (TapDownDetails
+                                                  onTapDetails) async {
                                                 log(
                                                   "entering and priniting the index ${index}",
                                                 );
                                                 // if (checkUrl != index) {
                                                 // checkUrl = index;
                                                 if (((widget.links.v1 == null ||
-                                                            widget
-                                                                .links
-                                                                .v1!
+                                                            widget.links.v1!
                                                                 .isEmpty) &&
                                                         index == 0) ||
                                                     ((widget.links.v2 == null ||
-                                                            widget
-                                                                .links
-                                                                .v2!
+                                                            widget.links.v2!
                                                                 .isEmpty) &&
                                                         index == 1) ||
                                                     ((widget.links.v3 == null ||
-                                                            widget
-                                                                .links
-                                                                .v3!
+                                                            widget.links.v3!
                                                                 .isEmpty) &&
                                                         index == 2) ||
                                                     ((widget.links.v4 == null ||
-                                                            widget
-                                                                .links
-                                                                .v4!
+                                                            widget.links.v4!
                                                                 .isEmpty) &&
                                                         index == 3) ||
                                                     ((widget.links.v5 == null ||
-                                                            widget
-                                                                .links
-                                                                .v5!
+                                                            widget.links.v5!
                                                                 .isEmpty) &&
                                                         index == 4) ||
                                                     ((widget.links.words ==
                                                                 null ||
-                                                            widget
-                                                                .links
-                                                                .words!
+                                                            widget.links.words!
                                                                 .isEmpty) &&
                                                         index == 5)) {
                                                   await _controller.pause();
@@ -809,12 +866,12 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                     MaterialPageRoute(
                                                       builder: (context) =>
                                                           WordScreenProfluentEnglish(
-                                                            title: widget.load,
-                                                            load: widget
-                                                                .load, //'Words',
-                                                            soundPractice:
-                                                                soundPractice!,
-                                                          ),
+                                                        title: widget.load,
+                                                        load: widget
+                                                            .load, //'Words',
+                                                        soundPractice:
+                                                            soundPractice!,
+                                                      ),
                                                     ),
                                                   ).then((_) {
                                                     // print("sjfidhjvgirj");
@@ -832,13 +889,12 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                       MaterialPageRoute(
                                                         builder: (context) =>
                                                             WordScreenProfluentEnglish(
-                                                              title:
-                                                                  widget.load,
-                                                              load: widget
-                                                                  .load, //'Words',
-                                                              soundPractice:
-                                                                  soundPractice!,
-                                                            ),
+                                                          title: widget.load,
+                                                          load: widget
+                                                              .load, //'Words',
+                                                          soundPractice:
+                                                              soundPractice!,
+                                                        ),
                                                       ),
                                                     ).then((value) {
                                                       // print("valueee:$value");
@@ -873,8 +929,7 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                       if (index != 5)
                                                         Image.asset(
                                                           "assets/images/pl${index + 1}.png",
-                                                          width:
-                                                              displayWidth(
+                                                          width: displayWidth(
                                                                 context,
                                                               ) *
                                                               0.05,
@@ -908,14 +963,15 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                         index == 0
                                                             ? "Front View"
                                                             : index == 1
-                                                            ? "Side View"
-                                                            : index == 2
-                                                            ? "Front Closer"
-                                                            : index == 3
-                                                            ? "Side Closer"
-                                                            : index == 4
-                                                            ? "Animation"
-                                                            : "Practice",
+                                                                ? "Side View"
+                                                                : index == 2
+                                                                    ? "Front Closer"
+                                                                    : index == 3
+                                                                        ? "Side Closer"
+                                                                        : index ==
+                                                                                4
+                                                                            ? "Animation"
+                                                                            : "Practice",
                                                         style: TextStyle(
                                                           color: Colors.white,
                                                           fontSize: kText.scale(
@@ -981,14 +1037,14 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                   : ListView(
                       children: [
                         SizedBox(
-                          width: kWidth,
-                          height: kIsWeb
-                              ? displayHeight(context) * 0.5
-                              : _controller.value.isInitialized
-                              ? kWidth / _controller.value.aspectRatio
-                              : displayWidth(context),
-                          child: _isPlaying == false
-                              ? _hasInitError
+                            width: kWidth,
+                            height: kIsWeb
+                                ? displayHeight(context) * 0.5
+                                : _controller.value.isInitialized
+                                    ? kWidth / _controller.value.aspectRatio
+                                    : displayWidth(context),
+                            child: _isPlaying == false
+                                ? _hasInitError
                                     ? Center(
                                         child: Column(
                                           mainAxisAlignment:
@@ -1021,8 +1077,8 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
 
                                                 _initializeVideoPlayerFuture =
                                                     _initVideoPlayer(
-                                                      url: widget.links.v1!,
-                                                    );
+                                                  url: widget.links.v1!,
+                                                );
                                                 setState(() {});
                                               },
                                               child: Text("Retry"),
@@ -1054,45 +1110,65 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                           ],
                                         ),
                                       )
-                              : Stack(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        toggleControllerVisibility();
-                                      },
-                                      child: VideoPlayer(_controller),
-                                    ),
-                                    if (_isControllerVisible)
-                                      Positioned(
-                                        bottom: 0,
-                                        left: 0,
-                                        right: 0,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            togglePlayPauseControllerVisibility();
-                                          },
-                                          child: Container(
-                                            color: Colors.black.withOpacity(
-                                              0.4,
-                                            ),
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                ValueListenableBuilder(
-                                                  valueListenable: _controller,
-                                                  builder:
-                                                      (
-                                                        context,
-                                                        VideoPlayerValue value,
-                                                        child,
-                                                      ) {
+                                : Stack(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: toggleControllerVisibility,
+                                        child: VideoPlayer(_controller),
+                                      ),
+
+                                      // Modern Controls Overlay (Fade in/out)
+                                      AnimatedOpacity(
+                                        opacity:
+                                            _isControllerVisible ? 1.0 : 0.0,
+                                        duration:
+                                            const Duration(milliseconds: 300),
+                                        child: Stack(
+                                          children: [
+                                            // --- 2. Bottom Control Bar (Timeline, Duration, and Play/Pause Button) ---
+                                            Positioned(
+                                              bottom: 0,
+                                              left: 0,
+                                              right: 0,
+                                              child: Container(
+                                                // Gradient for a smoother, modern look
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    begin:
+                                                        Alignment.bottomCenter,
+                                                    end: Alignment.topCenter,
+                                                    colors: [
+                                                      Colors.black
+                                                          .withOpacity(0.7),
+                                                      Colors.transparent,
+                                                    ],
+                                                  ),
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        16, 32, 16, 8),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    // --- A. Play/Pause Button (NEW POSITION) ---
+                                                    ValueListenableBuilder<
+                                                        VideoPlayerValue>(
+                                                      valueListenable:
+                                                          _controller,
+                                                      builder: (context, value,
+                                                          child) {
                                                         return IconButton(
+                                                          icon: Icon(
+                                                            value.isPlaying
+                                                                ? Icons
+                                                                    .pause_circle_filled_rounded
+                                                                : Icons
+                                                                    .play_circle_fill_rounded,
+                                                            color: Colors.white,
+                                                            size:
+                                                                36, // Adjust size for bottom row
+                                                          ),
                                                           onPressed: () {
                                                             if (_controller
                                                                 .value
@@ -1103,111 +1179,136 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                               _controller
                                                                   .play();
                                                             }
+                                                            // Reset hide timer
+                                                            // Assuming togglePlayPauseControllerVisibility is available
+                                                            // togglePlayPauseControllerVisibility();
+                                                            _showController(); // Assuming this function is available to reset the hide timer
                                                           },
-                                                          icon: Icon(
-                                                            _controller
-                                                                    .value
-                                                                    .isPlaying
-                                                                ? Icons.pause
-                                                                : Icons
-                                                                      .play_arrow,
-                                                            color: Colors.white,
-                                                            size: 30,
-                                                          ),
                                                         );
                                                       },
-                                                ),
-                                                ValueListenableBuilder(
-                                                  valueListenable: _controller,
-                                                  builder:
-                                                      (
-                                                        context,
-                                                        VideoPlayerValue value,
-                                                        child,
-                                                      ) {
+                                                    ),
+
+                                                    const SizedBox(width: 8),
+
+                                                    // --- B. Current Position Time ---
+                                                    ValueListenableBuilder<
+                                                        VideoPlayerValue>(
+                                                      valueListenable:
+                                                          _controller,
+                                                      builder: (context, value,
+                                                          child) {
                                                         return Text(
                                                           _formatDuration(
-                                                            value.position,
-                                                          ),
+                                                              value.position),
                                                           style:
                                                               const TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 14),
                                                         );
                                                       },
-                                                ),
-                                                Text(
-                                                  " / ",
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                                ValueListenableBuilder(
-                                                  valueListenable: _controller,
-                                                  builder:
-                                                      (
-                                                        context,
-                                                        VideoPlayerValue value,
-                                                        child,
-                                                      ) {
+                                                    ),
+
+                                                    const SizedBox(width: 8),
+
+                                                    // --- C. Timeline Slider ---
+                                                    Expanded(
+                                                      child:
+                                                          ValueListenableBuilder<
+                                                              VideoPlayerValue>(
+                                                        valueListenable:
+                                                            _controller,
+                                                        builder: (context,
+                                                            value, child) {
+                                                          return SliderTheme(
+                                                            data:
+                                                                SliderTheme.of(
+                                                                        context)
+                                                                    .copyWith(
+                                                              thumbShape:
+                                                                  RoundSliderThumbShape(
+                                                                      enabledThumbRadius:
+                                                                          6.0),
+                                                              overlayShape:
+                                                                  RoundSliderOverlayShape(
+                                                                      overlayRadius:
+                                                                          12.0),
+                                                              trackHeight: 3.0,
+                                                              activeTrackColor:
+                                                                  Colors.white,
+                                                              inactiveTrackColor:
+                                                                  Colors
+                                                                      .white54,
+                                                              thumbColor: Colors
+                                                                  .blue, // Highlight color
+                                                              overlayColor: Colors
+                                                                  .blue
+                                                                  .withOpacity(
+                                                                      0.3),
+                                                            ),
+                                                            child: Slider(
+                                                              value: value
+                                                                  .position
+                                                                  .inMilliseconds
+                                                                  .toDouble()
+                                                                  .clamp(
+                                                                      0.0,
+                                                                      value
+                                                                          .duration
+                                                                          .inMilliseconds
+                                                                          .toDouble()),
+                                                              min: 0,
+                                                              max: value
+                                                                  .duration
+                                                                  .inMilliseconds
+                                                                  .toDouble(),
+                                                              onChanged:
+                                                                  (newValue) {
+                                                                _controller
+                                                                    .seekTo(
+                                                                  Duration(
+                                                                      milliseconds:
+                                                                          newValue
+                                                                              .toInt()),
+                                                                );
+                                                                // Keep controls visible while seeking
+                                                                _showController(); // Assuming this function is available
+                                                              },
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+
+                                                    const SizedBox(width: 8),
+
+                                                    // --- D. Total Duration Time ---
+                                                    ValueListenableBuilder<
+                                                        VideoPlayerValue>(
+                                                      valueListenable:
+                                                          _controller,
+                                                      builder: (context, value,
+                                                          child) {
                                                         return Text(
                                                           _formatDuration(
-                                                            value.duration,
-                                                          ),
+                                                              value.duration),
                                                           style:
                                                               const TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 14),
                                                         );
                                                       },
+                                                    ),
+                                                  ],
                                                 ),
-                                                ValueListenableBuilder(
-                                                  valueListenable: _controller,
-                                                  builder:
-                                                      (
-                                                        context,
-                                                        VideoPlayerValue value,
-                                                        child,
-                                                      ) {
-                                                        return Expanded(
-                                                          child: Slider(
-                                                            value: value
-                                                                .position
-                                                                .inMilliseconds
-                                                                .toDouble(),
-                                                            min: 0,
-                                                            max: value
-                                                                .duration
-                                                                .inMilliseconds
-                                                                .toDouble(),
-                                                            onChanged: (newValue) {
-                                                              _controller.seekTo(
-                                                                Duration(
-                                                                  milliseconds:
-                                                                      newValue
-                                                                          .toInt(),
-                                                                ),
-                                                              );
-                                                            },
-                                                            activeColor:
-                                                                Colors.white,
-                                                            inactiveColor:
-                                                                Colors.grey,
-                                                          ),
-                                                        );
-                                                      },
-                                                ),
-                                                // **Current Time**
-                                              ],
+                                              ),
                                             ),
-                                          ),
+                                          ],
                                         ),
                                       ),
-                                  ],
-                                ),
-                        ),
+                                    ],
+                                  )),
                         Padding(
                           padding: EdgeInsets.only(
                             left: getWidgetWidth(width: 20),
@@ -1220,14 +1321,13 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                             shrinkWrap: true,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount:
-                                      2, // Number of columns in the grid
-                                  mainAxisSpacing: 18, // Spacing between rows
-                                  crossAxisSpacing:
-                                      19, // Spacing between columns
-                                  childAspectRatio:
-                                      3, // Width to height ratio of each grid item
-                                ),
+                              crossAxisCount:
+                                  2, // Number of columns in the grid
+                              mainAxisSpacing: 18, // Spacing between rows
+                              crossAxisSpacing: 19, // Spacing between columns
+                              childAspectRatio:
+                                  3, // Width to height ratio of each grid item
+                            ),
                             itemCount: 6, // Total number of items in the grid
                             itemBuilder: (BuildContext context, int index) {
                               return InkWell(
@@ -1268,10 +1368,10 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             WordScreenProfluentEnglish(
-                                              title: widget.load,
-                                              load: widget.load, //'Words',
-                                              soundPractice: soundPractice!,
-                                            ),
+                                          title: widget.load,
+                                          load: widget.load, //'Words',
+                                          soundPractice: soundPractice!,
+                                        ),
                                       ),
                                     ).then((_) {
                                       // print("sjfidhjvgirj");
@@ -1288,10 +1388,10 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               WordScreenProfluentEnglish(
-                                                title: widget.load,
-                                                load: widget.load, //'Words',
-                                                soundPractice: soundPractice!,
-                                              ),
+                                            title: widget.load,
+                                            load: widget.load, //'Words',
+                                            soundPractice: soundPractice!,
+                                          ),
                                         ),
                                       ).then((value) {
                                         // print("valueee:$value");
@@ -1350,51 +1450,37 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                         index == 0
                                             ? "Front View"
                                             : index == 1
-                                            ? "Side View"
-                                            : index == 2
-                                            ? "Front Closer"
-                                            : index == 3
-                                            ? "Side Closer"
-                                            : index == 4
-                                            ? "Animation"
-                                            : "Practice",
+                                                ? "Side View"
+                                                : index == 2
+                                                    ? "Front Closer"
+                                                    : index == 3
+                                                        ? "Side Closer"
+                                                        : index == 4
+                                                            ? "Animation"
+                                                            : "Practice",
                                         style: TextStyle(
-                                          color:
-                                              (((widget.links.v1 == null ||
-                                                          widget
-                                                              .links
-                                                              .v1!
+                                          color: (((widget.links.v1 == null ||
+                                                          widget.links.v1!
                                                               .isEmpty) &&
                                                       index == 0) ||
                                                   ((widget.links.v2 == null ||
-                                                          widget
-                                                              .links
-                                                              .v2!
+                                                          widget.links.v2!
                                                               .isEmpty) &&
                                                       index == 1) ||
                                                   ((widget.links.v3 == null ||
-                                                          widget
-                                                              .links
-                                                              .v3!
+                                                          widget.links.v3!
                                                               .isEmpty) &&
                                                       index == 2) ||
                                                   ((widget.links.v4 == null ||
-                                                          widget
-                                                              .links
-                                                              .v4!
+                                                          widget.links.v4!
                                                               .isEmpty) &&
                                                       index == 3) ||
                                                   ((widget.links.v5 == null ||
-                                                          widget
-                                                              .links
-                                                              .v5!
+                                                          widget.links.v5!
                                                               .isEmpty) &&
                                                       index == 4) ||
-                                                  ((widget.links.words ==
-                                                              null ||
-                                                          widget
-                                                              .links
-                                                              .words!
+                                                  ((widget.links.words == null ||
+                                                          widget.links.words!
                                                               .isEmpty) &&
                                                       index == 5))
                                               ? Colors.white
@@ -1459,9 +1545,9 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                   AssetImage(AllAssets.bottomHome),
                                   color:
                                       context.read<AuthState>().currentIndex ==
-                                          0
-                                      ? Color(0xFFAAAAAA)
-                                      : Color.fromARGB(132, 170, 170, 170),
+                                              0
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170),
                                 ),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(0);
@@ -1478,9 +1564,9 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                   AssetImage(AllAssets.bottomPL),
                                   color:
                                       context.read<AuthState>().currentIndex ==
-                                          1
-                                      ? Color(0xFFAAAAAA)
-                                      : Color.fromARGB(132, 170, 170, 170),
+                                              1
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170),
                                 ),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(1);
@@ -1497,9 +1583,9 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                   AssetImage(AllAssets.bottomIS),
                                   color:
                                       context.read<AuthState>().currentIndex ==
-                                          2
-                                      ? Color(0xFFAAAAAA)
-                                      : Color.fromARGB(132, 170, 170, 170),
+                                              2
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170),
                                 ),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(2);
@@ -1516,9 +1602,9 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                   AssetImage(AllAssets.bottomPE),
                                   color:
                                       context.read<AuthState>().currentIndex ==
-                                          3
-                                      ? Color(0xFFAAAAAA)
-                                      : Color.fromARGB(132, 170, 170, 170),
+                                              3
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170),
                                 ),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(3);
@@ -1535,9 +1621,9 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                   AssetImage(AllAssets.bottomPT),
                                   color:
                                       context.read<AuthState>().currentIndex ==
-                                          4
-                                      ? Color(0xFFAAAAAA)
-                                      : Color.fromARGB(132, 170, 170, 170),
+                                              4
+                                          ? Color(0xFFAAAAAA)
+                                          : Color.fromARGB(132, 170, 170, 170),
                                 ),
                                 onPressed: () {
                                   context.read<AuthState>().changeIndex(4);

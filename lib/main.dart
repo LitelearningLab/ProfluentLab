@@ -74,10 +74,15 @@ Future<void> main() async {
     Hive.registerAdapter(InteractiveLinkHiveAdapter());
     Hive.registerAdapter(InteractiveLinkAdapter());
   }
-
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Color(0xFF293750),
-      statusBarColor: Color(0xFF293750)));
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.dark, // Black icons
+    ),
+  );
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //     systemNavigationBarColor: Color(0xFF293750),
+  //     statusBarColor: Color(0xFF293750)));
   var configuredApp = new AppConfig(
       appName: 'Profluent', flavorName: 'prod', fcmKey: '', child: MyApp());
   runApp(

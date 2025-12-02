@@ -60,11 +60,17 @@ Future<void> main() async {
     // SystemChrome.setPreferredOrientations(
     //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     //SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemNavigationBarColor: Color(0xFF293750), statusBarColor: Color(0xFF293750)));
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarColor: Color(0xFF293750),
-        statusBarColor: Color(0xFF293750)));
+    //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //       systemNavigationBarColor: Color(0xFF293750),
+    //       statusBarColor: Color(0xFF293750)));
+    // }
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark, // Black icons
+      ),
+    );
   }
-
   var configuredApp = new AppConfig(
       appName: 'PF DEV', flavorName: 'dev', fcmKey: '', child: MyApp());
 
