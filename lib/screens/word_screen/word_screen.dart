@@ -90,6 +90,7 @@ class _WordScreenState extends State<WordScreen>
   bool openPlay3StopDialog = false;
   bool closePlay1StopDialog = false;
   bool closePlay3StopDialog = false;
+
   bool _isPaused = false;
   bool _isPaused3 = false;
   int _currentIndex = 0;

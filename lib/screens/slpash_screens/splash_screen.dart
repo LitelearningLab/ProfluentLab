@@ -68,21 +68,52 @@ class _SplashScreenState extends State<SplashScreen>
     if (kIsWeb) {
       // Web Index Style UI
       return Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF1F2D3D),
+                Color(0xFF293750),
+              ],
+            ),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF293750)),
+              // ✅ APP LOGO
+              Image.asset(
+                "assets/images/profluent_ar_icon.png", // make sure this exists
+                width: 120,
+                height: 120,
               ),
-              SizedBox(height: 24),
-              Text(
+
+              const SizedBox(height: 24),
+
+              // ✅ WHITE SPINNER (MATCH WEB)
+              const SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(
+                  strokeWidth: 6,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // ✅ APP NAME (MATCH WEB STYLE)
+              const Text(
                 "Profluent AR",
                 style: TextStyle(
-                  fontSize: 38,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF293750),
+                  fontSize: 26,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
+                  color: Colors.white,
                 ),
               ),
             ],

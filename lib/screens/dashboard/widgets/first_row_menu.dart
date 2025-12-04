@@ -417,7 +417,7 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                                       ? Container(
                                           margin: EdgeInsets.only(
                                               left: getWidgetWidth(width: 30)),
-                                          height: getWidgetHeight(height: 7.62),
+                                          height: getWidgetHeight(height: 10),
                                           width: getWidgetHeight(height: 10),
                                           child: CircularProgressIndicator(
                                             color: Colors.white,

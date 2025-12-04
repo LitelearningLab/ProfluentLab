@@ -168,6 +168,7 @@ class _InAppWebViewPageState extends State<InAppWebViewPage>
                   child: IconButton(
                     onPressed: () {
                       stopTimerMainCategory();
+
                       Navigator.pop(context);
                     },
                     icon: Icon(Icons.arrow_back),

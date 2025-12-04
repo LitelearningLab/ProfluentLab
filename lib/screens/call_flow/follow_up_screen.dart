@@ -796,23 +796,14 @@ class followUpscreenState extends State<FollowUpScreen> {
                                                                   _currentPlayingIndex ==
                                                                       index
                                                               ? SizedBox(
-                                                                  width: kIsWeb
-                                                                      ? getWidgetWidth(
-                                                                          width:
-                                                                              4)
-                                                                      : getWidgetWidth(
-                                                                          width:
-                                                                              30),
-                                                                  height:
-                                                                      getWidgetHeight(
-                                                                          height:
-                                                                              30),
+                                                                  height: 20,
+                                                                  width: 20,
                                                                   child:
                                                                       CircularProgressIndicator(
                                                                     color: Color(
                                                                         0xff6C63FE),
                                                                     strokeWidth:
-                                                                        2.5,
+                                                                        2,
                                                                   ),
                                                                 )
                                                               : Icon(
@@ -852,75 +843,78 @@ class followUpscreenState extends State<FollowUpScreen> {
                                                     SizedBox(
                                                         width: getWidgetWidth(
                                                             width: 17)),
-                                                    InkWell(
-                                                      onTap: () async {
-                                                        startPractice(
-                                                            actionType:
-                                                                'practice');
-                                                        _audioPlayerManager
-                                                            .stop();
-                                                        _isAudioLoading = false;
-                                                        _showDialog(
-                                                            // convertNumbersToText(convertSpecialChars(
-                                                            downloadController
-                                                                    .followUps[
-                                                                        index]
-                                                                    .text ??
-                                                                ""
-                                                            // ))
-                                                            ,
-                                                            false,
-                                                            context);
-                                                        String?
-                                                            sentenceFileUrl =
-                                                            downloadController
-                                                                .followUps[
-                                                                    index]
-                                                                .file;
+                                                    if (!kIsWeb)
+                                                      InkWell(
+                                                        onTap: () async {
+                                                          startPractice(
+                                                              actionType:
+                                                                  'practice');
+                                                          _audioPlayerManager
+                                                              .stop();
+                                                          _isAudioLoading =
+                                                              false;
+                                                          _showDialog(
+                                                              // convertNumbersToText(convertSpecialChars(
+                                                              downloadController
+                                                                      .followUps[
+                                                                          index]
+                                                                      .text ??
+                                                                  ""
+                                                              // ))
+                                                              ,
+                                                              false,
+                                                              context);
+                                                          String?
+                                                              sentenceFileUrl =
+                                                              downloadController
+                                                                  .followUps[
+                                                                      index]
+                                                                  .file;
 
-                                                        fileUrl?.add(
-                                                            sentenceFileUrl!);
+                                                          fileUrl?.add(
+                                                              sentenceFileUrl!);
 
-                                                        FirebaseFirestore
-                                                            firestore =
-                                                            FirebaseFirestore
-                                                                .instance;
-                                                        String userId =
-                                                            await SharedPref
-                                                                .getSavedString(
-                                                                    'userId');
-                                                        DocumentReference
-                                                            wordFileUrlDocument =
-                                                            firestore
-                                                                .collection(
-                                                                    'proFluentEnglishReport')
-                                                                .doc(userId);
+                                                          FirebaseFirestore
+                                                              firestore =
+                                                              FirebaseFirestore
+                                                                  .instance;
+                                                          String userId =
+                                                              await SharedPref
+                                                                  .getSavedString(
+                                                                      'userId');
+                                                          DocumentReference
+                                                              wordFileUrlDocument =
+                                                              firestore
+                                                                  .collection(
+                                                                      'proFluentEnglishReport')
+                                                                  .doc(userId);
 
-                                                        await wordFileUrlDocument
-                                                            .update({
-                                                              'SentencesTapped':
-                                                                  FieldValue
-                                                                      .arrayUnion([
-                                                                downloadController
-                                                                    .followUps[
-                                                                        index]
-                                                                    .file
-                                                              ]),
-                                                            })
-                                                            .then((_) {})
-                                                            .catchError((e) {});
-                                                      },
-                                                      child: Icon(
-                                                        Icons.mic,
-                                                        size: isSplitScreen
-                                                            ? getFullWidgetHeight(
-                                                                height: 30)
-                                                            : getWidgetHeight(
-                                                                height: 30),
-                                                        color:
-                                                            Color(0xffFFFFFF),
+                                                          await wordFileUrlDocument
+                                                              .update({
+                                                                'SentencesTapped':
+                                                                    FieldValue
+                                                                        .arrayUnion([
+                                                                  downloadController
+                                                                      .followUps[
+                                                                          index]
+                                                                      .file
+                                                                ]),
+                                                              })
+                                                              .then((_) {})
+                                                              .catchError(
+                                                                  (e) {});
+                                                        },
+                                                        child: Icon(
+                                                          Icons.mic,
+                                                          size: isSplitScreen
+                                                              ? getFullWidgetHeight(
+                                                                  height: 30)
+                                                              : getWidgetHeight(
+                                                                  height: 30),
+                                                          color:
+                                                              Color(0xffFFFFFF),
+                                                        ),
                                                       ),
-                                                    ),
                                                     // SPW(15),
                                                     // Image.asset(
                                                     //   AllAssets.dfb,

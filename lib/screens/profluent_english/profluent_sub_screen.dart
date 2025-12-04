@@ -13,6 +13,7 @@ import 'package:litelearninglab/constants/keys.dart';
 import 'package:litelearninglab/screens/profluent_english/new_profluent_english_screen.dart';
 // import 'package:litelearninglab/screens/profluent_english/widgets/video_player_controller.dart';
 import 'package:litelearninglab/screens/profluent_english/word_screen.dart';
+import 'package:litelearninglab/screens/word_screen/word_screen.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
 import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
@@ -303,6 +304,25 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
     }
   }
 
+  List<Map<String, dynamic>> convertWordListToMapList(List<Word> wordList) {
+    return wordList.map((word) {
+      return {
+        'id': word.id?.toString() ?? '', // Convert int to String
+        'key': word.key ?? '', // Already a String, use as is
+        'file': word.file ?? '',
+        'pronun': word.pronun ?? '',
+        'syllables': word.syllables ?? '',
+        'text': word.text ?? '',
+        'isPriority': word.isPriority ?? '',
+        'cat': word.cat ?? '',
+        'localPath': word.localPath ?? '',
+        'isFav': word.isFav?.toString() ?? '', // Convert int to String
+        'isPlaying':
+            word.isPlaying?.toString() ?? 'false' // Convert bool to String
+      };
+    }).toList();
+  }
+
   void toggleControllerVisibility() {
     if (_isControllerVisible) {
       // If currently visible, make it immediately invisible
@@ -588,34 +608,6 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                       child: Stack(
                                                         children: [
                                                           // The large central Play/Pause Icon has been REMOVED from here.
-
-                                                          // --- 1. Top Back Button (Remains unchanged) ---
-                                                          Positioned(
-                                                            top: 20,
-                                                            left: 20,
-                                                            child: Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                color: Colors
-                                                                    .white
-                                                                    .withOpacity(
-                                                                        0.3),
-                                                              ),
-                                                              child: IconButton(
-                                                                onPressed: () {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                },
-                                                                icon: const Icon(
-                                                                    Icons
-                                                                        .arrow_back,
-                                                                    color: Colors
-                                                                        .white),
-                                                              ),
-                                                            ),
-                                                          ),
 
                                                           // --- 2. Bottom Control Bar (Timeline, Duration, and Play/Pause Button) ---
                                                           Positioned(
