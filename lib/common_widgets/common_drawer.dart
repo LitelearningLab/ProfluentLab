@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:litelearninglab/common_widgets/spacings.dart';
 import 'package:litelearninglab/screens/login/new_login_screen.dart';
@@ -55,77 +56,81 @@ class _CommonDrawerState extends State<CommonDrawer> {
     showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          insetPadding:
-              EdgeInsets.only(left: kWidth / 32.35, right: kWidth / 32.75),
-          actionsPadding: EdgeInsets.only(
-              right: kWidth / 26.2,
-              left: kWidth / 26.2,
-              bottom: kHeight / 28.4),
-          actionsAlignment: MainAxisAlignment.spaceBetween,
-          title: Text(
-            'Log out',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(fontWeight: FontWeight.w600, color: Colors.white),
-          ),
-          content: Text(
-            'Are you sure want to log out?',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
-          ),
-          actions: [
-            SizedBox(
-              width: kWidth / 2.5,
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Cancel',
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+        return Dialog(
+          backgroundColor: const Color(0xFF293750),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          child: Container(
+            width: kIsWeb
+                ? kWidth / 4
+                : MediaQuery.of(context).size.width / 2, // ⬅ FIXED WIDTH
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Log out',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Are you sure want to log out?',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
-                        fontSize: kText.scale(15)),
-                  )),
+                      ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () async {
+                          AuthState controller =
+                              Provider.of<AuthState>(context, listen: false);
+                          await controller.signOut();
+
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (_) => NewLoginScreen()),
+                            (_) => false,
+                          );
+                        },
+                        child: Text(
+                          'Log out',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
-            SizedBox(
-              width: kWidth / 2.5,
-              child: TextButton(
-                  onPressed: () async {
-                    AuthState controller =
-                        Provider.of<AuthState>(context, listen: false);
-                    await controller.signOut();
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              NewLoginScreen()), // Your home page
-                      (Route<dynamic> route) =>
-                          false, // Remove all previous routes
-                    );
-                  },
-                  style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-                      backgroundColor:
-                          const MaterialStatePropertyAll(Colors.white),
-                      side: MaterialStatePropertyAll(
-                          BorderSide(width: 1, color: Colors.green))),
-                  child: Text('Log out',
-                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                          fontSize: kText.scale(15)))),
-            ),
-          ],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
           ),
-          backgroundColor: Color(0XFF293750),
         );
       },
     );

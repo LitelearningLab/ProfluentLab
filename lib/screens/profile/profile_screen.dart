@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -90,16 +91,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   margin: EdgeInsets.symmetric(
                       horizontal: getWidgetWidth(width: 10)),
                   child: Container(
-                      height: isSplitScreen
-                          ? getFullWidgetHeight(height: 50)
-                          : getWidgetHeight(height: 50),
+                      height: kIsWeb
+                          ? getWidgetHeight(height: 70)
+                          : isSplitScreen
+                              ? getFullWidgetHeight(height: 50)
+                              : getWidgetHeight(height: 50),
                       decoration: BoxDecoration(
                           color: Color(0XFF314162),
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(7),
                               topRight: Radius.circular(7))),
                       child: Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: kIsWeb
+                            ? EdgeInsets.only(
+                                top: getWidgetHeight(height: 10),
+                                bottom: getWidgetHeight(height: 10),
+                                left: getWidgetWidth(width: 5),
+                              )
+                            : EdgeInsets.all(12.0),
                         child: Row(
                           children: [
                             CircleAvatar(
@@ -107,13 +116,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               backgroundColor: Color(0XFF5248fe),
                               child: Image.asset(
                                 "assets/images/mobile_profile.png",
-                                height: isSplitScreen
-                                    ? getFullWidgetHeight(height: 20)
-                                    : getWidgetHeight(height: 20),
-                                width: getWidgetWidth(width: 20),
+                                height: kIsWeb
+                                    ? getWidgetHeight(height: 30)
+                                    : isSplitScreen
+                                        ? getFullWidgetHeight(height: 20)
+                                        : getWidgetHeight(height: 20),
+                                width: kIsWeb
+                                    ? getWidgetWidth(width: 30)
+                                    : getWidgetWidth(width: 20),
                               ),
                             ),
-                            SizedBox(width: getWidgetWidth(width: 10)),
+                            SizedBox(
+                                width: getWidgetWidth(width: kIsWeb ? 5 : 10)),
                             Text(
                               " +91 ${userDatas.appUser?.mobile ?? ""}",
                               style: TextStyle(
@@ -139,14 +153,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   margin: EdgeInsets.symmetric(
                       horizontal: getWidgetWidth(width: 10)),
                   child: Container(
-                      height: isSplitScreen
-                          ? getFullWidgetHeight(height: 50)
-                          : getWidgetHeight(height: 50),
+                      height: kIsWeb
+                          ? getWidgetHeight(height: 70)
+                          : isSplitScreen
+                              ? getFullWidgetHeight(height: 50)
+                              : getWidgetHeight(height: 50),
                       decoration: BoxDecoration(
                         color: Color(0XFF314162),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: kIsWeb
+                            ? EdgeInsets.only(
+                                top: getWidgetHeight(height: 10),
+                                bottom: getWidgetHeight(height: 10),
+                                left: getWidgetWidth(width: 5),
+                              )
+                            : EdgeInsets.all(12.0),
                         child: Row(
                           children: [
                             CircleAvatar(
@@ -154,13 +176,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               backgroundColor: Color(0XFF47bad0),
                               child: Image.asset(
                                 "assets/images/arroba_profile.png",
-                                height: isSplitScreen
-                                    ? getFullWidgetHeight(height: 15)
-                                    : getWidgetHeight(height: 15),
-                                width: getWidgetWidth(width: 15),
+                                height: kIsWeb
+                                    ? getWidgetHeight(height: 25)
+                                    : isSplitScreen
+                                        ? getFullWidgetHeight(height: 15)
+                                        : getWidgetHeight(height: 15),
+                                width: kIsWeb
+                                    ? getWidgetWidth(width: 25)
+                                    : getWidgetWidth(width: 15),
                               ),
                             ),
-                            SizedBox(width: getWidgetWidth(width: 10)),
+                            SizedBox(
+                                width: getWidgetWidth(width: kIsWeb ? 5 : 10)),
                             Text(
                               userDatas.appUser?.email ?? "",
                               style: TextStyle(
@@ -186,14 +213,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   margin: EdgeInsets.symmetric(
                       horizontal: getWidgetWidth(width: 10)),
                   child: Container(
-                      height: isSplitScreen
-                          ? getFullWidgetHeight(height: 50)
-                          : getWidgetHeight(height: 50),
+                      height: kIsWeb
+                          ? getWidgetHeight(height: 70)
+                          : isSplitScreen
+                              ? getFullWidgetHeight(height: 50)
+                              : getWidgetHeight(height: 50),
                       decoration: BoxDecoration(
                         color: Color(0XFF314162),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: kIsWeb
+                            ? EdgeInsets.only(
+                                top: getWidgetHeight(height: 10),
+                                bottom: getWidgetHeight(height: 10),
+                                left: getWidgetWidth(width: 5),
+                              )
+                            : EdgeInsets.all(12.0),
                         child: Row(
                           children: [
                             CircleAvatar(
@@ -201,13 +236,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               backgroundColor: Color(0XFF47da6d),
                               child: Image.asset(
                                 "assets/images/hierarchical_profile.png",
-                                height: isSplitScreen
-                                    ? getFullWidgetHeight(height: 15)
-                                    : getWidgetHeight(height: 15),
-                                width: getWidgetWidth(width: 15),
+                                height: kIsWeb
+                                    ? getWidgetHeight(height: 25)
+                                    : isSplitScreen
+                                        ? getFullWidgetHeight(height: 15)
+                                        : getWidgetHeight(height: 15),
+                                width: kIsWeb
+                                    ? getWidgetWidth(width: 25)
+                                    : getWidgetWidth(width: 15),
                               ),
                             ),
-                            SizedBox(width: getWidgetWidth(width: 10)),
+                            SizedBox(
+                                width: getWidgetWidth(width: kIsWeb ? 5 : 10)),
                             Text(
                               toBeginningOfSentenceCase(
                                       userDatas.appUser?.company ??
@@ -237,14 +277,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   margin: EdgeInsets.symmetric(
                       horizontal: getWidgetWidth(width: 10)),
                   child: Container(
-                      height: isSplitScreen
-                          ? getFullWidgetHeight(height: 50)
-                          : getWidgetHeight(height: 50),
+                      height: kIsWeb
+                          ? getWidgetHeight(height: 70)
+                          : isSplitScreen
+                              ? getFullWidgetHeight(height: 50)
+                              : getWidgetHeight(height: 50),
                       decoration: BoxDecoration(
                         color: Color(0XFF314162),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: kIsWeb
+                            ? EdgeInsets.only(
+                                top: getWidgetHeight(height: 10),
+                                bottom: getWidgetHeight(height: 10),
+                                left: getWidgetWidth(width: 5),
+                              )
+                            : EdgeInsets.all(12.0),
                         child: Row(
                           children: [
                             CircleAvatar(
@@ -252,13 +300,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               backgroundColor: Color(0XFFf5a716),
                               child: Image.asset(
                                 "assets/images/maps_flags_profile.png",
-                                height: isSplitScreen
-                                    ? getFullWidgetHeight(height: 15)
-                                    : getWidgetHeight(height: 15),
-                                width: getWidgetWidth(width: 15),
+                                height: kIsWeb
+                                    ? getWidgetHeight(height: 25)
+                                    : isSplitScreen
+                                        ? getFullWidgetHeight(height: 15)
+                                        : getWidgetHeight(height: 15),
+                                width: kIsWeb
+                                    ? getWidgetWidth(width: 25)
+                                    : getWidgetWidth(width: 15),
                               ),
                             ),
-                            SizedBox(width: getWidgetWidth(width: 10)),
+                            SizedBox(
+                                width: getWidgetWidth(width: kIsWeb ? 5 : 10)),
                             Text(
                               "${toBeginningOfSentenceCase(city) ?? ''}, ${toBeginningOfSentenceCase(country) ?? ''}",
                               style: TextStyle(
@@ -285,16 +338,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   margin: EdgeInsets.symmetric(
                       horizontal: getWidgetWidth(width: 10)),
                   child: Container(
-                      height: isSplitScreen
-                          ? getFullWidgetHeight(height: 50)
-                          : getWidgetHeight(height: 50),
+                      height: kIsWeb
+                          ? getWidgetHeight(height: 70)
+                          : isSplitScreen
+                              ? getFullWidgetHeight(height: 50)
+                              : getWidgetHeight(height: 50),
                       decoration: BoxDecoration(
                           color: Color(0XFF314162),
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(7),
                               bottomRight: Radius.circular(7))),
                       child: Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: kIsWeb
+                            ? EdgeInsets.only(
+                                top: getWidgetHeight(height: 10),
+                                bottom: getWidgetHeight(height: 10),
+                                left: getWidgetWidth(width: 5),
+                              )
+                            : EdgeInsets.all(12.0),
                         child: Row(
                           children: [
                             CircleAvatar(
@@ -302,13 +363,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               backgroundColor: Color(0XFFf66b5c),
                               child: Image.asset(
                                 "assets/images/calendar_profile.png",
-                                height: isSplitScreen
-                                    ? getFullWidgetHeight(height: 15)
-                                    : getWidgetHeight(height: 15),
-                                width: getWidgetWidth(width: 15),
+                                height: kIsWeb
+                                    ? getWidgetHeight(height: 25)
+                                    : isSplitScreen
+                                        ? getFullWidgetHeight(height: 15)
+                                        : getWidgetHeight(height: 15),
+                                width: kIsWeb
+                                    ? getWidgetWidth(width: 25)
+                                    : getWidgetWidth(width: 15),
                               ),
                             ),
-                            SizedBox(width: getWidgetWidth(width: 10)),
+                            SizedBox(
+                                width: getWidgetWidth(width: kIsWeb ? 5 : 10)),
                             Text(
                               "Active from ${DateFormat('dd-MM-yyyy').format(DateTime.parse(joinDate))} to ${DateFormat('dd-MM-yyyy').format(DateTime.parse(endDate))}",
                               style: TextStyle(

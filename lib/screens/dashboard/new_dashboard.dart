@@ -380,9 +380,13 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                               ),*/
                                     SPH(displayHeight(context) / 58),
                                     SizedBox(
-                                        height: isSplitScreen
-                                            ? getFullWidgetHeight(height: 46)
-                                            : getWidgetHeight(height: 46),
+                                        // color: Colors.amber,
+                                        height: kIsWeb
+                                            ? getWidgetHeight(height: 60)
+                                            : isSplitScreen
+                                                ? getFullWidgetHeight(
+                                                    height: 46)
+                                                : getWidgetHeight(height: 46),
                                         child: TextFormField(
                                           readOnly: true,
                                           keyboardType: TextInputType.text,
@@ -431,9 +435,12 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                                 padding:
                                                     const EdgeInsets.all(8.0),
                                                 child: Container(
-                                                    height: kHeight / 54.1,
+                                                    height: kIsWeb
+                                                        ? getWidgetHeight(
+                                                            height: 60)
+                                                        : kHeight / 54.1,
                                                     width: kIsWeb
-                                                        ? 80
+                                                        ? 60
                                                         : kWidth / 6.2,
                                                     decoration: BoxDecoration(
                                                         color:
@@ -774,7 +781,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                               // SPH(20),
                               SizedBox(
                                 height: kIsWeb
-                                    ? 26
+                                    ? getWidgetHeight(height: 20)
                                     : isSplitScreen
                                         ? getFullWidgetHeight(height: 26)
                                         : getWidgetHeight(height: 26),
