@@ -20,7 +20,7 @@ import 'package:litelearninglab/screens/performance_tracking/performance_trackin
 import 'package:litelearninglab/screens/process_learning/new_process_learning_screen.dart';
 import 'package:litelearninglab/screens/process_learning/process_learning_screen.dart';
 import 'package:litelearninglab/screens/profluent_english/new_profluent_english_screen.dart';
-import 'package:litelearninglab/screens/profluent_english/profluent_english_modified_screen.dart';
+import 'package:litelearninglab/screens/language_lab/language_lab_screen.dart';
 // import 'package:litelearninglab/screens/profluent_english/profluent_english_screen.dart';
 import 'package:litelearninglab/screens/reports/call_flow_report.dart';
 import 'package:litelearninglab/screens/reports/pronunciation_report.dart';
@@ -584,7 +584,7 @@ class AuthState with ChangeNotifier {
     NewDashboardScreen(),
     NewProcessLearningScreen(iconKey: false),
     ARCallSimulationScreen(ARIconKey: false),
-    ProfluentEnglishModifiedScreen(PEIconKey: false),
+    LanguageLabScreen(),
     //NewProfluentEnglishScreen(),
     PerformanceTrackingScreen(),
   ];

@@ -18,4 +18,5 @@ class AppColors {
   static const Color c40000000 = const Color(0x40000000);
   static const Color green = const Color(0xff7ab800);
   static const Color scaffoldBack = const Color(0xff202328);
+  static const Color linearColor = Color(0xFF34425D);
 }
