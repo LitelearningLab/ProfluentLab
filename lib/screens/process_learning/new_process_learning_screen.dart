@@ -31,6 +31,9 @@ import '../../models/ProcessLearningMain.dart';
 import '../../states/auth_state.dart';
 import '../../utils/firebase_helper.dart';
 import '../../utils/shared_pref.dart';
+import 'widgets/web_hero_section.dart';
+import 'widgets/web_hover_card.dart';
+import 'widgets/web_hover_list_item.dart';
 
 String pTitle = "";
 
@@ -289,224 +292,151 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
             MaterialPageRoute(builder: (context) => BottomNavigation()));
       },
       child: BackgroundWidget(
-          appBar: kIsWeb
-              ? null
-              : widget.iconKey
-                  ? CommonAppBar(
-                      title: "Process Learning",
-                    )
-                  : CommonAppBar(
-                      appbarIcon: AllAssets.quickLinkDM,
-                      title: "Process Learning",
+        appBar: kIsWeb
+            ? null
+            : widget.iconKey
+                ? CommonAppBar(
+                    title: "Process Learning",
+                  )
+                : CommonAppBar(
+                    appbarIcon: AllAssets.quickLinkDM,
+                    title: "Process Learning",
+                  ),
+        body: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              )
+            : _processLeaning.length == 0 && !_isLoading
+                ? Center(
+                    child: Text(
+                      "List is empty",
+                      style: TextStyle(color: AppColors.white),
                     ),
-          body: _isLoading
-              ? Center(
-                  child: CircularProgressIndicator(color: Colors.white),
-                )
-              : _processLeaning.length == 0 && !_isLoading
-                  ? Center(
-                      child: Text(
-                        "List is empty",
-                        style: TextStyle(color: AppColors.white),
-                      ),
-                    )
-                  : SingleChildScrollView(
-                      child: SizedBox(
-                        width: displayWidth(context),
+                  )
+                : SingleChildScrollView(
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxWidth: kIsWeb
+                                ? double.infinity
+                                : displayWidth(context)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            if (kIsWeb) SizedBox(height: 24),
                             kIsWeb
-                                ? Align(
-                                    alignment: Alignment.center,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          top: getWidgetHeight(height: 20),
-                                          left: getWidgetWidth(width: 18),
-                                          right: getWidgetWidth(width: 18)),
-                                      child: SizedBox(
-                                        width: displayWidth(context),
-                                        height: getWidgetHeight(height: 350),
-                                        child: ListView.builder(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: _processLeaning.length - 1,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12),
-                                          itemBuilder: (context, index) {
-                                            int adjustIndex =
-                                                customOrder[index];
-                                            int realIndex = adjustIndex %
-                                                (_processLeaning.length - 1);
-                                            int adjustedIndex = (realIndex < 1)
-                                                ? realIndex
-                                                : realIndex + 1;
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 0),
+                                    child: Wrap(
+                                      spacing: 24,
+                                      runSpacing: 40,
+                                      alignment: WrapAlignment.center,
+                                      children: List.generate(
+                                        _processLeaning.length - 1,
+                                        (index) {
+                                          int adjustIndex = customOrder[index];
+                                          int realIndex = adjustIndex %
+                                              (_processLeaning.length - 1);
+                                          int adjustedIndex = (realIndex < 1)
+                                              ? realIndex
+                                              : realIndex + 1;
 
-                                            return InkWell(
-                                              onTap: () {
-                                                if (_processLeaning[
-                                                            adjustedIndex]
-                                                        .underconstruction ==
-                                                    true) {
-                                                  Toast.show(
-                                                    "Work in progress",
-                                                    duration: Toast.lengthShort,
-                                                    gravity: Toast.bottom,
-                                                    backgroundColor:
-                                                        AppColors.white,
-                                                    textStyle: TextStyle(
-                                                        color: AppColors.black),
-                                                    backgroundRadius: 10,
-                                                  );
-                                                  return;
-                                                }
+                                          return WebHoverCard(
+                                            onTap: () {
+                                              if (_processLeaning[adjustedIndex]
+                                                      .underconstruction ==
+                                                  true) {
+                                                Toast.show(
+                                                  "Work in progress",
+                                                  duration: Toast.lengthShort,
+                                                  gravity: Toast.bottom,
+                                                  backgroundColor:
+                                                      AppColors.white,
+                                                  textStyle: const TextStyle(
+                                                      color: AppColors.black),
+                                                  backgroundRadius: 10,
+                                                );
+                                                return;
+                                              }
 
-                                                if (adjustedIndex == 0) {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ProcessCatScreen(
-                                                        linkCats: _processLeaning[
-                                                                    adjustedIndex]
-                                                                .subcategories!
-                                                                .first
-                                                                .linkCats ??
-                                                            [],
+                                              if (adjustedIndex == 0) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ProcessCatScreen(
+                                                      linkCats: _processLeaning[
+                                                                  adjustedIndex]
+                                                              .subcategories!
+                                                              .first
+                                                              .linkCats ??
+                                                          [],
+                                                      title: _processLeaning[
+                                                                  adjustedIndex]
+                                                              .subcategories!
+                                                              .first
+                                                              .name ??
+                                                          "",
+                                                    ),
+                                                  ),
+                                                );
+                                              } else {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return LearningScreen(
+                                                        icon: adjustedIndex == 2
+                                                            ? AllAssets
+                                                                .autoInsurance
+                                                            : adjustedIndex == 3
+                                                                ? AllAssets
+                                                                    .workersCompensation
+                                                                : adjustedIndex ==
+                                                                        4
+                                                                    ? AllAssets
+                                                                        .federalInsurance
+                                                                    : AllAssets
+                                                                        .blueCross,
                                                         title: _processLeaning[
                                                                     adjustedIndex]
                                                                 .subcategories!
                                                                 .first
                                                                 .name ??
                                                             "",
-                                                      ),
-                                                    ),
-                                                  );
-                                                } else {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) {
-                                                        return LearningScreen(
-                                                          icon: adjustedIndex ==
-                                                                  2
-                                                              ? AllAssets
-                                                                  .autoInsurance
-                                                              : adjustedIndex ==
-                                                                      3
-                                                                  ? AllAssets
-                                                                      .workersCompensation
-                                                                  : adjustedIndex ==
-                                                                          4
-                                                                      ? AllAssets
-                                                                          .federalInsurance
-                                                                      : AllAssets
-                                                                          .blueCross,
-                                                          title: _processLeaning[
-                                                                      adjustedIndex]
-                                                                  .subcategories!
-                                                                  .first
-                                                                  .name ??
-                                                              "",
-                                                          linkCats: _processLeaning[
-                                                                      adjustedIndex]
-                                                                  .subcategories!
-                                                                  .first
-                                                                  .linkCats ??
-                                                              [],
-                                                        );
-                                                      },
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 12),
-                                                child: Container(
-                                                  width: displayWidth(context) /
-                                                      6.5,
-                                                  decoration: BoxDecoration(
-                                                    color: swipperList[
-                                                            adjustedIndex]
-                                                        ['tileColor'],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            7),
+                                                        linkCats: _processLeaning[
+                                                                    adjustedIndex]
+                                                                .subcategories!
+                                                                .first
+                                                                .linkCats ??
+                                                            [],
+                                                      );
+                                                    },
                                                   ),
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 20,
-                                                    vertical: getWidgetHeight(
-                                                        height: 16),
-                                                  ),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        swipperList[
-                                                                adjustedIndex]
-                                                            ['heading'],
-                                                        style: TextStyle(
-                                                          fontFamily: 'Roboto',
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize:
-                                                              kText.scale(12),
-                                                          color: adjustedIndex ==
-                                                                      0 ||
-                                                                  adjustedIndex ==
-                                                                      4
-                                                              ? Color(
-                                                                  0xFF6A60FB)
-                                                              : adjustedIndex ==
-                                                                      5
-                                                                  ? Color(
-                                                                      0xFF26BFFF)
-                                                                  : Color(
-                                                                      0xFFFF1A1A),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 180,
-                                                        width: double.infinity,
-                                                        child: Image.asset(
-                                                          swipperList[
-                                                                  adjustedIndex]
-                                                              ['tileImage'],
-                                                          fit: BoxFit.contain,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        _processLeaning[
-                                                                adjustedIndex]
-                                                            .category!,
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                          fontFamily: 'Roboto',
-                                                          color:
-                                                              Color(0xFF535353),
-                                                          fontSize: 16.5,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                                );
+                                              }
+                                            },
+                                            tileColor:
+                                                swipperList[adjustedIndex]
+                                                    ['tileColor'],
+                                            tileImage:
+                                                swipperList[adjustedIndex]
+                                                    ['tileImage'],
+                                            heading: swipperList[adjustedIndex]
+                                                ['heading'],
+                                            headingColor: adjustedIndex == 0 ||
+                                                    adjustedIndex == 4
+                                                ? const Color(0xFF6A60FB)
+                                                : adjustedIndex == 5
+                                                    ? const Color(0xFF26BFFF)
+                                                    : const Color(0xFFFF1A1A),
+                                            category:
+                                                _processLeaning[adjustedIndex]
+                                                    .category!,
+                                          );
+                                        },
                                       ),
                                     ),
                                   )
@@ -732,37 +662,72 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                             ),
                             Container(
                               width: kIsWeb
-                                  ? displayWidth(context) * 0.5
+                                  ? kWidth / 1.5 // Full width as requested
                                   : getWidgetWidth(width: 335),
-                              height: getWidgetHeight(height: 258),
+                              margin: const EdgeInsets.only(bottom: 60),
                               decoration: BoxDecoration(
-                                color: Color(0xFFFFFFFF),
-                                borderRadius: BorderRadius.circular(7),
+                                color: const Color(0xFFFFFFFF),
+                                borderRadius: BorderRadius.circular(16),
+                                border:
+                                    null, // Avoids BorderRadius format exception
+                                boxShadow: kIsWeb
+                                    ? [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.04),
+                                          blurRadius: 15,
+                                          offset: const Offset(0, 8),
+                                        )
+                                      ]
+                                    : [],
                               ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Expanded(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: getWidgetWidth(width: 9)),
-                                      height: getWidgetHeight(height: 90),
-                                      width: getWidgetWidth(width: 335),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              _processLeaning[1].category!,
-                                              style: TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  letterSpacing: 0,
-                                                  fontSize: kText.scale(17),
-                                                  fontWeight: FontWeight.w600),
-                                            ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: kIsWeb
+                                          ? 32
+                                          : getWidgetWidth(width: 9),
+                                      vertical: kIsWeb ? 24 : 0,
+                                    ),
+                                    height: kIsWeb
+                                        ? null
+                                        : getWidgetHeight(height: 90),
+                                    width: kIsWeb
+                                        ? double.infinity
+                                        : getWidgetWidth(width: 335),
+                                    decoration: kIsWeb
+                                        ? BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                              color: Colors.black
+                                                  .withValues(alpha: 0.04),
+                                            )),
+                                          )
+                                        : null,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            _processLeaning[1].category!,
+                                            style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                letterSpacing: 0,
+                                                fontSize: kIsWeb
+                                                    ? 22
+                                                    : kText.scale(17),
+                                                color: kIsWeb
+                                                    ? const Color(0xFF1A1A1A)
+                                                    : null,
+                                                fontWeight: kIsWeb
+                                                    ? FontWeight.w800
+                                                    : FontWeight.w600),
                                           ),
+                                        ),
+                                        if (!kIsWeb)
                                           SizedBox(
                                             child: SvgPicture.asset(
                                               AllAssets.plAccounts,
@@ -770,22 +735,24 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                                   ? getFullWidgetHeight(
                                                       height: 86)
                                                   : getWidgetHeight(height: 86),
-                                              // scale: 1,
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                      ],
                                     ),
                                   ),
-                                  ListView.separated(
-                                      padding: EdgeInsets.zero,
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        return Column(
-                                          children: [
-                                            InkWell(
-                                              onTap: () async {
+                                  kIsWeb
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(24.0),
+                                          child: Wrap(
+                                            spacing: 20,
+                                            runSpacing: 20,
+                                            alignment: WrapAlignment.center,
+                                            children: List.generate(
+                                                _processLeaning[1]
+                                                    .subcategories!
+                                                    .length, (index) {
+                                              Future<void>
+                                                  handleItemTap() async {
                                                 subCategoryTitile =
                                                     _processLeaning[1]
                                                         .subcategories![index]
@@ -896,7 +863,6 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                                               .subcategories![
                                                                   index]
                                                               .name ??
-                                                          "" ??
                                                           "");
                                                   final box = await Hive.openBox<
                                                           ProcessLearningLinkHive>(
@@ -934,73 +900,245 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                                     ),
                                                   );
                                                 }
-                                              },
-                                              child: Container(
-                                                // color: Colors.red,
-                                                // height: displayHeight(context) / 15.61,
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: getWidgetWidth(
-                                                        width: 18)),
-                                                height: isSplitScreen
-                                                    ? getFullWidgetHeight(
-                                                        height: 40)
-                                                    : getWidgetHeight(
-                                                        height: 40),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      _processLeaning[1]
-                                                          .subcategories![index]
-                                                          .name!,
-                                                      style: TextStyle(
-                                                        fontFamily: 'Roboto',
-                                                        letterSpacing: 0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize:
-                                                            kText.scale(15),
-                                                        color:
-                                                            Color(0xFF4F4F4F),
-                                                      ),
-                                                    ),
-                                                    Icon(
-                                                      Icons
-                                                          .chevron_right_rounded,
-                                                      color: Color(0xFFD3D3D3),
-                                                      size: kWidth > 500
-                                                          ? getWidgetHeight(
-                                                              height: 40)
-                                                          : displayWidth(
-                                                                  context) /
-                                                              11,
-                                                    ),
-                                                  ],
+                                              }
+
+                                              return SizedBox(
+                                                width:
+                                                    4100, // Slightly wider for a "row" feel
+                                                child: WebHoverListItem(
+                                                  title: _processLeaning[1]
+                                                      .subcategories![index]
+                                                      .name!,
+                                                  onTap: handleItemTap,
                                                 ),
-                                              ),
-                                            ),
-                                            if (_processLeaning[1]
-                                                            .subcategories!
-                                                            .length -
-                                                        1 ==
-                                                    index &&
-                                                kIsWeb)
-                                              SizedBox(
-                                                height:
-                                                    getWidgetHeight(height: 10),
-                                              ),
-                                          ],
-                                        );
-                                      },
-                                      separatorBuilder: (context, index) =>
-                                          Divider(
-                                            color: Color(0xFFE4E4E4),
+                                              );
+                                            }),
                                           ),
-                                      itemCount: _processLeaning[1]
-                                          .subcategories!
-                                          .length),
+                                        )
+                                      : ListView.separated(
+                                          padding: EdgeInsets.zero,
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            Future<void> handleItemTap() async {
+                                              subCategoryTitile =
+                                                  _processLeaning[1]
+                                                      .subcategories![index]
+                                                      .name!;
+                                              log("${_processLeaning[1].category!}");
+                                              sessionName = _processLeaning[1]
+                                                  .subcategories![index]
+                                                  .name!;
+                                              if (_processLeaning[1]
+                                                      .subcategories![index]
+                                                      .link !=
+                                                  null) {
+                                                print("arManagementTappeddd");
+                                                String? arManagementLinks =
+                                                    _processLeaning[1]
+                                                        .subcategories![index]
+                                                        .link;
+                                                processLearningLinks
+                                                    .add(arManagementLinks!);
+                                                FirebaseFirestore firestore =
+                                                    FirebaseFirestore.instance;
+                                                String userId = await SharedPref
+                                                    .getSavedString('userId');
+                                                DocumentReference softSkills =
+                                                    firestore
+                                                        .collection(
+                                                            'processLearningReports')
+                                                        .doc(userId);
+
+                                                await softSkills.update({
+                                                  'isLink':
+                                                      FieldValue.arrayUnion([
+                                                    _processLeaning[1]
+                                                        .subcategories![index]
+                                                        .link
+                                                  ]),
+                                                }).then((_) {
+                                                  print(
+                                                      'Link added to Firestore: ${_processLeaning[1].subcategories![index].link}');
+                                                }).catchError((e) {
+                                                  print(
+                                                      'Error updating Firestore: $e');
+                                                });
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                await prefs.setStringList(
+                                                    'InAppWebViewPage', [
+                                                  _processLeaning[1]
+                                                      .subcategories![index]
+                                                      .link!
+                                                ]);
+                                                await prefs.setString(
+                                                    'lastAccess',
+                                                    'InAppWebViewPage');
+                                                await prefs.setString(
+                                                    "lastYes", processLearning);
+                                                startTimerSubCategory(
+                                                    processLearning,
+                                                    _processLeaning[1]
+                                                            .subcategories![
+                                                                index]
+                                                            .name ??
+                                                        "");
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        InAppWebViewPage(
+                                                      // title: _processLeaning[1].subcategories![index].name ?? "",
+                                                      url: _processLeaning[1]
+                                                          .subcategories![index]
+                                                          .link!,
+                                                    ),
+                                                  ),
+                                                );
+                                              } else if (_processLeaning[1]
+                                                          .subcategories![index]
+                                                          .linkCats !=
+                                                      null &&
+                                                  _processLeaning[1]
+                                                      .subcategories![index]
+                                                      .linkCats!
+                                                      .isNotEmpty) {
+                                                print(
+                                                    'denial managementtt>>>>>');
+                                                print(
+                                                    "checkk:${_processLeaning[1].subcategories![index].linkCats ?? []}");
+                                                print(
+                                                    "check1 : ${_processLeaning[1].subcategories![index].name ?? ""}");
+                                                print("indexCheck;$index");
+
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                await prefs.setString(
+                                                    'lastAccess',
+                                                    'ProcessCatScreen');
+                                                await prefs.setString(
+                                                    'ProcessCatScreen',
+                                                    _processLeaning[1]
+                                                            .subcategories![
+                                                                index]
+                                                            .name ??
+                                                        "" ??
+                                                        "");
+                                                final box = await Hive.openBox<
+                                                        ProcessLearningLinkHive>(
+                                                    'newProcessLearningBox');
+                                                // processLearningBox = await Hive.box<ProcessLearningLinkHive>('processLearningLinkBox');
+                                                ProcessLearningLinkHive prHive =
+                                                    ProcessLearningLinkHive(
+                                                        item: _processLeaning[1]
+                                                            .subcategories![
+                                                                index]
+                                                            .linkCats);
+                                                box.put(
+                                                    'ProcessCatScreen', prHive);
+
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ProcessCatScreen(
+                                                      linkCats: _processLeaning[
+                                                                  1]
+                                                              .subcategories![
+                                                                  index]
+                                                              .linkCats ??
+                                                          [],
+                                                      title: _processLeaning[1]
+                                                              .subcategories![
+                                                                  index]
+                                                              .name ??
+                                                          "",
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            }
+
+                                            return Column(
+                                              children: [
+                                                // The kIsWeb condition for WebHoverListItem is now handled by the outer conditional
+                                                InkWell(
+                                                  onTap: handleItemTap,
+                                                  child: Container(
+                                                    // color: Colors.red,
+                                                    // height: displayHeight(context) / 15.61,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal:
+                                                                getWidgetWidth(
+                                                                    width: 18)),
+                                                    height: isSplitScreen
+                                                        ? getFullWidgetHeight(
+                                                            height: 40)
+                                                        : getWidgetHeight(
+                                                            height: 40),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          _processLeaning[1]
+                                                              .subcategories![
+                                                                  index]
+                                                              .name!,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Roboto',
+                                                            letterSpacing: 0,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize:
+                                                                kText.scale(15),
+                                                            color: Color(
+                                                                0xFF4F4F4F),
+                                                          ),
+                                                        ),
+                                                        Icon(
+                                                          Icons
+                                                              .chevron_right_rounded,
+                                                          color:
+                                                              Color(0xFFD3D3D3),
+                                                          size: kWidth > 500
+                                                              ? getWidgetHeight(
+                                                                  height: 40)
+                                                              : displayWidth(
+                                                                      context) /
+                                                                  11,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                if (_processLeaning[1]
+                                                                .subcategories!
+                                                                .length -
+                                                            1 ==
+                                                        index &&
+                                                    kIsWeb) // This condition is now only relevant for the mobile ListView if kIsWeb is false
+                                                  SizedBox(
+                                                    height: getWidgetHeight(
+                                                        height: 10),
+                                                  ),
+                                              ],
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) =>
+                                              Divider(
+                                                color: Color(0xFFE4E4E4),
+                                              ),
+                                          itemCount: _processLeaning[1]
+                                              .subcategories!
+                                              .length),
                                   SizedBox(
                                     height: isSplitScreen
                                         ? getFullWidgetHeight(height: 5)
@@ -1019,7 +1157,9 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                           ],
                         ),
                       ),
-                    )),
+                    ),
+                  ),
+      ),
     );
   }
 }
