@@ -10,6 +10,7 @@ import 'package:litelearninglab/constants/app_colors.dart';
 import 'package:litelearninglab/hiveDb/new_interactive_simulator_hivedb.dart';
 import 'package:litelearninglab/models/InteracticeSimulationMain.dart';
 import 'package:litelearninglab/screens/interactive_simulations/widgets/ar_grid_tile.dart';
+import 'package:litelearninglab/screens/interactive_simulations/widgets/web_simulation_card.dart';
 import 'package:litelearninglab/states/auth_state.dart';
 import 'package:litelearninglab/utils/bottom_navigation.dart';
 import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
@@ -62,7 +63,7 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
     },
     {
       'tileColor': Color(0xFFDC6379),
-      'title': kIsWeb ? 'Auto Insurance' : 'Auto\nInsurance',
+      'title': 'Auto Insurance',
       'image': AllAssets.arAutoInsure,
       'ellipse': AllAssets.arpinkEllipse
     },
@@ -167,6 +168,39 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
     setState(() {});
   }
 
+  Future<void> _handleOnTap(int index) async {
+    if (index >= _categories.length) return;
+
+    if (_categories[index].subcategories != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('lastAccess', 'InteracticeCatScreen');
+      await prefs.setString(
+          'InteracticeCatScreen', _categories[index].category ?? "");
+      final box = await Hive.openBox<InteractiveLinkHive>('InteractiveLinkBox');
+      InteractiveLinkHive prHive =
+          InteractiveLinkHive(item: _categories[index].subcategories!);
+      box.put('InteracticeCatScreen', prHive);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => InteracticeCatScreen(
+            linkCats: _categories[index].subcategories!,
+            title: _categories[index].category ?? "",
+          ),
+        ),
+      );
+    } else {
+      Toast.show("Work in progress",
+          duration: Toast.lengthShort,
+          gravity: Toast.bottom,
+          backgroundColor: AppColors.white,
+          textStyle: TextStyle(color: AppColors.black),
+          backgroundRadius: 10);
+    }
+    _selectedWordOnClick = _categories[index].category;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -213,77 +247,51 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                 ? getFullWidgetHeight(height: 24)
                                 : getWidgetHeight(height: 24),
                           ),
-                          // Text(
-                          //   'Indulge in Lifelike Immersive Learning!',
-                          //   style: TextStyle(
-                          //       fontFamily: 'Roboto',
-                          //       fontWeight: FontWeight.w500,
-                          //       color: Colors.white,
-                          //       letterSpacing: 0,
-                          //       fontSize: kText.scale(16)),
-                          // ),
-                          // Text(
-                          //   'Be Ready & Confident For AR Calls.',
-                          //   style: TextStyle(
-                          //     fontWeight: FontWeight.w500,
-                          //     color: Colors.white,
-                          //     fontSize: kText.scale(15),
-                          //     fontFamily: 'Roboto',
-                          //     letterSpacing: 0,
-                          //   ),
-                          // ),
-                          // SizedBox(
-                          //     height: isSplitScreen
-                          //         ? getFullWidgetHeight(height: 10)
-                          //         : getWidgetHeight(height: 10)),
-                          // Text(
-                          //   'Practice Fearlessly...',
-                          //   style: TextStyle(
-                          //       fontWeight: FontWeight.w400,
-                          //       color: Color(0xFF6C63FF),
-                          //       fontSize: kText.scale(31),
-                          //       fontFamily: 'Kaushan',
-                          //       letterSpacing: 0),
-                          // ),
-                          Flexible(
-                            child: Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        'Indulge in Lifelike Immersive Learning! ',
-                                    style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white,
-                                      letterSpacing: 0,
-                                      fontSize: kText.scale(16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            child: Container(
+                              constraints: const BoxConstraints(maxWidth: 900),
+                              child: Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          'Indulge in Lifelike Immersive Learning! ',
+                                      style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                        letterSpacing: 0,
+                                        fontSize: kIsWeb ? 20 : kText.scale(16),
+                                      ),
                                     ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Be Ready & Confident For AR Calls. ',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white,
-                                      fontSize: kText.scale(15),
-                                      fontFamily: 'Roboto',
-                                      letterSpacing: 0,
+                                    TextSpan(
+                                      text:
+                                          'Be Ready & Confident For AR Calls. ',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                        fontSize: kIsWeb ? 18 : kText.scale(15),
+                                        fontFamily: 'Roboto',
+                                        letterSpacing: 0,
+                                      ),
                                     ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Practice Fearlessly...',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xFF6C63FF),
-                                      fontSize: kText.scale(31),
-                                      fontFamily: 'Kaushan',
-                                      letterSpacing: 0,
+                                    TextSpan(
+                                      text: 'Practice Fearlessly...',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        color: const Color(0xFF6C63FF),
+                                        fontSize: kIsWeb ? 48 : kText.scale(31),
+                                        fontFamily: 'Kaushan',
+                                        letterSpacing: 0,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                                softWrap: true,
+                                overflow: TextOverflow.visible,
                               ),
-                              softWrap: true,
-                              overflow: TextOverflow.visible,
                             ),
                           ),
                           SizedBox(
@@ -291,296 +299,127 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                 ? getFullWidgetHeight(height: 20)
                                 : getWidgetHeight(height: 20),
                           ),
-                          SizedBox(
-                            width: displayWidth(context),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    ARGridTile(
-                                      height: kWidth > 900
-                                          ? displayHeight(context) * 0.30
-                                          : null,
-                                      width: kWidth > 900
-                                          ? displayWidth(context) * 0.2
-                                          : null,
-                                      onTap: () async {
-                                        print(
-                                            '================////// ${_categories[0].category}');
-                                        if (_categories[0].subcategories !=
-                                            null) {
-                                          SharedPreferences prefs =
-                                              await SharedPreferences
-                                                  .getInstance();
-                                          await prefs.setString('lastAccess',
-                                              'InteracticeCatScreen');
-                                          await prefs.setString(
-                                              'InteracticeCatScreen',
-                                              _categories[0].category ?? "");
-                                          final box = await Hive.openBox<
-                                                  InteractiveLinkHive>(
-                                              'InteractiveLinkBox');
-                                          InteractiveLinkHive prHive =
-                                              InteractiveLinkHive(
-                                                  item: _categories[0]
-                                                      .subcategories!);
-                                          box.put(
-                                              'InteracticeCatScreen', prHive);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  InteracticeCatScreen(
-                                                linkCats: _categories[0]
-                                                    .subcategories!,
-                                                title:
-                                                    _categories[0].category ??
-                                                        "",
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          Toast.show("Work in progress",
-                                              duration: Toast.lengthShort,
-                                              gravity: Toast.bottom,
-                                              backgroundColor: AppColors.white,
-                                              textStyle: TextStyle(
-                                                  color: AppColors.black),
-                                              backgroundRadius: 10);
-                                        }
-                                        // } else if (val) {
-                                        _selectedWordOnClick =
-                                            _categories[0].category;
-                                        setState(() {});
-                                        // }
-                                      },
-                                      tileColor: gridTileDatas[0]['tileColor'],
-                                      title: gridTileDatas[0]['title']!,
-                                      icon: gridTileDatas[0]['image'],
-                                      ellipse: gridTileDatas[0]['ellipse'],
-                                    ),
-                                    // SPH(displayHeight(context) * 0.0246),
-                                    SizedBox(
-                                      height: isSplitScreen
-                                          ? getFullWidgetHeight(height: 20)
-                                          : getWidgetHeight(height: 20),
-                                    ),
-                                    ARGridTile(
-                                      height: kWidth > 900
-                                          ? displayHeight(context) * 0.30
-                                          : null,
-                                      width: kWidth > 900
-                                          ? displayWidth(context) * 0.2
-                                          : null,
-                                      onTap: () async {
-                                        if (_categories[3].subcategories !=
-                                            null) {
-                                          SharedPreferences prefs =
-                                              await SharedPreferences
-                                                  .getInstance();
-                                          await prefs.setString('lastAccess',
-                                              'InteracticeCatScreen');
-                                          await prefs.setString(
-                                              'InteracticeCatScreen',
-                                              _categories[3].category ?? "");
-                                          final box = await Hive.openBox<
-                                                  InteractiveLinkHive>(
-                                              'InteractiveLinkBox');
-                                          InteractiveLinkHive prHive =
-                                              InteractiveLinkHive(
-                                                  item: _categories[3]
-                                                      .subcategories!);
-                                          box.put(
-                                              'InteracticeCatScreen', prHive);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  InteracticeCatScreen(
-                                                linkCats: _categories[3]
-                                                    .subcategories!,
-                                                title: _categories[3]
-                                                        .category ??
-                                                    "", //4822126141 , 4911567682
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          Toast.show("Work in progress",
-                                              duration: Toast.lengthShort,
-                                              gravity: Toast.bottom,
-                                              backgroundColor: AppColors.white,
-                                              textStyle: TextStyle(
-                                                  color: AppColors.black),
-                                              backgroundRadius: 10);
-                                        }
-                                        // } else if (val) {
-                                        _selectedWordOnClick =
-                                            _categories[3].category;
-                                        setState(() {});
-                                        // }
-                                      },
-                                      tileColor: gridTileDatas[3]['tileColor'],
-                                      title: gridTileDatas[3]['title']!,
-                                      icon: gridTileDatas[3]['image'],
-                                      ellipse: gridTileDatas[3]['ellipse'],
-                                    ),
-                                  ],
+                          kIsWeb
+                              ? Container(
+                                  padding: const EdgeInsets.all(20),
+                                  alignment: Alignment.center,
+                                  child: Wrap(
+                                    spacing: 40,
+                                    runSpacing: 40,
+                                    alignment: WrapAlignment.center,
+                                    children: [
+                                      WebSimulationCard(
+                                        onTap: () => _handleOnTap(0),
+                                        tileColor: gridTileDatas[0]
+                                            ['tileColor'],
+                                        title: gridTileDatas[0]['title'],
+                                        icon: gridTileDatas[0]['image'],
+                                        ellipse: gridTileDatas[0]['ellipse'],
+                                      ),
+                                      WebSimulationCard(
+                                        onTap: () => _handleOnTap(1),
+                                        tileColor: gridTileDatas[1]
+                                            ['tileColor'],
+                                        title: gridTileDatas[1]['title'],
+                                        icon: gridTileDatas[1]['image'],
+                                        ellipse: gridTileDatas[1]['ellipse'],
+                                      ),
+                                      WebSimulationCard(
+                                        onTap: () => _handleOnTap(3),
+                                        tileColor: gridTileDatas[3]
+                                            ['tileColor'],
+                                        title: gridTileDatas[3]['title'],
+                                        icon: gridTileDatas[3]['image'],
+                                        ellipse: gridTileDatas[3]['ellipse'],
+                                      ),
+                                      WebSimulationCard(
+                                        onTap: () => _handleOnTap(2),
+                                        tileColor: gridTileDatas[2]
+                                            ['tileColor'],
+                                        title: gridTileDatas[2]['title'],
+                                        icon: gridTileDatas[2]['image'],
+                                        ellipse: gridTileDatas[2]['ellipse'],
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : SizedBox(
+                                  width: displayWidth(context),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          ARGridTile(
+                                            onTap: () => _handleOnTap(0),
+                                            tileColor: gridTileDatas[0]
+                                                ['tileColor'],
+                                            title: gridTileDatas[0]['title']!,
+                                            icon: gridTileDatas[0]['image'],
+                                            ellipse: gridTileDatas[0]
+                                                ['ellipse'],
+                                          ),
+                                          SizedBox(
+                                            height: isSplitScreen
+                                                ? getFullWidgetHeight(
+                                                    height: 20)
+                                                : getWidgetHeight(height: 20),
+                                          ),
+                                          ARGridTile(
+                                            onTap: () => _handleOnTap(3),
+                                            tileColor: gridTileDatas[3]
+                                                ['tileColor'],
+                                            title: gridTileDatas[3]['title']!,
+                                            icon: gridTileDatas[3]['image'],
+                                            ellipse: gridTileDatas[3]
+                                                ['ellipse'],
+                                          ),
+                                        ],
+                                      ),
+                                      SPW(displayWidth(context) * 0.046),
+                                      Column(
+                                        children: [
+                                          SizedBox(
+                                            height: isSplitScreen
+                                                ? getFullWidgetHeight(
+                                                    height: 40)
+                                                : getWidgetHeight(height: 40),
+                                          ),
+                                          ARGridTile(
+                                            onTap: () => _handleOnTap(1),
+                                            tileColor: gridTileDatas[1]
+                                                ['tileColor'],
+                                            title: gridTileDatas[1]['title']!,
+                                            icon: gridTileDatas[1]['image'],
+                                            ellipse: gridTileDatas[1]
+                                                ['ellipse'],
+                                          ),
+                                          SizedBox(
+                                            height: isSplitScreen
+                                                ? getFullWidgetHeight(
+                                                    height: 20)
+                                                : getWidgetHeight(height: 20),
+                                          ),
+                                          ARGridTile(
+                                            onTap: () => _handleOnTap(2),
+                                            tileColor: gridTileDatas[2]
+                                                ['tileColor'],
+                                            title: gridTileDatas[2]['title']!,
+                                            icon: gridTileDatas[2]['image'],
+                                            ellipse: gridTileDatas[2]
+                                                ['ellipse'],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                SPW(displayWidth(context) * 0.046),
-                                // Spacer(),
-                                // SizedBox(
-                                //   width: getWidgetWidth(width: 16),
-                                // ),
-                                Column(
-                                  children: [
-                                    // SPH(displayHeight(context) * 0.05),
-                                    SizedBox(
-                                      height: isSplitScreen
-                                          ? getFullWidgetHeight(height: 40)
-                                          : getWidgetHeight(height: 40),
-                                    ),
-                                    ARGridTile(
-                                      height: kWidth > 900
-                                          ? displayHeight(context) * 0.30
-                                          : null,
-                                      width: kWidth > 900
-                                          ? displayWidth(context) * 0.2
-                                          : null,
-                                      onTap: () async {
-                                        print(
-                                            '================////// ${_categories[1].category}');
-                                        if (_categories[1].subcategories !=
-                                            null) {
-                                          SharedPreferences prefs =
-                                              await SharedPreferences
-                                                  .getInstance();
-                                          await prefs.setString('lastAccess',
-                                              'InteracticeCatScreen');
-                                          await prefs.setString(
-                                              'InteracticeCatScreen',
-                                              _categories[1].category ?? "");
-                                          final box = await Hive.openBox<
-                                                  InteractiveLinkHive>(
-                                              'InteractiveLinkBox');
-                                          InteractiveLinkHive prHive =
-                                              InteractiveLinkHive(
-                                                  item: _categories[1]
-                                                      .subcategories!);
-                                          box.put(
-                                              'InteracticeCatScreen', prHive);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  InteracticeCatScreen(
-                                                linkCats: _categories[1]
-                                                    .subcategories!,
-                                                title:
-                                                    _categories[1].category ??
-                                                        "",
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          Toast.show("Work in progress",
-                                              duration: Toast.lengthShort,
-                                              gravity: Toast.bottom,
-                                              backgroundColor: AppColors.white,
-                                              textStyle: TextStyle(
-                                                  color: AppColors.black),
-                                              backgroundRadius: 10);
-                                        }
-                                        // } else if (val) {
-                                        _selectedWordOnClick =
-                                            _categories[1].category;
-                                        setState(() {});
-                                        // }
-                                      },
-                                      tileColor: gridTileDatas[1]['tileColor'],
-                                      title: gridTileDatas[1]['title']!,
-                                      icon: gridTileDatas[1]['image'],
-                                      ellipse: gridTileDatas[1]['ellipse'],
-                                    ),
-                                    // SPH(displayHeight(context) * 0.0246),
-                                    SizedBox(
-                                      height: isSplitScreen
-                                          ? getFullWidgetHeight(height: 20)
-                                          : getWidgetHeight(height: 20),
-                                    ),
-                                    ARGridTile(
-                                      height: kWidth > 900
-                                          ? displayHeight(context) * 0.30
-                                          : null,
-                                      width: kWidth > 900
-                                          ? displayWidth(context) * 0.2
-                                          : null,
-                                      onTap: () async {
-                                        print(
-                                            '================////// ${_categories[2].category}');
-                                        if (_categories[2].subcategories !=
-                                            null) {
-                                          SharedPreferences prefs =
-                                              await SharedPreferences
-                                                  .getInstance();
-                                          await prefs.setString('lastAccess',
-                                              'InteracticeCatScreen');
-                                          await prefs.setString(
-                                              'InteracticeCatScreen',
-                                              _categories[2].category ?? "");
-                                          final box = await Hive.openBox<
-                                                  InteractiveLinkHive>(
-                                              'InteractiveLinkBox');
-                                          InteractiveLinkHive prHive =
-                                              InteractiveLinkHive(
-                                                  item: _categories[2]
-                                                      .subcategories!);
-                                          box.put(
-                                              'InteracticeCatScreen', prHive);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  InteracticeCatScreen(
-                                                linkCats: _categories[2]
-                                                    .subcategories!,
-                                                title:
-                                                    _categories[2].category ??
-                                                        "",
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          Toast.show("Work in progress",
-                                              duration: Toast.lengthShort,
-                                              gravity: Toast.bottom,
-                                              backgroundColor: AppColors.white,
-                                              textStyle: TextStyle(
-                                                  color: AppColors.black),
-                                              backgroundRadius: 10);
-                                        }
-                                        // } else if (val) {
-                                        _selectedWordOnClick =
-                                            _categories[2].category;
-                                        setState(() {});
-                                        // }
-                                      },
-                                      tileColor: gridTileDatas[2]['tileColor'],
-                                      title: gridTileDatas[2]['title']!,
-                                      icon: gridTileDatas[2]['image'],
-                                      ellipse: gridTileDatas[2]['ellipse'],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
                           SizedBox(
                             height: isSplitScreen
-                                ? getFullWidgetHeight(height: 20)
-                                : getWidgetHeight(height: 20),
+                                ? getFullWidgetHeight(height: 40)
+                                : getWidgetHeight(height: 40),
                           ),
                         ],
                       ),
