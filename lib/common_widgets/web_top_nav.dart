@@ -7,12 +7,14 @@ class WebHeaderWithNav extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Function? onBack;
   final Function? onDrawer;
+  final String? appbarIcon;
 
   const WebHeaderWithNav({
     Key? key,
     required this.title,
     this.onBack,
     this.onDrawer,
+    this.appbarIcon,
   }) : super(key: key);
 
   bool get isHome =>
@@ -43,7 +45,27 @@ class WebHeaderWithNav extends StatelessWidget implements PreferredSizeWidget {
                 }
               },
             ),
-            const SizedBox(width: 8),
+            if (appbarIcon != null) ...[
+              Container(
+                padding: const EdgeInsets.all(8),
+                height: 35,
+                width: 35,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF584EFF),
+                      Color(0xFF6C63FE),
+                    ],
+                  ),
+                ),
+                child: Image.asset(
+                  appbarIcon!,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
             Text(
               title,
               style: const TextStyle(

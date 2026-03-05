@@ -244,16 +244,18 @@ class _ProfluentEnglishModifiedScreenState
             MaterialPageRoute(builder: (context) => BottomNavigation()));
       },
       child: BackgroundWidget(
-        appBar: widget.PEIconKey
-            ? CommonAppBar(
-                title: "Profluent English",
-                // height: displayHeight(context) / 12.6875,
-              )
-            : CommonAppBar(
-                appbarIcon: AllAssets.quickLinkPL,
-                title: "Profluent English",
-                //  height: displayHeight(context)/12.6875,
-              ),
+        appBar: kIsWeb
+            ? null
+            : widget.PEIconKey
+                ? CommonAppBar(
+                    title: "Profluent English",
+                    // height: displayHeight(context) / 12.6875,
+                  )
+                : CommonAppBar(
+                    appbarIcon: AllAssets.quickLinkPL,
+                    title: "Profluent English",
+                    //  height: displayHeight(context)/12.6875,
+                  ),
         body: _isLoading
             ? Center(
                 child: CircularProgressIndicator(color: Colors.white),

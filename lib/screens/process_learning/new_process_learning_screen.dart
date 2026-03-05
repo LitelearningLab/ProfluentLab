@@ -289,14 +289,16 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
             MaterialPageRoute(builder: (context) => BottomNavigation()));
       },
       child: BackgroundWidget(
-          appBar: widget.iconKey
-              ? CommonAppBar(
-                  title: "Process Learning",
-                )
-              : CommonAppBar(
-                  appbarIcon: AllAssets.quickLinkDM,
-                  title: "Process Learning",
-                ),
+          appBar: kIsWeb
+              ? null
+              : widget.iconKey
+                  ? CommonAppBar(
+                      title: "Process Learning",
+                    )
+                  : CommonAppBar(
+                      appbarIcon: AllAssets.quickLinkDM,
+                      title: "Process Learning",
+                    ),
           body: _isLoading
               ? Center(
                   child: CircularProgressIndicator(color: Colors.white),

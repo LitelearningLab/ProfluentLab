@@ -354,11 +354,13 @@ class _PerformanceTrackingScreenState extends State<PerformanceTrackingScreen> {
             MaterialPageRoute(builder: (context) => BottomNavigation()));
       },
       child: BackgroundWidget(
-        appBar: CommonAppBar(
-          appbarIcon: AllAssets.ptIcon,
-          title: 'Performance Tracking',
-          // height: displayHeight(context) / 12.6875,
-        ),
+        appBar: kIsWeb
+            ? null
+            : CommonAppBar(
+                appbarIcon: AllAssets.ptIcon,
+                title: 'Performance Tracking',
+                // height: displayHeight(context) / 12.6875,
+              ),
         body: Padding(
           padding: EdgeInsets.only(
               top: isSplitScreen

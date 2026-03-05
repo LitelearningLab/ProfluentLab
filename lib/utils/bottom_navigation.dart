@@ -52,6 +52,21 @@ class _BottomNavigationState extends State<BottomNavigation> {
     }
   }
 
+  String? _getIcon(int index) {
+    switch (index) {
+      case 1:
+        return AllAssets.quickLinkDM;
+      case 2:
+        return AllAssets.bottomIS;
+      case 3:
+        return AllAssets.bottomPE;
+      case 4:
+        return AllAssets.ptIcon;
+      default:
+        return null;
+    }
+  }
+
   @override
   void initState() {
     print("didjgi");
@@ -75,9 +90,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
             appBar: kIsWeb
                 ? WebHeaderWithNav(
                     title: _getTitle(controller.currentIndex),
+                    appbarIcon: _getIcon(controller.currentIndex),
                     onDrawer: () {
                       _bottomNavScaffoldKey.currentState?.openEndDrawer();
-                    })
+                    },
+                    onBack: () {
+                      controller.changeIndex(0);
+                    },
+                  )
                 : null,
             body: controller.pages[controller.currentIndex],
             bottomNavigationBar: kIsWeb

@@ -177,16 +177,18 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
             MaterialPageRoute(builder: (context) => BottomNavigation()));
       },
       child: BackgroundWidget(
-        appBar: widget.ARIconKey
-            ? CommonAppBar(
-                title: "AR Call Simulations",
-                // height: displayHeight(context) / 12.6875,
-              )
-            : CommonAppBar(
-                appbarIcon: AllAssets.bottomIS,
-                title: "AR Call Simulations",
-                //  height: displayHeight(context)/12.6875,
-              ),
+        appBar: kIsWeb
+            ? null
+            : widget.ARIconKey
+                ? CommonAppBar(
+                    title: "AR Call Simulations",
+                    // height: displayHeight(context) / 12.6875,
+                  )
+                : CommonAppBar(
+                    appbarIcon: AllAssets.bottomIS,
+                    title: "AR Call Simulations",
+                    //  height: displayHeight(context)/12.6875,
+                  ),
         body: _isLoading
             ? Center(
                 child: CircularProgressIndicator(color: Colors.white),
