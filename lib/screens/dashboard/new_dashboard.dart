@@ -160,6 +160,17 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
     return s[0].toUpperCase() + s.substring(1);
   }
 
+  String _getGreeting() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning';
+    }
+    if (hour < 17) {
+      return 'Good Afternoon';
+    }
+    return 'Good Evening';
+  }
+
   void exitPopup(BuildContext context) {
     showDialog<bool>(
       context: context,
@@ -305,10 +316,36 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // SPH(displayHeight(context) / 81.2),
+                              // Personalized Greeting Section
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${_getGreeting()}, ${capitalizeFirstLetter(user.appUser?.UserMname?.split(' ')[0])}!",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: kText.scale(28),
+                                      fontWeight: FontWeight.w800,
+                                      fontFamily: 'Quicksand',
+                                      letterSpacing: -0.5,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "Ready to continue your learning journey?",
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.6),
+                                      fontSize: kText.scale(15),
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Roboto',
+                                    ),
+                                  ),
+                                ],
+                              ),
                               SizedBox(
                                 height: isSplitScreen
-                                    ? getFullWidgetHeight(height: 11)
-                                    : getWidgetHeight(height: 11),
+                                    ? getFullWidgetHeight(height: 30)
+                                    : getWidgetHeight(height: 30),
                               ),
                               Container(
                                 // height: size.height / 5,
@@ -389,72 +426,69 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                                 ? getFullWidgetHeight(
                                                     height: 46)
                                                 : getWidgetHeight(height: 46),
-                                        child: TextFormField(
-                                          readOnly: true,
-                                          keyboardType: TextInputType.text,
-                                          //controller: controller,
-                                          style: TextStyle(
-                                            fontFamily: Keys.fontFamily,
-                                            color: AppColors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w400,
-                                            fontStyle: FontStyle.normal,
-                                            letterSpacing: 0.3334423928571427,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(40),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(0.1),
+                                                blurRadius: 20,
+                                                offset: const Offset(0, 10),
+                                              ),
+                                            ],
                                           ),
-                                          decoration: new InputDecoration(
-                                            isDense: true,
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                              borderSide: BorderSide.none,
+                                          child: TextFormField(
+                                            readOnly: true,
+                                            style: TextStyle(
+                                              fontFamily: Keys.fontFamily,
+                                              color: AppColors.white,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w400,
+                                              letterSpacing: 0.5,
                                             ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                              borderSide: BorderSide.none,
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                              borderSide: BorderSide.none,
-                                            ),
-                                            errorBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                              borderSide: BorderSide.none,
-                                            ),
-                                            disabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                              borderSide: BorderSide.none,
-                                            ),
-                                            suffixIcon: ShowCaseView(
-                                              globalKey: _lastPageKey,
-                                              title: '',
-                                              description:
-                                                  'Click here For Go to Last Accessed Content',
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Container(
-                                                    height: kIsWeb
-                                                        ? 45
-                                                        : kHeight / 54.1,
-                                                    width: kIsWeb
-                                                        ? 45
-                                                        : kWidth / 6.2,
-                                                    decoration: BoxDecoration(
-                                                        color:
-                                                            Color(0xFF6C63FE),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15)),
-                                                    child: InkWell(
-                                                      onTap: () async {
-                                                        SharedPreferences
-                                                            prefs =
-                                                            await SharedPreferences
-                                                                .getInstance();
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(40),
+                                                borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(40),
+                                                borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(40),
+                                                borderSide: const BorderSide(color: Color(0xFF6C63FE)),
+                                              ),
+                                              suffixIcon: ShowCaseView(
+                                                globalKey: _lastPageKey,
+                                                title: '',
+                                                description: 'Click here For Go to Last Accessed Content',
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(6.0),
+                                                  child: Container(
+                                                      height: 34,
+                                                      width: 34,
+                                                      decoration: BoxDecoration(
+                                                          gradient: const LinearGradient(
+                                                            colors: [Color(0xFF8B85FF), Color(0xFF6C63FE)],
+                                                            begin: Alignment.topLeft,
+                                                            end: Alignment.bottomRight,
+                                                          ),
+                                                          shape: BoxShape.circle,
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: const Color(0xFF6C63FE).withOpacity(0.3),
+                                                              blurRadius: 8,
+                                                              offset: const Offset(0, 4),
+                                                            )
+                                                          ]),
+                                                      child: InkWell(
+                                                        onTap: () async {
+                                                          SharedPreferences
+                                                              prefs =
+                                                              await SharedPreferences
+                                                                  .getInstance();
                                                         String
                                                             lastAccessContent =
                                                             await prefs.getString(

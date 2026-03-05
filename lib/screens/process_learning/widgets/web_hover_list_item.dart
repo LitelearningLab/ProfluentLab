@@ -32,45 +32,66 @@ class _WebHoverListItemState extends State<WebHoverListItem> {
         behavior: HitTestBehavior.opaque,
         onTap: widget.hasLink ? widget.onTap : null,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+          duration: const Duration(milliseconds: 250),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 28),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius:
-                _isHovered ? BorderRadius.circular(12) : BorderRadius.zero,
-            boxShadow: _isHovered
-                ? [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    )
-                  ]
-                : [],
+            color: _isHovered
+                ? const Color(0xFF6C63FE).withValues(alpha: 0.04)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: _isHovered
+                  ? const Color(0xFF6C63FE).withValues(alpha: 0.1)
+                  : Colors.transparent,
+              width: 1,
+            ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Text(
-                  widget.title,
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 17,
-                    fontWeight: _isHovered ? FontWeight.w700 : FontWeight.w600,
-                    color: widget.isSelected
-                        ? const Color(0xFF6C63FE)
-                        : const Color(0xFF1A1A1A),
-                  ),
+                child: Row(
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      width: _isHovered ? 4 : 0,
+                      height: 24,
+                      margin: EdgeInsets.only(right: _isHovered ? 16 : 0),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF6C63FE),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        widget.title,
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 18,
+                          fontWeight:
+                              _isHovered ? FontWeight.w800 : FontWeight.w600,
+                          letterSpacing: -0.2,
+                          color: widget.isSelected || _isHovered
+                              ? const Color(0xFF1A1A1A)
+                              : const Color(0xFF4A4A4A),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               if (widget.hasLink)
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: _isHovered
-                      ? const Color(0xFF6C63FE)
-                      : Colors.grey.shade400,
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  transform:
+                      Matrix4.translationValues(_isHovered ? 5 : 0, 0, 0),
+                  child: Icon(
+                    Icons.arrow_forward_rounded,
+                    size: 22,
+                    color: _isHovered
+                        ? const Color(0xFF6C63FE)
+                        : Colors.grey.shade300,
+                  ),
                 ),
             ],
           ),

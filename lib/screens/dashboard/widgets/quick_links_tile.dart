@@ -3,125 +3,122 @@ import 'package:flutter/material.dart';
 import 'package:litelearninglab/constants/keys.dart';
 import 'package:litelearninglab/utils/sizes_helpers.dart';
 
-class QuickLinksTile extends StatelessWidget {
+class QuickLinksTile extends StatefulWidget {
   final String title;
   final String subTitle;
   final String imageUrl;
   final Color bgColor;
   final Function onTap;
-  const QuickLinksTile(
-      {Key? key,
-      required this.title,
-      required this.subTitle,
-      required this.imageUrl,
-      required this.bgColor,
-      required this.onTap})
-      : super(key: key);
+
+  const QuickLinksTile({
+    Key? key,
+    required this.title,
+    required this.subTitle,
+    required this.imageUrl,
+    required this.bgColor,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  State<QuickLinksTile> createState() => _QuickLinksTileState();
+}
+
+class _QuickLinksTileState extends State<QuickLinksTile> {
+  bool isHovered = false;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 8),
-      child: Container(
-        child: Row(
-          children: [
-            Container(
-              decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
-              height: kIsWeb ? 50 : getWidgetHeight(height: 42),
-              width: kIsWeb ? 50 : getWidgetWidth(width: 42),
-              child: Padding(
-                padding: EdgeInsets.all(kIsWeb ? 8 : 12.0),
-                child: Image.asset(
-                  imageUrl,
-                  // scale: 3,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: MouseRegion(
+        onEnter: (_) => setState(() => isHovered = true),
+        onExit: (_) => setState(() => isHovered = false),
+        cursor: SystemMouseCursors.click,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color:
+                isHovered ? Colors.white.withOpacity(0.08) : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isHovered
+                  ? Colors.white.withOpacity(0.1)
+                  : Colors.transparent,
+              width: 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                decoration: BoxDecoration(
+                  color: widget.bgColor,
+                  shape: BoxShape.circle,
+                  boxShadow: isHovered
+                      ? [
+                          BoxShadow(
+                            color: widget.bgColor.withOpacity(0.4),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                          )
+                        ]
+                      : [],
+                ),
+                height: kIsWeb ? 52 : getWidgetHeight(height: 48),
+                width: kIsWeb ? 52 : getWidgetWidth(width: 48),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image.asset(
+                    widget.imageUrl,
+                  ),
                 ),
               ),
-            ),
-            // CircleAvatar(
-            //   backgroundColor: bgColor,
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(10.0),
-            //     child: Image.asset(
-            //       imageUrl,
-            //       // scale: 3,
-            //     ),
-            //   ),
-            // ),
-            SizedBox(
-              width: 15,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    letterSpacing: 0,
-                    fontFamily: 'Roboto',
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        letterSpacing: 0.2,
+                        fontFamily: 'Roboto',
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.subTitle,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.5),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                        fontFamily: 'Roboto',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity: isHovered ? 1.0 : 0.0,
+                child: AnimatedPadding(
+                  duration: const Duration(milliseconds: 200),
+                  padding: EdgeInsets.only(right: isHovered ? 8 : 0),
+                  child: const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: Color(0xFF8B85FF),
+                    size: 16,
                   ),
                 ),
-                Text(
-                  subTitle,
-                  style: TextStyle(
-                    color: const Color.fromARGB(125, 255, 255, 255),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                    letterSpacing: 0,
-                    fontFamily: 'Roboto',
-                  ),
-                ),
-              ],
-            )
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
-
-    // ListTile(
-    //   splashColor: Color(0xff34425D),
-    //   leading: CircleAvatar(
-    //     backgroundColor: bgColor,
-    //     child: Padding(
-    //       padding: const EdgeInsets.all(10.0),
-    //       child: Image.asset(
-    //         imageUrl,
-    //         // scale: 3,
-    //       ),
-    //     ),
-    //   ),
-    //   title: Transform.translate(
-    //     offset: Offset(-3,0),
-    //     child: Text(
-    //       title,
-    //       style: TextStyle(
-    //         color: Colors.white,
-    //         fontWeight: FontWeight.w500,
-    //         fontSize: 16,
-    //         fontFamily: Keys.fontFamilyMedium,
-    //         letterSpacing: 0,
-
-    //       ),
-    //     ),
-    //   ),
-    //   subtitle: Transform.translate(
-    //     offset: Offset(-3, 0),
-    //     child: Text(
-    //       subTitle,
-    //       style: TextStyle(
-    //         color: const Color.fromARGB(125, 255, 255, 255),
-    //         fontWeight: FontWeight.w500,
-    //         fontFamily: Keys.fontFamily,
-    //         fontSize: 14,
-    //         letterSpacing: 0,
-    //       ),
-    //     ),
-    //   ),
-    //   onTap: () {
-    //     onTap();
-    //   },
-    // );
   }
 }

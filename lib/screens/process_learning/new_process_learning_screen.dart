@@ -324,7 +324,37 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            if (kIsWeb) SizedBox(height: 24),
+                            if (kIsWeb) ...[
+                              const SizedBox(height: 60),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 40),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Learning Categories".toUpperCase(),
+                                      style: TextStyle(
+                                        color:
+                                            Colors.white.withValues(alpha: 0.5),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 2.0,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Container(
+                                      height: 3,
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF6C63FE),
+                                        borderRadius: BorderRadius.circular(2),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 48),
+                            ],
                             kIsWeb
                                 ? Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -662,23 +692,27 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                     80), // More breathing room between sections
                             Container(
                               width: kIsWeb
-                                  ? 1100 // Substantial width for web alignment
+                                  ? 1200 // Slightly wider for premium look
                                   : getWidgetWidth(width: 335),
-                              margin: const EdgeInsets.only(bottom: 80),
+                              margin: const EdgeInsets.only(bottom: 100),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFFFFFFF),
-                                borderRadius: BorderRadius.circular(24),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(32),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                  width: 1,
+                                ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.08),
-                                    blurRadius: 40,
-                                    spreadRadius: 2,
-                                    offset: const Offset(0, 20),
+                                    color: Colors.black.withValues(alpha: 0.12),
+                                    blurRadius: 50,
+                                    spreadRadius: 0,
+                                    offset: const Offset(0, 25),
                                   )
                                 ],
                               ),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(24),
+                                borderRadius: BorderRadius.circular(32),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -692,57 +726,80 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                       ),
                                     Container(
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: kIsWeb
-                                            ? 40
-                                            : getWidgetWidth(width: 9),
-                                        vertical: kIsWeb ? 32 : 0,
+                                        horizontal: kIsWeb ? 60 : 20,
+                                        vertical: kIsWeb ? 48 : 20,
                                       ),
-                                      height: kIsWeb
-                                          ? null
-                                          : getWidgetHeight(height: 90),
-                                      width: kIsWeb
-                                          ? double.infinity
-                                          : getWidgetWidth(width: 335),
                                       decoration: kIsWeb
                                           ? BoxDecoration(
+                                              color: const Color(0xFFF9FAFB),
                                               border: Border(
-                                                  bottom: BorderSide(
-                                                color: Colors.black
-                                                    .withValues(alpha: 0.05),
-                                              )),
+                                                bottom: BorderSide(
+                                                  color: Colors.black
+                                                      .withValues(alpha: 0.04),
+                                                  width: 1,
+                                                ),
+                                              ),
                                             )
                                           : null,
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
+                                          if (kIsWeb) ...[
+                                            Container(
+                                              padding: const EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFF6C63FE)
+                                                    .withValues(alpha: 0.1),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              child: const Icon(
+                                                Icons.account_balance_wallet,
+                                                color: Color(0xFF6C63FE),
+                                                size: 28,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 24),
+                                          ],
                                           Expanded(
-                                            child: Text(
-                                              _processLeaning[1].category!,
-                                              style: TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  letterSpacing: -0.5,
-                                                  fontSize: kIsWeb
-                                                      ? 24
-                                                      : kText.scale(17),
-                                                  color: kIsWeb
-                                                      ? const Color(0xFF1A1A1A)
-                                                      : null,
-                                                  fontWeight: kIsWeb
-                                                      ? FontWeight.w800
-                                                      : FontWeight.w600),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  _processLeaning[1].category!,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    fontSize: kIsWeb ? 28 : 20,
+                                                    fontWeight: FontWeight.w900,
+                                                    color:
+                                                        const Color(0xFF1A1A1A),
+                                                    letterSpacing: -0.8,
+                                                  ),
+                                                ),
+                                                if (kIsWeb) ...[
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    "Detailed learning modules for specializations",
+                                                    style: TextStyle(
+                                                      color: Colors.black
+                                                          .withValues(
+                                                              alpha: 0.4),
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ],
                                             ),
                                           ),
                                           if (!kIsWeb)
-                                            SizedBox(
-                                              child: SvgPicture.asset(
-                                                AllAssets.plAccounts,
-                                                height: isSplitScreen
-                                                    ? getFullWidgetHeight(
-                                                        height: 86)
-                                                    : getWidgetHeight(
-                                                        height: 86),
-                                              ),
+                                            SvgPicture.asset(
+                                              AllAssets.plAccounts,
+                                              height: isSplitScreen
+                                                  ? getFullWidgetHeight(
+                                                      height: 60)
+                                                  : getWidgetHeight(height: 60),
                                             ),
                                         ],
                                       ),
@@ -750,7 +807,10 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                     kIsWeb
                                         ? Container(
                                             alignment: Alignment.center,
-                                            padding: const EdgeInsets.all(24.0),
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 12,
+                                              horizontal: 20,
+                                            ),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.min,
                                               children: List.generate(
