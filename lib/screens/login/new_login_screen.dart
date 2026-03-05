@@ -568,270 +568,294 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
         },
         child: Scaffold(
           resizeToAvoidBottomInset: true,
-          backgroundColor: Colors.white,
+          backgroundColor: kIsWeb ? const Color(0xFFF3F4F6) : Colors.white,
           body: SingleChildScrollView(
             child: SizedBox(
               height: kHeight,
-              child: Padding(
-                padding: EdgeInsets.only(top: 25),
-                child: Form(
-                  key: _formKey,
-                  child: Container(
-                    padding: EdgeInsets.only(
-                        top: isSplitScreen
-                            ? getFullWidgetHeight(height: 30)
-                            : getWidgetHeight(height: 30),
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    width: kWidth,
-                    decoration: BoxDecoration(color: Colors.white),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: getFullWidgetHeight(height: 25),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "PROFLUENT",
-                                style: TextStyle(fontSize: 25),
-                              ),
-                              Container(
-                                  height: 40,
-                                  width: 40,
-                                  child: Image.asset(
-                                      "assets/images/profluent_ar_icon.png"))
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 40),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: getFullWidgetHeight(height: 25),
-                          ),
-                          child: SizedBox(
-                              height: isSplitScreen
-                                  ? getFullWidgetHeight(height: 280)
-                                  : getWidgetHeight(height: 280),
-                              child: Image.asset(_isLogin
-                                  ? 'assets/images/undraw_Messaging_app_re_aytg.png'
-                                  : 'assets/images/SMSOTP.png')),
-                        ),
-                        SizedBox(height: 20),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: getWidgetHeight(height: 25),
-                          ),
-                          child: Text(
-                            !_isLogin
-                                ? "Enter Your Password"
-                                : "Enter Your Email Address",
-                            style: TextStyle(color: Color(0XFFF8F8F8F)),
-                          ),
-                        ),
-                        SizedBox(height: 23),
-                        // if (!_isLogin && !_isLoading)
-                        //   Container(
-                        //     padding: EdgeInsets.symmetric(
-                        //         horizontal: getFullWidgetHeight(height: 25)),
-                        //     width: kWidth,
-                        //     child: PinCodeTextField(
-                        //       autoFocus: true,
-                        //       autoDisposeControllers: false,
-                        //       keyboardType: TextInputType.number,
-                        //       textStyle: TextStyle(
-                        //         fontFamily: 'Noto',
-                        //         color: Colors.black,
-                        //         fontSize: 20,
-                        //         fontWeight: FontWeight.w700,
-                        //         fontStyle: FontStyle.normal,
-                        //         letterSpacing: 0.25,
-                        //       ),
-                        //       length: 6,
-                        //       obscureText: false,
-                        //       animationType: AnimationType.fade,
-                        //       pinTheme: PinTheme(
-                        //           shape: PinCodeFieldShape.box,
-                        //           borderRadius: BorderRadius.circular(10),
-                        //           fieldHeight: 45,
-                        //           fieldWidth: 43,
-                        //           activeColor: Color(0XFFE8E8E8),
-                        //           disabledColor: Color(0XFFE8E8E8),
-                        //           inactiveColor:
-                        //               redBox ? Colors.red : Color(0XFFE8E8E8),
-                        //           selectedColor: Color(0XFFE8E8E8),
-                        //           activeFillColor: Color(0XFFE8E8E8),
-                        //           inactiveFillColor: Color(0XFFE8E8E8),
-                        //           selectedFillColor: Color(0XFFE8E8E8)),
-                        //       animationDuration: Duration(milliseconds: 300),
-                        //       backgroundColor: Colors.transparent,
-                        //       enableActiveFill: true,
-                        //       enablePinAutofill: true,
-                        //       errorAnimationController: errorController,
-                        //       controller: _otp,
-                        //       onChanged: (value) {
-                        //         resendOnChangedOnTap();
-                        //       },
-                        //       beforeTextPaste: (text) {
-                        //         return true;
-                        //       },
-                        //       appContext: context,
-                        //     ),
-                        //   ),
-                        // if (_isLogin && !_isLoading)
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: getWidgetHeight(height: 25),
-                          ),
-                          child: SizedBox(
-                            width:
-                                getWidgetWidth(width: kWidth > 500 ? 200 : 375),
-                            // height: getWidgetHeight(height: kWidth > 500 ? 75 : 50),
-                            child: TextFormField(
-                              cursorColor: Colors.black,
-                              controller: !_isLogin
-                                  ? passwordController
-                                  : emailController,
-                              keyboardType: !_isLogin
-                                  ? TextInputType.text
-                                  : TextInputType.emailAddress,
-                              obscureText: !_isLogin ? _obscurePassword : false,
-                              textInputAction: TextInputAction.done,
-                              onFieldSubmitted: (value) {
-                                _bottomMessageEntry?.remove();
-                                _bottomMessageEntry = null;
-                                if (!_isLogin) {
-                                  _isLoading = false;
-                                  setState(() {});
-                                }
-                                _isLogin ? loginNew() : verifyEmailLogin();
-                                // login();
-                              },
-                              validator: (val) {
-                                if (_isLogin) {
-                                  return validateEmail(val);
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                counterText: "",
-                                hintText:
-                                    !_isLogin ? "Password" : "Email Address",
-                                hintStyle: TextStyle(color: Colors.grey[600]),
-                                fillColor: Color(0XFFE8E8E8),
-                                filled: true,
-                                prefixIcon: Icon(
-                                  !_isLogin ? Icons.lock : Icons.email,
-                                  color: Colors.grey,
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: kIsWeb ? 50 : 25),
+                  child: Form(
+                    key: _formKey,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          top: isSplitScreen
+                              ? getFullWidgetHeight(height: 30)
+                              : getWidgetHeight(height: 30),
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      width: kIsWeb ? 500 : kWidth,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: kIsWeb
+                            ? BorderRadius.circular(16)
+                            : BorderRadius.zero,
+                        boxShadow: kIsWeb
+                            ? [
+                                BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 10,
+                                    spreadRadius: 2)
+                              ]
+                            : [],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: getFullWidgetHeight(height: 25),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "PROFLUENT",
+                                  style: TextStyle(fontSize: 25),
                                 ),
-                                suffixIcon: !_isLogin
-                                    ? IconButton(
-                                        icon: Icon(
-                                          _obscurePassword
-                                              ? Icons.visibility_off
-                                              : Icons.visibility,
-                                          color: Colors.grey,
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            _obscurePassword =
-                                                !_obscurePassword;
-                                          });
-
-                                          if (!_obscurePassword) {
-                                            _hideTimer?.cancel();
-
-                                            _hideTimer =
-                                                Timer(Duration(seconds: 1), () {
-                                              if (mounted) {
-                                                setState(() {
-                                                  _obscurePassword = true;
-                                                });
-                                              }
-                                            });
-                                          }
-                                        },
-                                      )
-                                    : null,
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 15,
-                                  horizontal: 10,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0XFFE8E8E8)),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0XFFE8E8E8)),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
+                                Container(
+                                    height: 40,
+                                    width: 40,
+                                    child: Image.asset(
+                                        "assets/images/profluent_ar_icon.png"))
+                              ],
                             ),
                           ),
-                        ),
-                        SizedBox(height: 23),
-                        if (!_isLoading)
+                          SizedBox(height: 40),
                           Padding(
                             padding: EdgeInsets.symmetric(
                               horizontal: getFullWidgetHeight(height: 25),
                             ),
                             child: SizedBox(
-                              width: getWidgetWidth(
-                                  width: kWidth > 500 ? 200 : 375),
-                              height: getWidgetHeight(
-                                  height: kWidth > 500 ? 55 : 50),
-                              child: CustomButton(
-                                buttonText: _isLogin
-                                    ? "Verify Login"
-                                    : "Verify & Login",
-                                onPressed: () async {
+                                height: kIsWeb
+                                    ? 250
+                                    : isSplitScreen
+                                        ? getFullWidgetHeight(height: 280)
+                                        : getWidgetHeight(height: 280),
+                                child: Image.asset(_isLogin
+                                    ? 'assets/images/undraw_Messaging_app_re_aytg.png'
+                                    : 'assets/images/SMSOTP.png')),
+                          ),
+                          SizedBox(height: 20),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: getWidgetHeight(height: 25),
+                            ),
+                            child: Text(
+                              !_isLogin
+                                  ? "Enter Your Password"
+                                  : "Enter Your Email Address",
+                              style: TextStyle(color: Color(0XFFF8F8F8F)),
+                            ),
+                          ),
+                          SizedBox(height: 23),
+                          // if (!_isLogin && !_isLoading)
+                          //   Container(
+                          //     padding: EdgeInsets.symmetric(
+                          //         horizontal: getFullWidgetHeight(height: 25)),
+                          //     width: kWidth,
+                          //     child: PinCodeTextField(
+                          //       autoFocus: true,
+                          //       autoDisposeControllers: false,
+                          //       keyboardType: TextInputType.number,
+                          //       textStyle: TextStyle(
+                          //         fontFamily: 'Noto',
+                          //         color: Colors.black,
+                          //         fontSize: 20,
+                          //         fontWeight: FontWeight.w700,
+                          //         fontStyle: FontStyle.normal,
+                          //         letterSpacing: 0.25,
+                          //       ),
+                          //       length: 6,
+                          //       obscureText: false,
+                          //       animationType: AnimationType.fade,
+                          //       pinTheme: PinTheme(
+                          //           shape: PinCodeFieldShape.box,
+                          //           borderRadius: BorderRadius.circular(10),
+                          //           fieldHeight: 45,
+                          //           fieldWidth: 43,
+                          //           activeColor: Color(0XFFE8E8E8),
+                          //           disabledColor: Color(0XFFE8E8E8),
+                          //           inactiveColor:
+                          //               redBox ? Colors.red : Color(0XFFE8E8E8),
+                          //           selectedColor: Color(0XFFE8E8E8),
+                          //           activeFillColor: Color(0XFFE8E8E8),
+                          //           inactiveFillColor: Color(0XFFE8E8E8),
+                          //           selectedFillColor: Color(0XFFE8E8E8)),
+                          //       animationDuration: Duration(milliseconds: 300),
+                          //       backgroundColor: Colors.transparent,
+                          //       enableActiveFill: true,
+                          //       enablePinAutofill: true,
+                          //       errorAnimationController: errorController,
+                          //       controller: _otp,
+                          //       onChanged: (value) {
+                          //         resendOnChangedOnTap();
+                          //       },
+                          //       beforeTextPaste: (text) {
+                          //         return true;
+                          //       },
+                          //       appContext: context,
+                          //     ),
+                          //   ),
+                          // if (_isLogin && !_isLoading)
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: getWidgetHeight(height: 25),
+                            ),
+                            child: SizedBox(
+                              width: kIsWeb
+                                  ? 400
+                                  : getWidgetWidth(
+                                      width: kWidth > 500 ? 200 : 375),
+                              // height: getWidgetHeight(height: kWidth > 500 ? 75 : 50),
+                              child: TextFormField(
+                                cursorColor: Colors.black,
+                                controller: !_isLogin
+                                    ? passwordController
+                                    : emailController,
+                                keyboardType: !_isLogin
+                                    ? TextInputType.text
+                                    : TextInputType.emailAddress,
+                                obscureText:
+                                    !_isLogin ? _obscurePassword : false,
+                                textInputAction: TextInputAction.done,
+                                onFieldSubmitted: (value) {
                                   _bottomMessageEntry?.remove();
                                   _bottomMessageEntry = null;
                                   if (!_isLogin) {
                                     _isLoading = false;
                                     setState(() {});
                                   }
-                                  _isLogin
-                                      ? await loginNew()
-                                      : await verifyEmailLogin();
+                                  _isLogin ? loginNew() : verifyEmailLogin();
+                                  // login();
                                 },
+                                validator: (val) {
+                                  if (_isLogin) {
+                                    return validateEmail(val);
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                  counterText: "",
+                                  hintText:
+                                      !_isLogin ? "Password" : "Email Address",
+                                  hintStyle: TextStyle(color: Colors.grey[600]),
+                                  fillColor: Color(0XFFE8E8E8),
+                                  filled: true,
+                                  prefixIcon: Icon(
+                                    !_isLogin ? Icons.lock : Icons.email,
+                                    color: Colors.grey,
+                                  ),
+                                  suffixIcon: !_isLogin
+                                      ? IconButton(
+                                          icon: Icon(
+                                            _obscurePassword
+                                                ? Icons.visibility_off
+                                                : Icons.visibility,
+                                            color: Colors.grey,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              _obscurePassword =
+                                                  !_obscurePassword;
+                                            });
+
+                                            if (!_obscurePassword) {
+                                              _hideTimer?.cancel();
+
+                                              _hideTimer = Timer(
+                                                  Duration(seconds: 1), () {
+                                                if (mounted) {
+                                                  setState(() {
+                                                    _obscurePassword = true;
+                                                  });
+                                                }
+                                              });
+                                            }
+                                          },
+                                        )
+                                      : null,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 15,
+                                    horizontal: 10,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0XFFE8E8E8)),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0XFFE8E8E8)),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        if (_isLoading)
-                          const Center(
-                            child: SizedBox(
-                                height: 25,
-                                width: 25,
-                                child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Color(0xff293750)))),
-                          ),
-                        SizedBox(height: 15),
-                        if (!_isLogin && !_isLoading)
-                          TextButton(
-                            onPressed: () {
-                              passwordController.clear();
-                              _isLogin = false;
-                              setState(() {});
-                            },
-                            child: const Text(
-                              "<< Back",
-                              style: TextStyle(color: Colors.black),
+                          SizedBox(height: 23),
+                          if (!_isLoading)
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: getFullWidgetHeight(height: 25),
+                              ),
+                              child: SizedBox(
+                                width: kIsWeb
+                                    ? 400
+                                    : getWidgetWidth(
+                                        width: kWidth > 500 ? 200 : 375),
+                                height: kIsWeb
+                                    ? 55
+                                    : getWidgetHeight(
+                                        height: kWidth > 500 ? 55 : 50),
+                                child: CustomButton(
+                                  buttonText: _isLogin
+                                      ? "Verify Login"
+                                      : "Verify & Login",
+                                  onPressed: () async {
+                                    _bottomMessageEntry?.remove();
+                                    _bottomMessageEntry = null;
+                                    if (!_isLogin) {
+                                      _isLoading = false;
+                                      setState(() {});
+                                    }
+                                    _isLogin
+                                        ? await loginNew()
+                                        : await verifyEmailLogin();
+                                  },
+                                ),
+                              ),
                             ),
-                          ),
-                        if (!_isLogin && !_isLoading)
-                          //if (!_isLogin && !_isLoading)
-                          if (_start > 0)
-                            Text(
-                              'Resend in $_start seconds',
-                              style: TextStyle(color: AppColors.chatBack),
+                          if (_isLoading)
+                            const Center(
+                              child: SizedBox(
+                                  height: 25,
+                                  width: 25,
+                                  child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Color(0xff293750)))),
                             ),
-                      ],
+                          SizedBox(height: 15),
+                          if (!_isLogin && !_isLoading)
+                            TextButton(
+                              onPressed: () {
+                                passwordController.clear();
+                                _isLogin = false;
+                                setState(() {});
+                              },
+                              child: const Text(
+                                "<< Back",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          if (!_isLogin && !_isLoading)
+                            //if (!_isLogin && !_isLoading)
+                            if (_start > 0)
+                              Text(
+                                'Resend in $_start seconds',
+                                style: TextStyle(color: AppColors.chatBack),
+                              ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

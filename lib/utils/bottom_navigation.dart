@@ -12,6 +12,8 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:litelearninglab/common_widgets/web_top_nav.dart';
+import 'package:litelearninglab/common_widgets/common_drawer.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({Key? key}) : super(key: key);
@@ -30,6 +32,25 @@ class _BottomNavigationState extends State<BottomNavigation> {
   bool OneTimeShowCase = false;
   bool isFirstTimeUser = true;
   bool isLoading = false;
+  final GlobalKey<ScaffoldState> _bottomNavScaffoldKey =
+      GlobalKey<ScaffoldState>();
+
+  String _getTitle(int index) {
+    switch (index) {
+      case 0:
+        return "Dashboard";
+      case 1:
+        return "Process Learning";
+      case 2:
+        return "Simulations";
+      case 3:
+        return "Language Lab";
+      case 4:
+        return "Reports";
+      default:
+        return "";
+    }
+  }
 
   @override
   void initState() {
@@ -49,41 +70,52 @@ class _BottomNavigationState extends State<BottomNavigation> {
         builder: (context, controller, _) {
           print("checkeddd1");
           return Scaffold(
+            key: _bottomNavScaffoldKey,
+            endDrawer: kIsWeb ? CommonDrawer() : null,
+            appBar: kIsWeb
+                ? WebHeaderWithNav(
+                    title: _getTitle(controller.currentIndex),
+                    onDrawer: () {
+                      _bottomNavScaffoldKey.currentState?.openEndDrawer();
+                    })
+                : null,
             body: controller.pages[controller.currentIndex],
-            bottomNavigationBar: Container(
-              child: BottomNavigationBar(
-                enableFeedback: false,
-                selectedFontSize: 0,
-                unselectedFontSize: 0,
-                iconSize: 24,
-                type: BottomNavigationBarType.fixed,
-                items: [
-                  BottomNavigationBarItem(
-                      icon: ImageIcon(AssetImage(AllAssets.bottomHome)),
-                      label: 'Home'),
-                  BottomNavigationBarItem(
-                      icon: ImageIcon(AssetImage(AllAssets.bottomPL)),
-                      label: ''),
-                  BottomNavigationBarItem(
-                      icon: ImageIcon(AssetImage(AllAssets.bottomIS)),
-                      label: ''),
-                  BottomNavigationBarItem(
-                      icon: ImageIcon(AssetImage(AllAssets.bottomPE)),
-                      label: ''),
-                  BottomNavigationBarItem(
-                      icon: ImageIcon(AssetImage(AllAssets.bottomPT)),
-                      label: ''),
-                ],
-                backgroundColor: Color(0xFF34445F),
-                currentIndex: controller.currentIndex,
-                onTap: (index) {
-                  controller.changeIndex(index);
-                  print("selected Index:${index}");
-                },
-                selectedItemColor: Color(0xFFAAAAAA),
-                unselectedItemColor: Color.fromARGB(132, 170, 170, 170),
-              ),
-            ),
+            bottomNavigationBar: kIsWeb
+                ? const SizedBox.shrink()
+                : Container(
+                    child: BottomNavigationBar(
+                      enableFeedback: false,
+                      selectedFontSize: 0,
+                      unselectedFontSize: 0,
+                      iconSize: 24,
+                      type: BottomNavigationBarType.fixed,
+                      items: [
+                        BottomNavigationBarItem(
+                            icon: ImageIcon(AssetImage(AllAssets.bottomHome)),
+                            label: 'Home'),
+                        BottomNavigationBarItem(
+                            icon: ImageIcon(AssetImage(AllAssets.bottomPL)),
+                            label: ''),
+                        BottomNavigationBarItem(
+                            icon: ImageIcon(AssetImage(AllAssets.bottomIS)),
+                            label: ''),
+                        BottomNavigationBarItem(
+                            icon: ImageIcon(AssetImage(AllAssets.bottomPE)),
+                            label: ''),
+                        BottomNavigationBarItem(
+                            icon: ImageIcon(AssetImage(AllAssets.bottomPT)),
+                            label: ''),
+                      ],
+                      backgroundColor: Color(0xFF34445F),
+                      currentIndex: controller.currentIndex,
+                      onTap: (index) {
+                        controller.changeIndex(index);
+                        print("selected Index:${index}");
+                      },
+                      selectedItemColor: Color(0xFFAAAAAA),
+                      unselectedItemColor: Color.fromARGB(132, 170, 170, 170),
+                    ),
+                  ),
           );
         },
       ),

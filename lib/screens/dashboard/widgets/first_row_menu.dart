@@ -64,6 +64,7 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
   List<String> wordsTapped = [];
   int wordsProgressPE = 0;
   int sentenceProgressPE = 0;
+  bool isHovered = false;
 
   void initState() {
     _getWords();
@@ -319,240 +320,264 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
   }
 
   Widget build(BuildContext context) {
-    // double containerWidth = displayWidth(context) * 0.607;
-    // double containerHeight = displayHeight(context) / 2.59;
-    return InkWell(
-      onTap: widget.onTap,
-      child: Container(
-        width: kIsWeb ? getWidgetWidth(width: 60) : getWidgetWidth(width: 228),
-        height: getWidgetHeight(height: kIsWeb ? 340 : 313.39),
-        decoration: BoxDecoration(
-          color: const Color(0xff34425D),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              // height: containerHeight / 2.5,
-              // width: containerWidth,
+    return MouseRegion(
+      onEnter: (_) => setState(() => isHovered = true),
+      onExit: (_) => setState(() => isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: AnimatedScale(
+        scale: kIsWeb && isHovered ? 1.03 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: kIsWeb
+              ? MediaQuery.of(context).size.width / 5
+              : getWidgetWidth(width: 228),
+          height: kIsWeb ? 330 : getWidgetHeight(height: 313.39),
+          decoration: BoxDecoration(
+            color: const Color(0xff34425D),
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: kIsWeb && isHovered
+                ? [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 15,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 8),
+                    )
+                  ]
+                : [],
+          ),
+          child: InkWell(
+            onTap: widget.onTap,
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  // height: containerHeight / 2.5,
+                  // width: containerWidth,
 
-              //  height: displayHeight(context)/5.293,
-              height: getWidgetHeight(height: kIsWeb ? 160 : 153.41),
-              width: kIsWeb
-                  ? getWidgetWidth(width: 60)
-                  : getWidgetWidth(width: 228),
-              decoration: BoxDecoration(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(10)),
-                color: const Color(0xFFFFFFFF),
-                image: DecorationImage(
-                  image: AssetImage(widget.menuImage),
-                  fit: BoxFit.contain,
+                  //  height: displayHeight(context)/5.293,
+                  height: kIsWeb ? 150 : getWidgetHeight(height: 153.41),
+                  width: kIsWeb
+                      ? MediaQuery.of(context).size.width / 5
+                      : getWidgetWidth(width: 228),
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(10)),
+                    color: const Color(0xFFFFFFFF),
+                    image: DecorationImage(
+                      image: AssetImage(widget.menuImage),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            // SPH(containerHeight * 0.03),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      widget.menu,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17.5,
-                        letterSpacing: 0,
-                        fontFamily: 'Roboto',
-                      ),
-                    ),
-                    // SPH(containerHeight * 0.03),
-                    Text(
-                      widget.menu == "Soft Skills"
-                          ? "Campus to Corporate, Being Smart & Effective on AR Calls, Meeting Etiquette..."
-                          : widget.menu == "AR Call Simulation"
-                              ? "Non-denials Follow Up, Denial Management, Auto Insurance..."
-                              : widget.menu == "Process Learning"
-                                  ? "Revenue Cycle Management, Accounts Receivable Management..."
-                                  : "Fast Track Pronunciation for AR, Sounds, Sentence Construction...",
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w400,
-                        color: const Color.fromARGB(125, 255, 255, 255),
-                        fontSize: 14,
-                        letterSpacing: 0,
-                      ),
-                    ),
-                    // SPH(containerHeight * 0.03),
-                    // Spacer(),
-                    Row(
+                // SPH(containerHeight * 0.03),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          'Progress',
+                          widget.menu,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17.5,
+                            letterSpacing: 0,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                        // SPH(containerHeight * 0.03),
+                        Text(
+                          widget.menu == "Soft Skills"
+                              ? "Campus to Corporate, Being Smart & Effective on AR Calls, Meeting Etiquette..."
+                              : widget.menu == "AR Call Simulation"
+                                  ? "Non-denials Follow Up, Denial Management, Auto Insurance..."
+                                  : widget.menu == "Process Learning"
+                                      ? "Revenue Cycle Management, Accounts Receivable Management..."
+                                      : "Fast Track Pronunciation for AR, Sounds, Sentence Construction...",
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF6C63FE),
-                            fontSize: 13.15,
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromARGB(125, 255, 255, 255),
+                            fontSize: 14,
                             letterSpacing: 0,
                           ),
                         ),
-                        // const Spacer(),
-                        widget.menu != "Profluent English"
-                            ? Column(
-                                children: [
-                                  SizedBox(
-                                    height: 7,
-                                  ),
-                                  isLoading
-                                      ? Container(
-                                          margin: EdgeInsets.only(
-                                              left: getWidgetWidth(width: 30)),
-                                          height: getWidgetHeight(height: 10),
-                                          width: getWidgetHeight(height: 10),
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
-                                            strokeWidth: 1,
-                                          ))
-                                      : Column(
-                                          children: [
-                                            LinearPercentIndicator(
-                                              barRadius:
-                                                  const Radius.circular(50),
-                                              // width: displayWidth(context)/2.652,
-                                              width: kIsWeb
-                                                  ? getWidgetWidth(width: 30)
-                                                  : getWidgetWidth(
-                                                      width: 141.35),
-                                              // lineHeight: displayHeight(context)/105.867,
-                                              lineHeight:
-                                                  getWidgetHeight(height: 6),
-                                              percent: widget.menu ==
-                                                      "Soft Skills"
-                                                  ? softSkillProgressBar
-                                                  : widget.menu ==
-                                                          "AR Call Simulation"
-                                                      ? arCallSimulationsProgressBar
+                        // SPH(containerHeight * 0.03),
+                        // Spacer(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Progress',
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w500,
+                                color: const Color(0xFF6C63FE),
+                                fontSize: 13.15,
+                                letterSpacing: 0,
+                              ),
+                            ),
+                            // const Spacer(),
+                            widget.menu != "Profluent English"
+                                ? Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 7,
+                                      ),
+                                      isLoading
+                                          ? Container(
+                                              margin: EdgeInsets.only(
+                                                  left: getWidgetWidth(
+                                                      width: 30)),
+                                              height:
+                                                  getWidgetHeight(height: 10),
+                                              width:
+                                                  getWidgetHeight(height: 10),
+                                              child: CircularProgressIndicator(
+                                                color: Colors.white,
+                                                strokeWidth: 1,
+                                              ))
+                                          : Column(
+                                              children: [
+                                                LinearPercentIndicator(
+                                                  barRadius:
+                                                      const Radius.circular(50),
+                                                  // width: displayWidth(context)/2.652,
+                                                  width: kIsWeb
+                                                      ? 120
+                                                      : getWidgetWidth(
+                                                          width: 141.35),
+                                                  // lineHeight: displayHeight(context)/105.867,
+                                                  lineHeight: getWidgetHeight(
+                                                      height: 6),
+                                                  percent: widget.menu ==
+                                                          "Soft Skills"
+                                                      ? softSkillProgressBar
                                                       : widget.menu ==
-                                                              "Process Learning"
-                                                          ? processLearningProgressBar
-                                                          : 0.44,
-                                              backgroundColor:
-                                                  const Color(0xFFFFFFFF),
-                                              progressColor:
-                                                  const Color(0xFF6C63FE),
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              widget.menu == "Soft Skills"
-                                                  ? (softSkillProgressBar * 100)
-                                                          .round()
-                                                          .toString() +
-                                                      '%'
-                                                  : widget.menu ==
-                                                          "AR Call Simulation"
-                                                      ? (arCallSimulationsProgressBar *
+                                                              "AR Call Simulation"
+                                                          ? arCallSimulationsProgressBar
+                                                          : widget.menu ==
+                                                                  "Process Learning"
+                                                              ? processLearningProgressBar
+                                                              : 0.44,
+                                                  backgroundColor:
+                                                      const Color(0xFFFFFFFF),
+                                                  progressColor:
+                                                      const Color(0xFF6C63FE),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(
+                                                  widget.menu == "Soft Skills"
+                                                      ? (softSkillProgressBar *
                                                                   100)
                                                               .round()
                                                               .toString() +
                                                           '%'
                                                       : widget.menu ==
-                                                              "Process Learning"
-                                                          ? (processLearningProgressBar *
+                                                              "AR Call Simulation"
+                                                          ? (arCallSimulationsProgressBar *
                                                                       100)
                                                                   .round()
                                                                   .toString() +
                                                               '%'
-                                                          : "0",
-                                              style: TextStyle(
-                                                fontFamily: Keys.fontFamily,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.white,
-                                                fontSize: 12.05,
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                ],
-                              )
-                            : isLoading
-                                ? Container(
-                                    margin: EdgeInsets.only(
-                                        left: getWidgetWidth(width: 30)),
-                                    height: getWidgetHeight(height: 7.62),
-                                    width: getWidgetHeight(height: 7.62),
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 1,
-                                    ))
-                                : Row(
-                                    children: [
-                                      Text(
-                                        widget.menu == "Profluent English"
-                                            ? " ${wordsProgressPE.toString()}"
-                                            : "0",
-                                        style: TextStyle(
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          letterSpacing: 0,
-                                        ),
-                                      ),
-                                      Text(
-                                        " Words ",
-                                        style: TextStyle(
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w400,
-                                          color: const Color.fromARGB(
-                                              125, 255, 255, 255),
-                                          fontSize: 14,
-                                          letterSpacing: 0,
-                                        ),
-                                      ),
-                                      Text(
-                                        widget.menu == "Profluent English"
-                                            ? sentenceProgressPE.toString()
-                                            : "0",
-                                        style: TextStyle(
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          letterSpacing: 0,
-                                        ),
-                                      ),
-                                      Text(
-                                        " Sentences",
-                                        style: TextStyle(
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w400,
-                                          color: const Color.fromARGB(
-                                              125, 255, 255, 255),
-                                          fontSize: 14,
-                                          letterSpacing: 0,
-                                        ),
-                                      )
+                                                          : widget.menu ==
+                                                                  "Process Learning"
+                                                              ? (processLearningProgressBar *
+                                                                          100)
+                                                                      .round()
+                                                                      .toString() +
+                                                                  '%'
+                                                              : "0",
+                                                  style: TextStyle(
+                                                    fontFamily: Keys.fontFamily,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white,
+                                                    fontSize: 12.05,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
                                     ],
-                                  ),
+                                  )
+                                : isLoading
+                                    ? Container(
+                                        margin: EdgeInsets.only(
+                                            left: getWidgetWidth(width: 30)),
+                                        height: getWidgetHeight(height: 7.62),
+                                        width: getWidgetHeight(height: 7.62),
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 1,
+                                        ))
+                                    : Row(
+                                        children: [
+                                          Text(
+                                            widget.menu == "Profluent English"
+                                                ? " ${wordsProgressPE.toString()}"
+                                                : "0",
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              letterSpacing: 0,
+                                            ),
+                                          ),
+                                          Text(
+                                            " Words ",
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w400,
+                                              color: const Color.fromARGB(
+                                                  125, 255, 255, 255),
+                                              fontSize: 14,
+                                              letterSpacing: 0,
+                                            ),
+                                          ),
+                                          Text(
+                                            widget.menu == "Profluent English"
+                                                ? sentenceProgressPE.toString()
+                                                : "0",
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              letterSpacing: 0,
+                                            ),
+                                          ),
+                                          Text(
+                                            " Sentences",
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w400,
+                                              color: const Color.fromARGB(
+                                                  125, 255, 255, 255),
+                                              fontSize: 14,
+                                              letterSpacing: 0,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                          ],
+                        ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

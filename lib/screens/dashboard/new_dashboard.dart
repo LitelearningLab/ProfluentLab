@@ -321,60 +321,62 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("PROFLUENT",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: kText.scale(26),
-                                                fontFamily: "Quicksand",
-                                                letterSpacing: 2)),
-                                        // SizedBox(width: 5),
-                                        Container(
-                                            height: 40,
-                                            child: Image.asset(
-                                                "assets/images/profluent_ar_icon.png",
-                                                height: isSplitScreen
-                                                    ? getFullWidgetHeight(
-                                                        height: 35)
-                                                    : getWidgetHeight(
-                                                        height: 35),
-                                                width: kIsWeb
-                                                    ? 45
-                                                    : getWidgetWidth(
-                                                        width: 35))),
-                                        const Spacer(),
-                                        ShowCaseView(
-                                          globalKey: _menuBarKey,
-                                          title: '',
-                                          description: 'Dashboard',
-                                          child: InkWell(
-                                              onTap: () {
-                                                _scaffoldKey.currentState
-                                                    ?.openEndDrawer();
-                                              },
+                                    if (!kIsWeb)
+                                      Row(
+                                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("PROFLUENT",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: kText.scale(26),
+                                                  fontFamily: "Quicksand",
+                                                  letterSpacing: 2)),
+                                          // SizedBox(width: 5),
+                                          Container(
+                                              height: 40,
                                               child: Image.asset(
-                                                AllAssets.drawerIcon,
-                                                height: isSplitScreen
-                                                    ? getFullWidgetHeight(
-                                                        height: 24)
-                                                    : getWidgetHeight(
-                                                        height: 24),
-                                                width: kIsWeb
-                                                    ? 30
-                                                    : getWidgetWidth(width: 24),
-                                                fit: BoxFit.fill,
-                                              )
-                                              // Icon(
-                                              //   Icons.menu,
-                                              //   size: 30,
-                                              //   color: Colors.white,
-                                              // ),
-                                              ),
-                                        ),
-                                      ],
-                                    ),
+                                                  "assets/images/profluent_ar_icon.png",
+                                                  height: isSplitScreen
+                                                      ? getFullWidgetHeight(
+                                                          height: 35)
+                                                      : getWidgetHeight(
+                                                          height: 35),
+                                                  width: kIsWeb
+                                                      ? 45
+                                                      : getWidgetWidth(
+                                                          width: 35))),
+                                          const Spacer(),
+                                          ShowCaseView(
+                                            globalKey: _menuBarKey,
+                                            title: '',
+                                            description: 'Dashboard',
+                                            child: InkWell(
+                                                onTap: () {
+                                                  _scaffoldKey.currentState
+                                                      ?.openEndDrawer();
+                                                },
+                                                child: Image.asset(
+                                                  AllAssets.drawerIcon,
+                                                  height: isSplitScreen
+                                                      ? getFullWidgetHeight(
+                                                          height: 24)
+                                                      : getWidgetHeight(
+                                                          height: 24),
+                                                  width: kIsWeb
+                                                      ? 30
+                                                      : getWidgetWidth(
+                                                          width: 24),
+                                                  fit: BoxFit.fill,
+                                                )
+                                                // Icon(
+                                                //   Icons.menu,
+                                                //   size: 30,
+                                                //   color: Colors.white,
+                                                // ),
+                                                ),
+                                          ),
+                                        ],
+                                      ),
                                     /*SizedBox(
                                 height: isSplitScreen ? getFullWidgetHeight(height: 11) : getWidgetHeight(height: 11),
                               ),*/
@@ -382,7 +384,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                     SizedBox(
                                         // color: Colors.amber,
                                         height: kIsWeb
-                                            ? getWidgetHeight(height: 60)
+                                            ? 45
                                             : isSplitScreen
                                                 ? getFullWidgetHeight(
                                                     height: 46)
@@ -436,11 +438,10 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                                     const EdgeInsets.all(8.0),
                                                 child: Container(
                                                     height: kIsWeb
-                                                        ? getWidgetHeight(
-                                                            height: 60)
+                                                        ? 45
                                                         : kHeight / 54.1,
                                                     width: kIsWeb
-                                                        ? 60
+                                                        ? 45
                                                         : kWidth / 6.2,
                                                     decoration: BoxDecoration(
                                                         color:
@@ -789,7 +790,7 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                               Container(
                                 // height: displayHeight(context) / 2.59,
                                 height: kIsWeb
-                                    ? getWidgetHeight(height: 400)
+                                    ? 330
                                     : isSplitScreen
                                         ? getFullWidgetHeight(height: 313.39)
                                         : getWidgetHeight(height: 313.39),
