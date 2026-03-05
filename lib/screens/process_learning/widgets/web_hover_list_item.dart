@@ -29,20 +29,24 @@ class _WebHoverListItemState extends State<WebHoverListItem> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: widget.hasLink ? widget.onTap : null,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
+          duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
           decoration: BoxDecoration(
-            color: _isHovered
-                ? const Color(0xFFF8F9FA) // Lighter grey/blue on hover
-                : Colors.transparent,
-            border: Border(
-              bottom: BorderSide(
-                color: Colors.grey.withValues(alpha: 0.1),
-                width: 1,
-              ),
-            ),
+            color: Colors.white,
+            borderRadius:
+                _isHovered ? BorderRadius.circular(12) : BorderRadius.zero,
+            boxShadow: _isHovered
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    )
+                  ]
+                : [],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,11 +56,11 @@ class _WebHoverListItemState extends State<WebHoverListItem> {
                   widget.title,
                   style: TextStyle(
                     fontFamily: 'Roboto',
-                    fontSize: 16, // slightly larger
-                    fontWeight: FontWeight.w600, // bolder
+                    fontSize: 17,
+                    fontWeight: _isHovered ? FontWeight.w700 : FontWeight.w600,
                     color: widget.isSelected
                         ? const Color(0xFF6C63FE)
-                        : const Color(0xFF2D2D2D), // darker inactive
+                        : const Color(0xFF1A1A1A),
                   ),
                 ),
               ),

@@ -39,23 +39,24 @@ class _WebHoverCardState extends State<WebHoverCard> {
           transform: Matrix4.translationValues(0, _isHovered ? -10.0 : 0, 0),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: Colors.grey.withValues(alpha: 0.1),
+              color: Colors.grey.withValues(alpha: 0.08),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
                 color: _isHovered
-                    ? widget.tileColor.withValues(alpha: 0.15)
-                    : Colors.black.withValues(alpha: 0.04),
-                blurRadius: _isHovered ? 24 : 10,
-                offset: _isHovered ? const Offset(0, 12) : const Offset(0, 4),
+                    ? widget.tileColor.withValues(alpha: 0.2)
+                    : Colors.black.withValues(alpha: 0.06),
+                blurRadius: _isHovered ? 40 : 20,
+                spreadRadius: _isHovered ? 4 : 0,
+                offset: _isHovered ? const Offset(0, 20) : const Offset(0, 10),
               ),
             ],
           ),
-          width: 300, // Slightly wider for a more substantial card feel
-          height: 340, // More height to accommodate the premium look
+          width: 320, // Increased width for better presence
+          height: 360, // Increased height
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
             child: Stack(
