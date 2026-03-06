@@ -9,7 +9,16 @@ import 'package:litelearninglab/screens/profluent_english/widgets/top_catetgorie
 import 'package:litelearninglab/screens/profluent_english/profluent_sub_screen.dart';
 import 'package:litelearninglab/models/ProfluentSubLink.dart';
 import 'package:litelearninglab/models/Word.dart' as ProWord;
+import 'package:litelearninglab/models/ProfluentEnglish.dart';
+import 'package:litelearninglab/models/ProfluentLink.dart';
+import 'package:litelearninglab/screens/fast_track_pronunciation/fast_track_pronunciation_screen.dart';
+import 'package:litelearninglab/screens/grammer_check/grammer_check_screen.dart';
+import 'package:litelearninglab/states/auth_state.dart';
+import 'package:litelearninglab/screens/profluent_english/lab_screen.dart';
 import 'package:litelearninglab/utils/commonfunctions/common_functions.dart';
+import 'package:litelearninglab/models/sound_model.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LanguageLabScreen extends StatelessWidget {
   const LanguageLabScreen({super.key});
@@ -18,10 +27,6 @@ class LanguageLabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // In ProfluentLab, we might not have a HomeController with loadRecentHistory,
-    // but the source project's LanguageLab uses it.
-    // I'll skip the PopScope part if HomeController is not found or needed.
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: GetBuilder<LanguageLabController>(
@@ -39,7 +44,10 @@ class LanguageLabScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _categoryGrid(context, controller),
-                const SizedBox(height: 12),
+                const SizedBox(height: 24),
+                if (controller.fastTrackArModel != null)
+                  _FastTrackArCard(model: controller.fastTrackArModel!),
+                const SizedBox(height: 24),
                 Text(
                   "Sounds",
                   style: GoogleFonts.inter(
@@ -102,22 +110,22 @@ class LanguageLabScreen extends StatelessWidget {
       mainAxisSpacing: 20,
       childAspectRatio: 1.8,
       children: [
-        _categoryCard(controller,
-            title: "English Pronunciation",
+        _categoryCard(context, controller,
+            title: "Pronunciation Lab",
             image: AllAssets.pePl,
             color: const Color(0xFF398480),
             keyName: "english_lab"),
-        _categoryCard(controller,
-            title: "French Pronunciation",
+        _categoryCard(context, controller,
+            title: "Sentence Lab",
             image: AllAssets.peScl,
             color: const Color(0xFF445EA9),
-            keyName: "french_lab"),
-        _categoryCard(controller,
-            title: "Sentence Lab",
+            keyName: "sentence_lab"),
+        _categoryCard(context, controller,
+            title: "Call Flow Lab",
             image: AllAssets.peCfpl,
             color: const Color(0xFF636CFF),
-            keyName: "sentence_lab"),
-        _categoryCard(controller,
+            keyName: "call_flow_lab"),
+        _categoryCard(context, controller,
             title: "Grammar Lab",
             image: AllAssets.peGl,
             color: const Color(0xFFDC6379),
@@ -127,24 +135,80 @@ class LanguageLabScreen extends StatelessWidget {
   }
 
   Widget _categoryCard(
+    BuildContext context,
     LanguageLabController controller, {
     required String title,
     required String image,
     required Color color,
     required String keyName,
   }) {
+    final auth = Provider.of<AuthState>(context, listen: false);
+
     return PETopCategoriesCard(
       title: title,
       imageUrl: image,
       cardColor: color,
       isUnderConstruction: false,
-      onTap: () {
-        if (!controller.isLabActive(keyName)) {
-          controller.showReviewPopup(Get.context!);
-          return;
+      onTap: () async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        if (keyName == "english_lab") {
+          await prefs.setString('lastAccess', 'LabScreen');
+          await prefs.setStringList('LabScreen', [
+            'Pronunciation Lab',
+            auth.pronunciationLabList.join(',,'),
+            'true'
+          ]);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => LabScreen(
+                pLIconKey: true,
+                user: auth,
+                title: 'Pronunciation Lab',
+                itemList: auth.pronunciationLabList,
+              ),
+            ),
+          );
+        } else if (keyName == "sentence_lab") {
+          await prefs.setString('lastAccess', 'LabScreen');
+          await prefs.setStringList('LabScreen', [
+            'Sentence Lab',
+            auth.sentenceConstructionLabList.join(',,'),
+            'true'
+          ]);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => LabScreen(
+                pLIconKey: true,
+                user: auth,
+                title: 'Sentence Lab',
+                itemList: auth.sentenceConstructionLabList,
+              ),
+            ),
+          );
+        } else if (keyName == "call_flow_lab") {
+          await prefs.setString('lastAccess', 'LabScreen');
+          await prefs.setStringList('LabScreen', [
+            'Call Flow Lab',
+            auth.callFlowPracticeLabList.join(',,'),
+            'true'
+          ]);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => LabScreen(
+                pLIconKey: true,
+                user: auth,
+                title: 'Call Flow Lab',
+                itemList: auth.callFlowPracticeLabList,
+              ),
+            ),
+          );
+        } else if (keyName == "grammer_lab") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => GrammerCheckScreen()),
+          );
         }
-        // In ProfluentLab, we'd navigate to the respective lab screens
-        // mianCategoryTitile = title;
       },
       height: null,
       width: null,
@@ -350,6 +414,171 @@ class LanguageLabScreen extends StatelessWidget {
           title: sub.name,
           ulr: sub.ULR,
           soundPractice: soundPracticeWords,
+        ),
+      ),
+    );
+  }
+
+  static ProfluentEnglish _mapSoundModelToProfluentEnglish(SoundModel model) {
+    return ProfluentEnglish(
+      category: model.category,
+      subcategories: model.subcategories.map((sub) {
+        return ProfluentLink(
+          name: sub.name,
+          ulr: sub.ULR,
+          videoLink:
+              sub.ULR, // Assuming ULR contains the video link for Fast Track
+          links: ProfluentSubLink(
+            v1: sub.links.v1,
+            v2: sub.links.v2,
+            v3: sub.links.v3,
+            v4: sub.links.v4,
+            v5: sub.links.v5,
+          ),
+          soundsPractice: sub.soundsPractice?.map((sp) {
+            return SoundPracticeModel(
+              file: sp.file,
+              pronun: sp.pronun,
+              syllabels: sp.syllables,
+              text: sp.text,
+            );
+          }).toList(),
+        );
+      }).toList(),
+    );
+  }
+}
+
+class _FastTrackArCard extends StatefulWidget {
+  final SoundModel model;
+
+  const _FastTrackArCard({required this.model});
+
+  @override
+  State<_FastTrackArCard> createState() => _FastTrackArCardState();
+}
+
+class _FastTrackArCardState extends State<_FastTrackArCard> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => fastTrackPronunciationScreen(
+                title: LanguageLabScreen._mapSoundModelToProfluentEnglish(
+                    widget.model),
+              ),
+            ),
+          );
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOutQuart,
+          height: 110,
+          width: double.infinity,
+          transform: Matrix4.identity()..scale(_isHovered ? 1.012 : 1.0),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.95),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: _isHovered
+                  ? const Color(0xFF6C63FE).withOpacity(0.4)
+                  : Colors.white.withOpacity(0.8),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: _isHovered
+                    ? const Color(0xFF6C63FE).withOpacity(0.2)
+                    : Colors.black.withOpacity(0.08),
+                blurRadius: _isHovered ? 30 : 15,
+                spreadRadius: _isHovered ? 2 : 0,
+                offset: _isHovered ? const Offset(0, 10) : const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Stack(
+              children: [
+                Positioned(
+                  right: -30,
+                  top: -30,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    width: 140,
+                    height: 140,
+                    decoration: BoxDecoration(
+                      color: _isHovered
+                          ? const Color(0xFF6C63FE).withOpacity(0.08)
+                          : const Color(0xFF6C63FE).withOpacity(0.03),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 28),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF6C63FE).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                "FEATURED CONTENT",
+                                style: GoogleFonts.inter(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 1.2,
+                                  color: const Color(0xFF6C63FE),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Fast Track Pronunciation For AR',
+                              style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                                color: const Color(0xFF1E293B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      AnimatedScale(
+                        duration: const Duration(milliseconds: 400),
+                        scale: _isHovered ? 1.08 : 1.0,
+                        curve: Curves.easeOutBack,
+                        child: Image.asset(
+                          AllAssets.peFtpfar,
+                          height: 90,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

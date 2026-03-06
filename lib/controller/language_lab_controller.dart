@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/sound_model.dart';
-import '../constants/app_colors.dart';
 
 class LanguageLabController extends GetxController {
   int selectedIndex = 0;
@@ -18,7 +17,7 @@ class LanguageLabController extends GetxController {
   SoundModel? importantSound;
   List<SoundModel> vowelSoundsList = [];
   List<SoundModel> consonantSoundsList = [];
-  Map<String, dynamic>? languageLabStatus;
+  SoundModel? fastTrackArModel;
 
   List<Color> colorList = [
     Color(0xFF5AB963),
@@ -37,54 +36,11 @@ class LanguageLabController extends GetxController {
   void onInit() {
     super.onInit();
     fetchAndCategorizeSounds();
-    fetchInReviewStatus();
   }
 
   void ontapTab(int index) {
     selectedIndex = index;
     update();
-  }
-
-  Future<void> fetchInReviewStatus() async {
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('LanguageLabInReview')
-          .get();
-
-      if (snapshot.docs.isNotEmpty) {
-        languageLabStatus = snapshot.docs.first.data();
-        update();
-      }
-    } catch (e) {
-      print('Error fetching status: $e');
-    }
-  }
-
-  void showReviewPopup(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        alignment: Alignment.center,
-        title: const Text('Section Under Review'),
-        content: const Text(
-          'This section is temporarily under review. We’ll inform you as soon as it’s available again.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text(
-              'OK',
-              style: TextStyle(color: AppColors.linearColor),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  bool isLabActive(String labKey) {
-    if (languageLabStatus == null) return false;
-    return (languageLabStatus![labKey] ?? '') == 'active';
   }
 
   Future<void> fetchAndCategorizeSounds() async {
@@ -101,6 +57,7 @@ class LanguageLabController extends GetxController {
       vowelSoundsList.clear();
       consonantSoundsList.clear();
       importantSound = null;
+      fastTrackArModel = null;
 
       for (var doc in snapshot.docs) {
         try {
@@ -119,6 +76,8 @@ class LanguageLabController extends GetxController {
           } else if (category.startsWith("consonants")) {
             consonantSoundsList.add(data);
             log("${data.category}");
+          } else if (category == 'fast track pronunciation for ar') {
+            fastTrackArModel = data;
           }
         } catch (e) {
           log("❌ Error parsing doc ${doc.id}: $e");
