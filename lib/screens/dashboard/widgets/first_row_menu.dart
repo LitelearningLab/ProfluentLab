@@ -331,7 +331,7 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           width: kIsWeb
-              ? MediaQuery.of(context).size.width / 5
+              ? MediaQuery.of(context).size.width / 5.5
               : getWidgetWidth(width: 228),
           height: kIsWeb ? 340 : getWidgetHeight(height: 320),
           decoration: BoxDecoration(
@@ -419,7 +419,7 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white.withOpacity(0.7),
-                                fontSize: 13,
+                                fontSize: 15,
                                 height: 1.4,
                               ),
                             ),
