@@ -1002,7 +1002,7 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                         color: AppColors.pinkishGrey,
                                         fontFamily: Keys.fontFamily,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: kText.scale(15),
+                                        fontSize: kText.scale(20),
                                       ),
                                     ),
                                     Padding(
@@ -1013,7 +1013,7 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                           color: Colors.white,
                                           fontFamily: Keys.fontFamily,
                                           fontWeight: FontWeight.w500,
-                                          fontSize: kText.scale(15),
+                                          fontSize: kText.scale(20),
                                         ),
                                       ),
                                     ),

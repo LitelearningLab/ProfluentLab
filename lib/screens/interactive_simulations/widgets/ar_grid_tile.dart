@@ -10,6 +10,7 @@ class ARGridTile extends StatelessWidget {
   final String ellipse;
   final double? height;
   final double? width;
+  final bool isUnderConstruction;
   const ARGridTile(
       {required this.onTap,
       required this.tileColor,
@@ -18,6 +19,7 @@ class ARGridTile extends StatelessWidget {
       required this.ellipse,
       this.height,
       this.width,
+      this.isUnderConstruction = false,
       Key? key})
       : super(key: key);
 
@@ -87,6 +89,47 @@ class ARGridTile extends StatelessWidget {
                   ellipse,
                   // gridTileDatas[0]['ellipse'],
                   scale: kIsWeb ? 2 : 3.5,
+                ),
+              ),
+            ),
+            // if (isUnderConstruction)
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.center,
+                child: Transform.rotate(
+                  angle: -0.05,
+                  child: FractionallySizedBox(
+                    widthFactor: 0.95,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: ShapeDecoration(
+                          color: Colors.amber.withOpacity(0.95),
+                          shape: const StadiumBorder(),
+                          shadows: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 20,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: const Text(
+                          "WORKING IN PROGRESS",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.2,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),

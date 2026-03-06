@@ -169,7 +169,15 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
   }
 
   Future<void> _handleOnTap(int index) async {
-    if (index >= _categories.length) return;
+    if (_isUnderConstruction(index)) {
+      Toast.show("Work in progress",
+          duration: Toast.lengthShort,
+          gravity: Toast.bottom,
+          backgroundColor: AppColors.white,
+          textStyle: TextStyle(color: AppColors.black),
+          backgroundRadius: 10);
+      return;
+    }
 
     if (_categories[index].subcategories != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -189,16 +197,17 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
           ),
         ),
       );
-    } else {
-      Toast.show("Work in progress",
-          duration: Toast.lengthShort,
-          gravity: Toast.bottom,
-          backgroundColor: AppColors.white,
-          textStyle: TextStyle(color: AppColors.black),
-          backgroundRadius: 10);
     }
+
     _selectedWordOnClick = _categories[index].category;
     setState(() {});
+  }
+
+  bool _isUnderConstruction(int index) {
+    if (_categories.isEmpty || index >= _categories.length) return true;
+    if (_categories[index].underconstruction == true) return true;
+    return _categories[index].subcategories == null ||
+        _categories[index].subcategories!.isEmpty;
   }
 
   @override
@@ -315,6 +324,7 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                         title: gridTileDatas[0]['title'],
                                         icon: gridTileDatas[0]['image'],
                                         ellipse: gridTileDatas[0]['ellipse'],
+                                        isUnderConstruction: true,
                                       ),
                                       WebSimulationCard(
                                         onTap: () => _handleOnTap(1),
@@ -323,6 +333,7 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                         title: gridTileDatas[1]['title'],
                                         icon: gridTileDatas[1]['image'],
                                         ellipse: gridTileDatas[1]['ellipse'],
+                                        isUnderConstruction: true,
                                       ),
                                       WebSimulationCard(
                                         onTap: () => _handleOnTap(3),
@@ -331,6 +342,7 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                         title: gridTileDatas[3]['title'],
                                         icon: gridTileDatas[3]['image'],
                                         ellipse: gridTileDatas[3]['ellipse'],
+                                        isUnderConstruction: true,
                                       ),
                                       WebSimulationCard(
                                         onTap: () => _handleOnTap(2),
@@ -339,6 +351,7 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                         title: gridTileDatas[2]['title'],
                                         icon: gridTileDatas[2]['image'],
                                         ellipse: gridTileDatas[2]['ellipse'],
+                                        isUnderConstruction: true,
                                       ),
                                     ],
                                   ),
@@ -360,6 +373,8 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                             icon: gridTileDatas[0]['image'],
                                             ellipse: gridTileDatas[0]
                                                 ['ellipse'],
+                                            isUnderConstruction:
+                                                _isUnderConstruction(0),
                                           ),
                                           SizedBox(
                                             height: isSplitScreen
@@ -375,6 +390,8 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                             icon: gridTileDatas[3]['image'],
                                             ellipse: gridTileDatas[3]
                                                 ['ellipse'],
+                                            isUnderConstruction:
+                                                _isUnderConstruction(3),
                                           ),
                                         ],
                                       ),
@@ -395,6 +412,8 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                             icon: gridTileDatas[1]['image'],
                                             ellipse: gridTileDatas[1]
                                                 ['ellipse'],
+                                            isUnderConstruction:
+                                                _isUnderConstruction(1),
                                           ),
                                           SizedBox(
                                             height: isSplitScreen
@@ -410,6 +429,8 @@ class _ProcessLearningScreenState extends State<ARCallSimulationScreen> {
                                             icon: gridTileDatas[2]['image'],
                                             ellipse: gridTileDatas[2]
                                                 ['ellipse'],
+                                            isUnderConstruction:
+                                                _isUnderConstruction(2),
                                           ),
                                         ],
                                       ),

@@ -6,6 +6,7 @@ class WebSimulationCard extends StatefulWidget {
   final String title;
   final String icon;
   final String ellipse;
+  final bool isUnderConstruction;
 
   const WebSimulationCard({
     Key? key,
@@ -14,6 +15,7 @@ class WebSimulationCard extends StatefulWidget {
     required this.title,
     required this.icon,
     required this.ellipse,
+    this.isUnderConstruction = false,
   }) : super(key: key);
 
   @override
@@ -121,6 +123,38 @@ class _WebSimulationCardState extends State<WebSimulationCard> {
                     ],
                   ),
                 ),
+                if (widget.isUnderConstruction)
+                  Center(
+                    child: Transform.rotate(
+                      angle: -0.05,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: ShapeDecoration(
+                          color: Colors.amber.withOpacity(0.95),
+                          shape: const StadiumBorder(),
+                          shadows: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 20,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: const Text(
+                          "WORKING IN PROGRESS",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.2,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
