@@ -21,6 +21,7 @@ import '../../utils/firebase_helper.dart';
 import '../../utils/shared_pref.dart';
 import '../webview/webview_screen.dart';
 import '../word_screen/widgets/drop_down_word_item.dart';
+import 'widgets/web_hover_wrapper.dart';
 
 class LearningScreen extends StatefulWidget {
   LearningScreen(
@@ -201,175 +202,187 @@ class _LearningScreenState extends State<LearningScreen> {
                                 key: ValueKey(widget.linkCats[index].name),
                                 controller: controller,
                                 index: index,
-                                child: InkWell(
-                                  splashColor: const Color.fromRGBO(0, 0, 0, 0),
-                                  onTap: () async {
-                                    sessionName = widget.linkCats[index].name!;
-                                    if (widget.linkCats[index].eLearning !=
-                                        null) {
-                                      if (widget.linkCats[index].eLearning!
-                                              .isEmpty ||
-                                          widget.linkCats[index].eLearning ==
-                                              null) {
-                                        print(
-                                            '-----------------Invalid Link----------------');
-
-                                        Toast.show("Work in progress",
-                                            duration: Toast.lengthShort,
-                                            gravity: Toast.bottom,
-                                            backgroundColor: AppColors.white,
-                                            textStyle: TextStyle(
-                                                color: AppColors.black),
-                                            backgroundRadius: 10);
-                                      } else {
-                                        print(
-                                            '-------------------- ${widget.linkCats[index].eLearning!}');
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        await prefs
-                                            .setStringList('InAppWebViewPage', [
-                                          widget.linkCats[index].eLearning!,
-                                          widget.linkCats[index].name ==
-                                                  'Meeting Etiquette'
-                                              ? "false"
-                                              : "true",
-                                          "true"
-                                        ]);
-                                        await prefs.setString(
-                                            'lastAccess', 'InAppWebViewPage');
+                                child: WebHoverWrapper(
+                                  hoverDecoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.05),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: InkWell(
+                                    splashColor:
+                                        const Color.fromRGBO(0, 0, 0, 0),
+                                    onTap: () async {
+                                      sessionName =
+                                          widget.linkCats[index].name!;
+                                      if (widget.linkCats[index].eLearning !=
+                                          null) {
                                         if (widget.linkCats[index].eLearning!
-                                            .isNotEmpty) {
-                                          print("sjfdif");
-                                          String? links =
-                                              widget.linkCats[index].eLearning;
-                                          processLearningLinks.add(links!);
+                                                .isEmpty ||
+                                            widget.linkCats[index].eLearning ==
+                                                null) {
                                           print(
-                                              "categoriesLink: ${widget.linkCats[index].eLearning}");
+                                              '-----------------Invalid Link----------------');
 
-                                          FirebaseFirestore firestore =
-                                              FirebaseFirestore.instance;
-                                          String userId =
-                                              await SharedPref.getSavedString(
-                                                  'userId');
-                                          DocumentReference processLearning =
-                                              firestore
-                                                  .collection(
-                                                      'processLearningReports')
-                                                  .doc(userId);
+                                          Toast.show("Work in progress",
+                                              duration: Toast.lengthShort,
+                                              gravity: Toast.bottom,
+                                              backgroundColor: AppColors.white,
+                                              textStyle: TextStyle(
+                                                  color: AppColors.black),
+                                              backgroundRadius: 10);
+                                        } else {
+                                          print(
+                                              '-------------------- ${widget.linkCats[index].eLearning!}');
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          await prefs.setStringList(
+                                              'InAppWebViewPage', [
+                                            widget.linkCats[index].eLearning!,
+                                            widget.linkCats[index].name ==
+                                                    'Meeting Etiquette'
+                                                ? "false"
+                                                : "true",
+                                            "true"
+                                          ]);
+                                          await prefs.setString(
+                                              'lastAccess', 'InAppWebViewPage');
+                                          if (widget.linkCats[index].eLearning!
+                                              .isNotEmpty) {
+                                            print("sjfdif");
+                                            String? links = widget
+                                                .linkCats[index].eLearning;
+                                            processLearningLinks.add(links!);
+                                            print(
+                                                "categoriesLink: ${widget.linkCats[index].eLearning}");
 
-                                          await processLearning.update({
-                                            'isLink': FieldValue.arrayUnion([
-                                              widget.linkCats[index].eLearning!
-                                            ]),
-                                          }).then((_) {
-                                            print(
-                                                'Link added to Firestore: ${widget.linkCats[index].eLearning!}');
-                                          }).catchError((e) {
-                                            print(
-                                                'Error updating Firestore: $e');
-                                          });
+                                            FirebaseFirestore firestore =
+                                                FirebaseFirestore.instance;
+                                            String userId =
+                                                await SharedPref.getSavedString(
+                                                    'userId');
+                                            DocumentReference processLearning =
+                                                firestore
+                                                    .collection(
+                                                        'processLearningReports')
+                                                    .doc(userId);
+
+                                            await processLearning.update({
+                                              'isLink': FieldValue.arrayUnion([
+                                                widget
+                                                    .linkCats[index].eLearning!
+                                              ]),
+                                            }).then((_) {
+                                              print(
+                                                  'Link added to Firestore: ${widget.linkCats[index].eLearning!}');
+                                            }).catchError((e) {
+                                              print(
+                                                  'Error updating Firestore: $e');
+                                            });
+                                          }
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      InAppWebViewPage(
+                                                        isLandscape: widget
+                                                                    .linkCats[
+                                                                        index]
+                                                                    .eLearning ==
+                                                                'Meeting Etiquette'
+                                                            ? false
+                                                            : true,
+                                                        isMeetingEtiquite: true,
+                                                        url: widget
+                                                            .linkCats[index]
+                                                            .eLearning!,
+                                                      )));
                                         }
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    InAppWebViewPage(
-                                                      isLandscape: widget
-                                                                  .linkCats[
-                                                                      index]
-                                                                  .eLearning ==
-                                                              'Meeting Etiquette'
-                                                          ? false
-                                                          : true,
-                                                      isMeetingEtiquite: true,
-                                                      url: widget
-                                                          .linkCats[index]
-                                                          .eLearning!,
-                                                    )));
-                                      }
-                                    } else
-                                      () {
-                                        _selectedWordOnClick =
-                                            widget.linkCats[index].name;
-                                        setState(() {});
-                                      };
-                                  },
-                                  child: Container(
-                                    width: displayWidth(context),
-                                    padding: EdgeInsets.only(
-                                        left: getWidgetWidth(width: 20),
-                                        right: getWidgetWidth(width: 20),
-                                        top: isSplitScreen
-                                            ? getFullWidgetHeight(height: 5)
-                                            : getWidgetHeight(height: 5),
-                                        bottom: isSplitScreen
-                                            ? getFullWidgetHeight(height: 5)
-                                            : getWidgetHeight(height: 5)),
-                                    // onTap: onTap,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Row(
-                                            children: [
-                                              CircleAvatar(
-                                                backgroundColor: skillController
-                                                        .softSkillData[index]
-                                                    ['color'],
-                                                // colorList[index],
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal:
-                                                          getWidgetWidth(
-                                                              width: 1),
-                                                      vertical: isSplitScreen
-                                                          ? getFullWidgetHeight(
-                                                              height: 5)
-                                                          : getWidgetHeight(
-                                                              height: 5)),
-                                                  child: ImageIcon(
-                                                    AssetImage(
-                                                      widget.icon,
+                                      } else
+                                        () {
+                                          _selectedWordOnClick =
+                                              widget.linkCats[index].name;
+                                          setState(() {});
+                                        };
+                                    },
+                                    child: Container(
+                                      width: displayWidth(context),
+                                      padding: EdgeInsets.only(
+                                          left: getWidgetWidth(width: 20),
+                                          right: getWidgetWidth(width: 20),
+                                          top: isSplitScreen
+                                              ? getFullWidgetHeight(height: 5)
+                                              : getWidgetHeight(height: 5),
+                                          bottom: isSplitScreen
+                                              ? getFullWidgetHeight(height: 5)
+                                              : getWidgetHeight(height: 5)),
+                                      // onTap: onTap,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Row(
+                                              children: [
+                                                CircleAvatar(
+                                                  backgroundColor:
+                                                      skillController
+                                                              .softSkillData[
+                                                          index]['color'],
+                                                  // colorList[index],
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                        horizontal:
+                                                            getWidgetWidth(
+                                                                width: 1),
+                                                        vertical: isSplitScreen
+                                                            ? getFullWidgetHeight(
+                                                                height: 5)
+                                                            : getWidgetHeight(
+                                                                height: 5)),
+                                                    child: ImageIcon(
+                                                      AssetImage(
+                                                        widget.icon,
+                                                      ),
                                                     ),
+                                                    // Image.asset(
+                                                    //   image,
+                                                    //   // scale: displayWidth(context)/101.5,
+                                                    // ),
                                                   ),
-                                                  // Image.asset(
-                                                  //   image,
-                                                  //   // scale: displayWidth(context)/101.5,
-                                                  // ),
+                                                  radius: 18,
                                                 ),
-                                                radius: 18,
-                                              ),
-                                              SizedBox(
-                                                width:
-                                                    getWidgetWidth(width: 10),
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  widget.linkCats[index].name!,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: kText.scale(15),
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      letterSpacing: 0),
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                SizedBox(
+                                                  width:
+                                                      getWidgetWidth(width: 10),
                                                 ),
-                                              ),
-                                            ],
+                                                Expanded(
+                                                  child: Text(
+                                                    widget
+                                                        .linkCats[index].name!,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize:
+                                                            kText.scale(15),
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        letterSpacing: 0),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          // height: 30,
-                                          // width: 30,
-                                          child: Icon(
-                                            Icons.chevron_right_rounded,
-                                            color: Color(0xFF34445F),
-                                            size: 30,
+                                          SizedBox(
+                                            // height: 30,
+                                            // width: 30,
+                                            child: Icon(
+                                              Icons.chevron_right_rounded,
+                                              color: Color(0xFF34445F),
+                                              size: 30,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

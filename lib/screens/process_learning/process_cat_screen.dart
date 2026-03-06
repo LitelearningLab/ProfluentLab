@@ -21,6 +21,7 @@ import '../../constants/all_assets.dart';
 import '../../models/ProcessLearningLink.dart';
 import '../webview/video_player_screen.dart';
 import '../word_screen/widgets/drop_down_word_item.dart';
+import 'widgets/web_hover_wrapper.dart';
 
 class ProcessCatScreen extends StatefulWidget {
   ProcessCatScreen({Key? key, required this.linkCats, required this.title})
@@ -198,13 +199,31 @@ class _ProcessCatScreenState extends State<ProcessCatScreen> {
                               key: ValueKey(widget.linkCats[index].name),
                               controller: controller,
                               index: index,
-                              child: Container(
+                              child: WebHoverWrapper(
                                 decoration: BoxDecoration(
                                   // color: Colors.yellow,
                                   image: DecorationImage(
                                     image: AssetImage(AllAssets.wordback),
                                     fit: BoxFit.cover,
                                   ),
+                                ),
+                                hoverDecoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(AllAssets.wordback),
+                                    fit: BoxFit.cover,
+                                    colorFilter: ColorFilter.mode(
+                                      Colors.black.withOpacity(0.15),
+                                      BlendMode.darken,
+                                    ),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.3),
+                                      blurRadius: 15,
+                                      spreadRadius: 2,
+                                      offset: const Offset(0, 8),
+                                    )
+                                  ],
                                 ),
                                 child: DropDownWordItem(
                                   index: index,

@@ -34,6 +34,7 @@ import '../../utils/shared_pref.dart';
 import 'widgets/web_hero_section.dart';
 import 'widgets/web_hover_card.dart';
 import 'widgets/web_hover_list_item.dart';
+import 'widgets/web_hover_wrapper.dart';
 
 String pTitle = "";
 
@@ -1236,58 +1237,70 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                               return Column(
                                                 children: [
                                                   // The kIsWeb condition for WebHoverListItem is now handled by the outer conditional
-                                                  InkWell(
-                                                    onTap: handleItemTap,
-                                                    child: Container(
-                                                      // color: Colors.red,
-                                                      // height: displayHeight(context) / 15.61,
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal:
-                                                                  getWidgetWidth(
-                                                                      width:
-                                                                          18)),
-                                                      height: isSplitScreen
-                                                          ? getFullWidgetHeight(
-                                                              height: 40)
-                                                          : getWidgetHeight(
-                                                              height: 40),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            _processLeaning[1]
-                                                                .subcategories![
-                                                                    index]
-                                                                .name!,
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'Roboto',
-                                                              letterSpacing: 0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: kText
-                                                                  .scale(15),
-                                                              color: Color(
-                                                                  0xFF4F4F4F),
+                                                  WebHoverWrapper(
+                                                    hoverDecoration:
+                                                        BoxDecoration(
+                                                      color: Colors.black
+                                                          .withOpacity(0.05),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                    ),
+                                                    child: InkWell(
+                                                      onTap: handleItemTap,
+                                                      child: Container(
+                                                        // color: Colors.red,
+                                                        // height: displayHeight(context) / 15.61,
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    getWidgetWidth(
+                                                                        width:
+                                                                            18)),
+                                                        height: isSplitScreen
+                                                            ? getFullWidgetHeight(
+                                                                height: 40)
+                                                            : getWidgetHeight(
+                                                                height: 40),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              _processLeaning[1]
+                                                                  .subcategories![
+                                                                      index]
+                                                                  .name!,
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Roboto',
+                                                                letterSpacing:
+                                                                    0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontSize: kText
+                                                                    .scale(15),
+                                                                color: Color(
+                                                                    0xFF4F4F4F),
+                                                              ),
                                                             ),
-                                                          ),
-                                                          Icon(
-                                                            Icons
-                                                                .chevron_right_rounded,
-                                                            color: Color(
-                                                                0xFFD3D3D3),
-                                                            size: kWidth > 500
-                                                                ? getWidgetHeight(
-                                                                    height: 40)
-                                                                : displayWidth(
-                                                                        context) /
-                                                                    11,
-                                                          ),
-                                                        ],
+                                                            Icon(
+                                                              Icons
+                                                                  .chevron_right_rounded,
+                                                              color: Color(
+                                                                  0xFFD3D3D3),
+                                                              size: kWidth > 500
+                                                                  ? getWidgetHeight(
+                                                                      height:
+                                                                          40)
+                                                                  : displayWidth(
+                                                                          context) /
+                                                                      11,
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
