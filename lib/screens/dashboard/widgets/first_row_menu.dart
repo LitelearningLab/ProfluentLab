@@ -346,18 +346,17 @@ class _FirstRowMenuState extends State<FirstRowMenu> {
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isHovered
-                  ? const Color(0xFF6C63FE).withOpacity(0.5)
+                  ? Colors.white.withOpacity(0.2)
                   : Colors.transparent,
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: isHovered
-                    ? const Color(0xFF6C63FE).withOpacity(0.3)
-                    : Colors.black26,
-                blurRadius: isHovered ? 25 : 15,
-                spreadRadius: isHovered ? 4 : 2,
-                offset: isHovered ? const Offset(0, 12) : const Offset(0, 8),
+                color:
+                    isHovered ? Colors.black.withOpacity(0.4) : Colors.black26,
+                blurRadius: isHovered ? 20 : 15,
+                spreadRadius: isHovered ? 2 : 2,
+                offset: isHovered ? const Offset(0, 10) : const Offset(0, 8),
               )
             ],
           ),
