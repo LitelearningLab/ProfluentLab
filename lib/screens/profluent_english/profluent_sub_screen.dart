@@ -812,67 +812,53 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                           itemCount: 6,
                                           itemBuilder: (BuildContext context,
                                               int index) {
-                                            return GestureDetector(
-                                              onTapDown: (TapDownDetails
-                                                  onTapDetails) async {
-                                                log(
-                                                  "entering and priniting the index ${index}",
-                                                );
-                                                // if (checkUrl != index) {
-                                                // checkUrl = index;
-                                                if (((widget.links.v1 == null ||
-                                                            widget.links.v1!
-                                                                .isEmpty) &&
-                                                        index == 0) ||
-                                                    ((widget.links.v2 == null ||
-                                                            widget.links.v2!
-                                                                .isEmpty) &&
-                                                        index == 1) ||
-                                                    ((widget.links.v3 == null ||
-                                                            widget.links.v3!
-                                                                .isEmpty) &&
-                                                        index == 2) ||
-                                                    ((widget.links.v4 == null ||
-                                                            widget.links.v4!
-                                                                .isEmpty) &&
-                                                        index == 3) ||
-                                                    ((widget.links.v5 == null ||
-                                                            widget.links.v5!
-                                                                .isEmpty) &&
-                                                        index == 4) ||
-                                                    ((widget.links.words ==
-                                                                null ||
-                                                            widget.links.words!
-                                                                .isEmpty) &&
-                                                        index == 5)) {
-                                                  await _controller.pause();
-                                                  // await _controller.dispose();
+                                            return MouseRegion(
+                                              cursor: SystemMouseCursors.click,
+                                              child: GestureDetector(
+                                                onTapDown: (TapDownDetails
+                                                    onTapDetails) async {
+                                                  log(
+                                                    "entering and priniting the index ${index}",
+                                                  );
+                                                  // if (checkUrl != index) {
+                                                  // checkUrl = index;
+                                                  if (((widget.links.v1 ==
+                                                                  null ||
+                                                              widget.links.v1!
+                                                                  .isEmpty) &&
+                                                          index == 0) ||
+                                                      ((widget.links.v2 ==
+                                                                  null ||
+                                                              widget.links.v2!
+                                                                  .isEmpty) &&
+                                                          index == 1) ||
+                                                      ((widget.links.v3 ==
+                                                                  null ||
+                                                              widget.links.v3!
+                                                                  .isEmpty) &&
+                                                          index == 2) ||
+                                                      ((widget.links.v4 ==
+                                                                  null ||
+                                                              widget.links.v4!
+                                                                  .isEmpty) &&
+                                                          index == 3) ||
+                                                      ((widget.links.v5 ==
+                                                                  null ||
+                                                              widget.links.v5!
+                                                                  .isEmpty) &&
+                                                          index == 4) ||
+                                                      ((widget.links.words ==
+                                                                  null ||
+                                                              widget
+                                                                  .links
+                                                                  .words!
+                                                                  .isEmpty) &&
+                                                          index == 5)) {
+                                                    await _controller.pause();
+                                                    // await _controller.dispose();
 
-                                                  repeatLoads = widget.load;
-                                                  /////////// //
-                                                  if (!kIsWeb) {
-                                                    await getSoundPracticeWords();
-                                                  }
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          WordScreenProfluentEnglish(
-                                                        title: widget.load,
-                                                        load: widget
-                                                            .load, //'Words',
-                                                        soundPractice:
-                                                            soundPractice!,
-                                                      ),
-                                                    ),
-                                                  ).then((_) {
-                                                    // print("sjfidhjvgirj");
-                                                    // refreshScreen(1);
-                                                  });
-                                                } else {
-                                                  if (index == 5) {
                                                     repeatLoads = widget.load;
-                                                    //
+                                                    /////////// //
                                                     if (!kIsWeb) {
                                                       await getSoundPracticeWords();
                                                     }
@@ -888,92 +874,121 @@ class _ProfluentSubScreenState extends State<ProfluentSubScreen> {
                                                               soundPractice!,
                                                         ),
                                                       ),
-                                                    ).then((value) {
-                                                      // print("valueee:$value");
-                                                      // if (value == "from") {
-                                                      refreshScreen(2);
-                                                      // }
+                                                    ).then((_) {
+                                                      // print("sjfidhjvgirj");
+                                                      // refreshScreen(1);
                                                     });
-                                                    await _controller.pause();
-                                                    // await _controller.dispose();
                                                   } else {
-                                                    log("else part is working");
-                                                    _onClick(index);
+                                                    if (index == 5) {
+                                                      repeatLoads = widget.load;
+                                                      //
+                                                      if (!kIsWeb) {
+                                                        await getSoundPracticeWords();
+                                                      }
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              WordScreenProfluentEnglish(
+                                                            title: widget.load,
+                                                            load: widget
+                                                                .load, //'Words',
+                                                            soundPractice:
+                                                                soundPractice!,
+                                                          ),
+                                                        ),
+                                                      ).then((value) {
+                                                        // print("valueee:$value");
+                                                        // if (value == "from") {
+                                                        refreshScreen(2);
+                                                        // }
+                                                      });
+                                                      await _controller.pause();
+                                                      // await _controller.dispose();
+                                                    } else {
+                                                      log("else part is working");
+                                                      _onClick(index);
+                                                    }
                                                   }
-                                                }
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Color(0xFF3B465A),
-                                                  border: Border(
-                                                    bottom: BorderSide(
-                                                      color: Colors.white,
-                                                      width: 0.5,
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Color(0xFF3B465A),
+                                                    border: Border(
+                                                      bottom: BorderSide(
+                                                        color: Colors.white,
+                                                        width: 0.5,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                child: Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical: 5,
-                                                  ),
-                                                  child: Row(
-                                                    children: [
-                                                      if (index != 5)
-                                                        Image.asset(
-                                                          "assets/images/pl${index + 1}.png",
-                                                          width: displayWidth(
-                                                                context,
-                                                              ) *
-                                                              0.05,
-                                                        ),
-                                                      if (index == 5)
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      vertical: 5,
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        if (index != 5)
+                                                          Image.asset(
+                                                            "assets/images/pl${index + 1}.png",
+                                                            width: displayWidth(
+                                                                  context,
+                                                                ) *
+                                                                0.05,
+                                                          ),
+                                                        if (index == 5)
+                                                          SizedBox(
+                                                            width:
+                                                                getWidgetWidth(
+                                                              width: 5,
+                                                            ),
+                                                          ),
+                                                        if (index == 5)
+                                                          Icon(
+                                                            Icons.mic,
+                                                            color: Colors.white,
+                                                            size:
+                                                                getWidgetHeight(
+                                                              height: 33,
+                                                            ),
+                                                          ),
+                                                        if (index == 5)
+                                                          SizedBox(
+                                                            width:
+                                                                getWidgetWidth(
+                                                              width: 7,
+                                                            ),
+                                                          ),
                                                         SizedBox(
                                                           width: getWidgetWidth(
-                                                            width: 5,
+                                                            width: 8,
                                                           ),
                                                         ),
-                                                      if (index == 5)
-                                                        Icon(
-                                                          Icons.mic,
-                                                          color: Colors.white,
-                                                          size: getWidgetHeight(
-                                                            height: 33,
+                                                        Text(
+                                                          index == 0
+                                                              ? "Front View"
+                                                              : index == 1
+                                                                  ? "Side View"
+                                                                  : index == 2
+                                                                      ? "Front Closer"
+                                                                      : index ==
+                                                                              3
+                                                                          ? "Side Closer"
+                                                                          : index == 4
+                                                                              ? "Animation"
+                                                                              : "Practice",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize:
+                                                                kText.scale(
+                                                              20,
+                                                            ),
+                                                            fontWeight:
+                                                                FontWeight.w400,
                                                           ),
                                                         ),
-                                                      if (index == 5)
-                                                        SizedBox(
-                                                          width: getWidgetWidth(
-                                                            width: 7,
-                                                          ),
-                                                        ),
-                                                      SizedBox(
-                                                        width: getWidgetWidth(
-                                                          width: 8,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        index == 0
-                                                            ? "Front View"
-                                                            : index == 1
-                                                                ? "Side View"
-                                                                : index == 2
-                                                                    ? "Front Closer"
-                                                                    : index == 3
-                                                                        ? "Side Closer"
-                                                                        : index ==
-                                                                                4
-                                                                            ? "Animation"
-                                                                            : "Practice",
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: kText.scale(
-                                                            20,
-                                                          ),
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                        ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
