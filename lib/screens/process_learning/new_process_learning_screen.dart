@@ -628,57 +628,123 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                                 borderRadius:
                                                     BorderRadius.circular(7),
                                               ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                              child: Stack(
                                                 children: [
-                                                  Text(
-                                                    swipperList[adjustedIndex]
-                                                        ['heading'],
-                                                    style: TextStyle(
-                                                      fontFamily: 'Roboto',
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: kText.scale(12),
-                                                      color: adjustedIndex ==
-                                                                  0 ||
-                                                              adjustedIndex == 4
-                                                          ? const Color(
-                                                              0xFF6A60FB)
-                                                          : adjustedIndex == 5
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        swipperList[
+                                                                adjustedIndex]
+                                                            ['heading'],
+                                                        style: TextStyle(
+                                                          fontFamily: 'Roboto',
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize:
+                                                              kText.scale(12),
+                                                          color: adjustedIndex ==
+                                                                      0 ||
+                                                                  adjustedIndex ==
+                                                                      4
                                                               ? const Color(
-                                                                  0xFF26BFFF)
-                                                              : const Color(
-                                                                  0xFFFF1A1A),
-                                                    ),
+                                                                  0xFF6A60FB)
+                                                              : adjustedIndex ==
+                                                                      5
+                                                                  ? const Color(
+                                                                      0xFF26BFFF)
+                                                                  : const Color(
+                                                                      0xFFFF1A1A),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 180,
+                                                        width: double.infinity,
+                                                        child: Image.asset(
+                                                          swipperList[
+                                                                  adjustedIndex]
+                                                              ['tileImage'],
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        _processLeaning[
+                                                                adjustedIndex]
+                                                            .category!,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                          fontFamily: 'Roboto',
+                                                          color:
+                                                              Color(0xFF535353),
+                                                          fontSize: 16.5,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  SizedBox(
-                                                    height: 180,
-                                                    width: double.infinity,
-                                                    child: Image.asset(
-                                                      swipperList[adjustedIndex]
-                                                          ['tileImage'],
-                                                      fit: BoxFit.contain,
+                                                  Positioned.fill(
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Transform.rotate(
+                                                        angle: 0,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      12,
+                                                                  vertical: 6),
+                                                          decoration:
+                                                              ShapeDecoration(
+                                                            color: Colors.amber
+                                                                .withOpacity(
+                                                                    0.95),
+                                                            shape:
+                                                                const StadiumBorder(),
+                                                            shadows: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        0.3),
+                                                                blurRadius: 10,
+                                                                spreadRadius: 1,
+                                                                offset:
+                                                                    const Offset(
+                                                                        0, 2),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          child: const Text(
+                                                            "WORKING IN PROGRESS",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 10,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w900,
+                                                              letterSpacing:
+                                                                  0.8,
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    _processLeaning[
-                                                            adjustedIndex]
-                                                        .category!,
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: const TextStyle(
-                                                      fontFamily: 'Roboto',
-                                                      color: Color(0xFF535353),
-                                                      fontSize: 16.5,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                                  ),
+                                                  )
                                                 ],
                                               ),
                                             ),
@@ -793,200 +859,221 @@ class _NewProcessLearningScreenState extends State<NewProcessLearningScreen>
                                               ],
                                             ),
                                           ),
-                                          if (!kIsWeb)
-                                            SvgPicture.asset(
-                                              AllAssets.plAccounts,
-                                              height: isSplitScreen
-                                                  ? getFullWidgetHeight(
-                                                      height: 60)
-                                                  : getWidgetHeight(height: 60),
-                                            ),
+                                          // if (!kIsWeb)
                                         ],
                                       ),
                                     ),
                                     kIsWeb
-                                        ? Container(
-                                            alignment: Alignment.center,
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 12,
-                                              horizontal: 20,
-                                            ),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: List.generate(
-                                                  _processLeaning[1]
-                                                      .subcategories!
-                                                      .length, (index) {
-                                                Future<void>
-                                                    handleItemTap() async {
-                                                  subCategoryTitile =
+                                        ? Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SvgPicture.asset(
+                                                AllAssets.plAccounts,
+                                                width: 400,
+                                              ),
+                                              Container(
+                                                alignment: Alignment.center,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 12,
+                                                  horizontal: 20,
+                                                ),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: List.generate(
                                                       _processLeaning[1]
-                                                          .subcategories![index]
-                                                          .name!;
-                                                  log("${_processLeaning[1].category!}");
-                                                  sessionName =
-                                                      _processLeaning[1]
-                                                          .subcategories![index]
-                                                          .name!;
-                                                  if (_processLeaning[1]
-                                                          .subcategories![index]
-                                                          .link !=
-                                                      null) {
-                                                    print(
-                                                        "arManagementTappeddd");
-                                                    String? arManagementLinks =
-                                                        _processLeaning[1]
-                                                            .subcategories![
-                                                                index]
-                                                            .link;
-                                                    processLearningLinks.add(
-                                                        arManagementLinks!);
-                                                    FirebaseFirestore
-                                                        firestore =
+                                                          .subcategories!
+                                                          .length, (index) {
+                                                    Future<void>
+                                                        handleItemTap() async {
+                                                      subCategoryTitile =
+                                                          _processLeaning[1]
+                                                              .subcategories![
+                                                                  index]
+                                                              .name!;
+                                                      log("${_processLeaning[1].category!}");
+                                                      sessionName =
+                                                          _processLeaning[1]
+                                                              .subcategories![
+                                                                  index]
+                                                              .name!;
+                                                      if (_processLeaning[1]
+                                                              .subcategories![
+                                                                  index]
+                                                              .link !=
+                                                          null) {
+                                                        print(
+                                                            "arManagementTappeddd");
+                                                        String?
+                                                            arManagementLinks =
+                                                            _processLeaning[1]
+                                                                .subcategories![
+                                                                    index]
+                                                                .link;
+                                                        processLearningLinks.add(
+                                                            arManagementLinks!);
                                                         FirebaseFirestore
-                                                            .instance;
-                                                    String userId =
-                                                        await SharedPref
-                                                            .getSavedString(
-                                                                'userId');
-                                                    DocumentReference
-                                                        softSkills = firestore
-                                                            .collection(
-                                                                'processLearningReports')
-                                                            .doc(userId);
+                                                            firestore =
+                                                            FirebaseFirestore
+                                                                .instance;
+                                                        String userId =
+                                                            await SharedPref
+                                                                .getSavedString(
+                                                                    'userId');
+                                                        DocumentReference
+                                                            softSkills =
+                                                            firestore
+                                                                .collection(
+                                                                    'processLearningReports')
+                                                                .doc(userId);
 
-                                                    await softSkills.update({
-                                                      'isLink': FieldValue
-                                                          .arrayUnion([
-                                                        _processLeaning[1]
-                                                            .subcategories![
-                                                                index]
-                                                            .link
-                                                      ]),
-                                                    }).then((_) {
-                                                      print(
-                                                          'Link added to Firestore: ${_processLeaning[1].subcategories![index].link}');
-                                                    }).catchError((e) {
-                                                      print(
-                                                          'Error updating Firestore: $e');
-                                                    });
-                                                    SharedPreferences prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    await prefs.setStringList(
-                                                        'InAppWebViewPage', [
-                                                      _processLeaning[1]
-                                                          .subcategories![index]
-                                                          .link!
-                                                    ]);
-                                                    await prefs.setString(
-                                                        'lastAccess',
-                                                        'InAppWebViewPage');
-                                                    await prefs.setString(
-                                                        "lastYes",
-                                                        processLearning);
-                                                    startTimerSubCategory(
-                                                        processLearning,
-                                                        _processLeaning[1]
+                                                        await softSkills
+                                                            .update({
+                                                          'isLink': FieldValue
+                                                              .arrayUnion([
+                                                            _processLeaning[1]
                                                                 .subcategories![
                                                                     index]
-                                                                .name ??
-                                                            "");
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            InAppWebViewPage(
-                                                          // title: _processLeaning[1].subcategories![index].name ?? "",
-                                                          url: _processLeaning[
-                                                                  1]
-                                                              .subcategories![
-                                                                  index]
-                                                              .link!,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  } else if (_processLeaning[1]
-                                                              .subcategories![
-                                                                  index]
-                                                              .linkCats !=
-                                                          null &&
-                                                      _processLeaning[1]
-                                                          .subcategories![index]
-                                                          .linkCats!
-                                                          .isNotEmpty) {
-                                                    print(
-                                                        'denial managementtt>>>>>');
-                                                    print(
-                                                        "checkk:${_processLeaning[1].subcategories![index].linkCats ?? []}");
-                                                    print(
-                                                        "check1 : ${_processLeaning[1].subcategories![index].name ?? ""}");
-                                                    print("indexCheck;$index");
-
-                                                    SharedPreferences prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    await prefs.setString(
-                                                        'lastAccess',
-                                                        'ProcessCatScreen');
-                                                    await prefs.setString(
-                                                        'ProcessCatScreen',
-                                                        _processLeaning[1]
-                                                                .subcategories![
-                                                                    index]
-                                                                .name ??
-                                                            "");
-                                                    final box = await Hive.openBox<
-                                                            ProcessLearningLinkHive>(
-                                                        'newProcessLearningBox');
-                                                    // processLearningBox = await Hive.box<ProcessLearningLinkHive>('processLearningLinkBox');
-                                                    ProcessLearningLinkHive
-                                                        prHive =
-                                                        ProcessLearningLinkHive(
-                                                            item: _processLeaning[
-                                                                    1]
-                                                                .subcategories![
-                                                                    index]
-                                                                .linkCats);
-                                                    box.put('ProcessCatScreen',
-                                                        prHive);
-
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ProcessCatScreen(
-                                                          linkCats: _processLeaning[
+                                                                .link
+                                                          ]),
+                                                        }).then((_) {
+                                                          print(
+                                                              'Link added to Firestore: ${_processLeaning[1].subcategories![index].link}');
+                                                        }).catchError((e) {
+                                                          print(
+                                                              'Error updating Firestore: $e');
+                                                        });
+                                                        SharedPreferences
+                                                            prefs =
+                                                            await SharedPreferences
+                                                                .getInstance();
+                                                        await prefs.setStringList(
+                                                            'InAppWebViewPage',
+                                                            [
+                                                              _processLeaning[1]
+                                                                  .subcategories![
+                                                                      index]
+                                                                  .link!
+                                                            ]);
+                                                        await prefs.setString(
+                                                            'lastAccess',
+                                                            'InAppWebViewPage');
+                                                        await prefs.setString(
+                                                            "lastYes",
+                                                            processLearning);
+                                                        startTimerSubCategory(
+                                                            processLearning,
+                                                            _processLeaning[1]
+                                                                    .subcategories![
+                                                                        index]
+                                                                    .name ??
+                                                                "");
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                InAppWebViewPage(
+                                                              // title: _processLeaning[1].subcategories![index].name ?? "",
+                                                              url: _processLeaning[
                                                                       1]
                                                                   .subcategories![
                                                                       index]
-                                                                  .linkCats ??
-                                                              [],
-                                                          title: _processLeaning[
+                                                                  .link!,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      } else if (_processLeaning[
                                                                       1]
                                                                   .subcategories![
                                                                       index]
-                                                                  .name ??
-                                                              "",
-                                                        ),
+                                                                  .linkCats !=
+                                                              null &&
+                                                          _processLeaning[1]
+                                                              .subcategories![
+                                                                  index]
+                                                              .linkCats!
+                                                              .isNotEmpty) {
+                                                        print(
+                                                            'denial managementtt>>>>>');
+                                                        print(
+                                                            "checkk:${_processLeaning[1].subcategories![index].linkCats ?? []}");
+                                                        print(
+                                                            "check1 : ${_processLeaning[1].subcategories![index].name ?? ""}");
+                                                        print(
+                                                            "indexCheck;$index");
+
+                                                        SharedPreferences
+                                                            prefs =
+                                                            await SharedPreferences
+                                                                .getInstance();
+                                                        await prefs.setString(
+                                                            'lastAccess',
+                                                            'ProcessCatScreen');
+                                                        await prefs.setString(
+                                                            'ProcessCatScreen',
+                                                            _processLeaning[1]
+                                                                    .subcategories![
+                                                                        index]
+                                                                    .name ??
+                                                                "");
+                                                        final box = await Hive.openBox<
+                                                                ProcessLearningLinkHive>(
+                                                            'newProcessLearningBox');
+                                                        // processLearningBox = await Hive.box<ProcessLearningLinkHive>('processLearningLinkBox');
+                                                        ProcessLearningLinkHive
+                                                            prHive =
+                                                            ProcessLearningLinkHive(
+                                                                item: _processLeaning[
+                                                                        1]
+                                                                    .subcategories![
+                                                                        index]
+                                                                    .linkCats);
+                                                        box.put(
+                                                            'ProcessCatScreen',
+                                                            prHive);
+
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ProcessCatScreen(
+                                                              linkCats: _processLeaning[
+                                                                          1]
+                                                                      .subcategories![
+                                                                          index]
+                                                                      .linkCats ??
+                                                                  [],
+                                                              title: _processLeaning[
+                                                                          1]
+                                                                      .subcategories![
+                                                                          index]
+                                                                      .name ??
+                                                                  "",
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                    }
+
+                                                    return ConstrainedBox(
+                                                      constraints:
+                                                          const BoxConstraints(
+                                                              maxWidth: 600),
+                                                      child: WebHoverListItem(
+                                                        title:
+                                                            _processLeaning[1]
+                                                                .subcategories![
+                                                                    index]
+                                                                .name!,
+                                                        onTap: handleItemTap,
                                                       ),
                                                     );
-                                                  }
-                                                }
-
-                                                return ConstrainedBox(
-                                                  constraints:
-                                                      const BoxConstraints(
-                                                          maxWidth: 600),
-                                                  child: WebHoverListItem(
-                                                    title: _processLeaning[1]
-                                                        .subcategories![index]
-                                                        .name!,
-                                                    onTap: handleItemTap,
-                                                  ),
-                                                );
-                                              }),
-                                            ),
+                                                  }),
+                                                ),
+                                              ),
+                                            ],
                                           )
                                         : ListView.separated(
                                             padding: EdgeInsets.zero,
