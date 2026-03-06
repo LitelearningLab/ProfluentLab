@@ -417,418 +417,418 @@ class _NewDashboardScreenState extends State<NewDashboardScreen>
                                     /*SizedBox(
                                 height: isSplitScreen ? getFullWidgetHeight(height: 11) : getWidgetHeight(height: 11),
                               ),*/
-                                    SPH(displayHeight(context) / 58),
-                                    SizedBox(
-                                      // color: Colors.amber,
-                                      height: kIsWeb
-                                          ? 45
-                                          : isSplitScreen
-                                              ? getFullWidgetHeight(height: 46)
-                                              : getWidgetHeight(height: 46),
-                                      child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(40),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black
-                                                    .withOpacity(0.1),
-                                                blurRadius: 20,
-                                                offset: const Offset(0, 10),
-                                              ),
-                                            ],
-                                          ),
-                                          child: TextFormField(
-                                            readOnly: true,
-                                            style: TextStyle(
-                                              fontFamily: Keys.fontFamily,
-                                              color: AppColors.white,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              letterSpacing: 0.5,
-                                            ),
-                                            decoration: InputDecoration(
-                                              isDense: true,
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(40),
-                                                borderSide: BorderSide(
-                                                    color: Colors.white
-                                                        .withOpacity(0.1)),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(40),
-                                                borderSide: BorderSide(
-                                                    color: Colors.white
-                                                        .withOpacity(0.1)),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(40),
-                                                borderSide: const BorderSide(
-                                                    color: Color(0xFF6C63FE)),
-                                              ),
-                                              suffixIcon: ShowCaseView(
-                                                globalKey: _lastPageKey,
-                                                title: '',
-                                                description:
-                                                    'Click here For Go to Last Accessed Content',
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(6.0),
-                                                  child: Container(
-                                                      height: 34,
-                                                      width: 34,
-                                                      decoration: BoxDecoration(
-                                                          gradient:
-                                                              const LinearGradient(
-                                                            colors: [
-                                                              Color(0xFF8B85FF),
-                                                              Color(0xFF6C63FE)
-                                                            ],
-                                                            begin: Alignment
-                                                                .topLeft,
-                                                            end: Alignment
-                                                                .bottomRight,
-                                                          ),
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                              color: const Color(
-                                                                      0xFF6C63FE)
-                                                                  .withOpacity(
-                                                                      0.3),
-                                                              blurRadius: 8,
-                                                              offset:
-                                                                  const Offset(
-                                                                      0, 4),
-                                                            )
-                                                          ]),
-                                                      child: InkWell(
-                                                        onTap: () async {
-                                                          SharedPreferences
-                                                              prefs =
-                                                              await SharedPreferences
-                                                                  .getInstance();
-                                                          String
-                                                              lastAccessContent =
-                                                              await prefs.getString(
-                                                                      'lastAccess') ??
-                                                                  "";
-                                                          var hiveBox =
-                                                              await Hive.openBox(
-                                                                  'lastAccess');
-                                                          if (lastAccessContent ==
-                                                              'FollowUpScreen') {
-                                                            List
-                                                                followupString =
-                                                                await prefs.getStringList(
-                                                                        'FollowUpScreen') ??
-                                                                    [];
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            FollowUpScreen(
-                                                                              user: Provider.of<AuthState>(context, listen: false),
-                                                                              title: followupString[0],
-                                                                              load: followupString[1],
-                                                                              main: followupString[2],
-                                                                            )));
-                                                          } else if (lastAccessContent ==
-                                                              'NewSoftSkillsScreen') {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            NewSoftSkillsScreen()));
-                                                          } else if (lastAccessContent ==
-                                                              'LabScreen') {
-                                                            List
-                                                                labScreenString =
-                                                                await prefs.getStringList(
-                                                                        'LabScreen') ??
-                                                                    [];
-                                                            List<dynamic>
-                                                                decodedList =
-                                                                jsonDecode(
-                                                                    labScreenString[
-                                                                        1]);
+                                    // SPH(displayHeight(context) / 58),
+                                    // SizedBox(
+                                    //   // color: Colors.amber,
+                                    //   height: kIsWeb
+                                    //       ? 45
+                                    //       : isSplitScreen
+                                    //           ? getFullWidgetHeight(height: 46)
+                                    //           : getWidgetHeight(height: 46),
+                                    //   child: Container(
+                                    //       decoration: BoxDecoration(
+                                    //         borderRadius:
+                                    //             BorderRadius.circular(40),
+                                    //         boxShadow: [
+                                    //           BoxShadow(
+                                    //             color: Colors.black
+                                    //                 .withOpacity(0.1),
+                                    //             blurRadius: 20,
+                                    //             offset: const Offset(0, 10),
+                                    //           ),
+                                    //         ],
+                                    //       ),
+                                    //       child: TextFormField(
+                                    //         readOnly: true,
+                                    //         style: TextStyle(
+                                    //           fontFamily: Keys.fontFamily,
+                                    //           color: AppColors.white,
+                                    //           fontSize: 15,
+                                    //           fontWeight: FontWeight.w400,
+                                    //           letterSpacing: 0.5,
+                                    //         ),
+                                    //         decoration: InputDecoration(
+                                    //           isDense: true,
+                                    //           border: OutlineInputBorder(
+                                    //             borderRadius:
+                                    //                 BorderRadius.circular(40),
+                                    //             borderSide: BorderSide(
+                                    //                 color: Colors.white
+                                    //                     .withOpacity(0.1)),
+                                    //           ),
+                                    //           enabledBorder: OutlineInputBorder(
+                                    //             borderRadius:
+                                    //                 BorderRadius.circular(40),
+                                    //             borderSide: BorderSide(
+                                    //                 color: Colors.white
+                                    //                     .withOpacity(0.1)),
+                                    //           ),
+                                    //           focusedBorder: OutlineInputBorder(
+                                    //             borderRadius:
+                                    //                 BorderRadius.circular(40),
+                                    //             borderSide: const BorderSide(
+                                    //                 color: Color(0xFF6C63FE)),
+                                    //           ),
+                                    //           suffixIcon: ShowCaseView(
+                                    //             globalKey: _lastPageKey,
+                                    //             title: '',
+                                    //             description:
+                                    //                 'Click here For Go to Last Accessed Content',
+                                    //             child: Padding(
+                                    //               padding:
+                                    //                   const EdgeInsets.all(6.0),
+                                    //               child: Container(
+                                    //                   height: 34,
+                                    //                   width: 34,
+                                    //                   decoration: BoxDecoration(
+                                    //                       gradient:
+                                    //                           const LinearGradient(
+                                    //                         colors: [
+                                    //                           Color(0xFF8B85FF),
+                                    //                           Color(0xFF6C63FE)
+                                    //                         ],
+                                    //                         begin: Alignment
+                                    //                             .topLeft,
+                                    //                         end: Alignment
+                                    //                             .bottomRight,
+                                    //                       ),
+                                    //                       shape:
+                                    //                           BoxShape.circle,
+                                    //                       boxShadow: [
+                                    //                         BoxShadow(
+                                    //                           color: const Color(
+                                    //                                   0xFF6C63FE)
+                                    //                               .withOpacity(
+                                    //                                   0.3),
+                                    //                           blurRadius: 8,
+                                    //                           offset:
+                                    //                               const Offset(
+                                    //                                   0, 4),
+                                    //                         )
+                                    //                       ]),
+                                    //                   child: InkWell(
+                                    //                     onTap: () async {
+                                    //                       SharedPreferences
+                                    //                           prefs =
+                                    //                           await SharedPreferences
+                                    //                               .getInstance();
+                                    //                       String
+                                    //                           lastAccessContent =
+                                    //                           await prefs.getString(
+                                    //                                   'lastAccess') ??
+                                    //                               "";
+                                    //                       var hiveBox =
+                                    //                           await Hive.openBox(
+                                    //                               'lastAccess');
+                                    //                       if (lastAccessContent ==
+                                    //                           'FollowUpScreen') {
+                                    //                         List
+                                    //                             followupString =
+                                    //                             await prefs.getStringList(
+                                    //                                     'FollowUpScreen') ??
+                                    //                                 [];
+                                    //                         Navigator.push(
+                                    //                             context,
+                                    //                             MaterialPageRoute(
+                                    //                                 builder:
+                                    //                                     (context) =>
+                                    //                                         FollowUpScreen(
+                                    //                                           user: Provider.of<AuthState>(context, listen: false),
+                                    //                                           title: followupString[0],
+                                    //                                           load: followupString[1],
+                                    //                                           main: followupString[2],
+                                    //                                         )));
+                                    //                       } else if (lastAccessContent ==
+                                    //                           'NewSoftSkillsScreen') {
+                                    //                         Navigator.push(
+                                    //                             context,
+                                    //                             MaterialPageRoute(
+                                    //                                 builder:
+                                    //                                     (context) =>
+                                    //                                         NewSoftSkillsScreen()));
+                                    //                       } else if (lastAccessContent ==
+                                    //                           'LabScreen') {
+                                    //                         List
+                                    //                             labScreenString =
+                                    //                             await prefs.getStringList(
+                                    //                                     'LabScreen') ??
+                                    //                                 [];
+                                    //                         List<dynamic>
+                                    //                             decodedList =
+                                    //                             jsonDecode(
+                                    //                                 labScreenString[
+                                    //                                     1]);
 
-                                                            final List<
-                                                                    Map<String,
-                                                                        dynamic>>
-                                                                originalDataList =
-                                                                decodedList
-                                                                    .map((map) {
-                                                              return (map as Map<
-                                                                      String,
-                                                                      dynamic>)
-                                                                  .map((key,
-                                                                      value) {
-                                                                if (key ==
-                                                                        'bgColor' &&
-                                                                    value
-                                                                        is String) {
-                                                                  return MapEntry(
-                                                                      key,
-                                                                      Color(int
-                                                                          .parse(
-                                                                              value))); // Convert back to Color object
-                                                                } else {
-                                                                  return MapEntry(
-                                                                      key,
-                                                                      value);
-                                                                }
-                                                              });
-                                                            }).toList();
-                                                            Navigator.of(
-                                                                    context)
-                                                                .push(
-                                                              MaterialPageRoute(
-                                                                builder: (context) => LabScreen(
-                                                                    pLIconKey: labScreenString[2] ==
-                                                                            'true'
-                                                                        ? true
-                                                                        : false,
-                                                                    user: user,
-                                                                    title:
-                                                                        labScreenString[
-                                                                            0],
-                                                                    itemList:
-                                                                        originalDataList),
-                                                              ),
-                                                            );
-                                                          } else if (lastAccessContent ==
-                                                              'ProcessCatScreen') {
-                                                            String
-                                                                processCatScreenScreenString =
-                                                                await prefs.getString(
-                                                                        'ProcessCatScreen') ??
-                                                                    "";
-                                                            final box = await Hive
-                                                                .openBox<
-                                                                        ProcessLearningLinkHive>(
-                                                                    'newProcessLearningBox');
-                                                            ProcessLearningLinkHive?
-                                                                getPr = box.get(
-                                                                    'ProcessCatScreen');
-                                                            List<ProcessLearningLink>?
-                                                                ans =
-                                                                getPr!.item;
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          ProcessCatScreen(
-                                                                            linkCats:
-                                                                                ans!,
-                                                                            title:
-                                                                                processCatScreenScreenString,
-                                                                          )),
-                                                            );
-                                                          } else if (lastAccessContent ==
-                                                              'CallFlowCatScreen') {
-                                                            List
-                                                                CallFlowCatScreenString =
-                                                                await prefs.getStringList(
-                                                                        'CallFlowCatScreen') ??
-                                                                    [];
-                                                            // Navigator.push(
-                                                            //     context,
-                                                            //     MaterialPageRoute(
-                                                            //         builder:
-                                                            //             (context) =>
-                                                            //                 CallFlowCatScreen(
-                                                            //                   user:
-                                                            //                       user,
-                                                            //                   title:
-                                                            //                       CallFlowCatScreenString[0],
-                                                            //                   load:
-                                                            //                       CallFlowCatScreenString[1],
-                                                            //                 )));
-                                                          } else if (lastAccessContent ==
-                                                              'InAppWebViewPage') {
-                                                            List
-                                                                inAppWebViewPageString =
-                                                                await prefs.getStringList(
-                                                                        'InAppWebViewPage') ??
-                                                                    [];
+                                    //                         final List<
+                                    //                                 Map<String,
+                                    //                                     dynamic>>
+                                    //                             originalDataList =
+                                    //                             decodedList
+                                    //                                 .map((map) {
+                                    //                           return (map as Map<
+                                    //                                   String,
+                                    //                                   dynamic>)
+                                    //                               .map((key,
+                                    //                                   value) {
+                                    //                             if (key ==
+                                    //                                     'bgColor' &&
+                                    //                                 value
+                                    //                                     is String) {
+                                    //                               return MapEntry(
+                                    //                                   key,
+                                    //                                   Color(int
+                                    //                                       .parse(
+                                    //                                           value))); // Convert back to Color object
+                                    //                             } else {
+                                    //                               return MapEntry(
+                                    //                                   key,
+                                    //                                   value);
+                                    //                             }
+                                    //                           });
+                                    //                         }).toList();
+                                    //                         Navigator.of(
+                                    //                                 context)
+                                    //                             .push(
+                                    //                           MaterialPageRoute(
+                                    //                             builder: (context) => LabScreen(
+                                    //                                 pLIconKey: labScreenString[2] ==
+                                    //                                         'true'
+                                    //                                     ? true
+                                    //                                     : false,
+                                    //                                 user: user,
+                                    //                                 title:
+                                    //                                     labScreenString[
+                                    //                                         0],
+                                    //                                 itemList:
+                                    //                                     originalDataList),
+                                    //                           ),
+                                    //                         );
+                                    //                       } else if (lastAccessContent ==
+                                    //                           'ProcessCatScreen') {
+                                    //                         String
+                                    //                             processCatScreenScreenString =
+                                    //                             await prefs.getString(
+                                    //                                     'ProcessCatScreen') ??
+                                    //                                 "";
+                                    //                         final box = await Hive
+                                    //                             .openBox<
+                                    //                                     ProcessLearningLinkHive>(
+                                    //                                 'newProcessLearningBox');
+                                    //                         ProcessLearningLinkHive?
+                                    //                             getPr = box.get(
+                                    //                                 'ProcessCatScreen');
+                                    //                         List<ProcessLearningLink>?
+                                    //                             ans =
+                                    //                             getPr!.item;
+                                    //                         Navigator.push(
+                                    //                           context,
+                                    //                           MaterialPageRoute(
+                                    //                               builder:
+                                    //                                   (context) =>
+                                    //                                       ProcessCatScreen(
+                                    //                                         linkCats:
+                                    //                                             ans!,
+                                    //                                         title:
+                                    //                                             processCatScreenScreenString,
+                                    //                                       )),
+                                    //                         );
+                                    //                       } else if (lastAccessContent ==
+                                    //                           'CallFlowCatScreen') {
+                                    //                         List
+                                    //                             CallFlowCatScreenString =
+                                    //                             await prefs.getStringList(
+                                    //                                     'CallFlowCatScreen') ??
+                                    //                                 [];
+                                    //                         // Navigator.push(
+                                    //                         //     context,
+                                    //                         //     MaterialPageRoute(
+                                    //                         //         builder:
+                                    //                         //             (context) =>
+                                    //                         //                 CallFlowCatScreen(
+                                    //                         //                   user:
+                                    //                         //                       user,
+                                    //                         //                   title:
+                                    //                         //                       CallFlowCatScreenString[0],
+                                    //                         //                   load:
+                                    //                         //                       CallFlowCatScreenString[1],
+                                    //                         //                 )));
+                                    //                       } else if (lastAccessContent ==
+                                    //                           'InAppWebViewPage') {
+                                    //                         List
+                                    //                             inAppWebViewPageString =
+                                    //                             await prefs.getStringList(
+                                    //                                     'InAppWebViewPage') ??
+                                    //                                 [];
 
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) => inAppWebViewPageString.length >
-                                                                            1
-                                                                        ? InAppWebViewPage(
-                                                                            isLandscape: inAppWebViewPageString[0] == 'false'
-                                                                                ? false
-                                                                                : true,
-                                                                            isMeetingEtiquite: inAppWebViewPageString[0] == 'false'
-                                                                                ? false
-                                                                                : true,
-                                                                            url:
-                                                                                inAppWebViewPageString[0],
-                                                                          )
-                                                                        : InAppWebViewPage(
-                                                                            url:
-                                                                                inAppWebViewPageString[0])));
-                                                          } else if (lastAccessContent ==
-                                                              'InteracticeCatScreen') {
-                                                            String
-                                                                interacticeCatScreenString =
-                                                                await prefs.getString(
-                                                                        'InteracticeCatScreen') ??
-                                                                    "";
-                                                            final box = await Hive
-                                                                .openBox<
-                                                                        InteractiveLinkHive>(
-                                                                    'InteractiveLinkBox');
-                                                            InteractiveLinkHive?
-                                                                getPr = box.get(
-                                                                    'InteracticeCatScreen');
-                                                            List<InteractiveLink>?
-                                                                ans =
-                                                                getPr!.item;
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        InteracticeCatScreen(
-                                                                  linkCats:
-                                                                      ans!,
-                                                                  title:
-                                                                      interacticeCatScreenString,
-                                                                ),
-                                                              ),
-                                                            );
-                                                          } else if (lastAccessContent ==
-                                                              'SentenceScreen') {
-                                                            List
-                                                                SentenceScreenString =
-                                                                await prefs.getStringList(
-                                                                        'SentenceScreen') ??
-                                                                    [];
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            SentenceScreen(
-                                                                              user: user,
-                                                                              title: SentenceScreenString[0],
-                                                                              load: SentenceScreenString[1],
-                                                                              main: SentenceScreenString[2],
-                                                                            )));
-                                                          } else if (lastAccessContent ==
-                                                              'SentencesScreen') {
-                                                            List
-                                                                SentencesScreenString =
-                                                                await prefs.getStringList(
-                                                                        'SentencesScreen') ??
-                                                                    [];
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            SentencesScreen(
-                                                                              title: SentencesScreenString[0],
-                                                                              user: user,
-                                                                              load: SentencesScreenString[1],
-                                                                            )));
-                                                          } else if (lastAccessContent ==
-                                                              'WordScreen') {
-                                                            List
-                                                                WordScreenString =
-                                                                await prefs.getStringList(
-                                                                        'WordScreen') ??
-                                                                    [];
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            WordScreen(
-                                                                              title: WordScreenString[0],
-                                                                              load: WordScreenString[1],
-                                                                            )));
-                                                          } else if (lastAccessContent ==
-                                                              'PronunciationReport') {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            PronunciationReport()));
-                                                          } else if (lastAccessContent ==
-                                                              'SpeechReport') {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            SpeechReport()));
-                                                          } else if (lastAccessContent ==
-                                                              'CallFlowReport') {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            CallFlowReport()));
-                                                          } else {
-                                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                                SnackBar(
-                                                                    backgroundColor:
-                                                                        Color(
-                                                                            0xff34445F),
-                                                                    content:
-                                                                        Text(
-                                                                      'No recent activity found. Dive into your learning journey now!',
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                              Colors.white),
-                                                                    ),
-                                                                    behavior:
-                                                                        SnackBarBehavior
-                                                                            .floating,
-                                                                    margin: EdgeInsets.only(
-                                                                        bottom: getWidgetHeight(
-                                                                            height:
-                                                                                550))));
-                                                          }
-                                                        },
-                                                        child: Icon(
-                                                            Icons
-                                                                .arrow_forward_rounded,
-                                                            color: Colors.white,
-                                                            size:
-                                                                kHeight / 40.6),
-                                                      )),
-                                                ),
-                                              ),
-                                              hintText:
-                                                  "Go To Last Accessed Content",
-                                              hintStyle: TextStyle(
-                                                fontFamily: Keys.fontFamily,
-                                                color: Colors.white38,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                              contentPadding:
-                                                  EdgeInsets.only(left: 22),
-                                              filled: true,
-                                              fillColor: Color(0xff34445F),
-                                            ),
-                                          )),
-                                    )
+                                    //                         Navigator.push(
+                                    //                             context,
+                                    //                             MaterialPageRoute(
+                                    //                                 builder: (context) => inAppWebViewPageString.length >
+                                    //                                         1
+                                    //                                     ? InAppWebViewPage(
+                                    //                                         isLandscape: inAppWebViewPageString[0] == 'false'
+                                    //                                             ? false
+                                    //                                             : true,
+                                    //                                         isMeetingEtiquite: inAppWebViewPageString[0] == 'false'
+                                    //                                             ? false
+                                    //                                             : true,
+                                    //                                         url:
+                                    //                                             inAppWebViewPageString[0],
+                                    //                                       )
+                                    //                                     : InAppWebViewPage(
+                                    //                                         url:
+                                    //                                             inAppWebViewPageString[0])));
+                                    //                       } else if (lastAccessContent ==
+                                    //                           'InteracticeCatScreen') {
+                                    //                         String
+                                    //                             interacticeCatScreenString =
+                                    //                             await prefs.getString(
+                                    //                                     'InteracticeCatScreen') ??
+                                    //                                 "";
+                                    //                         final box = await Hive
+                                    //                             .openBox<
+                                    //                                     InteractiveLinkHive>(
+                                    //                                 'InteractiveLinkBox');
+                                    //                         InteractiveLinkHive?
+                                    //                             getPr = box.get(
+                                    //                                 'InteracticeCatScreen');
+                                    //                         List<InteractiveLink>?
+                                    //                             ans =
+                                    //                             getPr!.item;
+                                    //                         Navigator.push(
+                                    //                           context,
+                                    //                           MaterialPageRoute(
+                                    //                             builder:
+                                    //                                 (context) =>
+                                    //                                     InteracticeCatScreen(
+                                    //                               linkCats:
+                                    //                                   ans!,
+                                    //                               title:
+                                    //                                   interacticeCatScreenString,
+                                    //                             ),
+                                    //                           ),
+                                    //                         );
+                                    //                       } else if (lastAccessContent ==
+                                    //                           'SentenceScreen') {
+                                    //                         List
+                                    //                             SentenceScreenString =
+                                    //                             await prefs.getStringList(
+                                    //                                     'SentenceScreen') ??
+                                    //                                 [];
+                                    //                         Navigator.push(
+                                    //                             context,
+                                    //                             MaterialPageRoute(
+                                    //                                 builder:
+                                    //                                     (context) =>
+                                    //                                         SentenceScreen(
+                                    //                                           user: user,
+                                    //                                           title: SentenceScreenString[0],
+                                    //                                           load: SentenceScreenString[1],
+                                    //                                           main: SentenceScreenString[2],
+                                    //                                         )));
+                                    //                       } else if (lastAccessContent ==
+                                    //                           'SentencesScreen') {
+                                    //                         List
+                                    //                             SentencesScreenString =
+                                    //                             await prefs.getStringList(
+                                    //                                     'SentencesScreen') ??
+                                    //                                 [];
+                                    //                         Navigator.push(
+                                    //                             context,
+                                    //                             MaterialPageRoute(
+                                    //                                 builder:
+                                    //                                     (context) =>
+                                    //                                         SentencesScreen(
+                                    //                                           title: SentencesScreenString[0],
+                                    //                                           user: user,
+                                    //                                           load: SentencesScreenString[1],
+                                    //                                         )));
+                                    //                       } else if (lastAccessContent ==
+                                    //                           'WordScreen') {
+                                    //                         List
+                                    //                             WordScreenString =
+                                    //                             await prefs.getStringList(
+                                    //                                     'WordScreen') ??
+                                    //                                 [];
+                                    //                         Navigator.push(
+                                    //                             context,
+                                    //                             MaterialPageRoute(
+                                    //                                 builder:
+                                    //                                     (context) =>
+                                    //                                         WordScreen(
+                                    //                                           title: WordScreenString[0],
+                                    //                                           load: WordScreenString[1],
+                                    //                                         )));
+                                    //                       } else if (lastAccessContent ==
+                                    //                           'PronunciationReport') {
+                                    //                         Navigator.push(
+                                    //                             context,
+                                    //                             MaterialPageRoute(
+                                    //                                 builder:
+                                    //                                     (context) =>
+                                    //                                         PronunciationReport()));
+                                    //                       } else if (lastAccessContent ==
+                                    //                           'SpeechReport') {
+                                    //                         Navigator.push(
+                                    //                             context,
+                                    //                             MaterialPageRoute(
+                                    //                                 builder:
+                                    //                                     (context) =>
+                                    //                                         SpeechReport()));
+                                    //                       } else if (lastAccessContent ==
+                                    //                           'CallFlowReport') {
+                                    //                         Navigator.push(
+                                    //                             context,
+                                    //                             MaterialPageRoute(
+                                    //                                 builder:
+                                    //                                     (context) =>
+                                    //                                         CallFlowReport()));
+                                    //                       } else {
+                                    //                         ScaffoldMessenger.of(context).showSnackBar(
+                                    //                             SnackBar(
+                                    //                                 backgroundColor:
+                                    //                                     Color(
+                                    //                                         0xff34445F),
+                                    //                                 content:
+                                    //                                     Text(
+                                    //                                   'No recent activity found. Dive into your learning journey now!',
+                                    //                                   style: TextStyle(
+                                    //                                       color:
+                                    //                                           Colors.white),
+                                    //                                 ),
+                                    //                                 behavior:
+                                    //                                     SnackBarBehavior
+                                    //                                         .floating,
+                                    //                                 margin: EdgeInsets.only(
+                                    //                                     bottom: getWidgetHeight(
+                                    //                                         height:
+                                    //                                             550))));
+                                    //                       }
+                                    //                     },
+                                    //                     child: Icon(
+                                    //                         Icons
+                                    //                             .arrow_forward_rounded,
+                                    //                         color: Colors.white,
+                                    //                         size:
+                                    //                             kHeight / 40.6),
+                                    //                   )),
+                                    //             ),
+                                    //           ),
+                                    //           hintText:
+                                    //               "Go To Last Accessed Content",
+                                    //           hintStyle: TextStyle(
+                                    //             fontFamily: Keys.fontFamily,
+                                    //             color: Colors.white38,
+                                    //             fontSize: 14,
+                                    //             fontWeight: FontWeight.w400,
+                                    //           ),
+                                    //           contentPadding:
+                                    //               EdgeInsets.only(left: 22),
+                                    //           filled: true,
+                                    //           fillColor: Color(0xff34445F),
+                                    //         ),
+                                    //       )),
+                                    // )
                                   ],
                                 ),
                               ),

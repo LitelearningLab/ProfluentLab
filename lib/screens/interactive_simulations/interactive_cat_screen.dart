@@ -519,91 +519,91 @@ class _ProcessCatScreenState extends State<InteracticeCatScreen> {
                           );
                         }),
                   ),
-                  Container(
-                    height: isSplitScreen
-                        ? getFullWidgetHeight(height: 60)
-                        : getWidgetHeight(height: 60),
-                    width: kWidth,
-                    decoration: BoxDecoration(
-                      color: Color(0xFF34445F),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                            icon: ImageIcon(
-                              AssetImage(AllAssets.bottomHome),
-                              color: context.read<AuthState>().currentIndex == 0
-                                  ? Color(0xFFAAAAAA)
-                                  : Color.fromARGB(132, 170, 170, 170),
-                            ),
-                            onPressed: () {
-                              context.read<AuthState>().changeIndex(0);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          BottomNavigation()));
-                            }),
-                        IconButton(
-                            icon: ImageIcon(AssetImage(AllAssets.bottomPL),
-                                color:
-                                    context.read<AuthState>().currentIndex == 1
-                                        ? Color(0xFFAAAAAA)
-                                        : Color.fromARGB(132, 170, 170, 170)),
-                            onPressed: () {
-                              context.read<AuthState>().changeIndex(1);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          BottomNavigation()));
-                            }),
-                        IconButton(
-                            icon: ImageIcon(AssetImage(AllAssets.bottomIS),
-                                color:
-                                    context.read<AuthState>().currentIndex == 2
-                                        ? Color(0xFFAAAAAA)
-                                        : Color.fromARGB(132, 170, 170, 170)),
-                            onPressed: () {
-                              context.read<AuthState>().changeIndex(2);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          BottomNavigation()));
-                            }),
-                        IconButton(
-                            icon: ImageIcon(AssetImage(AllAssets.bottomPE),
-                                color:
-                                    context.read<AuthState>().currentIndex == 3
-                                        ? Color(0xFFAAAAAA)
-                                        : Color.fromARGB(132, 170, 170, 170)),
-                            onPressed: () {
-                              context.read<AuthState>().changeIndex(3);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          BottomNavigation()));
-                            }),
-                        IconButton(
-                            icon: ImageIcon(AssetImage(AllAssets.bottomPT),
-                                color:
-                                    context.read<AuthState>().currentIndex == 4
-                                        ? Color(0xFFAAAAAA)
-                                        : Color.fromARGB(132, 170, 170, 170)),
-                            onPressed: () {
-                              context.read<AuthState>().changeIndex(4);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          BottomNavigation()));
-                            }),
-                      ],
-                    ),
-                  )
+                  // Container(
+                  //   height: isSplitScreen
+                  //       ? getFullWidgetHeight(height: 60)
+                  //       : getWidgetHeight(height: 60),
+                  //   width: kWidth,
+                  //   decoration: BoxDecoration(
+                  //     color: Color(0xFF34445F),
+                  //   ),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //     children: [
+                  //       IconButton(
+                  //           icon: ImageIcon(
+                  //             AssetImage(AllAssets.bottomHome),
+                  //             color: context.read<AuthState>().currentIndex == 0
+                  //                 ? Color(0xFFAAAAAA)
+                  //                 : Color.fromARGB(132, 170, 170, 170),
+                  //           ),
+                  //           onPressed: () {
+                  //             context.read<AuthState>().changeIndex(0);
+                  //             Navigator.pushReplacement(
+                  //                 context,
+                  //                 MaterialPageRoute(
+                  //                     builder: (context) =>
+                  //                         BottomNavigation()));
+                  //           }),
+                  //       IconButton(
+                  //           icon: ImageIcon(AssetImage(AllAssets.bottomPL),
+                  //               color:
+                  //                   context.read<AuthState>().currentIndex == 1
+                  //                       ? Color(0xFFAAAAAA)
+                  //                       : Color.fromARGB(132, 170, 170, 170)),
+                  //           onPressed: () {
+                  //             context.read<AuthState>().changeIndex(1);
+                  //             Navigator.pushReplacement(
+                  //                 context,
+                  //                 MaterialPageRoute(
+                  //                     builder: (context) =>
+                  //                         BottomNavigation()));
+                  //           }),
+                  //       IconButton(
+                  //           icon: ImageIcon(AssetImage(AllAssets.bottomIS),
+                  //               color:
+                  //                   context.read<AuthState>().currentIndex == 2
+                  //                       ? Color(0xFFAAAAAA)
+                  //                       : Color.fromARGB(132, 170, 170, 170)),
+                  //           onPressed: () {
+                  //             context.read<AuthState>().changeIndex(2);
+                  //             Navigator.pushReplacement(
+                  //                 context,
+                  //                 MaterialPageRoute(
+                  //                     builder: (context) =>
+                  //                         BottomNavigation()));
+                  //           }),
+                  //       IconButton(
+                  //           icon: ImageIcon(AssetImage(AllAssets.bottomPE),
+                  //               color:
+                  //                   context.read<AuthState>().currentIndex == 3
+                  //                       ? Color(0xFFAAAAAA)
+                  //                       : Color.fromARGB(132, 170, 170, 170)),
+                  //           onPressed: () {
+                  //             context.read<AuthState>().changeIndex(3);
+                  //             Navigator.pushReplacement(
+                  //                 context,
+                  //                 MaterialPageRoute(
+                  //                     builder: (context) =>
+                  //                         BottomNavigation()));
+                  //           }),
+                  //       IconButton(
+                  //           icon: ImageIcon(AssetImage(AllAssets.bottomPT),
+                  //               color:
+                  //                   context.read<AuthState>().currentIndex == 4
+                  //                       ? Color(0xFFAAAAAA)
+                  //                       : Color.fromARGB(132, 170, 170, 170)),
+                  //           onPressed: () {
+                  //             context.read<AuthState>().changeIndex(4);
+                  //             Navigator.pushReplacement(
+                  //                 context,
+                  //                 MaterialPageRoute(
+                  //                     builder: (context) =>
+                  //                         BottomNavigation()));
+                  //           }),
+                  //     ],
+                  //   ),
+                  // )
                 ],
               ),
       ),
